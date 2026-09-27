@@ -489,7 +489,7 @@ bool ConsoleCommandParserServer::performParsing(const NetworkId & userId, const 
 		ServerWorld::dumpObjectSphereTree(results);
 		result = Unicode::narrowToWide("Sending ");
 		char count[1024];
-		sprintf(count, "%i", results.size());
+		sprintf(count, "%zu", results.size());
 		result += Unicode::narrowToWide(count);
 		result += Unicode::narrowToWide(" object sphere tree nodes to client\n");
 
@@ -506,7 +506,7 @@ bool ConsoleCommandParserServer::performParsing(const NetworkId & userId, const 
 			}
 			sprintf(
 				count,
-				"Sphere id=[%lu] origin=[%f, %f, %f] radius=[%f] OID=[%s] %s\n",
+				"Sphere id=[%td] origin=[%f, %f, %f] radius=[%f] OID=[%s] %s\n",
 				std::distance(results.begin(), i),//reinterpret_cast<unsigned long>(i),
 				(*i).second.getCenter().x,
 				(*i).second.getCenter().y,
@@ -524,7 +524,7 @@ bool ConsoleCommandParserServer::performParsing(const NetworkId & userId, const 
 		ServerWorld::dumpTriggerSphereTree(results);
 		result = Unicode::narrowToWide("Sending ");
 		char count[128];
-		sprintf(count, "%i", results.size());
+		sprintf(count, "%zu", results.size());
 		result += Unicode::narrowToWide(count);
 		result += Unicode::narrowToWide(" trigger sphere tree nodes to client\n");
 
@@ -541,7 +541,7 @@ bool ConsoleCommandParserServer::performParsing(const NetworkId & userId, const 
 
 			sprintf(
 				count,
-				"Sphere id=[%lu] origin=[%f, %f, %f] radius=[%f] OID=[%s] %s\n",
+				"Sphere id=[%td] origin=[%f, %f, %f] radius=[%f] OID=[%s] %s\n",
 				std::distance(results.begin(), i),
 				(*i).second.getCenter().x,
 				(*i).second.getCenter().y,
@@ -887,7 +887,7 @@ bool ConsoleCommandParserServer::performParsing(const NetworkId & userId, const 
 			if (NameManager::getInstance().isPlayer(oid))
 			{
 				result += Unicode::narrowToWide(FormattedString<512>().sprintf("character oid:             %s\n", oid.getValueString().c_str()));
-				result += Unicode::narrowToWide(FormattedString<512>().sprintf("character station id:      %lu\n", NameManager::getInstance().getPlayerStationId(oid)));
+				result += Unicode::narrowToWide(FormattedString<512>().sprintf("character station id:      %u\n", NameManager::getInstance().getPlayerStationId(oid)));
 				result += Unicode::narrowToWide(FormattedString<512>().sprintf("character first name:      %s\n", NameManager::getInstance().getPlayerName(oid).c_str()));
 				result += Unicode::narrowToWide(FormattedString<512>().sprintf("character full name:       %s\n", NameManager::getInstance().getPlayerFullName(oid).c_str()));
 
@@ -908,7 +908,7 @@ bool ConsoleCommandParserServer::performParsing(const NetworkId & userId, const 
 			if (oid.isValid())
 			{
 				result += Unicode::narrowToWide(FormattedString<512>().sprintf("character oid:             %s\n", oid.getValueString().c_str()));
-				result += Unicode::narrowToWide(FormattedString<512>().sprintf("character station id:      %lu\n", NameManager::getInstance().getPlayerStationId(oid)));
+				result += Unicode::narrowToWide(FormattedString<512>().sprintf("character station id:      %u\n", NameManager::getInstance().getPlayerStationId(oid)));
 				result += Unicode::narrowToWide(FormattedString<512>().sprintf("character first name:      %s\n", NameManager::getInstance().getPlayerName(oid).c_str()));
 				result += Unicode::narrowToWide(FormattedString<512>().sprintf("character full name:       %s\n", NameManager::getInstance().getPlayerFullName(oid).c_str()));
 
@@ -1509,7 +1509,7 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 
 		if (!connectedCharacterLfgData.empty())
 		{
-			result += Unicode::narrowToWide(FormattedString<512>().sprintf("\nPopulation statistics: %d total\n", connectedCharacterLfgData.size()));
+			result += Unicode::narrowToWide(FormattedString<512>().sprintf("\nPopulation statistics: %zu total\n", connectedCharacterLfgData.size()));
 
 			std::map<std::string, int> const & statistics = LfgCharacterData::calculateStatistics(connectedCharacterLfgData);
 			std::map<std::string, int>::const_iterator iterStatistics;
@@ -1562,7 +1562,7 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 					std::pair<int32, int32> const & groupPickupTimer = groupObject->getGroupPickupTimer();
 					std::pair<std::string, Vector> const & groupPickupLocation = groupObject->getGroupPickupLocation();
 
-					result += Unicode::narrowToWide(FormattedString<512>().sprintf("Group (%s) Pickup Point: %s (%.2f, %.2f, %.2f), (%ld - %ld) (%u seconds left)\n", groupObject->getNetworkId().getValueString().c_str(), groupPickupLocation.first.c_str(), groupPickupLocation.second.x, groupPickupLocation.second.y, groupPickupLocation.second.z, groupPickupTimer.first, groupPickupTimer.second, secondsLeftOnGroupPickup));
+					result += Unicode::narrowToWide(FormattedString<512>().sprintf("Group (%s) Pickup Point: %s (%.2f, %.2f, %.2f), (%d - %d) (%u seconds left)\n", groupObject->getNetworkId().getValueString().c_str(), groupPickupLocation.first.c_str(), groupPickupLocation.second.x, groupPickupLocation.second.y, groupPickupLocation.second.z, groupPickupTimer.first, groupPickupTimer.second, secondsLeftOnGroupPickup));
 				}
 
 				result += Unicode::narrowToWide(FormattedString<512>().sprintf("Group (%s) Members:\n", groupObject->getNetworkId().getValueString().c_str()));
@@ -1701,7 +1701,7 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 		std::multimap<time_t, std::pair<std::pair<NetworkId, uint32>, std::string> > resultList;
 		NameManager::getInstance().getPlayerWithLastLoginTimeAfter(cutoff, resultList);
 
-		result += Unicode::narrowToWide(FormattedString<512>().sprintf("%d (out of %d total) characters have logged in since %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoff).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoff).c_str()));
+		result += Unicode::narrowToWide(FormattedString<512>().sprintf("%zu (out of %d total) characters have logged in since %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoff).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoff).c_str()));
 	}
 	else if (isAbbrev(argv[0], "listCharacterLastLoginTimeAfterBrief"))
 	{
@@ -1724,7 +1724,7 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 		std::multimap<time_t, std::pair<std::pair<NetworkId, uint32>, std::string> > resultList;
 		NameManager::getInstance().getPlayerWithLastLoginTimeAfter(cutoff, resultList);
 
-		result += Unicode::narrowToWide(FormattedString<512>().sprintf("%d (out of %d total) characters have logged in since %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoff).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoff).c_str()));
+		result += Unicode::narrowToWide(FormattedString<512>().sprintf("%zu (out of %d total) characters have logged in since %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoff).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoff).c_str()));
 	}
 	else if (isAbbrev(argv[0], "listCharacterLastLoginTimeBeforeBrief"))
 	{
@@ -1747,7 +1747,7 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 		std::multimap<time_t, std::pair<std::pair<NetworkId, uint32>, std::string> > resultList;
 		NameManager::getInstance().getPlayerWithLastLoginTimeBefore(cutoff, resultList);
 
-		result += Unicode::narrowToWide(FormattedString<512>().sprintf("%d (out of %d total) characters logged in before %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoff).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoff).c_str()));
+		result += Unicode::narrowToWide(FormattedString<512>().sprintf("%zu (out of %d total) characters logged in before %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoff).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoff).c_str()));
 	}
 	else if (isAbbrev(argv[0], "listCharacterLastLoginTimeBetweenBrief"))
 	{
@@ -1791,7 +1791,7 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 		std::multimap<time_t, std::pair<std::pair<NetworkId, uint32>, std::string> > resultList;
 		NameManager::getInstance().getPlayerWithLastLoginTimeBetween(cutoffLower, cutoffUpper, resultList);
 
-		result += Unicode::narrowToWide(FormattedString<512>().sprintf("%d (out of %d total) characters logged in between %s, %s and %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoffLower).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoffLower).c_str(), CalendarTime::convertEpochToTimeStringLocal(cutoffUpper).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoffUpper).c_str()));
+		result += Unicode::narrowToWide(FormattedString<512>().sprintf("%zu (out of %d total) characters logged in between %s, %s and %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoffLower).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoffLower).c_str(), CalendarTime::convertEpochToTimeStringLocal(cutoffUpper).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoffUpper).c_str()));
 	}
 	else if (isAbbrev(argv[0], "listCharacterLastLoginTimeDetailed"))
 	{
@@ -1802,9 +1802,9 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 		NameManager::getInstance().getPlayerWithLastLoginTimeAfter(cutoff, resultList);
 
 		for (std::multimap<time_t, std::pair<std::pair<NetworkId, uint32>, std::string> >::const_iterator iter = resultList.begin(); iter != resultList.end(); ++iter)
-			result += Unicode::narrowToWide(FormattedString<512>().sprintf("[%s, %s] %s, %lu, %s\n", CalendarTime::convertEpochToTimeStringLocal(iter->first).c_str(), CalendarTime::convertEpochToTimeStringGMT(iter->first).c_str(), iter->second.first.first.getValueString().c_str(), iter->second.first.second, iter->second.second.c_str()));
+			result += Unicode::narrowToWide(FormattedString<512>().sprintf("[%s, %s] %s, %u, %s\n", CalendarTime::convertEpochToTimeStringLocal(iter->first).c_str(), CalendarTime::convertEpochToTimeStringGMT(iter->first).c_str(), iter->second.first.first.getValueString().c_str(), iter->second.first.second, iter->second.second.c_str()));
 
-		result += Unicode::narrowToWide(FormattedString<512>().sprintf("%d (out of %d total) characters have logged in since %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoff).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoff).c_str()));
+		result += Unicode::narrowToWide(FormattedString<512>().sprintf("%zu (out of %d total) characters have logged in since %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoff).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoff).c_str()));
 	}
 	else if (isAbbrev(argv[0], "listCharacterLastLoginTimeAfterDetailed"))
 	{
@@ -1828,9 +1828,9 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 		NameManager::getInstance().getPlayerWithLastLoginTimeAfter(cutoff, resultList);
 
 		for (std::multimap<time_t, std::pair<std::pair<NetworkId, uint32>, std::string> >::const_iterator iter = resultList.begin(); iter != resultList.end(); ++iter)
-			result += Unicode::narrowToWide(FormattedString<512>().sprintf("[%s, %s] %s, %lu, %s\n", CalendarTime::convertEpochToTimeStringLocal(iter->first).c_str(), CalendarTime::convertEpochToTimeStringGMT(iter->first).c_str(), iter->second.first.first.getValueString().c_str(), iter->second.first.second, iter->second.second.c_str()));
+			result += Unicode::narrowToWide(FormattedString<512>().sprintf("[%s, %s] %s, %u, %s\n", CalendarTime::convertEpochToTimeStringLocal(iter->first).c_str(), CalendarTime::convertEpochToTimeStringGMT(iter->first).c_str(), iter->second.first.first.getValueString().c_str(), iter->second.first.second, iter->second.second.c_str()));
 
-		result += Unicode::narrowToWide(FormattedString<512>().sprintf("%d (out of %d total) characters have logged in since %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoff).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoff).c_str()));
+		result += Unicode::narrowToWide(FormattedString<512>().sprintf("%zu (out of %d total) characters have logged in since %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoff).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoff).c_str()));
 	}
 	else if (isAbbrev(argv[0], "listCharacterLastLoginTimeBeforeDetailed"))
 	{
@@ -1854,9 +1854,9 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 		NameManager::getInstance().getPlayerWithLastLoginTimeBefore(cutoff, resultList);
 
 		for (std::multimap<time_t, std::pair<std::pair<NetworkId, uint32>, std::string> >::const_iterator iter = resultList.begin(); iter != resultList.end(); ++iter)
-			result += Unicode::narrowToWide(FormattedString<512>().sprintf("[%s, %s] %s, %lu, %s\n", CalendarTime::convertEpochToTimeStringLocal(iter->first).c_str(), CalendarTime::convertEpochToTimeStringGMT(iter->first).c_str(), iter->second.first.first.getValueString().c_str(), iter->second.first.second, iter->second.second.c_str()));
+			result += Unicode::narrowToWide(FormattedString<512>().sprintf("[%s, %s] %s, %u, %s\n", CalendarTime::convertEpochToTimeStringLocal(iter->first).c_str(), CalendarTime::convertEpochToTimeStringGMT(iter->first).c_str(), iter->second.first.first.getValueString().c_str(), iter->second.first.second, iter->second.second.c_str()));
 
-		result += Unicode::narrowToWide(FormattedString<512>().sprintf("%d (out of %d total) characters logged in before %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoff).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoff).c_str()));
+		result += Unicode::narrowToWide(FormattedString<512>().sprintf("%zu (out of %d total) characters logged in before %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoff).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoff).c_str()));
 	}
 	else if (isAbbrev(argv[0], "listCharacterLastLoginTimeBetweenDetailed"))
 	{
@@ -1901,9 +1901,9 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 		NameManager::getInstance().getPlayerWithLastLoginTimeBetween(cutoffLower, cutoffUpper, resultList);
 
 		for (std::multimap<time_t, std::pair<std::pair<NetworkId, uint32>, std::string> >::const_iterator iter = resultList.begin(); iter != resultList.end(); ++iter)
-			result += Unicode::narrowToWide(FormattedString<512>().sprintf("[%s, %s] %s, %lu, %s\n", CalendarTime::convertEpochToTimeStringLocal(iter->first).c_str(), CalendarTime::convertEpochToTimeStringGMT(iter->first).c_str(), iter->second.first.first.getValueString().c_str(), iter->second.first.second, iter->second.second.c_str()));
+			result += Unicode::narrowToWide(FormattedString<512>().sprintf("[%s, %s] %s, %u, %s\n", CalendarTime::convertEpochToTimeStringLocal(iter->first).c_str(), CalendarTime::convertEpochToTimeStringGMT(iter->first).c_str(), iter->second.first.first.getValueString().c_str(), iter->second.first.second, iter->second.second.c_str()));
 
-		result += Unicode::narrowToWide(FormattedString<512>().sprintf("%d (out of %d total) characters logged in between %s, %s and %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoffLower).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoffLower).c_str(), CalendarTime::convertEpochToTimeStringLocal(cutoffUpper).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoffUpper).c_str()));
+		result += Unicode::narrowToWide(FormattedString<512>().sprintf("%zu (out of %d total) characters logged in between %s, %s and %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoffLower).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoffLower).c_str(), CalendarTime::convertEpochToTimeStringLocal(cutoffUpper).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoffUpper).c_str()));
 	}
 	else if (isAbbrev(argv[0], "sendMailToCharacterLastLoginTime"))
 	{
@@ -1935,7 +1935,7 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 
 		if ((s_days == days) && (s_confirmationTimeout > timeNow) && (s_fromName == Unicode::wideToNarrow(argv[2])) && (s_mailSubject == argv[3]) && (s_mailBody == mailBody))
 		{
-			result += Unicode::narrowToWide(FormattedString<512>().sprintf("Sending mail to %d (out of %d total) characters who have logged in since %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoff).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoff).c_str()));
+			result += Unicode::narrowToWide(FormattedString<512>().sprintf("Sending mail to %zu (out of %d total) characters who have logged in since %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoff).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoff).c_str()));
 
 			for (std::multimap<time_t, std::pair<std::pair<NetworkId, uint32>, std::string> >::const_iterator iter = resultList.begin(); iter != resultList.end(); ++iter)
 			{
@@ -1951,7 +1951,7 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 		}
 		else
 		{
-			result += Unicode::narrowToWide(FormattedString<512>().sprintf("The following is the mail that ***WILL BE SENT*** to %d (out of %d total) characters who have logged in since %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoff).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoff).c_str()));
+			result += Unicode::narrowToWide(FormattedString<512>().sprintf("The following is the mail that ***WILL BE SENT*** to %zu (out of %d total) characters who have logged in since %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoff).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoff).c_str()));
 			result += Unicode::narrowToWide("\nPlease confirm that you ***REALLY WANT TO SEND*** this mail and run the command again with the same arguments within 60 seconds to send the mail\n\n");
 
 			s_days = days;
@@ -2011,7 +2011,7 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 
 		if ((s_cutoff == cutoff) && (s_confirmationTimeout > timeNow) && (s_fromName == Unicode::wideToNarrow(argv[7])) && (s_mailSubject == argv[8]) && (s_mailBody == mailBody))
 		{
-			result += Unicode::narrowToWide(FormattedString<512>().sprintf("Sending mail to %d (out of %d total) characters who have logged in since %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoff).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoff).c_str()));
+			result += Unicode::narrowToWide(FormattedString<512>().sprintf("Sending mail to %zu (out of %d total) characters who have logged in since %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoff).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoff).c_str()));
 
 			for (std::multimap<time_t, std::pair<std::pair<NetworkId, uint32>, std::string> >::const_iterator iter = resultList.begin(); iter != resultList.end(); ++iter)
 			{
@@ -2027,7 +2027,7 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 		}
 		else
 		{
-			result += Unicode::narrowToWide(FormattedString<512>().sprintf("The following is the mail that ***WILL BE SENT*** to %d (out of %d total) characters who have logged in since %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoff).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoff).c_str()));
+			result += Unicode::narrowToWide(FormattedString<512>().sprintf("The following is the mail that ***WILL BE SENT*** to %zu (out of %d total) characters who have logged in since %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoff).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoff).c_str()));
 			result += Unicode::narrowToWide("\nPlease confirm that you ***REALLY WANT TO SEND*** this mail and run the command again with the same arguments within 60 seconds to send the mail\n\n");
 
 			s_cutoff = cutoff;
@@ -2087,7 +2087,7 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 
 		if ((s_cutoff == cutoff) && (s_confirmationTimeout > timeNow) && (s_fromName == Unicode::wideToNarrow(argv[7])) && (s_mailSubject == argv[8]) && (s_mailBody == mailBody))
 		{
-			result += Unicode::narrowToWide(FormattedString<512>().sprintf("Sending mail to %d (out of %d total) characters who logged in before %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoff).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoff).c_str()));
+			result += Unicode::narrowToWide(FormattedString<512>().sprintf("Sending mail to %zu (out of %d total) characters who logged in before %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoff).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoff).c_str()));
 
 			for (std::multimap<time_t, std::pair<std::pair<NetworkId, uint32>, std::string> >::const_iterator iter = resultList.begin(); iter != resultList.end(); ++iter)
 			{
@@ -2103,7 +2103,7 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 		}
 		else
 		{
-			result += Unicode::narrowToWide(FormattedString<512>().sprintf("The following is the mail that ***WILL BE SENT*** to %d (out of %d total) characters who logged in before %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoff).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoff).c_str()));
+			result += Unicode::narrowToWide(FormattedString<512>().sprintf("The following is the mail that ***WILL BE SENT*** to %zu (out of %d total) characters who logged in before %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoff).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoff).c_str()));
 			result += Unicode::narrowToWide("\nPlease confirm that you ***REALLY WANT TO SEND*** this mail and run the command again with the same arguments within 60 seconds to send the mail\n\n");
 
 			s_cutoff = cutoff;
@@ -2185,7 +2185,7 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 
 		if ((s_cutoffLower == cutoffLower) && (s_cutoffUpper == cutoffUpper) && (s_confirmationTimeout > timeNow) && (s_fromName == Unicode::wideToNarrow(argv[13])) && (s_mailSubject == argv[14]) && (s_mailBody == mailBody))
 		{
-			result += Unicode::narrowToWide(FormattedString<512>().sprintf("Sending mail to %d (out of %d total) characters who logged in between %s, %s and %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoffLower).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoffLower).c_str(), CalendarTime::convertEpochToTimeStringLocal(cutoffUpper).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoffUpper).c_str()));
+			result += Unicode::narrowToWide(FormattedString<512>().sprintf("Sending mail to %zu (out of %d total) characters who logged in between %s, %s and %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoffLower).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoffLower).c_str(), CalendarTime::convertEpochToTimeStringLocal(cutoffUpper).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoffUpper).c_str()));
 
 			for (std::multimap<time_t, std::pair<std::pair<NetworkId, uint32>, std::string> >::const_iterator iter = resultList.begin(); iter != resultList.end(); ++iter)
 			{
@@ -2202,7 +2202,7 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 		}
 		else
 		{
-			result += Unicode::narrowToWide(FormattedString<512>().sprintf("The following is the mail that ***WILL BE SENT*** to %d (out of %d total) characters who logged in between %s, %s and %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoffLower).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoffLower).c_str(), CalendarTime::convertEpochToTimeStringLocal(cutoffUpper).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoffUpper).c_str()));
+			result += Unicode::narrowToWide(FormattedString<512>().sprintf("The following is the mail that ***WILL BE SENT*** to %zu (out of %d total) characters who logged in between %s, %s and %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoffLower).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoffLower).c_str(), CalendarTime::convertEpochToTimeStringLocal(cutoffUpper).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoffUpper).c_str()));
 			result += Unicode::narrowToWide("\nPlease confirm that you ***REALLY WANT TO SEND*** this mail and run the command again with the same arguments within 60 seconds to send the mail\n\n");
 
 			s_cutoffLower = cutoffLower;
@@ -2228,7 +2228,7 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 		std::multimap<time_t, std::pair<std::pair<NetworkId, uint32>, std::string> > resultList;
 		NameManager::getInstance().getPlayerWithCreateTimeAfter(cutoff, resultList);
 
-		result += Unicode::narrowToWide(FormattedString<512>().sprintf("%d (out of %d total) characters created since %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoff).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoff).c_str()));
+		result += Unicode::narrowToWide(FormattedString<512>().sprintf("%zu (out of %d total) characters created since %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoff).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoff).c_str()));
 	}
 	else if (isAbbrev(argv[0], "listCharacterCreateTimeAfterBrief"))
 	{
@@ -2251,7 +2251,7 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 		std::multimap<time_t, std::pair<std::pair<NetworkId, uint32>, std::string> > resultList;
 		NameManager::getInstance().getPlayerWithCreateTimeAfter(cutoff, resultList);
 
-		result += Unicode::narrowToWide(FormattedString<512>().sprintf("%d (out of %d total) characters created since %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoff).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoff).c_str()));
+		result += Unicode::narrowToWide(FormattedString<512>().sprintf("%zu (out of %d total) characters created since %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoff).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoff).c_str()));
 	}
 	else if (isAbbrev(argv[0], "listCharacterCreateTimeBeforeBrief"))
 	{
@@ -2274,7 +2274,7 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 		std::multimap<time_t, std::pair<std::pair<NetworkId, uint32>, std::string> > resultList;
 		NameManager::getInstance().getPlayerWithCreateTimeBefore(cutoff, resultList);
 
-		result += Unicode::narrowToWide(FormattedString<512>().sprintf("%d (out of %d total) characters created before %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoff).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoff).c_str()));
+		result += Unicode::narrowToWide(FormattedString<512>().sprintf("%zu (out of %d total) characters created before %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoff).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoff).c_str()));
 	}
 	else if (isAbbrev(argv[0], "listCharacterCreateTimeBetweenBrief"))
 	{
@@ -2318,7 +2318,7 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 		std::multimap<time_t, std::pair<std::pair<NetworkId, uint32>, std::string> > resultList;
 		NameManager::getInstance().getPlayerWithCreateTimeBetween(cutoffLower, cutoffUpper, resultList);
 
-		result += Unicode::narrowToWide(FormattedString<512>().sprintf("%d (out of %d total) characters created between %s, %s and %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoffLower).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoffLower).c_str(), CalendarTime::convertEpochToTimeStringLocal(cutoffUpper).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoffUpper).c_str()));
+		result += Unicode::narrowToWide(FormattedString<512>().sprintf("%zu (out of %d total) characters created between %s, %s and %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoffLower).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoffLower).c_str(), CalendarTime::convertEpochToTimeStringLocal(cutoffUpper).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoffUpper).c_str()));
 	}
 	else if (isAbbrev(argv[0], "listCharacterCreateTimeDetailed"))
 	{
@@ -2329,9 +2329,9 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 		NameManager::getInstance().getPlayerWithCreateTimeAfter(cutoff, resultList);
 
 		for (std::multimap<time_t, std::pair<std::pair<NetworkId, uint32>, std::string> >::const_iterator iter = resultList.begin(); iter != resultList.end(); ++iter)
-			result += Unicode::narrowToWide(FormattedString<512>().sprintf("[%s, %s] %s, %lu, %s\n", CalendarTime::convertEpochToTimeStringLocal(iter->first).c_str(), CalendarTime::convertEpochToTimeStringGMT(iter->first).c_str(), iter->second.first.first.getValueString().c_str(), iter->second.first.second, iter->second.second.c_str()));
+			result += Unicode::narrowToWide(FormattedString<512>().sprintf("[%s, %s] %s, %u, %s\n", CalendarTime::convertEpochToTimeStringLocal(iter->first).c_str(), CalendarTime::convertEpochToTimeStringGMT(iter->first).c_str(), iter->second.first.first.getValueString().c_str(), iter->second.first.second, iter->second.second.c_str()));
 
-		result += Unicode::narrowToWide(FormattedString<512>().sprintf("%d (out of %d total) characters created since %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoff).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoff).c_str()));
+		result += Unicode::narrowToWide(FormattedString<512>().sprintf("%zu (out of %d total) characters created since %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoff).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoff).c_str()));
 	}
 	else if (isAbbrev(argv[0], "listCharacterCreateTimeAfterDetailed"))
 	{
@@ -2355,9 +2355,9 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 		NameManager::getInstance().getPlayerWithCreateTimeAfter(cutoff, resultList);
 
 		for (std::multimap<time_t, std::pair<std::pair<NetworkId, uint32>, std::string> >::const_iterator iter = resultList.begin(); iter != resultList.end(); ++iter)
-			result += Unicode::narrowToWide(FormattedString<512>().sprintf("[%s, %s] %s, %lu, %s\n", CalendarTime::convertEpochToTimeStringLocal(iter->first).c_str(), CalendarTime::convertEpochToTimeStringGMT(iter->first).c_str(), iter->second.first.first.getValueString().c_str(), iter->second.first.second, iter->second.second.c_str()));
+			result += Unicode::narrowToWide(FormattedString<512>().sprintf("[%s, %s] %s, %u, %s\n", CalendarTime::convertEpochToTimeStringLocal(iter->first).c_str(), CalendarTime::convertEpochToTimeStringGMT(iter->first).c_str(), iter->second.first.first.getValueString().c_str(), iter->second.first.second, iter->second.second.c_str()));
 
-		result += Unicode::narrowToWide(FormattedString<512>().sprintf("%d (out of %d total) characters created since %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoff).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoff).c_str()));
+		result += Unicode::narrowToWide(FormattedString<512>().sprintf("%zu (out of %d total) characters created since %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoff).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoff).c_str()));
 	}
 	else if (isAbbrev(argv[0], "listCharacterCreateTimeBeforeDetailed"))
 	{
@@ -2381,9 +2381,9 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 		NameManager::getInstance().getPlayerWithCreateTimeBefore(cutoff, resultList);
 
 		for (std::multimap<time_t, std::pair<std::pair<NetworkId, uint32>, std::string> >::const_iterator iter = resultList.begin(); iter != resultList.end(); ++iter)
-			result += Unicode::narrowToWide(FormattedString<512>().sprintf("[%s, %s] %s, %lu, %s\n", CalendarTime::convertEpochToTimeStringLocal(iter->first).c_str(), CalendarTime::convertEpochToTimeStringGMT(iter->first).c_str(), iter->second.first.first.getValueString().c_str(), iter->second.first.second, iter->second.second.c_str()));
+			result += Unicode::narrowToWide(FormattedString<512>().sprintf("[%s, %s] %s, %u, %s\n", CalendarTime::convertEpochToTimeStringLocal(iter->first).c_str(), CalendarTime::convertEpochToTimeStringGMT(iter->first).c_str(), iter->second.first.first.getValueString().c_str(), iter->second.first.second, iter->second.second.c_str()));
 
-		result += Unicode::narrowToWide(FormattedString<512>().sprintf("%d (out of %d total) characters created before %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoff).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoff).c_str()));
+		result += Unicode::narrowToWide(FormattedString<512>().sprintf("%zu (out of %d total) characters created before %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoff).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoff).c_str()));
 	}
 	else if (isAbbrev(argv[0], "listCharacterCreateTimeBetweenDetailed"))
 	{
@@ -2428,9 +2428,9 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 		NameManager::getInstance().getPlayerWithCreateTimeBetween(cutoffLower, cutoffUpper, resultList);
 
 		for (std::multimap<time_t, std::pair<std::pair<NetworkId, uint32>, std::string> >::const_iterator iter = resultList.begin(); iter != resultList.end(); ++iter)
-			result += Unicode::narrowToWide(FormattedString<512>().sprintf("[%s, %s] %s, %lu, %s\n", CalendarTime::convertEpochToTimeStringLocal(iter->first).c_str(), CalendarTime::convertEpochToTimeStringGMT(iter->first).c_str(), iter->second.first.first.getValueString().c_str(), iter->second.first.second, iter->second.second.c_str()));
+			result += Unicode::narrowToWide(FormattedString<512>().sprintf("[%s, %s] %s, %u, %s\n", CalendarTime::convertEpochToTimeStringLocal(iter->first).c_str(), CalendarTime::convertEpochToTimeStringGMT(iter->first).c_str(), iter->second.first.first.getValueString().c_str(), iter->second.first.second, iter->second.second.c_str()));
 
-		result += Unicode::narrowToWide(FormattedString<512>().sprintf("%d (out of %d total) characters created between %s, %s and %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoffLower).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoffLower).c_str(), CalendarTime::convertEpochToTimeStringLocal(cutoffUpper).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoffUpper).c_str()));
+		result += Unicode::narrowToWide(FormattedString<512>().sprintf("%zu (out of %d total) characters created between %s, %s and %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoffLower).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoffLower).c_str(), CalendarTime::convertEpochToTimeStringLocal(cutoffUpper).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoffUpper).c_str()));
 	}
 	else if (isAbbrev(argv[0], "sendMailToCharacterCreateTime"))
 	{
@@ -2462,7 +2462,7 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 
 		if ((s_days == days) && (s_confirmationTimeout > timeNow) && (s_fromName == Unicode::wideToNarrow(argv[2])) && (s_mailSubject == argv[3]) && (s_mailBody == mailBody))
 		{
-			result += Unicode::narrowToWide(FormattedString<512>().sprintf("Sending mail to %d (out of %d total) characters created since %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoff).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoff).c_str()));
+			result += Unicode::narrowToWide(FormattedString<512>().sprintf("Sending mail to %zu (out of %d total) characters created since %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoff).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoff).c_str()));
 
 			for (std::multimap<time_t, std::pair<std::pair<NetworkId, uint32>, std::string> >::const_iterator iter = resultList.begin(); iter != resultList.end(); ++iter)
 			{
@@ -2478,7 +2478,7 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 		}
 		else
 		{
-			result += Unicode::narrowToWide(FormattedString<512>().sprintf("The following is the mail that ***WILL BE SENT*** to %d (out of %d total) characters created since %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoff).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoff).c_str()));
+			result += Unicode::narrowToWide(FormattedString<512>().sprintf("The following is the mail that ***WILL BE SENT*** to %zu (out of %d total) characters created since %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoff).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoff).c_str()));
 			result += Unicode::narrowToWide("\nPlease confirm that you ***REALLY WANT TO SEND*** this mail and run the command again with the same arguments within 60 seconds to send the mail\n\n");
 
 			s_days = days;
@@ -2538,7 +2538,7 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 
 		if ((s_cutoff == cutoff) && (s_confirmationTimeout > timeNow) && (s_fromName == Unicode::wideToNarrow(argv[7])) && (s_mailSubject == argv[8]) && (s_mailBody == mailBody))
 		{
-			result += Unicode::narrowToWide(FormattedString<512>().sprintf("Sending mail to %d (out of %d total) characters created since %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoff).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoff).c_str()));
+			result += Unicode::narrowToWide(FormattedString<512>().sprintf("Sending mail to %zu (out of %d total) characters created since %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoff).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoff).c_str()));
 
 			for (std::multimap<time_t, std::pair<std::pair<NetworkId, uint32>, std::string> >::const_iterator iter = resultList.begin(); iter != resultList.end(); ++iter)
 			{
@@ -2554,7 +2554,7 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 		}
 		else
 		{
-			result += Unicode::narrowToWide(FormattedString<512>().sprintf("The following is the mail that ***WILL BE SENT*** to %d (out of %d total) characters created since %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoff).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoff).c_str()));
+			result += Unicode::narrowToWide(FormattedString<512>().sprintf("The following is the mail that ***WILL BE SENT*** to %zu (out of %d total) characters created since %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoff).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoff).c_str()));
 			result += Unicode::narrowToWide("\nPlease confirm that you ***REALLY WANT TO SEND*** this mail and run the command again with the same arguments within 60 seconds to send the mail\n\n");
 
 			s_cutoff = cutoff;
@@ -2614,7 +2614,7 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 
 		if ((s_cutoff == cutoff) && (s_confirmationTimeout > timeNow) && (s_fromName == Unicode::wideToNarrow(argv[7])) && (s_mailSubject == argv[8]) && (s_mailBody == mailBody))
 		{
-			result += Unicode::narrowToWide(FormattedString<512>().sprintf("Sending mail to %d (out of %d total) characters created before %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoff).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoff).c_str()));
+			result += Unicode::narrowToWide(FormattedString<512>().sprintf("Sending mail to %zu (out of %d total) characters created before %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoff).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoff).c_str()));
 
 			for (std::multimap<time_t, std::pair<std::pair<NetworkId, uint32>, std::string> >::const_iterator iter = resultList.begin(); iter != resultList.end(); ++iter)
 			{
@@ -2630,7 +2630,7 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 		}
 		else
 		{
-			result += Unicode::narrowToWide(FormattedString<512>().sprintf("The following is the mail that ***WILL BE SENT*** to %d (out of %d total) characters created before %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoff).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoff).c_str()));
+			result += Unicode::narrowToWide(FormattedString<512>().sprintf("The following is the mail that ***WILL BE SENT*** to %zu (out of %d total) characters created before %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoff).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoff).c_str()));
 			result += Unicode::narrowToWide("\nPlease confirm that you ***REALLY WANT TO SEND*** this mail and run the command again with the same arguments within 60 seconds to send the mail\n\n");
 
 			s_cutoff = cutoff;
@@ -2712,7 +2712,7 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 
 		if ((s_cutoffLower == cutoffLower) && (s_cutoffUpper == cutoffUpper) && (s_confirmationTimeout > timeNow) && (s_fromName == Unicode::wideToNarrow(argv[13])) && (s_mailSubject == argv[14]) && (s_mailBody == mailBody))
 		{
-			result += Unicode::narrowToWide(FormattedString<512>().sprintf("Sending mail to %d (out of %d total) characters created between %s, %s and %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoffLower).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoffLower).c_str(), CalendarTime::convertEpochToTimeStringLocal(cutoffUpper).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoffUpper).c_str()));
+			result += Unicode::narrowToWide(FormattedString<512>().sprintf("Sending mail to %zu (out of %d total) characters created between %s, %s and %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoffLower).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoffLower).c_str(), CalendarTime::convertEpochToTimeStringLocal(cutoffUpper).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoffUpper).c_str()));
 
 			for (std::multimap<time_t, std::pair<std::pair<NetworkId, uint32>, std::string> >::const_iterator iter = resultList.begin(); iter != resultList.end(); ++iter)
 			{
@@ -2729,7 +2729,7 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 		}
 		else
 		{
-			result += Unicode::narrowToWide(FormattedString<512>().sprintf("The following is the mail that ***WILL BE SENT*** to %d (out of %d total) characters created between %s, %s and %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoffLower).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoffLower).c_str(), CalendarTime::convertEpochToTimeStringLocal(cutoffUpper).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoffUpper).c_str()));
+			result += Unicode::narrowToWide(FormattedString<512>().sprintf("The following is the mail that ***WILL BE SENT*** to %zu (out of %d total) characters created between %s, %s and %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoffLower).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoffLower).c_str(), CalendarTime::convertEpochToTimeStringLocal(cutoffUpper).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoffUpper).c_str()));
 			result += Unicode::narrowToWide("\nPlease confirm that you ***REALLY WANT TO SEND*** this mail and run the command again with the same arguments within 60 seconds to send the mail\n\n");
 
 			s_cutoffLower = cutoffLower;
@@ -2762,10 +2762,10 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 		if (sourceCharacterCreateTime > 0)
 			result += Unicode::narrowToWide(FormattedString<512>().sprintf("      characterCreateTime: %s\n", CalendarTime::convertEpochToTimeStringLocal(sourceCharacterCreateTime).c_str()));
 
-		result += Unicode::narrowToWide(FormattedString<512>().sprintf("\n          sourceStationId: %lu\n", sourceStationId));
+		result += Unicode::narrowToWide(FormattedString<512>().sprintf("\n          sourceStationId: %u\n", sourceStationId));
 		result += Unicode::narrowToWide(FormattedString<512>().sprintf("            sourceCluster: %s\n", sourceCluster.c_str()));
 
-		result += Unicode::narrowToWide(FormattedString<512>().sprintf("\n          targetStationId: %lu\n", targetStationId));
+		result += Unicode::narrowToWide(FormattedString<512>().sprintf("\n          targetStationId: %u\n", targetStationId));
 		result += Unicode::narrowToWide(FormattedString<512>().sprintf("            targetCluster: %s\n", targetCluster.c_str()));
 
 		FreeCtsDataTable::FreeCtsInfo const * freeCtsInfo = FreeCtsDataTable::wouldCharacterTransferBeFree(sourceCharacterCreateTime, sourceStationId, sourceCluster, targetStationId, targetCluster, false);
@@ -3418,7 +3418,7 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 						result += Unicode::narrowToWide(FormattedString<1024>().sprintf("(%d, %s) [%d, %s]\n", iterOutput->second.first.first, iterOutput->second.second.c_str(), iterOutput->second.first.second, GameObjectTypes::getCanonicalName(iterOutput->second.first.second).c_str()));
 					}
 
-					result += Unicode::narrowToWide(FormattedString<1024>().sprintf("count=%d\n", output.size()));
+					result += Unicode::narrowToWide(FormattedString<1024>().sprintf("count=%zu\n", output.size()));
 				}
 				else
 				{
@@ -3468,7 +3468,7 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 		static const Unicode::String unl(Unicode::narrowToWide(std::string("\n")));
 
 		result += Unicode::narrowToWide("PID: ");
-		snprintf(numBuf, sizeof(numBuf), "%lu", GameServer::getInstance().getProcessId());
+		snprintf(numBuf, sizeof(numBuf), "%u", GameServer::getInstance().getProcessId());
 		result += Unicode::narrowToWide(std::string(numBuf)) + unl;
 
 		result += Unicode::narrowToWide("Scene: ") + Unicode::narrowToWide(ConfigServerGame::getSceneID()) + unl;

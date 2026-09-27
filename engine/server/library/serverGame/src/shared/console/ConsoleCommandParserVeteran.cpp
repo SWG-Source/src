@@ -107,7 +107,7 @@ bool ConsoleCommandParserVeteran::performParsing (const NetworkId & userId, cons
 			uint32 const gameFeatures = client->getGameFeatures();
 			bool const adminLogin = client->isUsingAdminLogin();
 			char buffer[256];
-			snprintf(buffer,sizeof(buffer),"Entitled time:  %u\nGame features:  %lu\nUsing admin login:  %s\n",
+			snprintf(buffer,sizeof(buffer),"Entitled time:  %u\nGame features:  %u\nUsing admin login:  %s\n",
 					 entitledTime, gameFeatures, adminLogin ? "true" : "false");
 			buffer[sizeof(buffer)-1]='\0';
 			output += buffer;

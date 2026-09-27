@@ -144,8 +144,8 @@ bool ConsoleCommandParserPvp::performParsing (const NetworkId & userId, const St
 				else
 					result += Unicode::narrowToWide("current faction:                        None\n");
 
-				result += Unicode::narrowToWide(FormattedString<512>().sprintf("current GCW points:                     %ld\n",p->getCurrentGcwPoints()));
-				result += Unicode::narrowToWide(FormattedString<512>().sprintf("current GCW rating:                     %ld\n",p->getCurrentGcwRating()));
+				result += Unicode::narrowToWide(FormattedString<512>().sprintf("current GCW points:                     %d\n",p->getCurrentGcwPoints()));
+				result += Unicode::narrowToWide(FormattedString<512>().sprintf("current GCW rating:                     %d\n",p->getCurrentGcwRating()));
 				result += Unicode::narrowToWide(FormattedString<512>().sprintf("current GCW rank:                       %d",p->getCurrentGcwRank()));
 				if (p->getCurrentGcwRank() > 0)
 				{
@@ -164,13 +164,13 @@ bool ConsoleCommandParserPvp::performParsing (const NetworkId & userId, const St
 				}
 
 				result += Unicode::narrowToWide(FormattedString<512>().sprintf("current GCW rank progress:              %0.2f%%\n",p->getCurrentGcwRankProgress()));
-				result += Unicode::narrowToWide(FormattedString<512>().sprintf("current PvP kills:                      %ld\n",p->getCurrentPvpKills()));
+				result += Unicode::narrowToWide(FormattedString<512>().sprintf("current PvP kills:                      %d\n",p->getCurrentPvpKills()));
 
 				result += Unicode::narrowToWide("lifetime GCW points:                    ");
 				result += Unicode::narrowToWide(FormattedString<512>().sprintf(INT64_FORMAT_SPECIFIER,p->getLifetimeGcwPoints()));
 				result += Unicode::narrowToWide("\n");
 
-				result += Unicode::narrowToWide(FormattedString<512>().sprintf("max GCW imperial rating:                %ld\n",p->getMaxGcwImperialRating()));
+				result += Unicode::narrowToWide(FormattedString<512>().sprintf("max GCW imperial rating:                %d\n",p->getMaxGcwImperialRating()));
 				result += Unicode::narrowToWide(FormattedString<512>().sprintf("max GCW imperial rank:                  %d",p->getMaxGcwImperialRank()));
 				if (p->getMaxGcwImperialRank() > 0)
 				{
@@ -182,7 +182,7 @@ bool ConsoleCommandParserPvp::performParsing (const NetworkId & userId, const St
 					result += Unicode::narrowToWide("\n");
 				}
 
-				result += Unicode::narrowToWide(FormattedString<512>().sprintf("max GCW rebel rating:                   %ld\n",p->getMaxGcwRebelRating()));
+				result += Unicode::narrowToWide(FormattedString<512>().sprintf("max GCW rebel rating:                   %d\n",p->getMaxGcwRebelRating()));
 				result += Unicode::narrowToWide(FormattedString<512>().sprintf("max GCW rebel rank:                     %d",p->getMaxGcwRebelRank()));
 				if (p->getMaxGcwRebelRank() > 0)
 				{
@@ -194,8 +194,8 @@ bool ConsoleCommandParserPvp::performParsing (const NetworkId & userId, const St
 					result += Unicode::narrowToWide("\n");
 				}
 
-				result += Unicode::narrowToWide(FormattedString<512>().sprintf("lifetime PvP kills:                     %ld\n",p->getLifetimePvpKills()));
-				result += Unicode::narrowToWide(FormattedString<512>().sprintf("next GCW rating calculation time:       %ld",p->getNextGcwRatingCalcTime()));
+				result += Unicode::narrowToWide(FormattedString<512>().sprintf("lifetime PvP kills:                     %d\n",p->getLifetimePvpKills()));
+				result += Unicode::narrowToWide(FormattedString<512>().sprintf("next GCW rating calculation time:       %d",p->getNextGcwRatingCalcTime()));
 				int32 const now = static_cast<int32>(::time(nullptr));
 				if (p->getNextGcwRatingCalcTime() > 0)
 				{
@@ -213,7 +213,7 @@ bool ConsoleCommandParserPvp::performParsing (const NetworkId & userId, const St
 
 				if (p->getGcwRatingActualCalcTime() > 0)
 				{
-					result += Unicode::narrowToWide(FormattedString<512>().sprintf("actual GCW rating calculation time:     %ld",p->getGcwRatingActualCalcTime()));
+					result += Unicode::narrowToWide(FormattedString<512>().sprintf("actual GCW rating calculation time:     %d",p->getGcwRatingActualCalcTime()));
 
 					if (p->getGcwRatingActualCalcTime() >= now)
 						result += Unicode::narrowToWide(FormattedString<512>().sprintf(" (%s)",CalendarTime::convertSecondsToDHMS(static_cast<unsigned int>(p->getGcwRatingActualCalcTime() - now)).c_str()));
@@ -256,7 +256,7 @@ bool ConsoleCommandParserPvp::performParsing (const NetworkId & userId, const St
 			else
 			{
 				int const adjustment = atoi(Unicode::wideToNarrow(argv[2]).c_str());
-				result += Unicode::narrowToWide(FormattedString<512>().sprintf("character object %s (%s) adjusting current GCW point (%ld) by (%d)\n", oid.getValueString().c_str(), Unicode::wideToNarrow(o->getAssignedObjectName()).c_str(), p->getCurrentGcwPoints(), adjustment));
+				result += Unicode::narrowToWide(FormattedString<512>().sprintf("character object %s (%s) adjusting current GCW point (%d) by (%d)\n", oid.getValueString().c_str(), Unicode::wideToNarrow(o->getAssignedObjectName()).c_str(), p->getCurrentGcwPoints(), adjustment));
 				p->modifyCurrentGcwPoints(adjustment, false);
 			}
 		}
@@ -292,7 +292,7 @@ bool ConsoleCommandParserPvp::performParsing (const NetworkId & userId, const St
 			else
 			{
 				int const adjustment = atoi(Unicode::wideToNarrow(argv[2]).c_str());
-				result += Unicode::narrowToWide(FormattedString<512>().sprintf("character object %s (%s) adjusting current GCW rating (%ld) by (%d)\n", oid.getValueString().c_str(), Unicode::wideToNarrow(o->getAssignedObjectName()).c_str(), p->getCurrentGcwRating(), adjustment));
+				result += Unicode::narrowToWide(FormattedString<512>().sprintf("character object %s (%s) adjusting current GCW rating (%d) by (%d)\n", oid.getValueString().c_str(), Unicode::wideToNarrow(o->getAssignedObjectName()).c_str(), p->getCurrentGcwRating(), adjustment));
 				p->modifyCurrentGcwRating(adjustment, false);
 			}
 		}
@@ -328,7 +328,7 @@ bool ConsoleCommandParserPvp::performParsing (const NetworkId & userId, const St
 			else
 			{
 				int const adjustment = atoi(Unicode::wideToNarrow(argv[2]).c_str());
-				result += Unicode::narrowToWide(FormattedString<512>().sprintf("character object %s (%s) adjusting current PvP kill (%ld) by (%d)\n", oid.getValueString().c_str(), Unicode::wideToNarrow(o->getAssignedObjectName()).c_str(), p->getCurrentPvpKills(), adjustment));
+				result += Unicode::narrowToWide(FormattedString<512>().sprintf("character object %s (%s) adjusting current PvP kill (%d) by (%d)\n", oid.getValueString().c_str(), Unicode::wideToNarrow(o->getAssignedObjectName()).c_str(), p->getCurrentPvpKills(), adjustment));
 				p->modifyCurrentPvpKills(adjustment, false);
 			}
 		}
@@ -402,7 +402,7 @@ bool ConsoleCommandParserPvp::performParsing (const NetworkId & userId, const St
 			else
 			{
 				int const adjustment = atoi(Unicode::wideToNarrow(argv[2]).c_str());
-				result += Unicode::narrowToWide(FormattedString<512>().sprintf("character object %s (%s) adjusting maximum attained Imperial rating (%ld) by (%d)\n", oid.getValueString().c_str(), Unicode::wideToNarrow(o->getAssignedObjectName()).c_str(), p->getMaxGcwImperialRating(), adjustment));
+				result += Unicode::narrowToWide(FormattedString<512>().sprintf("character object %s (%s) adjusting maximum attained Imperial rating (%d) by (%d)\n", oid.getValueString().c_str(), Unicode::wideToNarrow(o->getAssignedObjectName()).c_str(), p->getMaxGcwImperialRating(), adjustment));
 				p->modifyMaxGcwImperialRating(adjustment);
 			}
 		}
@@ -438,7 +438,7 @@ bool ConsoleCommandParserPvp::performParsing (const NetworkId & userId, const St
 			else
 			{
 				int const adjustment = atoi(Unicode::wideToNarrow(argv[2]).c_str());
-				result += Unicode::narrowToWide(FormattedString<512>().sprintf("character object %s (%s) adjusting maximum attained Rebel rating (%ld) by (%d)\n", oid.getValueString().c_str(), Unicode::wideToNarrow(o->getAssignedObjectName()).c_str(), p->getMaxGcwRebelRating(), adjustment));
+				result += Unicode::narrowToWide(FormattedString<512>().sprintf("character object %s (%s) adjusting maximum attained Rebel rating (%d) by (%d)\n", oid.getValueString().c_str(), Unicode::wideToNarrow(o->getAssignedObjectName()).c_str(), p->getMaxGcwRebelRating(), adjustment));
 				p->modifyMaxGcwRebelRating(adjustment);
 			}
 		}
@@ -474,7 +474,7 @@ bool ConsoleCommandParserPvp::performParsing (const NetworkId & userId, const St
 			else
 			{
 				int const adjustment = atoi(Unicode::wideToNarrow(argv[2]).c_str());
-				result += Unicode::narrowToWide(FormattedString<512>().sprintf("character object %s (%s) adjusting lifetime PvP kill (%ld) by (%d)\n", oid.getValueString().c_str(), Unicode::wideToNarrow(o->getAssignedObjectName()).c_str(), p->getLifetimePvpKills(), adjustment));
+				result += Unicode::narrowToWide(FormattedString<512>().sprintf("character object %s (%s) adjusting lifetime PvP kill (%d) by (%d)\n", oid.getValueString().c_str(), Unicode::wideToNarrow(o->getAssignedObjectName()).c_str(), p->getLifetimePvpKills(), adjustment));
 				p->modifyLifetimePvpKills(adjustment);
 			}
 		}
@@ -524,9 +524,9 @@ bool ConsoleCommandParserPvp::performParsing (const NetworkId & userId, const St
 		}
 
 		if (adjustment != 0)
-			result += Unicode::narrowToWide(FormattedString<512>().sprintf("character object %s (%s) adjusting next GCW rating calculation time (%ld) by (%d) weeks\n", oid.getValueString().c_str(), Unicode::wideToNarrow(o->getAssignedObjectName()).c_str(), p->getNextGcwRatingCalcTime(), adjustment));
+			result += Unicode::narrowToWide(FormattedString<512>().sprintf("character object %s (%s) adjusting next GCW rating calculation time (%d) by (%d) weeks\n", oid.getValueString().c_str(), Unicode::wideToNarrow(o->getAssignedObjectName()).c_str(), p->getNextGcwRatingCalcTime(), adjustment));
 		else
-			result += Unicode::narrowToWide(FormattedString<512>().sprintf("character object %s (%s) adjusting next GCW rating calculation time (%ld) to now\n", oid.getValueString().c_str(), Unicode::wideToNarrow(o->getAssignedObjectName()).c_str(), p->getNextGcwRatingCalcTime()));
+			result += Unicode::narrowToWide(FormattedString<512>().sprintf("character object %s (%s) adjusting next GCW rating calculation time (%d) to now\n", oid.getValueString().c_str(), Unicode::wideToNarrow(o->getAssignedObjectName()).c_str(), p->getNextGcwRatingCalcTime()));
 
 		p->modifyNextGcwRatingCalcTime(adjustment);
 

@@ -27,11 +27,11 @@ bool TaskOrphanedObjectCleanup::process(DB::Session *session)
 			LOG("TaskOrphanedObjectCleanup::process",( "returned false!" ));
 			return false;
 		}
-		LOG("TaskOrphanedObjectCleanup::process",("ROWS = %d", qry.result.getValue() ));
+		LOG("TaskOrphanedObjectCleanup::process",("ROWS = %ld", qry.result.getValue() ));
 		if( qry.result.getValue() == 0 )   // cleanup done
 			break;
 	}
-	LOG("TaskOrphanedObjectCleanup",("TIME = %d", time(0)-t_start ));
+	LOG("TaskOrphanedObjectCleanup",("TIME = %lld", static_cast<long long>(time(0)-t_start) ));
 	return true;
 }
 

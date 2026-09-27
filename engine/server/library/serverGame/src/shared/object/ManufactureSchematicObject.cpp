@@ -511,7 +511,7 @@ ServerIntangibleObjectTemplate::CraftingType ManufactureSchematicObject::getCate
 	}
 	else
 	{
-		sprintf(errBuffer, "its source draft schematic (crc=%lu) not existing", 
+		sprintf(errBuffer, "its source draft schematic (crc=%u) not existing", 
 			getDraftSchematic());
 		schematicOk = false;
 	}
@@ -605,7 +605,7 @@ bool ManufactureSchematicObject::getSlot(int index, Crafting::IngredientSlot & d
 	const DraftSchematicObject * const draft = DraftSchematicObject::getSchematic(getDraftSchematic());
 	if (!draft)
 	{
-		WARNING (true, ("ManufactureSchematicObject [%d] has invalid draft "
+		WARNING (true, ("ManufactureSchematicObject [%s] has invalid draft "
 			"schematic [%u]", getNetworkId().getValueString().c_str(), 
 			getDraftSchematic()));
 		return false;

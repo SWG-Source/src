@@ -27,11 +27,11 @@ bool TaskMarketAttributesCleanup::process(DB::Session *session)
 			LOG("TaskMarketAttributesCleanup::process",( "returned false!" ));
 			return false;
 		}
-		LOG("TaskMarketAttributesCleanup::process",("ROWS = %d", qry.result.getValue() ));
+		LOG("TaskMarketAttributesCleanup::process",("ROWS = %ld", qry.result.getValue() ));
 		if( qry.result.getValue() == 0 )   // cleanup done
 			break;
 	}
-	LOG("TaskMarketAttributesCleanup",("TIME = %d", time(0)-t_start ));
+	LOG("TaskMarketAttributesCleanup",("TIME = %lld", static_cast<long long>(time(0)-t_start) ));
 	return true;
 }
 

@@ -56,7 +56,7 @@ namespace AuctionNamespace
 		bool & applicableSearchCondition)
 	{
 #ifdef _DEBUG
-		DEBUG_FATAL((searchCondition.comparison != AuctionQueryHeadersMessage::SCC_int), ("searchConditionComparisonFnInt() called for attributeNameCrc=(%lu), comparison=(%d) that is not AuctionQueryHeadersMessage::SCC_int", searchCondition.attributeNameCrc, static_cast<int>(searchCondition.comparison)));
+		DEBUG_FATAL((searchCondition.comparison != AuctionQueryHeadersMessage::SCC_int), ("searchConditionComparisonFnInt() called for attributeNameCrc=(%u), comparison=(%d) that is not AuctionQueryHeadersMessage::SCC_int", searchCondition.attributeNameCrc, static_cast<int>(searchCondition.comparison)));
 		DEBUG_REPORT_LOG(ConfigCommodityServer::getShowAllDebugInfo(), ("[Commodities Server QueryAuctionHeadersMessage] searchConditionComparisonFnInt\n"));
 #endif
 		UNREF(searchableAttributeFloat);
@@ -90,7 +90,7 @@ namespace AuctionNamespace
 		bool & applicableSearchCondition)
 	{
 #ifdef _DEBUG
-		DEBUG_FATAL((searchCondition.comparison != AuctionQueryHeadersMessage::SCC_float), ("searchConditionComparisonFnFloat() called for attributeNameCrc=(%lu), comparison=(%d) that is not AuctionQueryHeadersMessage::SCC_float", searchCondition.attributeNameCrc, static_cast<int>(searchCondition.comparison)));
+		DEBUG_FATAL((searchCondition.comparison != AuctionQueryHeadersMessage::SCC_float), ("searchConditionComparisonFnFloat() called for attributeNameCrc=(%u), comparison=(%d) that is not AuctionQueryHeadersMessage::SCC_float", searchCondition.attributeNameCrc, static_cast<int>(searchCondition.comparison)));
 		DEBUG_REPORT_LOG(ConfigCommodityServer::getShowAllDebugInfo(), ("[Commodities Server QueryAuctionHeadersMessage] searchConditionComparisonFnFloat\n"));
 #endif
 		UNREF(searchableAttributeInt);
@@ -124,7 +124,7 @@ namespace AuctionNamespace
 		bool & applicableSearchCondition)
 	{
 #ifdef _DEBUG
-		DEBUG_FATAL((searchCondition.comparison != AuctionQueryHeadersMessage::SCC_string_equal), ("searchConditionComparisonFnStringEqual() called for attributeNameCrc=(%lu), comparison=(%d) that is not AuctionQueryHeadersMessage::SCC_string_equal", searchCondition.attributeNameCrc, static_cast<int>(searchCondition.comparison)));
+		DEBUG_FATAL((searchCondition.comparison != AuctionQueryHeadersMessage::SCC_string_equal), ("searchConditionComparisonFnStringEqual() called for attributeNameCrc=(%u), comparison=(%d) that is not AuctionQueryHeadersMessage::SCC_string_equal", searchCondition.attributeNameCrc, static_cast<int>(searchCondition.comparison)));
 		DEBUG_REPORT_LOG(ConfigCommodityServer::getShowAllDebugInfo(), ("[Commodities Server QueryAuctionHeadersMessage] searchConditionComparisonFnStringEqual\n"));
 #endif
 		UNREF(searchableAttributeInt);
@@ -158,7 +158,7 @@ namespace AuctionNamespace
 		bool & applicableSearchCondition)
 	{
 #ifdef _DEBUG
-		DEBUG_FATAL((searchCondition.comparison != AuctionQueryHeadersMessage::SCC_string_not_equal), ("searchConditionComparisonFnStringNotEqual() called for attributeNameCrc=(%lu), comparison=(%d) that is not AuctionQueryHeadersMessage::SCC_string_not_equal", searchCondition.attributeNameCrc, static_cast<int>(searchCondition.comparison)));
+		DEBUG_FATAL((searchCondition.comparison != AuctionQueryHeadersMessage::SCC_string_not_equal), ("searchConditionComparisonFnStringNotEqual() called for attributeNameCrc=(%u), comparison=(%d) that is not AuctionQueryHeadersMessage::SCC_string_not_equal", searchCondition.attributeNameCrc, static_cast<int>(searchCondition.comparison)));
 		DEBUG_REPORT_LOG(ConfigCommodityServer::getShowAllDebugInfo(), ("[Commodities Server QueryAuctionHeadersMessage] searchConditionComparisonFnStringNotEqual\n"));
 #endif
 		UNREF(searchableAttributeInt);
@@ -192,7 +192,7 @@ namespace AuctionNamespace
 		bool & applicableSearchCondition)
 	{
 #ifdef _DEBUG
-		DEBUG_FATAL((searchCondition.comparison != AuctionQueryHeadersMessage::SCC_string_contain), ("searchConditionComparisonFnStringContain() called for attributeNameCrc=(%lu), comparison=(%d) that is not AuctionQueryHeadersMessage::SCC_string_contain", searchCondition.attributeNameCrc, static_cast<int>(searchCondition.comparison)));
+		DEBUG_FATAL((searchCondition.comparison != AuctionQueryHeadersMessage::SCC_string_contain), ("searchConditionComparisonFnStringContain() called for attributeNameCrc=(%u), comparison=(%d) that is not AuctionQueryHeadersMessage::SCC_string_contain", searchCondition.attributeNameCrc, static_cast<int>(searchCondition.comparison)));
 		DEBUG_REPORT_LOG(ConfigCommodityServer::getShowAllDebugInfo(), ("[Commodities Server QueryAuctionHeadersMessage] searchConditionComparisonFnStringContain\n"));
 #endif
 		UNREF(searchableAttributeInt);
@@ -226,7 +226,7 @@ namespace AuctionNamespace
 		bool & applicableSearchCondition)
 	{
 #ifdef _DEBUG
-		DEBUG_FATAL((searchCondition.comparison != AuctionQueryHeadersMessage::SCC_string_not_contain), ("searchConditionComparisonFnStringNotContain() called for attributeNameCrc=(%lu), comparison=(%d) that is not AuctionQueryHeadersMessage::SCC_string_not_contain", searchCondition.attributeNameCrc, static_cast<int>(searchCondition.comparison)));
+		DEBUG_FATAL((searchCondition.comparison != AuctionQueryHeadersMessage::SCC_string_not_contain), ("searchConditionComparisonFnStringNotContain() called for attributeNameCrc=(%u), comparison=(%d) that is not AuctionQueryHeadersMessage::SCC_string_not_contain", searchCondition.attributeNameCrc, static_cast<int>(searchCondition.comparison)));
 		DEBUG_REPORT_LOG(ConfigCommodityServer::getShowAllDebugInfo(), ("[Commodities Server QueryAuctionHeadersMessage] searchConditionComparisonFnStringNotContain\n"));
 #endif
 		UNREF(searchableAttributeInt);
@@ -588,7 +588,7 @@ void Auction::GetAttributes(std::string & output) const
 				}
 			}
 
-			snprintf(buffer, sizeof(buffer)-1, "(%s, %lu) (%d)", attributeName.c_str(), iter->first, iter->second);
+			snprintf(buffer, sizeof(buffer)-1, "(%s, %u) (%d)", attributeName.c_str(), iter->first, iter->second);
 			buffer[sizeof(buffer)-1] = '\0';
 
 			output += buffer;
@@ -612,7 +612,7 @@ void Auction::GetAttributes(std::string & output) const
 				}
 			}
 
-			snprintf(buffer, sizeof(buffer)-1, "(%s, %lu) (%.10g)", attributeName.c_str(), iter->first, iter->second);
+			snprintf(buffer, sizeof(buffer)-1, "(%s, %u) (%.10g)", attributeName.c_str(), iter->first, iter->second);
 			buffer[sizeof(buffer)-1] = '\0';
 
 			output += buffer;
@@ -636,7 +636,7 @@ void Auction::GetAttributes(std::string & output) const
 				}
 			}
 
-			snprintf(buffer, sizeof(buffer)-1, "(%s, %lu) (%s)", attributeName.c_str(), iter->first, iter->second.c_str());
+			snprintf(buffer, sizeof(buffer)-1, "(%s, %u) (%s)", attributeName.c_str(), iter->first, iter->second.c_str());
 			buffer[sizeof(buffer)-1] = '\0';
 
 			output += buffer;
@@ -1303,7 +1303,7 @@ void Auction::BuildSearchableAttributeList()
 						bufferStr += buffer;
 					}
 
-					LOG("CustomerService", ("CommoditiesAttributeSearch:Item %s (%s) in category %d (%s) has value (%s) (%s) (%d) for attribute (%s) that is not in the attribute enum list",
+					LOG("CustomerService", ("CommoditiesAttributeSearch:Item %s (%s) in category %d (%s) has value (%s) (%s) (%zu) for attribute (%s) that is not in the attribute enum list",
 						m_item->GetItemId().getValueString().c_str(),
 						Unicode::wideToNarrow(m_item->GetName()).c_str(),
 						m_item->GetCategory(),

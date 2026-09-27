@@ -5100,7 +5100,7 @@ bool JavaLibrary::unpackDictionary(const std::vector<int8> & packedData,
 				if (crc != dataCrc)
 				{
 					WARNING(true, ("JavaLibrary::unpackDictionary got packed data with "
-						"bad crc! Expected: %lu, got %lu.", crc, dataCrc));
+						"bad crc! Expected: %u, got %u.", crc, dataCrc));
 					return false;
 				}
 			}

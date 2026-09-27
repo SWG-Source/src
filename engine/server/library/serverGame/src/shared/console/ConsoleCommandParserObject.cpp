@@ -563,7 +563,7 @@ bool ConsoleCommandParserObject::performParsing (const NetworkId & userId, const
 		}
 
 		const char *objectTemplateName = obj->getObjectTemplateName();
-		result += Unicode::narrowToWide(FormattedString<512>().sprintf("object %s (%s) has %d total opened objects\n", obj->getNetworkId().getValueString().c_str(), (objectTemplateName ? objectTemplateName : "nullptr object template"), opened.size()));
+		result += Unicode::narrowToWide(FormattedString<512>().sprintf("object %s (%s) has %zu total opened objects\n", obj->getNetworkId().getValueString().c_str(), (objectTemplateName ? objectTemplateName : "nullptr object template"), opened.size()));
 
 		if(!text.empty())
 		{
@@ -1822,7 +1822,7 @@ bool ConsoleCommandParserObject::performParsing (const NetworkId & userId, const
 		{
 			ServerObject::TriggerVolumeMap const & volumes = o->getTriggerVolumeMap();
 			char radius[1024];
-			sprintf(radius, "%i", volumes.size());
+			sprintf(radius, "%zu", volumes.size());
 			result = Unicode::narrowToWide("Listing ");
 			result += Unicode::narrowToWide(radius);
 			result += Unicode::narrowToWide(" trigger volumes for object ");
@@ -2110,7 +2110,7 @@ bool ConsoleCommandParserObject::performParsing (const NetworkId & userId, const
 	else if (isCommand(argv[0], "count"))
 	{
 		char buf[32] = {"\0"};
-		snprintf(buf, sizeof(buf), "%lu objects allocated\n", ServerObject::getObjectCount());
+		snprintf(buf, sizeof(buf), "%u objects allocated\n", ServerObject::getObjectCount());
 		result += Unicode::narrowToWide(std::string(buf));
 	}
 
@@ -2196,7 +2196,7 @@ bool ConsoleCommandParserObject::performParsing (const NetworkId & userId, const
 			for (ProxyList::const_iterator i = proxyList.begin(); i != proxyList.end(); ++i)
 			{
 				char numbuf[16] = {"\0"};
-				snprintf(numbuf, sizeof(numbuf), "%li", (*i));
+				snprintf(numbuf, sizeof(numbuf), "%u", (*i));
 				result += Unicode::narrowToWide(std::string(numbuf));
 				result += Unicode::narrowToWide(std::string("\n"));
 			}
@@ -2267,7 +2267,7 @@ bool ConsoleCommandParserObject::performParsing2(const NetworkId & userId, const
 
 			const char *objectTemplateName = obj->getObjectTemplateName();
 
-			result += Unicode::narrowToWide(FormattedString<512>().sprintf("object %s (%s) has %d total observers (%d observers on this game server)\n", obj->getNetworkId().getValueString().c_str(), (objectTemplateName ? objectTemplateName : "nullptr object template"), obj->getObserversCount(), observerList.size()));
+			result += Unicode::narrowToWide(FormattedString<512>().sprintf("object %s (%s) has %d total observers (%zu observers on this game server)\n", obj->getNetworkId().getValueString().c_str(), (objectTemplateName ? objectTemplateName : "nullptr object template"), obj->getObserversCount(), observerList.size()));
 
 			if (!observers.empty())
 			{
@@ -2290,7 +2290,7 @@ bool ConsoleCommandParserObject::performParsing2(const NetworkId & userId, const
 		{
 			Client::ObservingList const &observing = obj->getClient()->getObserving();
 			char objbuf[1024] = {"\0"};
-			snprintf(objbuf, sizeof(objbuf), "Observing list (%d items) for %s:\n", observing.size(), oid.getValueString().c_str());
+			snprintf(objbuf, sizeof(objbuf), "Observing list (%zu items) for %s:\n", observing.size(), oid.getValueString().c_str());
 			result += Unicode::narrowToWide(std::string(objbuf));
 			int count = 1;
 			for (Client::ObservingList::const_iterator i = observing.begin(); i != observing.end(); ++i)
@@ -2318,7 +2318,7 @@ bool ConsoleCommandParserObject::performParsing2(const NetworkId & userId, const
 		{
 			Client::ObservingList const &observing = obj->getClient()->getObserving();
 			char objbuf[1024] = {"\0"};
-			snprintf(objbuf, sizeof(objbuf), "Observing list (%d items) for %s:\n", observing.size(), oid.getValueString().c_str());
+			snprintf(objbuf, sizeof(objbuf), "Observing list (%zu items) for %s:\n", observing.size(), oid.getValueString().c_str());
 			result += Unicode::narrowToWide(std::string(objbuf));
 			int count = 1;
 			for (Client::ObservingList::const_iterator i = observing.begin(); i != observing.end(); ++i)
@@ -2354,7 +2354,7 @@ bool ConsoleCommandParserObject::performParsing2(const NetworkId & userId, const
 		{
 			Client::ObservingListPvpSync const &observing = obj->getClient()->getObservingPvpSync();
 			char objbuf[1024] = {"\0"};
-			snprintf(objbuf, sizeof(objbuf), "Observing (pvp sync) list (%d items) for %s:\n", observing.size(), oid.getValueString().c_str());
+			snprintf(objbuf, sizeof(objbuf), "Observing (pvp sync) list (%zu items) for %s:\n", observing.size(), oid.getValueString().c_str());
 			result += Unicode::narrowToWide(std::string(objbuf));
 			int count = 1;
 			for (Client::ObservingListPvpSync::const_iterator i = observing.begin(); i != observing.end(); ++i)
@@ -2382,7 +2382,7 @@ bool ConsoleCommandParserObject::performParsing2(const NetworkId & userId, const
 		{
 			Client::ObservingListPvpSync const &observing = obj->getClient()->getObservingPvpSync();
 			char objbuf[1024] = {"\0"};
-			snprintf(objbuf, sizeof(objbuf), "Observing (pvp sync) list (%d items) for %s:\n", observing.size(), oid.getValueString().c_str());
+			snprintf(objbuf, sizeof(objbuf), "Observing (pvp sync) list (%zu items) for %s:\n", observing.size(), oid.getValueString().c_str());
 			result += Unicode::narrowToWide(std::string(objbuf));
 			int count = 1;
 			for (Client::ObservingListPvpSync::const_iterator i = observing.begin(); i != observing.end(); ++i)
@@ -3116,7 +3116,7 @@ bool ConsoleCommandParserObject::performParsing2(const NetworkId & userId, const
 			if (racialModifiers.size() != professionModifiers.size() ||
 				racialModifiers.size() != static_cast<size_t>(Attributes::NumberOfAttributes))
 			{
-				WARNING(true, ("Invalid racial (%d) or profession (%d) data "
+				WARNING(true, ("Invalid racial (%zu) or profession (%zu) data "
 					"handling resetStats command", racialModifiers.size(),
 					professionModifiers.size()));
 				result += getErrorMessage(argv[0], ERR_FAIL);
@@ -3208,7 +3208,7 @@ bool ConsoleCommandParserObject::performParsing2(const NetworkId & userId, const
 			const GenericValueTypeMessage<TransferCharacterData> loginCharacter("TransferGetLoginLocationData", data);
 			GameServer::getInstance().sendToDatabaseServer(loginCharacter);
 
-			result += Unicode::narrowToWide(FormattedString<512>().sprintf("Request to login character (%s, %s), station id (%lu) sent\n", playerId.getValueString().c_str(), sourceCharacterName.c_str(), stationId));
+			result += Unicode::narrowToWide(FormattedString<512>().sprintf("Request to login character (%s, %s), station id (%u) sent\n", playerId.getValueString().c_str(), sourceCharacterName.c_str(), stationId));
 		}
 	}
 
@@ -3697,7 +3697,7 @@ bool ConsoleCommandParserObject::performParsing2(const NetworkId & userId, const
 		std::vector<CollectionsDataTable::CollectionInfoSlot const *> earnedBadges;
 		IGNORE_RETURN(p->getCompletedCollectionSlotCountInBook("badge_book", &earnedBadges));
 
-		result += Unicode::narrowToWide(FormattedString<512>().sprintf("%d Earned Badges:\n", earnedBadges.size()));
+		result += Unicode::narrowToWide(FormattedString<512>().sprintf("%zu Earned Badges:\n", earnedBadges.size()));
 
 		std::vector<CollectionsDataTable::CollectionInfoSlot const *>::const_iterator iter;
 		for (iter = earnedBadges.begin(); iter != earnedBadges.end(); ++iter)
@@ -3725,7 +3725,7 @@ bool ConsoleCommandParserObject::performParsing2(const NetworkId & userId, const
 		// unearned badges
 		std::vector<CollectionsDataTable::CollectionInfoSlot const *> const & allBadges = CollectionsDataTable::getSlotsInBook("badge_book");
 
-		result += Unicode::narrowToWide(FormattedString<512>().sprintf("\n%d Unearned Badges:\n", (allBadges.size() - earnedBadges.size())));
+		result += Unicode::narrowToWide(FormattedString<512>().sprintf("\n%zu Unearned Badges:\n", (allBadges.size() - earnedBadges.size())));
 
 		for (iter = allBadges.begin(); iter != allBadges.end(); ++iter)
 		{
@@ -3783,7 +3783,7 @@ bool ConsoleCommandParserObject::performParsing2(const NetworkId & userId, const
 		}
 		else
 		{
-			result += Unicode::narrowToWide(FormattedString<512>().sprintf("Displaying passive reveal list (size=%d) for %s\n", passiveReveal.size(), t->getNetworkId().getValueString().c_str()));
+			result += Unicode::narrowToWide(FormattedString<512>().sprintf("Displaying passive reveal list (size=%zu) for %s\n", passiveReveal.size(), t->getNetworkId().getValueString().c_str()));
 
 			for (std::map<NetworkId, int>::const_iterator iter = passiveReveal.begin(); iter != passiveReveal.end(); ++iter)
 			{
@@ -4034,7 +4034,7 @@ bool ConsoleCommandParserObject::performParsing2(const NetworkId & userId, const
 			return true;
 		}
 
-		result += Unicode::narrowToWide(FormattedString<1024>().sprintf("requesting adjustment of (%d) for SWG feature Id (%lu) on character object %s (%s) account (%lu)... please wait for reply.\n", adjustment, featureId, o->getNetworkId().getValueString().c_str(), Unicode::wideToNarrow(o->getAssignedObjectName()).c_str(), p->getStationId()));
+		result += Unicode::narrowToWide(FormattedString<1024>().sprintf("requesting adjustment of (%d) for SWG feature Id (%u) on character object %s (%s) account (%u)... please wait for reply.\n", adjustment, featureId, o->getNetworkId().getValueString().c_str(), Unicode::wideToNarrow(o->getAssignedObjectName()).c_str(), p->getStationId()));
 
 		AdjustAccountFeatureIdRequest const msg(userId, GameServer::getInstance().getProcessId(), o->getNetworkId(), std::string(), p->getStationId(), NetworkId::cms_invalid, std::string(), PlatformGameCode::SWG, featureId, adjustment);
 		client->sendToConnectionServer(msg);
@@ -4075,7 +4075,7 @@ bool ConsoleCommandParserObject::performParsing2(const NetworkId & userId, const
 			return true;
 		}
 
-		result += Unicode::narrowToWide(FormattedString<1024>().sprintf("requesting SWG account feature Id for character object %s (%s) account (%lu)... please wait for reply.\n", o->getNetworkId().getValueString().c_str(), Unicode::wideToNarrow(o->getAssignedObjectName()).c_str(), p->getStationId()));
+		result += Unicode::narrowToWide(FormattedString<1024>().sprintf("requesting SWG account feature Id for character object %s (%s) account (%u)... please wait for reply.\n", o->getNetworkId().getValueString().c_str(), Unicode::wideToNarrow(o->getAssignedObjectName()).c_str(), p->getStationId()));
 
 		AccountFeatureIdRequest const req(userId, GameServer::getInstance().getProcessId(), oid, p->getStationId(), PlatformGameCode::SWG, AccountFeatureIdRequest::RR_ConsoleCommandReloadRequest);
 		client->sendToConnectionServer(req);
@@ -4116,7 +4116,7 @@ bool ConsoleCommandParserObject::performParsing2(const NetworkId & userId, const
 			return true;
 		}
 
-		result += Unicode::narrowToWide(FormattedString<1024>().sprintf("requesting SWG TCG account feature Id for character object %s (%s) account (%lu)... please wait for reply.\n", o->getNetworkId().getValueString().c_str(), Unicode::wideToNarrow(o->getAssignedObjectName()).c_str(), p->getStationId()));
+		result += Unicode::narrowToWide(FormattedString<1024>().sprintf("requesting SWG TCG account feature Id for character object %s (%s) account (%u)... please wait for reply.\n", o->getNetworkId().getValueString().c_str(), Unicode::wideToNarrow(o->getAssignedObjectName()).c_str(), p->getStationId()));
 
 		AccountFeatureIdRequest const req(userId, GameServer::getInstance().getProcessId(), oid, p->getStationId(), PlatformGameCode::SWGTCG, AccountFeatureIdRequest::RR_ConsoleCommandReloadRequest);
 		client->sendToConnectionServer(req);

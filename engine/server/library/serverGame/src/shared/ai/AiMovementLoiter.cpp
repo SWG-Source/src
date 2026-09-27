@@ -307,7 +307,7 @@ AiStateResult AiMovementLoiter::stateMoving(float time)
 	{
 		if (m_goalLocationIndex >= 0)
 		{
-			LOGC(AiLogManager::isLogging(m_controller->getOwner()->getNetworkId()), "debug_ai", ("AiMovementLoiter::stateMoving() owner(%s:%s) waypointCount(%u/%u) I was stuck...removing bad index(%d)...warping to anchor position", m_controller->getOwner()->getNetworkId().getValueString().c_str(), FileNameUtils::get(m_controller->getOwner()->getDebugName(), FileNameUtils::fileName).c_str(), m_cachedAiLocations->size(), s_maxCachedAiLocations, m_goalLocationIndex));
+			LOGC(AiLogManager::isLogging(m_controller->getOwner()->getNetworkId()), "debug_ai", ("AiMovementLoiter::stateMoving() owner(%s:%s) waypointCount(%zu/%u) I was stuck...removing bad index(%d)...warping to anchor position", m_controller->getOwner()->getNetworkId().getValueString().c_str(), FileNameUtils::get(m_controller->getOwner()->getDebugName(), FileNameUtils::fileName).c_str(), m_cachedAiLocations->size(), s_maxCachedAiLocations, m_goalLocationIndex));
 
 			m_controller->warpTo(m_anchor.getCell(), m_anchor.getPosition_p());
 			(*m_cachedAiLocations).erase((*m_cachedAiLocations).begin() + m_goalLocationIndex);
@@ -401,7 +401,7 @@ bool AiMovementLoiter::generateWaypoint()
 	{
 		if (m_anchor.hasChanged())
 		{
-			LOGC(AiLogManager::isLogging(creatureOwner->getNetworkId()), "debug_ai", ("AiMovementLoiter::generateWaypoint(anchorChanged) owner(%s:%s) waypointCount(%u/%u)", creatureOwner->getNetworkId().getValueString().c_str(), FileNameUtils::get(creatureOwner->getDebugName(), FileNameUtils::fileName).c_str(), m_cachedAiLocations->size(), s_maxCachedAiLocations));
+			LOGC(AiLogManager::isLogging(creatureOwner->getNetworkId()), "debug_ai", ("AiMovementLoiter::generateWaypoint(anchorChanged) owner(%s:%s) waypointCount(%zu/%u)", creatureOwner->getNetworkId().getValueString().c_str(), FileNameUtils::get(creatureOwner->getDebugName(), FileNameUtils::fileName).c_str(), m_cachedAiLocations->size(), s_maxCachedAiLocations));
 
 			m_anchor.setChanged(false);
 			m_cachedAiLocations->clear();
@@ -430,7 +430,7 @@ bool AiMovementLoiter::generateWaypoint()
 				{
 					m_cachedAiLocations->push_back(AiLocation(m_controller->getCreatureCell(), floorPosition_p));
 
-					LOGC(AiLogManager::isLogging(creatureOwner->getNetworkId()), "debug_ai", ("AiMovementLoiter::generateWaypoint(floor) owner(%s:%s) waypointCount(%u/%u)", creatureOwner->getNetworkId().getValueString().c_str(), FileNameUtils::get(creatureOwner->getDebugName(), FileNameUtils::fileName).c_str(), m_cachedAiLocations->size(), s_maxCachedAiLocations));
+					LOGC(AiLogManager::isLogging(creatureOwner->getNetworkId()), "debug_ai", ("AiMovementLoiter::generateWaypoint(floor) owner(%s:%s) waypointCount(%zu/%u)", creatureOwner->getNetworkId().getValueString().c_str(), FileNameUtils::get(creatureOwner->getDebugName(), FileNameUtils::fileName).c_str(), m_cachedAiLocations->size(), s_maxCachedAiLocations));
 				}
 			}
 			else
@@ -542,7 +542,7 @@ bool AiMovementLoiter::generateWaypoint()
 						if (!collision)
 						{
 							m_cachedAiLocations->push_back(AiLocation(m_controller->getCreatureCell(), randomPosition_p));
-							LOGC(AiLogManager::isLogging(creatureOwner->getNetworkId()), "debug_ai", ("AiMovementLoiter::generateWaypoint(terrain) owner(%s:%s) waypointCount(%u/%u)", creatureOwner->getNetworkId().getValueString().c_str(), FileNameUtils::get(creatureOwner->getDebugName(), FileNameUtils::fileName).c_str(), m_cachedAiLocations->size(), s_maxCachedAiLocations));
+							LOGC(AiLogManager::isLogging(creatureOwner->getNetworkId()), "debug_ai", ("AiMovementLoiter::generateWaypoint(terrain) owner(%s:%s) waypointCount(%zu/%u)", creatureOwner->getNetworkId().getValueString().c_str(), FileNameUtils::get(creatureOwner->getDebugName(), FileNameUtils::fileName).c_str(), m_cachedAiLocations->size(), s_maxCachedAiLocations));
 						}
 					}
 				}

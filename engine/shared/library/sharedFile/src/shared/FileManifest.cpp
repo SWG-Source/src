@@ -125,7 +125,7 @@ void FileManifest::install()
 				delimeter = strstr(currentPos, "\t");
 				if (!delimeter)
 				{
-					DEBUG_WARNING(true, ("FileManifest::install(): Couldn't find a tab at position %i in file manfiest table, stopped iterating on elements!\n", currentPos - fileBuffer));
+					DEBUG_WARNING(true, ("FileManifest::install(): Couldn't find a tab at position %td in file manfiest table, stopped iterating on elements!\n", currentPos - fileBuffer));
 					break;
 				}
 				int numCharacters = delimeter - currentPos;
@@ -137,7 +137,7 @@ void FileManifest::install()
 				delimeter = strstr(currentPos, "\t");
 				if (!delimeter)
 				{
-					DEBUG_WARNING(true, ("FileManifest::install(): Couldn't find a tab at position %i in file manfiest table, stopped iterating on elements!\n", currentPos - fileBuffer));
+					DEBUG_WARNING(true, ("FileManifest::install(): Couldn't find a tab at position %td in file manfiest table, stopped iterating on elements!\n", currentPos - fileBuffer));
 					break;
 				}
 
@@ -150,7 +150,7 @@ void FileManifest::install()
 				delimeter = strstr(currentPos, "\n");
 				if (!delimeter)
 				{
-					DEBUG_WARNING(true, ("FileManifest::install(): Couldn't find a newline at position %i in file manfiest table, stopped iterating on elements!\n", currentPos - fileBuffer));
+					DEBUG_WARNING(true, ("FileManifest::install(): Couldn't find a newline at position %td in file manfiest table, stopped iterating on elements!\n", currentPos - fileBuffer));
 					break;
 				}
 				numCharacters = delimeter - currentPos;

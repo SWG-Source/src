@@ -252,7 +252,7 @@ bool ConsoleCommandParserSkill::performParsing (const NetworkId & userId, const 
 		else
 		{
 			char buf[1024];
-			sprintf (buf, "skill list object %s, num %d\n", creature->getNetworkId ().getValueString ().c_str (), creature->getSkillList ().size ());
+			sprintf (buf, "skill list object %s, num %zu\n", creature->getNetworkId ().getValueString ().c_str (), creature->getSkillList ().size ());
 			result += Unicode::narrowToWide (buf);
 			for (CreatureObject::SkillList::const_iterator i = creature->getSkillList ().begin (); i != creature->getSkillList ().end (); ++i)
 			{
@@ -281,7 +281,7 @@ bool ConsoleCommandParserSkill::performParsing (const NetworkId & userId, const 
 		else
 		{
 			char buf[1024];
-			sprintf (buf, "command list object %s, num %d\n", creature->getNetworkId ().getValueString ().c_str (), creature->getCommandList ().size ());
+			sprintf (buf, "command list object %s, num %zu\n", creature->getNetworkId ().getValueString ().c_str (), creature->getCommandList ().size ());
 			result += Unicode::narrowToWide (buf);
 			std::map<std::string, int>::const_iterator i;
 			for (i = creature->getCommandList ().begin (); i != creature->getCommandList ().end (); ++i)

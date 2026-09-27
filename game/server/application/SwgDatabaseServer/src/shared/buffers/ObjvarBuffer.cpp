@@ -111,7 +111,7 @@ ObjvarBuffer::load(DB::Session *session, const DB::TagSet &tags, const std::stri
 // ----------------------------------------------------------------------
 
 bool ObjvarBuffer::save(DB::Session *session) {
-    LOG("SaveCounts", ("Objvars:  %i saved to db", m_data.size()));
+    LOG("SaveCounts", ("Objvars:  %zu saved to db", m_data.size()));
 
     {
         DBQuery::AddObjectVariableQuery addQuery;
@@ -321,7 +321,7 @@ ObjvarBuffer::updateObjvars(const NetworkId &objectId, const std::vector <Dynami
     }
 
     DEBUG_WARNING(commands.size() >
-                  100, ("Object %s has a suspicious number of objvar updates (%i updates).", objectId.getValueString().c_str(), commands.size()));
+                  100, ("Object %s has a suspicious number of objvar updates (%zu updates).", objectId.getValueString().c_str(), commands.size()));
 }
 
 // ----------------------------------------------------------------------

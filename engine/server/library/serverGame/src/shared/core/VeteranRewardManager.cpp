@@ -1438,7 +1438,7 @@ void VeteranRewardManager::announceMonthlyBonusBoosterPack(CreatureObject const 
 	client->sendToConnectionServer(msg);
 
 	// display announcement
-	LOG("CustomerService",("VeteranRewards: displaying announcement for monthly free 5 pack of boosters for %s (account feature Id %lu, %d -> 0)", PlayerObject::getAccountDescription(&playerCreature).c_str(), static_cast<uint32>(ConfigServerGame::getAccountFeatureIdForMonthlyBoosterPack()), iterFind->second));
+	LOG("CustomerService",("VeteranRewards: displaying announcement for monthly free 5 pack of boosters for %s (account feature Id %u, %d -> 0)", PlayerObject::getAccountDescription(&playerCreature).c_str(), static_cast<uint32>(ConfigServerGame::getAccountFeatureIdForMonthlyBoosterPack()), iterFind->second));
 	Chat::sendSystemMessage(playerCreature, StringId("veteran_new", "tcg_available_monthly_bonus_booster_pack"), Unicode::emptyString);
 }
 
@@ -1470,7 +1470,7 @@ void VeteranRewardManager::announceSwgTcgBeta(CreatureObject const & playerCreat
 	client->sendToConnectionServer(msg);
 
 	// display and send mail announcement
-	LOG("CustomerService",("VeteranRewards: displaying TCG beta announcement for %s (account feature Id %lu, %d -> 0)", PlayerObject::getAccountDescription(&playerCreature).c_str(), static_cast<uint32>(ConfigServerGame::getAccountFeatureIdForTcgBetaAnnouncement()), iterFind->second));
+	LOG("CustomerService",("VeteranRewards: displaying TCG beta announcement for %s (account feature Id %u, %d -> 0)", PlayerObject::getAccountDescription(&playerCreature).c_str(), static_cast<uint32>(ConfigServerGame::getAccountFeatureIdForTcgBetaAnnouncement()), iterFind->second));
 	Chat::sendSystemMessage(playerCreature, StringId("veteran_new", "tcg_beta_announcement"), Unicode::emptyString);
 
 	Unicode::String const mailSubject = Unicode::narrowToWide("@" + StringId("veteran_new", "tcg_beta_announcement_subject").getCanonicalRepresentation());
@@ -1668,7 +1668,7 @@ bool RewardItem::grantToPlayer(CreatureObject & playerCreature, uint32 accountFe
 			{
 				if (accountFeatureId > 0)
 				{
-					LOG("CustomerService",("VeteranRewards:  %s tried to claim item %s, but it could not be created (account feature Id %lu, %d -> %d)", PlayerObject::getAccountDescription(&playerCreature).c_str(), getId().c_str(), accountFeatureId, previousAccountFeatureIdCount, currentAccountFeatureIdCount));
+					LOG("CustomerService",("VeteranRewards:  %s tried to claim item %s, but it could not be created (account feature Id %u, %d -> %d)", PlayerObject::getAccountDescription(&playerCreature).c_str(), getId().c_str(), accountFeatureId, previousAccountFeatureIdCount, currentAccountFeatureIdCount));
 				}
 				else
 				{
@@ -1688,7 +1688,7 @@ bool RewardItem::grantToPlayer(CreatureObject & playerCreature, uint32 accountFe
 			{
 				if (accountFeatureId > 0)
 				{
-					LOG("CustomerService",("VeteranRewards:  Granted item %s (%s) to player %s (account feature Id %lu, %d -> %d)", newObject.getValueString().c_str(), getId().c_str(), PlayerObject::getAccountDescription(&playerCreature).c_str(), accountFeatureId, previousAccountFeatureIdCount, currentAccountFeatureIdCount));
+					LOG("CustomerService",("VeteranRewards:  Granted item %s (%s) to player %s (account feature Id %u, %d -> %d)", newObject.getValueString().c_str(), getId().c_str(), PlayerObject::getAccountDescription(&playerCreature).c_str(), accountFeatureId, previousAccountFeatureIdCount, currentAccountFeatureIdCount));
 				}
 				else
 				{

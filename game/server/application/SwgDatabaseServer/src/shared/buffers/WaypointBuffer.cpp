@@ -107,7 +107,7 @@ bool WaypointBuffer::load(DB::Session *session,const DB::TagSet &tags, const std
 
 bool WaypointBuffer::save(DB::Session *session)
 {
-	LOG("SaveCounts",("Waypoint:  %i saved to db",m_data.size()));
+	LOG("SaveCounts",("Waypoint:  %zu saved to db",m_data.size()));
 	
 	DBQuery::WaypointQuery qry;
 	

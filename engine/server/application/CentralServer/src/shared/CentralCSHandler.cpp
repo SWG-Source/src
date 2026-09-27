@@ -78,7 +78,7 @@ void CentralCSHandler::handleStructureListResponse( StructureListMessage& msg )
 	for( unsigned i = 0; i < data.size(); ++i )
 	{
 		StructureListMessageData &row = data[ i ];
-		snprintf(buf,512,"structure-%u:(%s)%s %s(%.02f %.02f %.02f)%ld\r\n", i,
+		snprintf(buf,512,"structure-%u:(%s)%s %s(%.02f %.02f %.02f)%d\r\n", i,
 							       row.m_structureId.getValueString().c_str(),
 							       row.m_objectTemplate.c_str(),
 							       row.m_location.c_str(),

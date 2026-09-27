@@ -313,7 +313,7 @@ void AlterSchedulerNamespace::validateObject(Object const *object)
 		}
 		catch (...)
 		{ //lint !e1775 // catch block does not declare any exception // that's right: I want to catch it all.
-			WARNING(true, ("validateObject(): Object-derived class with address [%x] failed to return valid C++ type info; likely a deleted Object.", reinterpret_cast<uint64_t const>(object)));
+			WARNING(true, ("validateObject(): Object-derived class with address [%p] failed to return valid C++ type info; likely a deleted Object.", static_cast<void const *>(object)));
 			isInvalid = true;
 		}
 	}

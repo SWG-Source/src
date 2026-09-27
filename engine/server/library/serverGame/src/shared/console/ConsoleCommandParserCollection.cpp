@@ -170,7 +170,7 @@ bool ConsoleCommandParserCollection::performParsing (const NetworkId & userId, c
 			uint32_t currentValue;
 			IGNORE_RETURN(p->getCollectionSlotValue(*slot, currentValue));
 
-			result += Unicode::narrowToWide(FormattedString<512>().sprintf("modifying collection slot %s/%s/%s/%s value of %lu by %s for character object %s (%s)\n", slot->collection.page.book.name.c_str(), slot->collection.page.name.c_str(), slot->collection.name.c_str(), Unicode::wideToNarrow(argv[2]).c_str(), currentValue, adjustment.getValueString().c_str(), oid.getValueString().c_str(), Unicode::wideToNarrow(o->getAssignedObjectName()).c_str()));
+			result += Unicode::narrowToWide(FormattedString<512>().sprintf("modifying collection slot %s/%s/%s/%s value of %u by %s for character object %s (%s)\n", slot->collection.page.book.name.c_str(), slot->collection.page.name.c_str(), slot->collection.name.c_str(), Unicode::wideToNarrow(argv[2]).c_str(), currentValue, adjustment.getValueString().c_str(), oid.getValueString().c_str(), Unicode::wideToNarrow(o->getAssignedObjectName()).c_str()));
 			p->modifyCollectionSlotValue(Unicode::wideToNarrow(argv[2]), adjustment.getValue());
 		}
 
@@ -245,7 +245,7 @@ bool ConsoleCommandParserCollection::performParsing (const NetworkId & userId, c
 					// quickie way to convert to an int64
 					NetworkId const adjustment(static_cast<int64>((*iter)->maxSlotValue) - static_cast<int64>(currentValue));
 
-					result += Unicode::narrowToWide(FormattedString<512>().sprintf("modifying collection slot %s/%s/%s/%s value of %lu by %s\n", (*iter)->collection.page.book.name.c_str(), (*iter)->collection.page.name.c_str(), (*iter)->collection.name.c_str(), (*iter)->name.c_str(), currentValue, adjustment.getValueString().c_str()));
+					result += Unicode::narrowToWide(FormattedString<512>().sprintf("modifying collection slot %s/%s/%s/%s value of %u by %s\n", (*iter)->collection.page.book.name.c_str(), (*iter)->collection.page.name.c_str(), (*iter)->collection.name.c_str(), (*iter)->name.c_str(), currentValue, adjustment.getValueString().c_str()));
 					p->modifyCollectionSlotValue((*iter)->name, adjustment.getValue());
 				}
 			}
@@ -322,7 +322,7 @@ bool ConsoleCommandParserCollection::performParsing (const NetworkId & userId, c
 					// quickie way to convert to an int64
 					NetworkId const adjustment(static_cast<int64>((*iter)->maxSlotValue) - static_cast<int64>(currentValue));
 
-					result += Unicode::narrowToWide(FormattedString<512>().sprintf("modifying collection slot %s/%s/%s/%s value of %lu by %s\n", (*iter)->collection.page.book.name.c_str(), (*iter)->collection.page.name.c_str(), (*iter)->collection.name.c_str(), (*iter)->name.c_str(), currentValue, adjustment.getValueString().c_str()));
+					result += Unicode::narrowToWide(FormattedString<512>().sprintf("modifying collection slot %s/%s/%s/%s value of %u by %s\n", (*iter)->collection.page.book.name.c_str(), (*iter)->collection.page.name.c_str(), (*iter)->collection.name.c_str(), (*iter)->name.c_str(), currentValue, adjustment.getValueString().c_str()));
 					p->modifyCollectionSlotValue((*iter)->name, adjustment.getValue());
 				}
 			}
@@ -399,7 +399,7 @@ bool ConsoleCommandParserCollection::performParsing (const NetworkId & userId, c
 					// quickie way to convert to an int64
 					NetworkId const adjustment(static_cast<int64>((*iter)->maxSlotValue) - static_cast<int64>(currentValue));
 
-					result += Unicode::narrowToWide(FormattedString<512>().sprintf("modifying collection slot %s/%s/%s/%s value of %lu by %s\n", (*iter)->collection.page.book.name.c_str(), (*iter)->collection.page.name.c_str(), (*iter)->collection.name.c_str(), (*iter)->name.c_str(), currentValue, adjustment.getValueString().c_str()));
+					result += Unicode::narrowToWide(FormattedString<512>().sprintf("modifying collection slot %s/%s/%s/%s value of %u by %s\n", (*iter)->collection.page.book.name.c_str(), (*iter)->collection.page.name.c_str(), (*iter)->collection.name.c_str(), (*iter)->name.c_str(), currentValue, adjustment.getValueString().c_str()));
 					p->modifyCollectionSlotValue((*iter)->name, adjustment.getValue());
 				}
 			}
@@ -462,7 +462,7 @@ bool ConsoleCommandParserCollection::performParsing (const NetworkId & userId, c
 					// quickie way to convert to an int64
 					NetworkId const adjustment(-(static_cast<int64>(currentValue)));
 
-					result += Unicode::narrowToWide(FormattedString<512>().sprintf("modifying collection slot %s/%s/%s/%s value of %lu by %s\n", (*iter)->collection.page.book.name.c_str(), (*iter)->collection.page.name.c_str(), (*iter)->collection.name.c_str(), (*iter)->name.c_str(), currentValue, adjustment.getValueString().c_str()));
+					result += Unicode::narrowToWide(FormattedString<512>().sprintf("modifying collection slot %s/%s/%s/%s value of %u by %s\n", (*iter)->collection.page.book.name.c_str(), (*iter)->collection.page.name.c_str(), (*iter)->collection.name.c_str(), (*iter)->name.c_str(), currentValue, adjustment.getValueString().c_str()));
 					p->modifyCollectionSlotValue((*iter)->name, adjustment.getValue());
 				}
 			}
@@ -525,7 +525,7 @@ bool ConsoleCommandParserCollection::performParsing (const NetworkId & userId, c
 					// quickie way to convert to an int64
 					NetworkId const adjustment(-(static_cast<int64>(currentValue)));
 
-					result += Unicode::narrowToWide(FormattedString<512>().sprintf("modifying collection slot %s/%s/%s/%s value of %lu by %s\n", (*iter)->collection.page.book.name.c_str(), (*iter)->collection.page.name.c_str(), (*iter)->collection.name.c_str(), (*iter)->name.c_str(), currentValue, adjustment.getValueString().c_str()));
+					result += Unicode::narrowToWide(FormattedString<512>().sprintf("modifying collection slot %s/%s/%s/%s value of %u by %s\n", (*iter)->collection.page.book.name.c_str(), (*iter)->collection.page.name.c_str(), (*iter)->collection.name.c_str(), (*iter)->name.c_str(), currentValue, adjustment.getValueString().c_str()));
 					p->modifyCollectionSlotValue((*iter)->name, adjustment.getValue());
 				}
 			}
@@ -588,7 +588,7 @@ bool ConsoleCommandParserCollection::performParsing (const NetworkId & userId, c
 					// quickie way to convert to an int64
 					NetworkId const adjustment(-(static_cast<int64>(currentValue)));
 
-					result += Unicode::narrowToWide(FormattedString<512>().sprintf("modifying collection slot %s/%s/%s/%s value of %lu by %s\n", (*iter)->collection.page.book.name.c_str(), (*iter)->collection.page.name.c_str(), (*iter)->collection.name.c_str(), (*iter)->name.c_str(), currentValue, adjustment.getValueString().c_str()));
+					result += Unicode::narrowToWide(FormattedString<512>().sprintf("modifying collection slot %s/%s/%s/%s value of %u by %s\n", (*iter)->collection.page.book.name.c_str(), (*iter)->collection.page.name.c_str(), (*iter)->collection.name.c_str(), (*iter)->name.c_str(), currentValue, adjustment.getValueString().c_str()));
 					p->modifyCollectionSlotValue((*iter)->name, adjustment.getValue());
 				}
 			}
@@ -657,9 +657,9 @@ bool ConsoleCommandParserCollection::performParsing (const NetworkId & userId, c
 								continue;
 
 							if ((*iterSlot)->maxSlotValue == 0)
-								slotInfo += FormattedString<512>().sprintf("            %s (%lu)\n", (*iterSlot)->name.c_str(), value);
+								slotInfo += FormattedString<512>().sprintf("            %s (%u)\n", (*iterSlot)->name.c_str(), value);
 							else
-								slotInfo += FormattedString<512>().sprintf("            %s (%lu/%lu)\n", (*iterSlot)->name.c_str(), value, (*iterSlot)->maxSlotValue);
+								slotInfo += FormattedString<512>().sprintf("            %s (%u/%lu)\n", (*iterSlot)->name.c_str(), value, (*iterSlot)->maxSlotValue);
 						}
 					}
 

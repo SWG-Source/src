@@ -641,7 +641,7 @@ void PlayerObject::virtualOnSetAuthority()
 				if (m_draftSchematic.getPointer() == nullptr)
 				{
 					WARNING(true, ("PlayerObject::virtualOnSetAuthority object "
-						"%s is flagged as crafting, but has bad manf schematic %lu",
+						"%s is flagged as crafting, but has bad manf schematic %u",
 						getNetworkId().getValueString().c_str(),
 						manfSchematic->getDraftSchematic()));
 				}
@@ -860,7 +860,7 @@ int PlayerObject::grantExperiencePoints(const std::string & experienceType, int 
 		{
 			// log the grant
 			uint32_t time = ServerClock::getInstance().getGameTimeSeconds();
-			LOG("GameBalance", ("balancelog:%d:XP;%lu;%s;%s;%d;%d;%d;%d",
+			LOG("GameBalance", ("balancelog:%d:XP;%u;%s;%s;%d;%d;%d;%d",
 				static_cast<int>(GameServer::getInstance().getProcessId()), time,
 				owner->getNetworkId().getValueString().c_str(), experienceType.c_str(),
 				amount, current, total, (m_expModified.get()+1)));
@@ -945,7 +945,7 @@ bool PlayerObject::grantSchematic(uint32 schematicCrc, bool fromSkill)
 				{
 					// save schematic as objvar
 					char buffer[256];
-					sprintf(buffer, "%s.%lu", OBJVAR_NOT_SKILL_SCHEMATICS.c_str(),
+					sprintf(buffer, "%s.%u", OBJVAR_NOT_SKILL_SCHEMATICS.c_str(),
 						schematicCrc);
 					owner->setObjVarItem(buffer, 1);
 				}
@@ -1001,7 +1001,7 @@ bool PlayerObject::revokeSchematic(uint32 schematicCrc, bool fromSkill)
 				{
 					// remove schematic from objvars
 					char buffer[256];
-					sprintf(buffer, "%s.%lu", OBJVAR_NOT_SKILL_SCHEMATICS.c_str(),
+					sprintf(buffer, "%s.%u", OBJVAR_NOT_SKILL_SCHEMATICS.c_str(),
 						schematicCrc);
 					owner->removeObjVarItem(buffer);
 				}
@@ -3337,7 +3337,7 @@ void PlayerObject::setFriendList(const StringVector &friendList)
 			std::sort(friendListLowercaseSorted.begin(), friendListLowercaseSorted.end());
 		}
 
-		LOG("ChatFriendIgnoreList", ("Friend=%d, %s", friendListLowercaseSorted.size(), getAccountDescription().c_str()));
+		LOG("ChatFriendIgnoreList", ("Friend=%zu, %s", friendListLowercaseSorted.size(), getAccountDescription().c_str()));
 		m_friendList.set(friendListLowercaseSorted);
 	}
 }
@@ -3399,7 +3399,7 @@ void PlayerObject::setIgnoreList(const StringVector &ignoreList)
 			std::sort(ignoreListLowercaseSorted.begin(), ignoreListLowercaseSorted.end());
 		}
 
-		LOG("ChatFriendIgnoreList", ("Ignore=%d, %s", ignoreListLowercaseSorted.size(), getAccountDescription().c_str()));
+		LOG("ChatFriendIgnoreList", ("Ignore=%zu, %s", ignoreListLowercaseSorted.size(), getAccountDescription().c_str()));
 		m_ignoreList.set(ignoreListLowercaseSorted);
 	}
 }
@@ -3713,7 +3713,7 @@ bool PlayerObject::adjustLotCount(int adjustment)
 		if (adjustment > 0 &&
 			(m_accountNumLots.get() + adjustment) > (ConfigServerGame::getMaxLotsPerAccount() + m_accountMaxLotsAdjustment.get()))
 		{
-			DEBUG_REPORT_LOG(true,("Account %lu is not allowed to use any more lots.  (Already has %i, limit is %i, tried to use %i more.)\n",
+			DEBUG_REPORT_LOG(true,("Account %u is not allowed to use any more lots.  (Already has %i, limit is %i, tried to use %i more.)\n",
 								   m_stationId.get(), m_accountNumLots.get(), ConfigServerGame::getMaxLotsPerAccount() + m_accountMaxLotsAdjustment.get(), adjustment));
 			return false;
 		}
@@ -4746,7 +4746,7 @@ std::string PlayerObject::getAccountDescription() const
 	desc += owner->getNetworkId().getValueString();
 	desc += ") StationId(";
 	char stationIdBuf[32] = {"\0"};
-	snprintf(stationIdBuf, sizeof(stationIdBuf), "%lu", m_stationId.get());
+	snprintf(stationIdBuf, sizeof(stationIdBuf), "%u", m_stationId.get());
 	stationIdBuf[sizeof(stationIdBuf) - 1] = 0;
 	desc += stationIdBuf;
 	if (isGod)
@@ -5564,7 +5564,7 @@ void PlayerObject::questCheckQuestLimits()
 			possibleQuestsToDelete.pop_front();
 			--numberToDelete;
 
-			LOG("CustomerService",("Removed quest %lu from player %s because there were too many quests in the journal", playerQuestDataKey, NON_NULL(getCreatureObject())->getNetworkId().getValueString().c_str()));
+			LOG("CustomerService",("Removed quest %u from player %s because there were too many quests in the journal", playerQuestDataKey, NON_NULL(getCreatureObject())->getNetworkId().getValueString().c_str()));
 		}
 	}
 }
@@ -5770,7 +5770,7 @@ PlayerObject::QuestResult PlayerObject::questActivateQuestTask(uint32 const ques
 		return canActivateResult;
 
 	PlayerQuestDataMap::const_iterator questData=m_quests.find(questCrc);
-	DEBUG_FATAL(questData==m_quests.end(),("Programmer bug:  questCanActivateQuestTask(%lu, %i) returned success, but the quest was not in m_quests", questCrc, taskId));
+	DEBUG_FATAL(questData==m_quests.end(),("Programmer bug:  questCanActivateQuestTask(%u, %i) returned success, but the quest was not in m_quests", questCrc, taskId));
 
 	PlayerQuestData newQuestData(questData->second); // unfortunately have to copy the quest data, because AutoDeltaPackedMap does not have non-const iterators
 	newQuestData.activateTask(taskId);
@@ -6702,7 +6702,7 @@ void PlayerObject::modifyCurrentGcwPoints(int const count, bool modifyLifetimeVa
 				char buffer[256];
 				sprintf(buffer, INT64_FORMAT_SPECIFIER, m_lifetimeGcwPoints.get());
 
-				LOG("CustomerService", ("PvP_Ranking:%s|adjust point=%d|current=%ld|new=%ld|lifetime=%s",
+				LOG("CustomerService", ("PvP_Ranking:%s|adjust point=%d|current=%d|new=%d|lifetime=%s",
 					getAccountDescription().c_str(),
 					count,
 					temp,
@@ -6715,7 +6715,7 @@ void PlayerObject::modifyCurrentGcwPoints(int const count, bool modifyLifetimeVa
 			// non-factional characters is always at 0
 			if (m_currentGcwPoints.get() != 0)
 			{
-				LOG("CustomerService", ("PvP_Ranking:%s|adjust point=%d|setting current points (%ld) to 0 because not factional",
+				LOG("CustomerService", ("PvP_Ranking:%s|adjust point=%d|setting current points (%d) to 0 because not factional",
 					getAccountDescription().c_str(),
 					count,
 					m_currentGcwPoints.get()));
@@ -6788,7 +6788,7 @@ void PlayerObject::modifyCurrentGcwRating(int const count, bool modifyMaxValue)
 					}
 				}
 
-				LOG("CustomerService", ("PvP_Ranking:%s|adjust rating=%d|current=%ld|new=%ld|max imp=%ld|max reb=%ld",
+				LOG("CustomerService", ("PvP_Ranking:%s|adjust rating=%d|current=%d|new=%d|max imp=%d|max reb=%d",
 					getAccountDescription().c_str(),
 					count,
 					temp,
@@ -6816,7 +6816,7 @@ void PlayerObject::modifyCurrentGcwRating(int const count, bool modifyMaxValue)
 			// non-factional characters is always at -1
 			if (m_currentGcwRating.get() != -1)
 			{
-				LOG("CustomerService", ("PvP_Ranking:%s|adjust rating=%d|setting current rating (%ld) to -1 because not factional",
+				LOG("CustomerService", ("PvP_Ranking:%s|adjust rating=%d|setting current rating (%d) to -1 because not factional",
 					getAccountDescription().c_str(),
 					count,
 					m_currentGcwRating.get()));
@@ -6885,7 +6885,7 @@ void PlayerObject::modifyCurrentPvpKills(int const count, bool modifyLifetimeVal
 
 			if (adjustedCount != 0)
 			{
-				LOG("CustomerService", ("PvP_Ranking:%s|adjust pvp kill=%d|current=%ld|new=%ld|lifetime=%ld",
+				LOG("CustomerService", ("PvP_Ranking:%s|adjust pvp kill=%d|current=%d|new=%d|lifetime=%d",
 					getAccountDescription().c_str(),
 					count,
 					temp,
@@ -6898,7 +6898,7 @@ void PlayerObject::modifyCurrentPvpKills(int const count, bool modifyLifetimeVal
 			// non-factional characters is always at 0
 			if (m_currentPvpKills.get() != 0)
 			{
-				LOG("CustomerService", ("PvP_Ranking:%s|adjust pvp kill=%d|setting current pvp kill (%ld) to 0 because not factional",
+				LOG("CustomerService", ("PvP_Ranking:%s|adjust pvp kill=%d|setting current pvp kill (%d) to 0 because not factional",
 					getAccountDescription().c_str(),
 					count,
 					m_currentPvpKills.get()));
@@ -7144,7 +7144,7 @@ void PlayerObject::ctsUseOnlySetGcwInfo(int32 currentGcwPoints, int32 currentGcw
 	sprintf(buffer1, INT64_FORMAT_SPECIFIER, oldLifetimeGcwPoints);
 	sprintf(buffer2, INT64_FORMAT_SPECIFIER, m_lifetimeGcwPoints.get());
 
-	LOG("CustomerService", ("PvP_Ranking:%s|applying info from CTS|point:%ld -> %ld|rating:%ld -> %ld|pvp kill:%ld -> %ld|lifetime point:%s -> %s|max imp rating:%ld -> %ld|max reb rating:%ld -> %ld|lifetime pvp kill:%ld -> %ld|calc time:%ld -> %ld",
+	LOG("CustomerService", ("PvP_Ranking:%s|applying info from CTS|point:%d -> %d|rating:%d -> %d|pvp kill:%d -> %d|lifetime point:%s -> %s|max imp rating:%d -> %d|max reb rating:%d -> %d|lifetime pvp kill:%d -> %d|calc time:%d -> %d",
 		getAccountDescription().c_str(),
 		oldCurrentGcwPoints, m_currentGcwPoints.get(),
 		oldCurrentGcwRating, m_currentGcwRating.get(),
@@ -7253,7 +7253,7 @@ void PlayerObject::handleRecalculateGcwRating()
 				if ((totalRatingAdjustment < 0) && (Pvp::isInGcwRankDecayExclusionInterval(static_cast<uint32_t>(nextCalcInterval))))
 				{
 					// CS log
-					LOG("CustomerService", ("PvP_Ranking:%s|NOT APPLYING RATING LOSS|interval %ld (%s) (%s)|current rating=%ld|points=%ld|total earned rating=%ld|total earned rating after decay=%ld|capped rating adjustment=%ld|final rating adjustment=%ld",
+					LOG("CustomerService", ("PvP_Ranking:%s|NOT APPLYING RATING LOSS|interval %d (%s) (%s)|current rating=%d|points=%d|total earned rating=%d|total earned rating after decay=%d|capped rating adjustment=%d|final rating adjustment=%d",
 						getAccountDescription().c_str(),
 						nextCalcInterval,
 						CalendarTime::convertEpochToTimeStringGMT(static_cast<uint32_t>(nextCalcInterval)).c_str(),
@@ -7276,7 +7276,7 @@ void PlayerObject::handleRecalculateGcwRating()
 					currentRating = std::min(currentRating, static_cast<int32>(Pvp::getMaxRatingForRank()));
 
 					// CS log
-					LOG("CustomerService", ("PvP_Ranking:%s|interval %ld (%s) (%s)|current rating=%ld|new rating=%ld|points=%ld|total earned rating=%ld|total earned rating after decay=%ld|capped rating adjustment=%ld|final rating adjustment=%ld",
+					LOG("CustomerService", ("PvP_Ranking:%s|interval %d (%s) (%s)|current rating=%d|new rating=%d|points=%d|total earned rating=%d|total earned rating after decay=%d|capped rating adjustment=%d|final rating adjustment=%d",
 						getAccountDescription().c_str(),
 						nextCalcInterval,
 						CalendarTime::convertEpochToTimeStringGMT(static_cast<uint32_t>(nextCalcInterval)).c_str(),
@@ -7621,7 +7621,7 @@ bool PlayerObject::modifyCollectionSlotValue(std::string const & slotName, int64
 				b.setValue(slotInfo->beginSlotId, slotInfo->endSlotId, static_cast<uint32_t>(newSlotValue));
 				collections->set(b);
 
-				LOG("CustomerService", ("Collection:%s modified collection %d-%d (%s/%s/%s/%s) from %lu to %lu",
+				LOG("CustomerService", ("Collection:%s modified collection %d-%d (%s/%s/%s/%s) from %u to %u",
 					getAccountDescription().c_str(),
 					slotInfo->absoluteBeginSlotId,
 					slotInfo->absoluteEndSlotId,

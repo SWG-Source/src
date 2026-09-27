@@ -52,7 +52,7 @@ ServerObject * ServerWorld::createObjectFromTemplate(uint32 templateCrc, const N
 
 	if (!objectTemplate) {
 		DEBUG_WARNING(!objectTemplate, ("Missing Template!  Can't create object from "
-			"template crc %lu(%s), file not found", templateCrc, 
+			"template crc %u(%s), file not found", templateCrc, 
 			ObjectTemplateList::lookUp(templateCrc).getString()));
 		return 0;
 	}
@@ -80,7 +80,7 @@ ServerObject * ServerWorld::createObjectFromTemplate(uint32 templateCrc, const N
 					objectTemplate->releaseReference();
 					return serverObject;
 				}
-				WARNING(true, ("tried to create non-server object %lu(%s)", templateCrc,
+				WARNING(true, ("tried to create non-server object %u(%s)", templateCrc,
 					ObjectTemplateList::lookUp(templateCrc).getString()));
 				delete object;
 			}
@@ -88,7 +88,7 @@ ServerObject * ServerWorld::createObjectFromTemplate(uint32 templateCrc, const N
 		}
 		else
 		{
-			WARNING_STRICT_FATAL(true, ("ServerWorld::createObjectFromTemplate() Unable to create the ServerObject because there is no corresponding SharedObjectTemplate for the ServerObjectTemplate(%lu:%s)", templateCrc, ObjectTemplateList::lookUp(templateCrc).getString()));
+			WARNING_STRICT_FATAL(true, ("ServerWorld::createObjectFromTemplate() Unable to create the ServerObject because there is no corresponding SharedObjectTemplate for the ServerObjectTemplate(%u:%s)", templateCrc, ObjectTemplateList::lookUp(templateCrc).getString()));
 		}
 	}
 

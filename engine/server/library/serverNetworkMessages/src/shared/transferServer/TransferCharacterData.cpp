@@ -397,7 +397,7 @@ std::string TransferCharacterData::toString() const
 	result += getObjectTemplateName();
 
 	result += " objectTemplateCrc=";
-	snprintf(buf, sizeof(buf) - 1, "%lu", getObjectTemplateCrc());
+	snprintf(buf, sizeof(buf) - 1, "%u", getObjectTemplateCrc());
 	result += buf;
 
 	result += " scaleFactor=";
@@ -407,12 +407,12 @@ std::string TransferCharacterData::toString() const
 
 	result += " customizationData.length=";
 	memset(buf, 0, sizeof(buf));
-	snprintf(buf, sizeof(buf) - 1, "%d", getCustomizationData().length());
+	snprintf(buf, sizeof(buf) - 1, "%zu", getCustomizationData().length());
 	result += buf;
 
 	result += " scriptDictionaryData.length=";
 	memset(buf, 0, sizeof(buf));
-	snprintf(buf, sizeof(buf) - 1, "%d", getScriptDictionaryData().size()); 
+	snprintf(buf, sizeof(buf) - 1, "%zu", getScriptDictionaryData().size()); 
 	result += buf;
 
 	result += " hairObjectTemplateName=";
@@ -420,7 +420,7 @@ std::string TransferCharacterData::toString() const
 
 	result += " hairAppearanceData.length=";
 	memset(buf, 0, sizeof(buf));
-	snprintf(buf, sizeof(buf) -1, "%d", getHairAppearanceData().length());
+	snprintf(buf, sizeof(buf) -1, "%zu", getHairAppearanceData().length());
 	result += buf;
 
 	result += " profession=";

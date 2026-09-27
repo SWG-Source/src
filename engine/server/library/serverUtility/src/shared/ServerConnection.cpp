@@ -285,7 +285,7 @@ void ServerConnection::send(const GameNetworkMessage & message, const bool relia
 
 void ServerConnection::onConnectionStalled(const unsigned long stallTimeMs)
 {
-	LOG("Network", ("Connection to %s, pid %d stalled with %d bytes pending for %d milliseconds", getRemoteAddress().c_str(), getOsProcessId(), getPendingBytes(), stallTimeMs));
+	LOG("Network", ("Connection to %s, pid %d stalled with %d bytes pending for %lu milliseconds", getRemoteAddress().c_str(), getOsProcessId(), getPendingBytes(), stallTimeMs));
 }
 
 // ----------------------------------------------------------------------

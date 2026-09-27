@@ -2312,31 +2312,31 @@ void AuctionMarket::QueryAuctionHeaders(
 
 				if (iter->comparison == AuctionQueryHeadersMessage::SCC_int)
 				{
-					snprintf(buffer, sizeof(buffer)-1, "AdvancedSearch = (%s, %lu) SCC_int (%d, %d) required (%s)", attributeName.c_str(), iter->attributeNameCrc, iter->intMin, iter->intMax, (iter->requiredAttribute ? "yes" : "no"));
+					snprintf(buffer, sizeof(buffer)-1, "AdvancedSearch = (%s, %u) SCC_int (%d, %d) required (%s)", attributeName.c_str(), iter->attributeNameCrc, iter->intMin, iter->intMax, (iter->requiredAttribute ? "yes" : "no"));
 				}
 				else if (iter->comparison == AuctionQueryHeadersMessage::SCC_float)
 				{
-					snprintf(buffer, sizeof(buffer)-1, "AdvancedSearch = (%s, %lu) SCC_float (%.2f, %.2f) required (%s)", attributeName.c_str(), iter->attributeNameCrc, iter->floatMin, iter->floatMax, (iter->requiredAttribute ? "yes" : "no"));
+					snprintf(buffer, sizeof(buffer)-1, "AdvancedSearch = (%s, %u) SCC_float (%.2f, %.2f) required (%s)", attributeName.c_str(), iter->attributeNameCrc, iter->floatMin, iter->floatMax, (iter->requiredAttribute ? "yes" : "no"));
 				}
 				else if (iter->comparison == AuctionQueryHeadersMessage::SCC_string_equal)
 				{
-					snprintf(buffer, sizeof(buffer)-1, "AdvancedSearch = (%s, %lu) SCC_string_equal (%s) required (%s)", attributeName.c_str(), iter->attributeNameCrc, iter->stringValue.c_str(), (iter->requiredAttribute ? "yes" : "no"));
+					snprintf(buffer, sizeof(buffer)-1, "AdvancedSearch = (%s, %u) SCC_string_equal (%s) required (%s)", attributeName.c_str(), iter->attributeNameCrc, iter->stringValue.c_str(), (iter->requiredAttribute ? "yes" : "no"));
 				}
 				else if (iter->comparison == AuctionQueryHeadersMessage::SCC_string_not_equal)
 				{
-					snprintf(buffer, sizeof(buffer)-1, "AdvancedSearch = (%s, %lu) SCC_string_not_equal (%s) required (%s)", attributeName.c_str(), iter->attributeNameCrc, iter->stringValue.c_str(), (iter->requiredAttribute ? "yes" : "no"));
+					snprintf(buffer, sizeof(buffer)-1, "AdvancedSearch = (%s, %u) SCC_string_not_equal (%s) required (%s)", attributeName.c_str(), iter->attributeNameCrc, iter->stringValue.c_str(), (iter->requiredAttribute ? "yes" : "no"));
 				}
 				else if (iter->comparison == AuctionQueryHeadersMessage::SCC_string_contain)
 				{
-					snprintf(buffer, sizeof(buffer)-1, "AdvancedSearch = (%s, %lu) SCC_string_contain (%s) required (%s)", attributeName.c_str(), iter->attributeNameCrc, iter->stringValue.c_str(), (iter->requiredAttribute ? "yes" : "no"));
+					snprintf(buffer, sizeof(buffer)-1, "AdvancedSearch = (%s, %u) SCC_string_contain (%s) required (%s)", attributeName.c_str(), iter->attributeNameCrc, iter->stringValue.c_str(), (iter->requiredAttribute ? "yes" : "no"));
 				}
 				else if (iter->comparison == AuctionQueryHeadersMessage::SCC_string_not_contain)
 				{
-					snprintf(buffer, sizeof(buffer)-1, "AdvancedSearch = (%s, %lu) SCC_string_not_contain (%s) required (%s)", attributeName.c_str(), iter->attributeNameCrc, iter->stringValue.c_str(), (iter->requiredAttribute ? "yes" : "no"));
+					snprintf(buffer, sizeof(buffer)-1, "AdvancedSearch = (%s, %u) SCC_string_not_contain (%s) required (%s)", attributeName.c_str(), iter->attributeNameCrc, iter->stringValue.c_str(), (iter->requiredAttribute ? "yes" : "no"));
 				}
 				else
 				{
-					snprintf(buffer, sizeof(buffer)-1, "AdvancedSearch = (%s, %lu) UNKNOWN COMPARISON (%d) (%d, %d) (%.2f, %.2f) (%s) required (%s)", attributeName.c_str(), iter->attributeNameCrc, static_cast<int>(iter->comparison), iter->intMin, iter->intMax, iter->floatMin, iter->floatMax, iter->stringValue.c_str(), (iter->requiredAttribute ? "yes" : "no"));
+					snprintf(buffer, sizeof(buffer)-1, "AdvancedSearch = (%s, %u) UNKNOWN COMPARISON (%d) (%d, %d) (%.2f, %.2f) (%s) required (%s)", attributeName.c_str(), iter->attributeNameCrc, static_cast<int>(iter->comparison), iter->intMin, iter->intMax, iter->floatMin, iter->floatMax, iter->stringValue.c_str(), (iter->requiredAttribute ? "yes" : "no"));
 				}
 
 				buffer[sizeof(buffer)-1] = '\0';
@@ -2818,7 +2818,7 @@ void AuctionMarket::QueryAuctionHeaders(
 	{
 		char buffer[4096];
 
-		snprintf(buffer, sizeof(buffer)-1, "(%d / %d / %d) locations tested, (%d / %d) auctions tested", debugNumberLocationsMatched, debugNumberLocationsTested, m_locationIdMap.size(), debugNumberAuctionsTested, m_auctions.size());
+		snprintf(buffer, sizeof(buffer)-1, "(%d / %d / %zu) locations tested, (%d / %zu) auctions tested", debugNumberLocationsMatched, debugNumberLocationsTested, m_locationIdMap.size(), debugNumberAuctionsTested, m_auctions.size());
 		buffer[sizeof(buffer)-1] = '\0';
 		debugOutput += buffer;
 		debugOutput += "\r\n";
@@ -3921,7 +3921,7 @@ void AuctionMarket::OnQueryAuctionHeaders(
 			DEBUG_REPORT_LOG(m_showAllDebugInfo, ("[Commodities Server OnQueryAuctionHeadersMessage] : HasMorePages : %d.\n", message.HasMorePages()));
 			DEBUG_REPORT_LOG(m_showAllDebugInfo, ("[Commodities Server OnQueryAuctionHeadersMessage] : ResponseId : %d.\n", message.GetResponseId()));
 			DEBUG_REPORT_LOG(m_showAllDebugInfo, ("[Commodities Server OnQueryAuctionHeadersMessage] : TrackId : %d.\n", message.GetTrackId()));
-			DEBUG_REPORT_LOG(m_showAllDebugInfo, ("[Commodities Server OnQueryAuctionHeadersMessage] : Auctions : %d.\n", message.GetAuctionData().size()));
+			DEBUG_REPORT_LOG(m_showAllDebugInfo, ("[Commodities Server OnQueryAuctionHeadersMessage] : Auctions : %zu.\n", message.GetAuctionData().size()));
 			gameServerConn->send(message, true);
 		}
 	else
@@ -4629,7 +4629,7 @@ void AuctionMarket::getItemAttributeData(int requestingGameServerId, const Netwo
 			if (gameServerConn)
 			{
 				char buffer[2048];
-				snprintf(buffer, sizeof(buffer)-1, "%s request modified.  outputFileName=(%s), gameObjectType=(%d, %s), exactGameObjectTypeMatch=(%s), ignoreSearchableAttribute=(%s), throttle=(%d), numberItemsProcessed=(%d), totalNumberOfItems=(%d).",
+				snprintf(buffer, sizeof(buffer)-1, "%s request modified.  outputFileName=(%s), gameObjectType=(%d, %s), exactGameObjectTypeMatch=(%s), ignoreSearchableAttribute=(%s), throttle=(%d), numberItemsProcessed=(%d), totalNumberOfItems=(%zu).",
 					getItemAttributeDataRequest->action.c_str(),
 					getItemAttributeDataRequest->outputFileName.c_str(),
 					getItemAttributeDataRequest->gameObjectType,
@@ -4667,7 +4667,7 @@ void AuctionMarket::getItemAttributeData(int requestingGameServerId, const Netwo
 		if (gameServerConn)
 		{
 			char buffer[2048];
-			snprintf(buffer, sizeof(buffer)-1, "%s request accepted.  outputFileName=(%s), gameObjectType=(%d, %s), exactGameObjectTypeMatch=(%s), ignoreSearchableAttribute=(%s), throttle=(%d), totalNumberOfItems=(%d).",
+			snprintf(buffer, sizeof(buffer)-1, "%s request accepted.  outputFileName=(%s), gameObjectType=(%d, %s), exactGameObjectTypeMatch=(%s), ignoreSearchableAttribute=(%s), throttle=(%d), totalNumberOfItems=(%zu).",
 				getItemAttributeDataRequest->action.c_str(),
 				getItemAttributeDataRequest->outputFileName.c_str(),
 				getItemAttributeDataRequest->gameObjectType,
@@ -4724,7 +4724,7 @@ void AuctionMarket::getItemAttributeDataValues(int requestingGameServerId, const
 			if (gameServerConn)
 			{
 				char buffer[2048];
-				snprintf(buffer, sizeof(buffer)-1, "%s request modified.  game object type=(%d, %s), exactGameObjectTypeMatch=(%s), attribute name=(%s), throttle=(%d), numberItemsProcessed=(%d), totalNumberOfItems=(%d).",
+				snprintf(buffer, sizeof(buffer)-1, "%s request modified.  game object type=(%d, %s), exactGameObjectTypeMatch=(%s), attribute name=(%s), throttle=(%d), numberItemsProcessed=(%d), totalNumberOfItems=(%zu).",
 					getItemAttributeDataRequest->action.c_str(),
 					getItemAttributeDataRequest->gameObjectType,
 					GameObjectTypes::getCanonicalName(getItemAttributeDataRequest->gameObjectType).c_str(),
@@ -4760,7 +4760,7 @@ void AuctionMarket::getItemAttributeDataValues(int requestingGameServerId, const
 		if (gameServerConn)
 		{
 			char buffer[2048];
-			snprintf(buffer, sizeof(buffer)-1, "%s request accepted.  game object type=(%d, %s), exactGameObjectTypeMatch=(%s), attribute name=(%s), throttle=(%d), totalNumberOfItems=(%d).",
+			snprintf(buffer, sizeof(buffer)-1, "%s request accepted.  game object type=(%d, %s), exactGameObjectTypeMatch=(%s), attribute name=(%s), throttle=(%d), totalNumberOfItems=(%zu).",
 				getItemAttributeDataRequest->action.c_str(),
 				getItemAttributeDataRequest->gameObjectType,
 				GameObjectTypes::getCanonicalName(getItemAttributeDataRequest->gameObjectType).c_str(),

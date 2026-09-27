@@ -10644,7 +10644,7 @@ void CreatureObject::handleCMessageTo(MessageToPayload const &message)
 			{
 				if (msg.getResultCode() == RESULT_SUCCESS)
 				{
-					ConsoleMgr::broadcastString(FormattedString<1024>().sprintf("request for feature Id for account (%lu) was successful", msg.getTargetStationId()),
+					ConsoleMgr::broadcastString(FormattedString<1024>().sprintf("request for feature Id for account (%u) was successful", msg.getTargetStationId()),
 						getClient());
 
 					if (msg.getGameCode() == PlatformGameCode::SWG)
@@ -10657,12 +10657,12 @@ void CreatureObject::handleCMessageTo(MessageToPayload const &message)
 					{
 						std::map<uint32, std::string> const & sessionFeatureIdsData = msg.getSessionFeatureIdsData();
 
-						ConsoleMgr::broadcastString(FormattedString<1024>().sprintf("session/Platform reported successful result code (%u, %s:%s), (%d) feature Ids for account (%lu)", msg.getResultCode(), msg.getSessionResultString().c_str(), msg.getSessionResultText().c_str(), sessionFeatureIdsData.size(), msg.getTargetStationId()),
+						ConsoleMgr::broadcastString(FormattedString<1024>().sprintf("session/Platform reported successful result code (%u, %s:%s), (%zu) feature Ids for account (%u)", msg.getResultCode(), msg.getSessionResultString().c_str(), msg.getSessionResultText().c_str(), sessionFeatureIdsData.size(), msg.getTargetStationId()),
 							getClient());
 
 						for (std::map<uint32, std::string>::const_iterator iter = sessionFeatureIdsData.begin(); iter != sessionFeatureIdsData.end(); ++iter)
 						{
-							ConsoleMgr::broadcastString(FormattedString<1024>().sprintf("%lu (%s)", iter->first, iter->second.c_str()),
+							ConsoleMgr::broadcastString(FormattedString<1024>().sprintf("%u (%s)", iter->first, iter->second.c_str()),
 								getClient());
 						}
 					}
@@ -10670,12 +10670,12 @@ void CreatureObject::handleCMessageTo(MessageToPayload const &message)
 					{
 						std::map<uint32, int> const & featureIds = msg.getFeatureIds();
 
-						ConsoleMgr::broadcastString(FormattedString<1024>().sprintf("(%d) feature Ids for account (%lu)", featureIds.size(), msg.getTargetStationId()),
+						ConsoleMgr::broadcastString(FormattedString<1024>().sprintf("(%zu) feature Ids for account (%u)", featureIds.size(), msg.getTargetStationId()),
 							getClient());
 
 						for (std::map<uint32, int>::const_iterator iter = featureIds.begin(); iter != featureIds.end(); ++iter)
 						{
-							ConsoleMgr::broadcastString(FormattedString<1024>().sprintf("%lu (%d)", iter->first, iter->second),
+							ConsoleMgr::broadcastString(FormattedString<1024>().sprintf("%u (%d)", iter->first, iter->second),
 								getClient());
 						}
 					}
@@ -10683,9 +10683,9 @@ void CreatureObject::handleCMessageTo(MessageToPayload const &message)
 				else
 				{
 					if (msg.getResultCameFromSession())
-						ConsoleMgr::broadcastString(FormattedString<1024>().sprintf("request for feature Id for account (%lu) failed with error code (%u, %s:%s)", msg.getTargetStationId(), msg.getResultCode(), msg.getSessionResultString().c_str(), msg.getSessionResultText().c_str()), getClient());
+						ConsoleMgr::broadcastString(FormattedString<1024>().sprintf("request for feature Id for account (%u) failed with error code (%u, %s:%s)", msg.getTargetStationId(), msg.getResultCode(), msg.getSessionResultString().c_str(), msg.getSessionResultText().c_str()), getClient());
 					else
-						ConsoleMgr::broadcastString(FormattedString<1024>().sprintf("request for feature Id for account (%lu) failed with error code (%u)", msg.getTargetStationId(), msg.getResultCode()), getClient());
+						ConsoleMgr::broadcastString(FormattedString<1024>().sprintf("request for feature Id for account (%u) failed with error code (%u)", msg.getTargetStationId(), msg.getResultCode()), getClient());
 				}
 			}
 
@@ -12085,7 +12085,7 @@ std::vector<unsigned char> CreatureObject::uploadCharacterData(const bool withIt
 			{
 				result.push_back(tmp[static_cast<size_t>(i)]);
 			}
-			LOG("CustomerService", ("CharacterTransfer: CreatureObject::uploadCharacterData() yields a buffer %d bytes long", result.size()));
+			LOG("CustomerService", ("CharacterTransfer: CreatureObject::uploadCharacterData() yields a buffer %zu bytes long", result.size()));
 		}
 	}
 	return result;
@@ -12588,7 +12588,7 @@ void CreatureObject::unequipAllItems()
 	if (!equipmentContainer)
 	{
 		WARNING(true,
-			("unequipAllItems() called on object id=[%s], template=[%s] on server id=[%d]: failed to get equipment slotted container, error code=[%d].",
+			("unequipAllItems() called on object id=[%s], template=[%s] on server id=[%d]: failed to get equipment slotted container.",
 			getNetworkId().getValueString().c_str(),
 			getObjectTemplateName(),
 			static_cast<int>(GameServer::getInstance().getProcessId())
@@ -15539,7 +15539,7 @@ void CreatureObject::saveDecorationLayout(ServerObject const & pobSourceObject, 
 	if ((debugNumItems > 0) && getClient()->isGod())
 	{
 		const uint32_t debugEndTimeMs = Clock::timeMs();
-		Chat::sendSystemMessage(*this, Unicode::narrowToWide(FormattedString<256>().sprintf("!!!GOD MODE STATISTICS!!! %d items saved in %lums", debugNumItems, (debugEndTimeMs - debugStartTimeMs))), Unicode::emptyString);
+		Chat::sendSystemMessage(*this, Unicode::narrowToWide(FormattedString<256>().sprintf("!!!GOD MODE STATISTICS!!! %d items saved in %ums", debugNumItems, (debugEndTimeMs - debugStartTimeMs))), Unicode::emptyString);
 	}
 }
 
@@ -15884,7 +15884,7 @@ void CreatureObject::restoreDecorationLayout(ServerObject const & pobTargetObjec
 	if ((debugNumItems > 0) && getClient()->isGod())
 	{
 		const uint32_t debugEndTimeMs = Clock::timeMs();
-		Chat::sendSystemMessage(*this, Unicode::narrowToWide(FormattedString<256>().sprintf("!!!GOD MODE STATISTICS!!! %d items read (%d will be moved) in %lums", debugNumItems, numItemsToBeMoved, (debugEndTimeMs - debugStartTimeMs))), Unicode::emptyString);
+		Chat::sendSystemMessage(*this, Unicode::narrowToWide(FormattedString<256>().sprintf("!!!GOD MODE STATISTICS!!! %d items read (%d will be moved) in %ums", debugNumItems, numItemsToBeMoved, (debugEndTimeMs - debugStartTimeMs))), Unicode::emptyString);
 	}
 }
 

@@ -138,8 +138,8 @@ namespace Archive
 		        permissionString = permissionString.insert(0, Prefix::CITY);
                 break;
 			default:
-                WARNING_STRICT_FATAL(true, ("CellPermissions::Archive::put() got a source value without a prefix or with a prefix we don't know (%s)."
-                                            "This is VERY game breaking. Please notify Development ASAP.", source.m_originalPermissionFormat));
+                WARNING_STRICT_FATAL(true, ("CellPermissions::Archive::put() got a source value without a prefix or with a prefix we don't know (%d)."
+                                            "This is VERY game breaking. Please notify Development ASAP.", static_cast<int>(source.m_originalPermissionFormat)));
 				break;
 		}
 		put(target, permissionString);

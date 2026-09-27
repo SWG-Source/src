@@ -352,7 +352,7 @@ bool ConsoleCommandParserObjvar::performParsing (const NetworkId & userId, const
 			{
 				DynamicVariableList const & objVarList = specifiedServerObject->getObjVars();
 				FormattedString<1024> fs;
-				result += Unicode::narrowToWide(fs.sprintf("objvar list for object %s, num %d\n", specifiedServerObject->getNetworkId().getValueString().c_str(), objVarList.size()));
+				result += Unicode::narrowToWide(fs.sprintf("objvar list for object %s, num %zu\n", specifiedServerObject->getNetworkId().getValueString().c_str(), objVarList.size()));
 				listObjvars(DynamicVariableList::NestedList(objVarList), result, 0, false);
 				result += getErrorMessage(argv[0], ERR_SUCCESS);
 

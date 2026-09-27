@@ -179,11 +179,11 @@ void CustomerServiceInterface::parseIssueChild(CategoryList & categoryList, xmlN
 
 		if (strcmp(tagName, "category") == 0)
 		{
-			LOG("CSServer", ("parseIssueChild() Skipping invalid category(%s) id(%d)", categoryName.c_str(), categoryId));
+			LOG("CSServer", ("parseIssueChild() Skipping invalid category(%s) id(%d)", Unicode::wideToUTF8(categoryName).c_str(), categoryId));
 		}
 		else if (strcmp(tagName, "subCategory") == 0)
 		{
-			LOG("CSServer", ("parseIssueChild() Skipping invalid sub-category(%s) id(%d)", categoryName.c_str(), categoryId));
+			LOG("CSServer", ("parseIssueChild() Skipping invalid sub-category(%s) id(%d)", Unicode::wideToUTF8(categoryName).c_str(), categoryId));
 		}
 	}
 
@@ -266,7 +266,7 @@ void CustomerServiceInterface::OnGetIssueHierarchy(
 	}
 	else
 	{
-		LOG("CSServer", ("ERROR: nullptr hierarchy returned from platform...why did this happen?", track, modifyData, result, getErrorString(result)));
+		LOG("CSServer", ("ERROR: nullptr hierarchy returned from platform...why did this happen? track(%i) modifyData(%u) result(%i:%s)", track, modifyData, result, getErrorString(result)));
 	}
 }
 
@@ -614,7 +614,7 @@ void CustomerServiceInterface::OnUnRegisterCharacter(const CSAssistGameAPITrack 
 
 void CustomerServiceInterface::addPlayer(NetworkId const &networkId, ConnectionServerConnection *connection, const unsigned int suid)
 {
-	LOG("CSServer", ("addPlayer() networkId(%s) suid(%i)", networkId.getValueString().c_str(), suid));
+	LOG("CSServer", ("addPlayer() networkId(%s) suid(%u)", networkId.getValueString().c_str(), suid));
 
 	ClientConnectionMap::iterator iterClientConnectionMap = m_clientConnectionMap->find(networkId);
 
@@ -776,7 +776,7 @@ void CustomerServiceInterface::requestUnRegisterCharacter(const NetworkId &reque
 
 	if (getSuid(requester, suid))
 	{
-		LOG("CSServer", ("requestUnRegisterCharacter() networkId(%s) suid(%i)", requester.getValueString().c_str(), suid));
+		LOG("CSServer", ("requestUnRegisterCharacter() networkId(%s) suid(%u)", requester.getValueString().c_str(), suid));
 
 		NetworkId *tmpNetworkId = new NetworkId(requester);
 		CSAssistGameAPI::requestUnRegisterCharacter(reinterpret_cast<const void *>(tmpNetworkId), suid, nullptr);

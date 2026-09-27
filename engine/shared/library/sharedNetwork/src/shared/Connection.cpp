@@ -570,7 +570,7 @@ void Connection::install()
 
 void Connection::onConnectionOverflowing(unsigned int totalBytes)
 {
-	WARNING(true, ("Connection with %s is overflowing. There are %lu bytes pending! The overflow limit is set to %d", m_remoteAddress.c_str(), totalBytes, m_overflowLimit));
+	WARNING(true, ("Connection with %s is overflowing. There are %u bytes pending! The overflow limit is set to %d", m_remoteAddress.c_str(), totalBytes, m_overflowLimit));
 	setDisconnectReason("Connection::onConnectionOverflowing called");
 	disconnect();
 }
@@ -965,7 +965,7 @@ void Connection::sendSharedPacket(const LogicalPacket * packet, const bool relia
 
 void Connection::onConnectionStalled(const unsigned long stallTimeMs)
 {
-	LOG("Network", ("Connection stalled with %d bytes pending for %d milliseconds", udpConnection->TotalPendingBytes(), stallTimeMs));
+	LOG("Network", ("Connection stalled with %d bytes pending for %lu milliseconds", udpConnection->TotalPendingBytes(), stallTimeMs));
 }
 
 //-----------------------------------------------------------------------
@@ -1161,7 +1161,7 @@ void Connection::reportDeferredMessages() const
 	if (   !m_deferredMessages.empty()
 	    && (m_deferredMessages.size() % ConfigSharedNetwork::getLogConnectionDeferredMessagesWarningInterval()) == 0)
 	{
-		LOG("Connection", ("deferred message count(%i) %s(%d) [%s:%d %s]",
+		LOG("Connection", ("deferred message count(%zu) %s(%d) [%s:%d %s]",
 		m_deferredMessages.size(),
 		Os::getProgramName(),
 		static_cast<int>(Os::getProcessId()),

@@ -1189,7 +1189,7 @@ static void commandFuncAdminListGuilds(Command const &, NetworkId const &actor, 
 				buf[511] = '\0';
 				ConsoleMgr::broadcastString(buf, client);
 			}
-			snprintf(buf, 511, "%d guilds total.", guildIds.size());
+			snprintf(buf, 511, "%zu guilds total.", guildIds.size());
 			ConsoleMgr::broadcastString(buf, client);
 		}
 	}
@@ -5027,7 +5027,7 @@ static void commandFuncGuildPickRandomGuildMember(Command const &, NetworkId con
 		}
 		else
 		{
-			Chat::sendSystemMessage(*targetObj, Unicode::narrowToWide(FormattedString<1024>().sprintf("Guild member \"%s\" was randomly chosen out of %d guild members in guild %s [%s].", gmi->m_name.c_str(), results.size(), GuildInterface::getGuildName(targetObj->getGuildId()).c_str(), GuildInterface::getGuildAbbrev(targetObj->getGuildId()).c_str())), Unicode::emptyString);
+			Chat::sendSystemMessage(*targetObj, Unicode::narrowToWide(FormattedString<1024>().sprintf("Guild member \"%s\" was randomly chosen out of %zu guild members in guild %s [%s].", gmi->m_name.c_str(), results.size(), GuildInterface::getGuildName(targetObj->getGuildId()).c_str(), GuildInterface::getGuildAbbrev(targetObj->getGuildId()).c_str())), Unicode::emptyString);
 
 			// reminder of the -online option
 			if (!onlineOption && (randomMember != targetObj->getNetworkId()) && (ServerUniverse::getConnectedCharacterLfgData().count(randomMember) <= 0))
@@ -5234,7 +5234,7 @@ static void commandFuncCityPickRandomCitizen(Command const &, NetworkId const &a
 		}
 		else
 		{
-			Chat::sendSystemMessage(*targetObj, Unicode::narrowToWide(FormattedString<1024>().sprintf("Citizen \"%s\" was randomly chosen out of %d citizens in city %s.", ci->m_citizenName.c_str(), results.size(), CityInterface::getCityInfo(cityIds[0]).getCityName().c_str())), Unicode::emptyString);
+			Chat::sendSystemMessage(*targetObj, Unicode::narrowToWide(FormattedString<1024>().sprintf("Citizen \"%s\" was randomly chosen out of %zu citizens in city %s.", ci->m_citizenName.c_str(), results.size(), CityInterface::getCityInfo(cityIds[0]).getCityName().c_str())), Unicode::emptyString);
 
 			// reminder of the -online option
 			if (!onlineOption && (randomMember != targetObj->getNetworkId()) && (ServerUniverse::getConnectedCharacterLfgData().count(randomMember) <= 0))
@@ -6942,7 +6942,7 @@ static void commandFuncGetAccountInfo(Command const &, NetworkId const &actor, N
 						if (!accountFeatureIdsString.empty())
 							accountFeatureIdsString += ", ";
 
-						accountFeatureIdsString += FormattedString<1024>().sprintf("%lu:%d", iterAccountFeatureIds->first, iterAccountFeatureIds->second);
+						accountFeatureIdsString += FormattedString<1024>().sprintf("%u:%d", iterAccountFeatureIds->first, iterAccountFeatureIds->second);
 
 						if (VeteranRewardManager::isFeatureIdBlockedBySubscriptionBit(*player, iterAccountFeatureIds->first))
 							accountFeatureIdsString += "*";
@@ -7960,7 +7960,7 @@ static void commandFuncExchangeListCredits(Command const &, NetworkId const &act
 		return;
 
 	char message[512];
-	sprintf(message, "Listing %ld credits on station exchange.", credits);
+	sprintf(message, "Listing %u credits on station exchange.", credits);
 	Chat::sendSystemMessage(*actorCreature, Unicode::narrowToWide(message), Unicode::emptyString);
 
 	ExchangeListCreditsMessage const msg(actor, credits, GameServer::getInstance().getProcessId());
@@ -8601,7 +8601,7 @@ static void commandFuncDeputizeWarden(Command const &, NetworkId const &actor, N
 
 			// send a messageTo to the target to complete the deputize process
 			char buffer[1024];
-			snprintf(buffer, sizeof(buffer) - 1, "%s|%lu", gm->getNetworkId().getValueString().c_str(), gmPlayerObject->getStationId());
+			snprintf(buffer, sizeof(buffer) - 1, "%s|%u", gm->getNetworkId().getValueString().c_str(), gmPlayerObject->getStationId());
 			buffer[sizeof(buffer) - 1] = '\0';
 
 			MessageToQueue::getInstance().sendMessageToC(parsedNetworkId,
@@ -8670,7 +8670,7 @@ static void commandFuncUndeputizeWarden(Command const &, NetworkId const &actor,
 
 			// send a messageTo to the target to complete the undeputize process
 			char buffer[1024];
-			snprintf(buffer, sizeof(buffer) - 1, "%s|%lu", gm->getNetworkId().getValueString().c_str(), gmPlayerObject->getStationId());
+			snprintf(buffer, sizeof(buffer) - 1, "%s|%u", gm->getNetworkId().getValueString().c_str(), gmPlayerObject->getStationId());
 			buffer[sizeof(buffer) - 1] = '\0';
 
 			MessageToQueue::getInstance().sendMessageToC(parsedNetworkId,
@@ -9633,7 +9633,7 @@ static void commandFuncRoomPickRandomPlayer(Command const &, NetworkId const &ac
 	else
 	{
 		int const random = ::rand() % validPlayers.size();
-		Chat::sendSystemMessage(*targetObj, Unicode::narrowToWide(FormattedString<1024>().sprintf("Player \"%s\" was randomly chosen out of %d players in this room.", Unicode::wideToNarrow(validPlayers[random]->getAssignedObjectName()).c_str(), validPlayers.size())), Unicode::emptyString);
+		Chat::sendSystemMessage(*targetObj, Unicode::narrowToWide(FormattedString<1024>().sprintf("Player \"%s\" was randomly chosen out of %zu players in this room.", Unicode::wideToNarrow(validPlayers[random]->getAssignedObjectName()).c_str(), validPlayers.size())), Unicode::emptyString);
 
 		// do emote at the selected player, if requested
 		if (socialType > 0)

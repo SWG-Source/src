@@ -360,20 +360,20 @@ void DataLint::report()
 		{
 			fprintf(fp, "This file contains a categorized listing of the linted assets in the game. The categories are as follows:\n");
 			fprintf(fp, "\n");
-			fprintf(fp, "1.  Appearances                (%5d)\n", getList(AT_appearance).size());
-			fprintf(fp, "2.  Arrangement Descriptors    (%5d)\n", getList(AT_arrangementDescriptor).size());
-			fprintf(fp, "3.  Localized String Tables    (%5d)\n", getList(AT_localizedStringTable).size());
-			fprintf(fp, "4.  Object Templates           (%5d)\n", getList(AT_objectTemplate).size());
-			fprintf(fp, "5.  Portal Properties          (%5d)\n", getList(AT_portalProperty).size());
-			fprintf(fp, "6.  Shader Templates           (%5d)\n", getList(AT_shaderTemplate).size());
-			fprintf(fp, "7.  SkyBoxes                   (%5d)\n", getList(AT_skyBox).size());
-			fprintf(fp, "8.  Slot Descriptors           (%5d)\n", getList(AT_slotDescriptor).size());
-			fprintf(fp, "9.  Sound Templates            (%5d)\n", getList(AT_soundTemplate).size());
-			fprintf(fp, "10. Terrain                    (%5d)\n", getList(AT_terrain).size());
-			fprintf(fp, "11. Textures                   (%5d)\n", getList(AT_texture).size());
-			fprintf(fp, "12. Texture Renderer Templates (%5d)\n", getList(AT_textureRendererTemplate).size());
+			fprintf(fp, "1.  Appearances                (%5zu)\n", getList(AT_appearance).size());
+			fprintf(fp, "2.  Arrangement Descriptors    (%5zu)\n", getList(AT_arrangementDescriptor).size());
+			fprintf(fp, "3.  Localized String Tables    (%5zu)\n", getList(AT_localizedStringTable).size());
+			fprintf(fp, "4.  Object Templates           (%5zu)\n", getList(AT_objectTemplate).size());
+			fprintf(fp, "5.  Portal Properties          (%5zu)\n", getList(AT_portalProperty).size());
+			fprintf(fp, "6.  Shader Templates           (%5zu)\n", getList(AT_shaderTemplate).size());
+			fprintf(fp, "7.  SkyBoxes                   (%5zu)\n", getList(AT_skyBox).size());
+			fprintf(fp, "8.  Slot Descriptors           (%5zu)\n", getList(AT_slotDescriptor).size());
+			fprintf(fp, "9.  Sound Templates            (%5zu)\n", getList(AT_soundTemplate).size());
+			fprintf(fp, "10. Terrain                    (%5zu)\n", getList(AT_terrain).size());
+			fprintf(fp, "11. Textures                   (%5zu)\n", getList(AT_texture).size());
+			fprintf(fp, "12. Texture Renderer Templates (%5zu)\n", getList(AT_textureRendererTemplate).size());
 			fprintf(fp, "--------------------------------------\n");
-			fprintf(fp, "13. Total Linted Assets        (%5d)\n", m_assetList->size() - getList(AT_unSupported).size());
+			fprintf(fp, "13. Total Linted Assets        (%5zu)\n", m_assetList->size() - getList(AT_unSupported).size());
 			fprintf(fp, "\n");
 
 			writeToCategorizedFile(fp, "Appearances", AT_appearance);

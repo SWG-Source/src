@@ -276,11 +276,11 @@ bool LoginServer::deleteCharacter(uint32 clusterId, NetworkId const &characterId
             DatabaseConnection::getInstance().deleteCharacter(clusterId, characterId, suid);
             return true;
         } else {
-            DEBUG_REPORT_LOG(true, ("User %lu requested deleting character %s on cluster %lu, but the cluster is not currently connected.\n", suid, characterId.getValueString().c_str(), clusterId));
+            DEBUG_REPORT_LOG(true, ("User %u requested deleting character %s on cluster %u, but the cluster is not currently connected.\n", suid, characterId.getValueString().c_str(), clusterId));
             return false;
         }
     } else {
-        DEBUG_REPORT_LOG(true, ("User %lu requested deleting character %s on cluster %lu, but we have no cluster with that number.\n", suid, characterId.getValueString().c_str(), clusterId));
+        DEBUG_REPORT_LOG(true, ("User %u requested deleting character %s on cluster %u, but we have no cluster with that number.\n", suid, characterId.getValueString().c_str(), clusterId));
         return false;
     }
 }
@@ -563,9 +563,9 @@ void LoginServer::receiveMessage(const MessageDispatch::Emitter &source, const M
                 if (nonSessionTestingAccountFeatureIds && !msg.getTargetPlayerDescription().empty() &&
                     msg.getTargetItem().isValid() && !msg.getTargetItemDescription().empty()) {
                     if (msg.getGameCode() == PlatformGameCode::SWGTCG) {
-                        LOG("CustomerService", ("TcgRedemption: %s redeemed %s for SWGTCG account feature Id %lu (%d -> %d)", msg.getTargetPlayerDescription().c_str(), msg.getTargetItemDescription().c_str(), msg.getFeatureId(), currentFeatureIdCount, updatedFeatureIdCount));
+                        LOG("CustomerService", ("TcgRedemption: %s redeemed %s for SWGTCG account feature Id %u (%d -> %d)", msg.getTargetPlayerDescription().c_str(), msg.getTargetItemDescription().c_str(), msg.getFeatureId(), currentFeatureIdCount, updatedFeatureIdCount));
                     } else if (msg.getGameCode() == PlatformGameCode::SWG) {
-                        LOG("CustomerService", ("VeteranRewards: %s traded in %s for SWG account feature Id %lu (%d -> %d)", msg.getTargetPlayerDescription().c_str(), msg.getTargetItemDescription().c_str(), msg.getFeatureId(), currentFeatureIdCount, updatedFeatureIdCount));
+                        LOG("CustomerService", ("VeteranRewards: %s traded in %s for SWG account feature Id %u (%d -> %d)", msg.getTargetPlayerDescription().c_str(), msg.getTargetItemDescription().c_str(), msg.getFeatureId(), currentFeatureIdCount, updatedFeatureIdCount));
                     }
                 }
 
@@ -653,7 +653,7 @@ void LoginServer::receiveMessage(const MessageDispatch::Emitter &source, const M
 
             if (result == TransferReplyMoveValidation::TRMVR_can_create_regular_character) {
                 // check with DB to see if account is allowed to create character on the destination galaxy
-                LOG("CustomerService", ("CharacterTransfer: Received TransferRequestMoveValidation : %s (character template id %lu) on %s to %s on %s. Forwarding request to Login Database.", request.getSourceCharacter().c_str(), request.getSourceCharacterTemplateId(), request.getSourceGalaxy().c_str(), request.getDestinationCharacter().c_str(), request.getDestinationGalaxy().c_str()));
+                LOG("CustomerService", ("CharacterTransfer: Received TransferRequestMoveValidation : %s (character template id %u) on %s to %s on %s. Forwarding request to Login Database.", request.getSourceCharacter().c_str(), request.getSourceCharacterTemplateId(), request.getSourceGalaxy().c_str(), request.getDestinationCharacter().c_str(), request.getDestinationGalaxy().c_str()));
                 DatabaseConnection::getInstance().getAccountValidationData(request, cle->m_centralServerConnection->getClusterId());
             } else {
                 // send failure back to originating server
@@ -1144,7 +1144,7 @@ LoginServer::sendAvatarList(const StationId &stationId, int stationIdNumberJediS
             // CTS API character list request
             bool result = CentralServerConnection::sendCharacterListResponse(transferData->getSourceStationId(), avatars, *transferData);
             UNREF(result);
-            DEBUG_REPORT_LOG(!result, ("Could not send avatar list to StationId %lu because connection has been closed.\n", stationId));
+            DEBUG_REPORT_LOG(!result, ("Could not send avatar list to StationId %u because connection has been closed.\n", stationId));
         } else {
             uint32 characterTemplateId = 0;
             NetworkId characterId = NetworkId::cms_invalid;
@@ -1162,7 +1162,7 @@ LoginServer::sendAvatarList(const StationId &stationId, int stationIdNumberJediS
                 }
             }
 
-            LOG("CustomerService", ("CharacterTransfer: sendAvatarList() for stationId=%u, characterName=%s, sourceGalaxy=%s, determined characterId=%s, determined character template id=%lu", transferData->getSourceStationId(), transferData->getSourceCharacterName().c_str(), transferData->getSourceGalaxy().c_str(), characterId.getValueString().c_str(), characterTemplateId));
+            LOG("CustomerService", ("CharacterTransfer: sendAvatarList() for stationId=%u, characterName=%s, sourceGalaxy=%s, determined characterId=%s, determined character template id=%u", transferData->getSourceStationId(), transferData->getSourceCharacterName().c_str(), transferData->getSourceGalaxy().c_str(), characterId.getValueString().c_str(), characterTemplateId));
 
             transferData->setCharacterId(characterId);
             transferData->setObjectTemplateCrc(characterTemplateId);
@@ -1174,7 +1174,7 @@ LoginServer::sendAvatarList(const StationId &stationId, int stationIdNumberJediS
     } else {
         ClientConnection *conn = getValidatedClient(stationId);
         if (conn) {
-            LOG("LoginClientConnection", ("sendAvatarList() for stationId (%lu) at IP (%s), sending avatar list to client", stationId, conn->getRemoteAddress().c_str()));
+            LOG("LoginClientConnection", ("sendAvatarList() for stationId (%u) at IP (%s), sending avatar list to client", stationId, conn->getRemoteAddress().c_str()));
 
             // this message ***MUST*** be sent first, as the client expects to
             // receive this information before receiving the avatar list information
@@ -1183,8 +1183,8 @@ LoginServer::sendAvatarList(const StationId &stationId, int stationIdNumberJediS
 
             conn->send(msg, true);
         } else {
-            DEBUG_REPORT_LOG(true, ("Could not send avatar list to StationId %lu.\n", stationId));
-            LOG("LoginClientConnection", ("sendAvatarList() for stationId (%lu), cannot find connection to client for sending avatar list", stationId));
+            DEBUG_REPORT_LOG(true, ("Could not send avatar list to StationId %u.\n", stationId));
+            LOG("LoginClientConnection", ("sendAvatarList() for stationId (%u), cannot find connection to client for sending avatar list", stationId));
         }
     }
 }
@@ -1209,11 +1209,11 @@ void LoginServer::performAccountTransfer(const AvatarList &avatars, TransferAcco
 
             avatarData.push_back(AvatarData(clusterName, avatarName));
 
-            LOG("CustomerService", ("CharacterTransfer: Sending request to update game db (via cluster: %s) for account transfer from %lu to %lu (avatar: %s)", clusterName.c_str(), sourceStationId, destinationStationId, avatarName.c_str()));
+            LOG("CustomerService", ("CharacterTransfer: Sending request to update game db (via cluster: %s) for account transfer from %u to %u (avatar: %s)", clusterName.c_str(), sourceStationId, destinationStationId, avatarName.c_str()));
             const GenericValueTypeMessage <TransferAccountData> message("TransferAccountRequestCentralDatabase", *transferAccountData);
             sendToCluster(i->m_clusterId, message);
         } else {
-            LOG("CustomerService", ("CharacterTransfer: Could not connect to cluster id %lu to update game db for account transfer from %lu to %lu (avatar: %s)", i->m_clusterId, sourceStationId, destinationStationId, Unicode::wideToNarrow(i->m_name).c_str()));
+            LOG("CustomerService", ("CharacterTransfer: Could not connect to cluster id %u to update game db for account transfer from %u to %u (avatar: %s)", i->m_clusterId, sourceStationId, destinationStationId, Unicode::wideToNarrow(i->m_name).c_str()));
             const GenericValueTypeMessage <TransferAccountData> response("TransferAccountToAccountFailedToUpdateGameDatabase", *transferAccountData);
             CentralServerConnection::sendToCentralServer(transferAccountData->getStartGalaxy(), response);
             return;
@@ -1234,7 +1234,7 @@ LoginServer::onValidateClient(StationId suid, const std::string &username, Clien
     UNREF(gameBits);
     UNREF(subscriptionBits);
     NOT_NULL(conn);
-    WARNING_STRICT_FATAL(getValidatedClient(suid), ("Validating an already valid client in onValidateClient().  StationId: %d UserName: %s", suid, username.c_str()));
+    WARNING_STRICT_FATAL(getValidatedClient(suid), ("Validating an already valid client in onValidateClient().  StationId: %u UserName: %s", suid, username.c_str()));
 
     // determine if this is an admin account
     const bool isAdminAccount = AdminAccountManager::getAdminLevel(username) > 0;
@@ -1268,21 +1268,22 @@ LoginServer::onValidateClient(StationId suid, const std::string &username, Clien
             conn->send(msg, true);
         }
     } else {
-        // If we aren't validating sessions, pack username, security status, and username to connectionserver
+        WARNING(ConfigLoginServer::getDoConsumption() || ConfigLoginServer::getDoSessionLogin(), ("onValidateClient: account %s authenticated without a session although session validation is configured; issuing an account token", username.c_str()));
+        len = accountTokenLength;
         memcpy(keyBufferPointer, &suid, sizeof(uint32)); //lint !e64 !e119 !e534 (lint isn't resolving memcpy properly)
         keyBufferPointer += sizeof(uint32);
         memcpy(keyBufferPointer, &isSecure, sizeof(bool)); //lint !e64 !e119 !e534
         keyBufferPointer += sizeof(bool);
-        memcpy(keyBufferPointer, username.c_str(), MAX_ACCOUNT_NAME_LENGTH); //lint !e64 !e119 !e534
+        // the name field is MAX_ACCOUNT_NAME_LENGTH bytes, zero-padded
+        memcpy(keyBufferPointer, username.c_str(), std::min(username.size(), static_cast<size_t>(MAX_ACCOUNT_NAME_LENGTH))); //lint !e64 !e119 !e534
     }
 
-    KeyShare::Token token = LoginServer::getInstance().makeToken(keyBuffer, len);
+    KeyShare::Token token = LoginServer::getInstance().makeToken(keyBuffer.data(), len);
     Archive::ByteStream a;
     token.pack(a);
 
     const LoginClientToken k(a.getBuffer(), static_cast<unsigned char>(a.getSize()), static_cast<uint32>(suid), username);
     conn->send(k, true);
-    delete[] keyBuffer;
 
     std::vector <LoginEnumCluster::ClusterData> data;
 
@@ -1309,7 +1310,7 @@ LoginServer::onValidateClient(StationId suid, const std::string &username, Clien
 
     //Send off request for the avatar list from the database.
     DatabaseConnection::getInstance().requestAvatarListForAccount(suid, 0);
-    LOG("LoginClientConnection", ("onValidateClient() for stationId (%lu) at IP (%s), id (%s), requesting avatar list for account", suid, conn->getRemoteAddress().c_str(), username.c_str()));
+    LOG("LoginClientConnection", ("onValidateClient() for stationId (%u) at IP (%s), id (%s), requesting avatar list for account", suid, conn->getRemoteAddress().c_str(), username.c_str()));
 
     //Set up the connection as being validated with this suid.
     conn->setIsValidated(true);
@@ -1556,14 +1557,14 @@ LoginServer::updateClusterData(uint32 clusterId, const std::string &clusterName,
         if (cle) {
             // refreshing data on a cluster we already know about
             if ((cle->m_clusterName != clusterName) || (cle->m_address != address) || (cle->m_port != port)) {
-                DEBUG_REPORT_LOG(true, ("Disconnecting from cluster %lu because its data has changed in the database.\n", clusterId));
+                DEBUG_REPORT_LOG(true, ("Disconnecting from cluster %u because its data has changed in the database.\n", clusterId));
                 disconnectCluster(*cle, true, true);
             }
         }
     }
 
     if (!cle) {
-        DEBUG_REPORT_LOG(true, ("Cluster %lu: %s\n", clusterId, clusterName.c_str()));
+        DEBUG_REPORT_LOG(true, ("Cluster %u: %s\n", clusterId, clusterName.c_str()));
 
         cle = new ClusterListEntry;
         m_clusterList.push_back(cle);
@@ -1721,7 +1722,7 @@ void LoginServer::sendToCluster(uint32 clusterId, const GameNetworkMessage &mess
     if (cle && cle->m_connected && cle->m_centralServerConnection) {
         cle->m_centralServerConnection->send(message, true);
     } else {
-        DEBUG_REPORT_LOG(true, ("Could not send message to cluster %lu because it was not connected.\n", clusterId));
+        DEBUG_REPORT_LOG(true, ("Could not send message to cluster %u because it was not connected.\n", clusterId));
     }
 }
 

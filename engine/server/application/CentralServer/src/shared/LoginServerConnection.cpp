@@ -251,7 +251,7 @@ void LoginServerConnection::onReceive(const Archive::ByteStream & message)
 		{
 			// got message back from loginServer - have to transfer to DBProcess to update the game database
 			GenericValueTypeMessage<TransferAccountData> accountTransferRequest(ri);
-			LOG("CustomerService", ("CharacterTransfer: Received TransferAccountRequestCentralDatabase from station ID %d to station ID %d", accountTransferRequest.getValue().getSourceStationId(), accountTransferRequest.getValue().getDestinationStationId()));
+			LOG("CustomerService", ("CharacterTransfer: Received TransferAccountRequestCentralDatabase from station ID %u to station ID %u", accountTransferRequest.getValue().getSourceStationId(), accountTransferRequest.getValue().getDestinationStationId()));
 			CentralServer::getInstance().sendToDBProcess(accountTransferRequest, true);
 			break;
 		}
@@ -259,7 +259,7 @@ void LoginServerConnection::onReceive(const Archive::ByteStream & message)
 		{
 			// got reply back from login server - fwd to transfer server
 			GenericValueTypeMessage<TransferAccountData> replyToTransferServer(ri);
-			LOG("CustomerService", ("CharacterTransfer: Received TransferAccountReplySuccessTransferServer from station ID %d to station ID %d", replyToTransferServer.getValue().getSourceStationId(), replyToTransferServer.getValue().getDestinationStationId()));
+			LOG("CustomerService", ("CharacterTransfer: Received TransferAccountReplySuccessTransferServer from station ID %u to station ID %u", replyToTransferServer.getValue().getSourceStationId(), replyToTransferServer.getValue().getDestinationStationId()));
 			IGNORE_RETURN(CentralServer::getInstance().sendToTransferServer(replyToTransferServer));
 			
 			break;
@@ -268,7 +268,7 @@ void LoginServerConnection::onReceive(const Archive::ByteStream & message)
 		{
 			// got failure message back from login server - fwd to transfer server
 			GenericValueTypeMessage<TransferAccountData> replyToTransferServer(ri);
-			LOG("CustomerService", ("CharacterTransfer: Received TransferAccountFailedToUpdateGameDatabase for transfer from station ID %d to station ID %d", replyToTransferServer.getValue().getSourceStationId(), replyToTransferServer.getValue().getDestinationStationId()));
+			LOG("CustomerService", ("CharacterTransfer: Received TransferAccountFailedToUpdateGameDatabase for transfer from station ID %u to station ID %u", replyToTransferServer.getValue().getSourceStationId(), replyToTransferServer.getValue().getDestinationStationId()));
 			IGNORE_RETURN(CentralServer::getInstance().sendToTransferServer(replyToTransferServer));
 			break;
 		}
@@ -276,7 +276,7 @@ void LoginServerConnection::onReceive(const Archive::ByteStream & message)
 		{
 			// got failure message back from login server - fwd to transfer server
 			GenericValueTypeMessage<TransferAccountData> replyToTransferServer(ri);
-			LOG("CustomerService", ("CharacterTransfer: Received TransferAccountFailedDestinationNotEmpty for transfer from station ID %d to station ID %d", replyToTransferServer.getValue().getSourceStationId(), replyToTransferServer.getValue().getDestinationStationId()));
+			LOG("CustomerService", ("CharacterTransfer: Received TransferAccountFailedDestinationNotEmpty for transfer from station ID %u to station ID %u", replyToTransferServer.getValue().getSourceStationId(), replyToTransferServer.getValue().getDestinationStationId()));
 			IGNORE_RETURN(CentralServer::getInstance().sendToTransferServer(replyToTransferServer));
 			break;
 		}

@@ -71,16 +71,16 @@ void CharacterCreationTracker::handleCreateNewCharacter(const ConnectionCreateCh
 	{
 		if (ServerClock::getInstance().getGameTimeSeconds() > (creationRecord->second->m_creationTime + ConfigCentralServer::getCharacterCreationTimeout()))
 		{
-			LOG("TraceCharacterCreation", ("%d allowing character creation because previous one timed out", msg.getStationId()));
-			DEBUG_REPORT_LOG(true,("Allowing character creation for account %li because previous one timed out.\n",msg.getStationId()));
+			LOG("TraceCharacterCreation", ("%u allowing character creation because previous one timed out", msg.getStationId()));
+			DEBUG_REPORT_LOG(true,("Allowing character creation for account %u because previous one timed out.\n",msg.getStationId()));
 			unlockAccount(msg.getStationId());
 			creationRecord = m_creations.end();
 		}
 		else
 		{
-			LOG("TraceCharacterCreation", ("%d refusing character creation because one is already in progress", msg.getStationId()));
-			DEBUG_REPORT_LOG(true,("Refusing character creation for account %li because one was already in progress.\n",msg.getStationId()));
-			ConnectionCreateCharacterFailed f(msg.getStationId(), msg.getCharacterName(), NameErrors::nameDeclinedRetry, FormattedString<2048>().sprintf("%lu refusing character creation because one is already in progress", msg.getStationId())); //lint !e40 // undeclared identifier nameDeclinedEntry
+			LOG("TraceCharacterCreation", ("%u refusing character creation because one is already in progress", msg.getStationId()));
+			DEBUG_REPORT_LOG(true,("Refusing character creation for account %u because one was already in progress.\n",msg.getStationId()));
+			ConnectionCreateCharacterFailed f(msg.getStationId(), msg.getCharacterName(), NameErrors::nameDeclinedRetry, FormattedString<2048>().sprintf("%u refusing character creation because one is already in progress", msg.getStationId())); //lint !e40 // undeclared identifier nameDeclinedEntry
 			CentralServer::getInstance().sendToConnectionServerForAccount(msg.getStationId(), f, true);
 			return;
 		}
@@ -93,9 +93,9 @@ void CharacterCreationTracker::handleCreateNewCharacter(const ConnectionCreateCh
 	{
 		if (!msg.getNoRateLimit() && ((Clock::timeSeconds() - fcl->second) < (msg.getIsForCharacterTransfer() ? static_cast<uint32>(ConfigCentralServer::getCharacterCtsCreationRateLimitSeconds()) : static_cast<uint32>(ConfigCentralServer::getCharacterCreationRateLimitSeconds()))))
 		{
-			LOG("TraceCharacterCreation", ("%d refusing character creation because not enough time has passed since the previous one", msg.getStationId()));
-			DEBUG_REPORT_LOG(true,("Refusing character creation for account %li because not enough time has passed since the previous one\n",msg.getStationId()));
-			ConnectionCreateCharacterFailed f(msg.getStationId(), msg.getCharacterName(), NameErrors::nameDeclinedTooFast, FormattedString<2048>().sprintf("%lu refusing character creation because not enough time has passed since the previous one", msg.getStationId()));
+			LOG("TraceCharacterCreation", ("%u refusing character creation because not enough time has passed since the previous one", msg.getStationId()));
+			DEBUG_REPORT_LOG(true,("Refusing character creation for account %u because not enough time has passed since the previous one\n",msg.getStationId()));
+			ConnectionCreateCharacterFailed f(msg.getStationId(), msg.getCharacterName(), NameErrors::nameDeclinedTooFast, FormattedString<2048>().sprintf("%u refusing character creation because not enough time has passed since the previous one", msg.getStationId()));
 			CentralServer::getInstance().sendToConnectionServerForAccount(msg.getStationId(), f, true);
 			return;
 		}
@@ -117,8 +117,8 @@ void CharacterCreationTracker::handleCreateNewCharacter(const ConnectionCreateCh
 		if (!getStartLocation(msg.getStartingLocation(), planetName, coordinates, cellId))
 		{
 			// bad starting location
-			LOG("TraceCharacterCreation", ("%d bad starting location (%s)", msg.getStationId(), msg.getStartingLocation().c_str()));
-			ConnectionCreateCharacterFailed cccf(msg.getStationId(), msg.getCharacterName(), SharedStringIds::character_create_failed_bad_location, FormattedString<2048>().sprintf("%lu bad starting location (%s)", msg.getStationId(), msg.getStartingLocation().c_str()));
+			LOG("TraceCharacterCreation", ("%u bad starting location (%s)", msg.getStationId(), msg.getStartingLocation().c_str()));
+			ConnectionCreateCharacterFailed cccf(msg.getStationId(), msg.getCharacterName(), SharedStringIds::character_create_failed_bad_location, FormattedString<2048>().sprintf("%u bad starting location (%s)", msg.getStationId(), msg.getStartingLocation().c_str()));
 			CentralServer::getInstance().sendToConnectionServerForAccount(msg.getStationId(), cccf, true);
 			unlockAccount(msg.getStationId());
 			return;
@@ -148,13 +148,13 @@ void CharacterCreationTracker::handleCreateNewCharacter(const ConnectionCreateCh
 	if (gameServerId == 0)
 	{
 		DEBUG_REPORT_LOG(true, ("Could not find a game server for character creation, starting a tutorial server\n"));
-		LOG("TraceCharacterCreation", ("%d waiting for game server", msg.getStationId()));
+		LOG("TraceCharacterCreation", ("%u waiting for game server", msg.getStationId()));
 		CentralServer::getInstance().startPlanetServer(CentralServer::getInstance().getHostForScene(tutorialPlanetName), tutorialPlanetName, 0);
 		creationRecord->second->m_stage = CreationRecord::S_queuedForGameServer;
 		return;
 	}
 
-	LOG("TraceCharacterCreation", ("%d sending CentralCreateCharacter(%s) to game server %lu", msg.getStationId(), Unicode::wideToNarrow(msg.getCharacterName()).c_str(), gameServerId));
+	LOG("TraceCharacterCreation", ("%u sending CentralCreateCharacter(%s) to game server %u", msg.getStationId(), Unicode::wideToNarrow(msg.getCharacterName()).c_str(), gameServerId));
 	creationRecord->second->m_stage = CreationRecord::S_sentToGameServer;
 	creationRecord->second->m_gameServerId = gameServerId;
 }
@@ -181,7 +181,7 @@ void CharacterCreationTracker::retryGameServerCreates()
 			{
 				i->second->m_stage = CreationRecord::S_sentToGameServer;
 				i->second->m_gameServerId = gameServerId;
-				LOG("TraceCharacterCreation", ("%d sending CentralCreateCharacter to game server %lu", i->first,gameServerId));
+				LOG("TraceCharacterCreation", ("%d sending CentralCreateCharacter to game server %u", i->first,gameServerId));
 			}
 			else
 			{

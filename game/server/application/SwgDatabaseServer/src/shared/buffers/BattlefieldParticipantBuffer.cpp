@@ -127,7 +127,7 @@ bool BattlefieldParticipantBuffer::load(DB::Session *session, const DB::TagSet &
 
 bool BattlefieldParticipantBuffer::save(DB::Session *session)
 {
-	LOG("SaveCounts",("BattlefieldParticipants:  %i saved to db",m_rows.size()));
+	LOG("SaveCounts",("BattlefieldParticipants:  %zu saved to db",m_rows.size()));
 	
 	DBQuery::BattlefieldParticipantQuery qry;
 	

@@ -19,6 +19,7 @@
 #include "sharedFoundation/GameControllerMessage.h"
 #include "sharedObject/CellProperty.h"
 #include "sharedObject/NetworkIdManager.h"
+#include <cinttypes>
 
 namespace ScriptMethodsAnimationNamespace
 {
@@ -67,7 +68,7 @@ void JNICALL ScriptMethodsAnimationNamespace::doAnimationAction (JNIEnv *env, jo
 	Controller * controller = 0;
 	if (!JavaLibrary::getObjectController(target, tangibleObject, controller))
 	{
-		WARNING (true, ("doAnimationAction on bad TangibleObject/Controller id %d", NetworkId(target).getValue ()));
+		WARNING (true, ("doAnimationAction on bad TangibleObject/Controller id %" PRId64, NetworkId(target).getValue ()));
 		return;
 	}
 

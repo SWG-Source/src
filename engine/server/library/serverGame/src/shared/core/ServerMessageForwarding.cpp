@@ -76,7 +76,7 @@ void ServerMessageForwarding::end()
 
 void ServerMessageForwarding::send(GameNetworkMessage const &msg)
 {
-	DEBUG_FATAL(!ServerConnection::isMessageForwardable(msg.getType()), ("Tried to forward message of type %lu which is not in the forwardable message table.", msg.getType()));
+	DEBUG_FATAL(!ServerConnection::isMessageForwardable(msg.getType()), ("Tried to forward message of type %u which is not in the forwardable message table.", msg.getType()));
 
 	GameServer::getInstance().sendToPlanetServer(msg);
 }

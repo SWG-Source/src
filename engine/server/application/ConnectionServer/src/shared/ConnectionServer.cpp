@@ -577,13 +577,13 @@ ConnectionServer::receiveMessage(const MessageDispatch::Emitter &source, const M
         case constcrc("ConnectionCreateCharacterSuccess") : {
             Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
             const ConnectionCreateCharacterSuccess msg(ri);
-            LOG("TraceCharacterCreation", ("Received ConnectionCreateCharacterSuccess for %d", msg.getStationId()));
+            LOG("TraceCharacterCreation", ("Received ConnectionCreateCharacterSuccess for %u", msg.getStationId()));
             ClientConnection *const client = getClientConnection(msg.getStationId());
             if (client) {
                 const ClientCreateCharacterSuccess m(msg.getNetworkId());
                 client->send(m, true);
             } else {
-                LOG("CustomerService", ("CharacterTransfer: Trying to deliver ConnectionCreateCharacterSuccess to PsuedoClientConnection(%d)", msg.getStationId()));
+                LOG("CustomerService", ("CharacterTransfer: Trying to deliver ConnectionCreateCharacterSuccess to PsuedoClientConnection(%u)", msg.getStationId()));
                 PseudoClientConnection::tryToDeliverMessageTo(static_cast<unsigned int>(msg.getStationId()), static_cast<const GameNetworkMessage &>(message).getByteStream());
             }
             break;
@@ -744,7 +744,7 @@ ConnectionServer::receiveMessage(const MessageDispatch::Emitter &source, const M
                     bool result;
                     result = PseudoClientConnection::tryToDeliverMessageTo(msg.getStationId(), static_cast<const GameNetworkMessage &>(message).getByteStream());
                     UNREF(result);
-                    DEBUG_REPORT_LOG(!result, ("Received GameServerForLoginMessage for %lu, who was not connected.\n", msg.getStationId()));
+                    DEBUG_REPORT_LOG(!result, ("Received GameServerForLoginMessage for %u, who was not connected.\n", msg.getStationId()));
                 }
             }
 
@@ -761,7 +761,7 @@ ConnectionServer::receiveMessage(const MessageDispatch::Emitter &source, const M
 
             ClientConnection *cconn = getClientConnection(msg.getSuid());
             if (!cconn) {
-                DEBUG_REPORT_LOG(true, ("Received ValidateCharacterForLoginReplyMessage for account %lu, which is no longer connected.\n", msg.getSuid()));
+                DEBUG_REPORT_LOG(true, ("Received ValidateCharacterForLoginReplyMessage for account %u, which is no longer connected.\n", msg.getSuid()));
             } else {
                 cconn->onCharacterValidated(msg.getApproved(), msg.getCharacterId(), Unicode::wideToNarrow(msg.getCharacterName()), msg.getContainerId(), msg.getScene(), msg.getCoordinates());
             }
@@ -773,7 +773,7 @@ ConnectionServer::receiveMessage(const MessageDispatch::Emitter &source, const M
 
             ClientConnection *cconn = getClientConnection(msg.getStationId());
             if (!cconn) {
-                DEBUG_REPORT_LOG(true, ("Received ValidateAccountReplyMessage for account %lu, which is no longer connected.\n", msg.getStationId()));
+                DEBUG_REPORT_LOG(true, ("Received ValidateAccountReplyMessage for account %u, which is no longer connected.\n", msg.getStationId()));
             } else {
                 cconn->onIdValidated(msg.getCanLogin(), msg.getCanCreateRegular(), msg.getCanCreateJedi(), msg.getCanSkipTutorial(), msg.getConsumedRewardEvents(), msg.getClaimedRewardItems());
             }
@@ -827,7 +827,7 @@ ConnectionServer::receiveMessage(const MessageDispatch::Emitter &source, const M
             Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
             ExcommunicateGameServerMessage msg(ri);
 
-            LOG("GameGameConnect", ("Told to drop connection to %lu by Central", msg.getServerId()));
+            LOG("GameGameConnect", ("Told to drop connection to %u by Central", msg.getServerId()));
 
             GameConnection *conn = getGameConnection(msg.getServerId());
             if (conn) {

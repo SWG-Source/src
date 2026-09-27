@@ -467,7 +467,7 @@ void IntangibleObject::persist()
 			else
 			{
 				WARNING_STRICT_FATAL(true, ("IntangibleObject::persist buffer "
-					"overflow, %d %d %u", k, stored, sizeof(buffer)));
+					"overflow, %d %d %zu", k, stored, sizeof(buffer)));
 			}
 		}
 

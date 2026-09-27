@@ -749,7 +749,7 @@ std::string LfgCharacterData::getDebugString() const
 	else if (PvpData::isNeutralFactionId(faction))
 		output += "Neutral";
 	else
-		output += FormattedString<32>().sprintf("%lu", faction);
+		output += FormattedString<32>().sprintf("%u", faction);
 
 	output += "\nPilot:           ";
 	if (pilot == LfgCharacterData::Pilot_Imperial)

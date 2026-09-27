@@ -78,6 +78,7 @@
 #include "sharedObject/SlotIdManager.h"
 #include "sharedObject/SlottedContainer.h"
 #include "sharedObject/VolumeContainer.h"
+#include <cinttypes>
 
 //----------------------------------------------------------------------
 
@@ -632,13 +633,13 @@ static bool transferFromBankToCommoditiesNamedAccount(const NetworkId &target, i
 	{
 		if( obj->transferBankCreditsTo(COMMODITIES_NAMED_ACCOUNT, amount))
 		{
-			LOG("CustomerService", ("Auction: transfered bid amount of %d from bank to commodities named account for player '%s' (%Ld)",
+			LOG("CustomerService", ("Auction: transfered bid amount of %d from bank to commodities named account for player '%s' (%" PRId64 ")",
 				amount, PlayerObject::getAccountDescription(target).c_str(), target.getValue()));
 			return true;
 		}
 	}
 
-	LOG("CustomerService", ("Auction: failed commodities named account bank transfer for player '%s' (%Ld) in the bid amount of %d",
+	LOG("CustomerService", ("Auction: failed commodities named account bank transfer for player '%s' (%" PRId64 ") in the bid amount of %d",
 		PlayerObject::getAccountDescription(target).c_str(), target.getValue(), amount));
 	return false;
 }
@@ -651,18 +652,18 @@ static void transferToBankFromCommoditiesNamedAccount(const NetworkId &target, c
 	{
 		if( obj->transferBankCreditsFrom(COMMODITIES_NAMED_ACCOUNT, amount) )
 		{
-			LOG("CustomerService", ("Auction: successfully transfered %d credits to player '%s' (%Ld).  Transfer Reason = '%s'",
+			LOG("CustomerService", ("Auction: successfully transfered %d credits to player '%s' (%" PRId64 ").  Transfer Reason = '%s'",
 				amount, PlayerObject::getAccountDescription(target).c_str(), target.getValue(), reason.c_str()));
 		}
 		else
 		{
-			LOG("CustomerService", ("Auction: failed to transfer %d credits to player '%s' (%Ld) because ServerObject::transferBankCreditsFrom() returned false.  Transfer Reason = '%s'",
+			LOG("CustomerService", ("Auction: failed to transfer %d credits to player '%s' (%" PRId64 ") because ServerObject::transferBankCreditsFrom() returned false.  Transfer Reason = '%s'",
 				amount, PlayerObject::getAccountDescription(target).c_str(), target.getValue(), reason.c_str()));
 		}
 	}
 	else
 	{	
-		LOG("CustomerService", ("Auction: Transferring %d credits to player '%s' (%Ld) using C++FromNamedAccountToBank message method.  Transfer Reason = '%s'",
+		LOG("CustomerService", ("Auction: Transferring %d credits to player '%s' (%" PRId64 ") using C++FromNamedAccountToBank message method.  Transfer Reason = '%s'",
 			amount, PlayerObject::getAccountDescription(target).c_str(), target.getValue(), reason.c_str()));
 		char buf[100];
 		snprintf(buf, sizeof(buf), "%s %d", COMMODITIES_NAMED_ACCOUNT.c_str(), (int)(amount));
@@ -681,7 +682,7 @@ static void transferBank(const NetworkId &source, const NetworkId &dest, int32 a
 	{
 //		printf("Transfering %i bank from %Ld to %Ld", (int)amount, source.getValue(), dest.getValue());
 		char buf[100];
-		sprintf(buf, "%Ld %Ld", (int64)dest.getValue(), (int64)amount);
+		sprintf(buf, "%" PRId64 " %" PRId64, (int64)dest.getValue(), (int64)amount);
 		MessageToQueue::getInstance().sendMessageToC(source, "C++ModifyBank", buf, 0, true);
 	}
 }
@@ -1324,7 +1325,7 @@ void CommoditiesMarket::onAddAuction(int sequence, int32 result, const NetworkId
 
 	if (result == 0)
 	{
-		LOG("CustomerService", ("Auction:%s has put item %s for auction at location %Ld",
+		LOG("CustomerService", ("Auction:%s has put item %s for auction at location %" PRId64,
 			PlayerObject::getAccountDescription(auctionOwnerId).c_str(), ServerObject::getLogDescription(itemId).c_str(), location.getValue()));
 		if ((item) && (item->getVolume() > 1))
 		{
@@ -1336,7 +1337,7 @@ void CommoditiesMarket::onAddAuction(int sequence, int32 result, const NetworkId
 					ServerObject * containedObject = safe_cast<ServerObject *>((*containerIterator).getObject());
 					if (containedObject)
 					{
-						LOG("CustomerService", ("Auction:%s has put item %s for auction at location %Ld inside container %s",
+						LOG("CustomerService", ("Auction:%s has put item %s for auction at location %" PRId64 " inside container %s",
 							PlayerObject::getAccountDescription(auctionOwnerId).c_str(), 
 							ServerObject::getLogDescription(containedObject->getNetworkId()).c_str(), 
 							location.getValue(),
@@ -1373,12 +1374,12 @@ void CommoditiesMarket::onAddAuction(int sequence, int32 result, const NetworkId
 				bool result = ContainerInterface::transferItemToVolumeContainer(*container,*item, nullptr, tmp);
 				if (!result)
 				{
-					LOG("CustomerService", ("Auction: Player %s transfer of item (%Ld) to auction container (%Ld) failed with code %d",
+					LOG("CustomerService", ("Auction: Player %s transfer of item (%" PRId64 ") to auction container (%" PRId64 ") failed with code %d",
 											PlayerObject::getAccountDescription(auctionOwnerId).c_str(),
 											itemId.getValue(),
 											location.getValue(),
 											static_cast<int>(tmp)));
-					WARNING(!result, ("Transfer of item (%Ld) to auction container (%Ld) failed", itemId.getValue(), location.getValue()));
+					WARNING(!result, ("Transfer of item (%" PRId64 ") to auction container (%" PRId64 ") failed", itemId.getValue(), location.getValue()));
 				}
 			}
 			else
@@ -1409,7 +1410,7 @@ void CommoditiesMarket::onAddAuction(int sequence, int32 result, const NetworkId
 		else if (result == ARC_AuctionAlreadyExists)
 		{
 			auctionResult = ar_ITEM_ALREADY_AUCTIONED;
-			LOG("CustomerService", ("Auction:%Ld has tried to auction the item %Ld, but it failed because the item was already for auction.  This comes about when the cluster comes down and the auction is written to the DB before the item transfer occurs.",  auctionOwnerId.getValue(), itemId.getValue()));
+			LOG("CustomerService", ("Auction:%" PRId64 " has tried to auction the item %" PRId64 ", but it failed because the item was already for auction.  This comes about when the cluster comes down and the auction is written to the DB before the item transfer occurs.",  auctionOwnerId.getValue(), itemId.getValue()));
 			if (s_market)
 			{
 				s_market->CancelAuction(itemId, auctionOwnerId);
@@ -1991,7 +1992,7 @@ void CommoditiesMarket::auctionQueryHeaders(
 		{
 			// previous request has exceeded timeout, so send this request out
 			if (ConfigServerGame::getCommoditiesShowAllDebugInfo())
-				LOG("AuctionList", ("Sending auctionQueryHeaders request %d for %s even though there is already an outstanding request because outstanding request is %lus old which exceeds the request timeout threshold of %ds", requestId, who.getNetworkId().getValueString().c_str(), (timeCurrent - iter->second->previousQueryTime), ConfigServerGame::getCommoditiesQueryTimeoutSec()));
+				LOG("AuctionList", ("Sending auctionQueryHeaders request %d for %s even though there is already an outstanding request because outstanding request is %lus old which exceeds the request timeout threshold of %llds", requestId, who.getNetworkId().getValueString().c_str(), (timeCurrent - iter->second->previousQueryTime), static_cast<long long>(ConfigServerGame::getCommoditiesQueryTimeoutSec())));
 
 			// no longer need to track the request that timed out
 			delete iter->second;
@@ -2325,7 +2326,7 @@ void CommoditiesMarket::onAuctionComplete(NetworkId const &itemId, NetworkId con
 	int salesTax = 0;	
 	if (success)
 	{
-		LOG("CustomerService", ("Auction:player %s (%Ld) has won the auction of %s from %s at location %Ld",
+		LOG("CustomerService", ("Auction:player %s (%" PRId64 ") has won the auction of %s from %s at location %" PRId64,
 			PlayerObject::getAccountDescription(buyerId).c_str(), buyerId.getValue(), ServerObject::getLogDescription(itemId).c_str(), ServerObject::getLogDescription(sellerId).c_str(), location.getValue()));
 		if (!immediate)
 		{
@@ -2346,7 +2347,7 @@ void CommoditiesMarket::onAuctionComplete(NetworkId const &itemId, NetworkId con
  				{
  				 	salesTax = s->salesTaxAmount;
 					transferToBankFromCommoditiesNamedAccount(s->salesTaxBankId, s->salesTaxAmount, "Credit the sales tax to the city for the sale");
- 					LOG("CustomerService", ("Auction:Crediting sales tax of amount %d to bankId = %Ld from immediate sale of item %Ld to player %Ld",
+ 					LOG("CustomerService", ("Auction:Crediting sales tax of amount %d to bankId = %" PRId64 " from immediate sale of item %" PRId64 " to player %" PRId64,
  											s->salesTaxAmount, s->salesTaxBankId.getValue(), s->itemId.getValue(), buyerId.getValue() ));
  					if (buyerId != s->buyerId)
  					{
@@ -2423,7 +2424,7 @@ void CommoditiesMarket::onAuctionComplete(NetworkId const &itemId, NetworkId con
 			Client * const client = owner->getClient();
 			if (client)
 			{
-				LOG("CustomerService", ("Auction:%s has canceled the auction of %s at location %Ld",
+				LOG("CustomerService", ("Auction:%s has canceled the auction of %s at location %" PRId64,
 					PlayerObject::getAccountDescription(sellerId).c_str(), ServerObject::getLogDescription(itemId).c_str(), location.getValue()));
 				CancelLiveAuctionResponseMessage msg(itemId, ar_OK); 	
 				client->send(msg, true);
@@ -2534,7 +2535,7 @@ void CommoditiesMarket::checkPendingLoads(const NetworkId &itemId)
 		{
 			if( item )
 			{
-				WARNING(!player, ("After an auction purchased item was loaded, we tried to transfer it to the purchaser, but the purchaser was not found. itemId = %Ld", itemId.getValue()));
+				WARNING(!player, ("After an auction purchased item was loaded, we tried to transfer it to the purchaser, but the purchaser was not found. itemId = %" PRId64, itemId.getValue()));
 			}
 
 			if (!item)
@@ -2554,7 +2555,7 @@ void CommoditiesMarket::checkPendingLoads(const NetworkId &itemId)
 					getCommoditiesServerConnection(); //attempt to reconnect to commodities server
 				}
 
-				LOG("CustomerService", ("Auction:%Ld has tried to retrieve an auction item %Ld, but it failed because the item could not be loaded.  The system will automatically cleanup this item and reimburse money or adjust bazaar slots depending on if this was a purchased auction item or a canceled auction sale.",  (*f).second.ownerId.getValue(), itemId.getValue()));
+				LOG("CustomerService", ("Auction:%" PRId64 " has tried to retrieve an auction item %" PRId64 ", but it failed because the item could not be loaded.  The system will automatically cleanup this item and reimburse money or adjust bazaar slots depending on if this was a purchased auction item or a canceled auction sale.",  (*f).second.ownerId.getValue(), itemId.getValue()));
 			}
 		}
 		s_pendingLoads.erase(f);
@@ -2586,7 +2587,7 @@ void CommoditiesMarket::onGetItemReply(int32 result, int32 requestId, NetworkId 
 	{
 		if (player)
 		{
-			LOG("CustomerService", ("Auction: onGetItemReply - %s has retrieved auction item %s from location %Ld",
+			LOG("CustomerService", ("Auction: onGetItemReply - %s has retrieved auction item %s from location %" PRId64,
 									PlayerObject::getAccountDescription(itemOwnerId).c_str(), ServerObject::getLogDescription(itemId).c_str(), location.getValue()));
 			item = dynamic_cast<ServerObject *>(NetworkIdManager::getObjectById(itemId));
 			ServerObject *inventory = player->getInventory();
@@ -2666,7 +2667,7 @@ void CommoditiesMarket::onGetItemReply(int32 result, int32 requestId, NetworkId 
 						//and only refund the money if the owner is not the vendor owner and the owner if the item isn't the guy we're refunding.
 						//ugh, that won't work.  To dupe you just buy the item, give it away, then 'buy' it again
 						
-						LOG("CustomerService", ("Auction: onGetItemReply - %s failed to retrieve auction item %s from location %Ld because someone else has it.",
+						LOG("CustomerService", ("Auction: onGetItemReply - %s failed to retrieve auction item %s from location %" PRId64 " because someone else has it.",
 												PlayerObject::getAccountDescription(itemOwnerId).c_str(),
 												ServerObject::getLogDescription(itemId).c_str(),
 												location.getValue()));
@@ -2677,7 +2678,7 @@ void CommoditiesMarket::onGetItemReply(int32 result, int32 requestId, NetworkId 
 				else
 				{
 					transactionFailed = true;
-					LOG("CustomerService", ("Auction: onGetItemReply - item not found for player %s, item %s, location %Ld",
+					LOG("CustomerService", ("Auction: onGetItemReply - item not found for player %s, item %s, location %" PRId64,
 											PlayerObject::getAccountDescription(itemOwnerId).c_str(),
 											ServerObject::getLogDescription(itemId).c_str(),
 											location.getValue()));
@@ -2687,7 +2688,7 @@ void CommoditiesMarket::onGetItemReply(int32 result, int32 requestId, NetworkId 
 			{
 				transactionFailed = true;
 			
-				LOG("CustomerService", ("Auction: onGetItemReply - inventory not found for player %s, item %s, location %Ld",
+				LOG("CustomerService", ("Auction: onGetItemReply - inventory not found for player %s, item %s, location %" PRId64,
 										PlayerObject::getAccountDescription(itemOwnerId).c_str(),
 										ServerObject::getLogDescription(itemId).c_str(),
 										location.getValue()));
@@ -2696,8 +2697,7 @@ void CommoditiesMarket::onGetItemReply(int32 result, int32 requestId, NetworkId 
 		else
 		{
 			transactionFailed = true;
-			LOG("CustomerService", ("Auction: onGetItemReply - player %s not found for item %s, location %Ld",
-									result,
+			LOG("CustomerService", ("Auction: onGetItemReply - player %s not found for item %s, location %" PRId64,
 									itemOwnerId.getValueString().c_str(),
 									ServerObject::getLogDescription(itemId).c_str(),
 									location.getValue()));
@@ -2706,7 +2706,7 @@ void CommoditiesMarket::onGetItemReply(int32 result, int32 requestId, NetworkId 
 	}
 	else
 	{
-		LOG("CustomerService", ("Auction: onGetItemReply - player (result %d) not found for player %s, item %s, location %Ld",
+		LOG("CustomerService", ("Auction: onGetItemReply - player (result %d) not found for player %s, item %s, location %" PRId64,
 								result,
 								PlayerObject::getAccountDescription(itemOwnerId).c_str(),
 								ServerObject::getLogDescription(itemId).c_str(),
@@ -3170,7 +3170,7 @@ void CommoditiesMarket::onPermanentAuctionPurchased (
 void CommoditiesMarket::onCleanupInvalidItemRetrieval(  const NetworkId &itemId, const NetworkId & playerId, const NetworkId &creatorId, int32 reimburseAmt )
 {
 
-	WARNING(true, ("Received OnCleanupInvalidItemRetrieval request.  item=%Ld, player=%Ld, creator=%Ld, reimburse=%d", itemId.getValue(), playerId.getValue(), creatorId.getValue(), reimburseAmt));
+	WARNING(true, ("Received OnCleanupInvalidItemRetrieval request.  item=%" PRId64 ", player=%" PRId64 ", creator=%" PRId64 ", reimburse=%d", itemId.getValue(), playerId.getValue(), creatorId.getValue(), reimburseAmt));
 	CreatureObject *player = dynamic_cast<CreatureObject *>(NetworkIdManager::getObjectById(playerId));
 	if( reimburseAmt>0  && playerId.getValue()>0 )
 	{
@@ -3188,12 +3188,12 @@ void CommoditiesMarket::onCleanupInvalidItemRetrieval(  const NetworkId &itemId,
 		if (reimburseAmt < ConfigServerGame::getMaxReimburseAmount())
 		{
 			MessageToQueue::getInstance().sendMessageToC(playerId, "C++FinishBankTransfer", buffer, 0, true);
-			LOG("CustomerService", ("Auction:Player %s was reimbursed as a result of an invalid auction item %Ld cleanup for the amount of %d.", PlayerObject::getAccountDescription(playerId).c_str(), itemId.getValue(), reimburseAmt));
-			LOG("CustomerService", ("Reimbursal:Player %s was reimbursed as a result of an invalid auction item %Ld cleanup for the amount of %d.", PlayerObject::getAccountDescription(playerId).c_str(), itemId.getValue(), reimburseAmt));
+			LOG("CustomerService", ("Auction:Player %s was reimbursed as a result of an invalid auction item %" PRId64 " cleanup for the amount of %d.", PlayerObject::getAccountDescription(playerId).c_str(), itemId.getValue(), reimburseAmt));
+			LOG("CustomerService", ("Reimbursal:Player %s was reimbursed as a result of an invalid auction item %" PRId64 " cleanup for the amount of %d.", PlayerObject::getAccountDescription(playerId).c_str(), itemId.getValue(), reimburseAmt));
 		}
 		else
 		{
-			LOG("CustomerService", ("Reimbursal:Player %s may need to be reimbursed as a result of an invalid auction item %Ld cleanup for the amount of %d.  It was greater than the max allowed", PlayerObject::getAccountDescription(playerId).c_str(), itemId.getValue(), reimburseAmt));			
+			LOG("CustomerService", ("Reimbursal:Player %s may need to be reimbursed as a result of an invalid auction item %" PRId64 " cleanup for the amount of %d.  It was greater than the max allowed", PlayerObject::getAccountDescription(playerId).c_str(), itemId.getValue(), reimburseAmt));			
 		}
 
 	}
@@ -3209,7 +3209,7 @@ void CommoditiesMarket::onCleanupInvalidItemRetrieval(  const NetworkId &itemId,
 				client->send(msg, true);
 			}
 		}
-		LOG("CustomerService", ("Auction:Invalid auction item %Ld was cleaned from the system when attempted to be retrieved by player %Ld.", itemId.getValue(), playerId.getValue()));
+		LOG("CustomerService", ("Auction:Invalid auction item %" PRId64 " was cleaned from the system when attempted to be retrieved by player %" PRId64 ".", itemId.getValue(), playerId.getValue()));
 	}
 }
 
@@ -3222,7 +3222,7 @@ void CommoditiesMarket::setSalesTax( int32 salesTax, const NetworkId &bankId, Se
 		return;
 	}
 
-	LOG("CustomerService", ("Auction: Setting sales tax=%d and bankId=%Ld for vendor at location '%s'",
+	LOG("CustomerService", ("Auction: Setting sales tax=%d and bankId=%" PRId64 " for vendor at location '%s'",
 				salesTax, bankId.getValue(), getLocationString(auctionContainer).c_str()));
 	if (s_market)
 	{

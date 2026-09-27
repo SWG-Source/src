@@ -9,6 +9,8 @@
 #ifndef _INCLUDED_JavaLibrary_H
 #define _INCLUDED_JavaLibrary_H
 
+
+#include "sharedFoundation/FormatAttribute.h"
 #ifdef WIN32
 #pragma warning (disable: 4100)
 #pragma warning (disable: 4786)
@@ -189,7 +191,7 @@ public:
 
 public:
 
-	static void throwScriptException(char const * format, ...);
+	static void throwScriptException(char const * format, ...) SWG_FORMAT_PRINTF(1, 2);
 
 	static void throwScriptException(char const * format, va_list va);
 

@@ -48,7 +48,7 @@ bool TaskGetCharactersForAccount::process(DB::Session *session)
 	{
 		// add query info here.
 		CSGetCharactersQuery qry;
-		DEBUG_REPORT_LOG( true, ( "Sending query for sid %lu\n", m_accountId ) );
+		DEBUG_REPORT_LOG( true, ( "Sending query for sid %u\n", m_accountId ) );
 		qry.station_id = m_accountId; // debug, my station id.  Should have a char on here, hopefully!
 		if (! (session->exec(&qry)))
 			return false;

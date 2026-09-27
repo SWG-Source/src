@@ -63,7 +63,7 @@ void AuthTransferTracker::beginAuthTransfer(NetworkId const &networkId, uint32 n
 		std::map<NetworkId, AuthTransferInfo>::iterator i = s_authTransferMap->find(networkId);
 		if (i != s_authTransferMap->end())
 		{
-			WARNING_STRICT_FATAL(true, ("Tried to transfer authority for %s to %lu with an authority transfer to %lu still outstanding.  Some controller messages could be lost.", networkId.getValueString().c_str(), newAuthProcessId, (*i).second.newAuthProcessId));
+			WARNING_STRICT_FATAL(true, ("Tried to transfer authority for %s to %u with an authority transfer to %u still outstanding.  Some controller messages could be lost.", networkId.getValueString().c_str(), newAuthProcessId, (*i).second.newAuthProcessId));
 			s_authTransferMap->erase(i);
 			return;
 		}
@@ -92,7 +92,7 @@ void AuthTransferTracker::beginAuthTransfer(NetworkId const &networkId, uint32 n
 			char logBuffer[1024];
 			logBuffer[0] = '\0';
 			for (std::vector<uint32>::const_iterator i = authTransferInfo.unconfirmedProcessIds.begin(); i != authTransferInfo.unconfirmedProcessIds.end(); ++i)
-				snprintf(logBuffer + strlen(logBuffer), sizeof(logBuffer), "%lu ", *i);
+				snprintf(logBuffer + strlen(logBuffer), sizeof(logBuffer), "%u ", *i);
 			LOG("AuthTransfer", ("Begin auth transfer confirm for %s ( %s)", networkId.getValueString().c_str(), logBuffer));
 		}
 	}
@@ -135,7 +135,7 @@ void AuthTransferTracker::handleConfirmAuthTransfer(NetworkId const &networkId, 
 		if (j != authTransferInfo.unconfirmedProcessIds.end())
 		{
 			if (ConfigServerGame::getLogAuthTransfer())
-				LOG("AuthTransfer", ("Confirm for auth transfer of %s from %lu", networkId.getValueString().c_str(), whichServer));
+				LOG("AuthTransfer", ("Confirm for auth transfer of %s from %u", networkId.getValueString().c_str(), whichServer));
 
 			if (authTransferInfo.unconfirmedProcessIds.size() == 1)
 			{
@@ -152,7 +152,7 @@ void AuthTransferTracker::handleConfirmAuthTransfer(NetworkId const &networkId, 
 	}
 
 	if (ConfigServerGame::getLogAuthTransfer())
-		LOG("AuthTransfer", ("unexpected confirm for auth transfer of %s from %lu", networkId.getValueString().c_str(), whichServer));
+		LOG("AuthTransfer", ("unexpected confirm for auth transfer of %s from %u", networkId.getValueString().c_str(), whichServer));
 }
 
 // ----------------------------------------------------------------------

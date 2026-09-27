@@ -79,7 +79,7 @@ value(newValue)
 	addVariable(value);
 	DEBUG_FATAL(networkId.get() == NetworkId::cms_invalid, ("Trying to send a controller message to networkId 0\n"));
 	char msgDetail[256] = {"\0"};
-	snprintf(msgDetail, 255, "send.ObjControllerMessage.%lu", newMessage);
+	snprintf(msgDetail, 255, "send.ObjControllerMessage.%u", newMessage);
 	NetworkHandler::reportMessage(std::string(msgDetail), 0);
 }
 
@@ -102,7 +102,7 @@ value(0)
 	data = ControllerMessageFactory::unpack(i, source); 
 	DEBUG_FATAL(networkId.get() == NetworkId::cms_invalid, ("Trying to send a controller message to networkId 0\n"));
 	char msgDetail[256] = {"\0"};
-	snprintf(msgDetail, 255, "recv.ObjControllerMessage.%lu", message.get());
+	snprintf(msgDetail, 255, "recv.ObjControllerMessage.%d", message.get());
 	NetworkHandler::reportMessage(std::string(msgDetail), 0);
 
 }

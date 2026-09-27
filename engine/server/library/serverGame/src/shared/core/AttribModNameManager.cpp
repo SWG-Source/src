@@ -161,7 +161,7 @@ bool AttribModNameManager::addAttribModNameFromRemote(const char * name)
 				AttribModNameManagerNamespace::unknownCrcs.end())
 			{
 				LOG("unknown_mods", ("AttribModNameManager::addAttribModNameFromRemote "
-					"added previously unknown mod name %s(%u) in frame %lu",
+					"added previously unknown mod name %s(%u) in frame %u",
 					buffer, crc, ServerClock::getInstance().getServerFrame()));
 				AttribModNameManagerNamespace::unknownCrcs.erase(crc);
 			}
@@ -273,7 +273,7 @@ const char * AttribModNameManager::getAttribModName(uint32 crc) const
 		if (result != m_crcMap->end())
 			return (*(*result).second).c_str();
 		LOG("unknown_mods", ("AttribModNameManager::getAttribModName could not find "
-			"mod name for crc %u in frame %lu", crc, 
+			"mod name for crc %u in frame %u", crc, 
 			ServerClock::getInstance().getServerFrame()));
 		AttribModNameManagerNamespace::unknownCrcs.insert(crc);
 	}

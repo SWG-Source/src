@@ -27,11 +27,11 @@ bool TaskVendorObjectCleanup::process(DB::Session *session)
 			LOG("TaskVendorObjectCleanup::process",( "returned false!" ));
 			return false;
 		}
-		LOG("TaskVendorObjectCleanup::process",("ROWS = %d", qry.result.getValue() ));
+		LOG("TaskVendorObjectCleanup::process",("ROWS = %ld", qry.result.getValue() ));
 		if( qry.result.getValue() == 0 )   // cleanup done
 			break;
 	}
-	LOG("TaskVendorObjectCleanup",("TIME = %d", time(0)-t_start ));
+	LOG("TaskVendorObjectCleanup",("TIME = %lld", static_cast<long long>(time(0)-t_start) ));
 	return true;
 }
 

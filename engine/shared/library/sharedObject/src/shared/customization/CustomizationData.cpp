@@ -794,7 +794,7 @@ void CustomizationData::deregisterModificationListener(ModificationCallback modi
 	ModificationCallbackDataVector::iterator findIt = std::find(m_modificationCallbacks->begin(), m_modificationCallbacks->end(), ModificationCallbackData(modificationCallback, context));
 	if (findIt == m_modificationCallbacks->end())
 	{
-		WARNING(true, ("specified callback/context pair not registered [0x%08x/0x%08x]", modificationCallback, context));
+		WARNING(true, ("specified callback/context pair not registered [%p/%p]", reinterpret_cast<const void *>(modificationCallback), context));
 		return;
 	}
 
@@ -1119,7 +1119,7 @@ void CustomizationData::removeDependentCustomizationData(CustomizationData *cust
 		}
 	}
 
-	WARNING(!hasEntry, ("removeDependentCustomizationData(): customizationData [0x%08x] not dependent on this instance.", customizationData));
+	WARNING(!hasEntry, ("removeDependentCustomizationData(): customizationData [%p] not dependent on this instance.", static_cast<const void *>(customizationData)));
 }
 
 // ----------------------------------------------------------------------

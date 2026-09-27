@@ -121,7 +121,7 @@ void StationPlayersCollectorImpl::handleSPCharacterProfileData(const GameNetwork
 	DEBUG_REPORT_LOG(ConfigStationPlayersCollector::getShowAllDebugInfo(), ("[StationPlayersCollector] : \t Cash: %f\n",msg.GetCash_Balance()));
 	DEBUG_REPORT_LOG(ConfigStationPlayersCollector::getShowAllDebugInfo(), ("[StationPlayersCollector] : \t Bank: %f\n",msg.GetBank_Balance()));
 	DEBUG_REPORT_LOG(ConfigStationPlayersCollector::getShowAllDebugInfo(), ("[StationPlayersCollector] : \t Template: %s\n",msg.GetObjectTemplateName().c_str()));
-	DEBUG_REPORT_LOG(ConfigStationPlayersCollector::getShowAllDebugInfo(), ("[StationPlayersCollector] : \t StationId: %d\n",msg.GetStationId()));
+	DEBUG_REPORT_LOG(ConfigStationPlayersCollector::getShowAllDebugInfo(), ("[StationPlayersCollector] : \t StationId: %u\n",msg.GetStationId()));
 	DEBUG_REPORT_LOG(ConfigStationPlayersCollector::getShowAllDebugInfo(), ("[StationPlayersCollector] : \t ContainedBy: %s\n",msg.GetContainedBy().getValueString().c_str()));
 	DEBUG_REPORT_LOG(ConfigStationPlayersCollector::getShowAllDebugInfo(), ("[StationPlayersCollector] : \t CreateTime: %d\n",msg.GetCreateTime()));
 	DEBUG_REPORT_LOG(ConfigStationPlayersCollector::getShowAllDebugInfo(), ("[StationPlayersCollector] : \t PlayedTime: %d\n",msg.GetPlayedTime()));

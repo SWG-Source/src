@@ -175,7 +175,7 @@ void NetworkHandler::dispatch()
 			services.inputQueue.pop_front();
 		}
 
-		REPORT_LOG(ms_logThrottle && throttle && !services.inputQueue.empty(), ("NetworkHandler::dispatch: services.inputQueue has %d/%d messages remaining\n", services.inputQueue.size(), startQueueSize));
+		REPORT_LOG(ms_logThrottle && throttle && !services.inputQueue.empty(), ("NetworkHandler::dispatch: services.inputQueue has %zu/%zu messages remaining\n", services.inputQueue.size(), startQueueSize));
 	}
 }
 

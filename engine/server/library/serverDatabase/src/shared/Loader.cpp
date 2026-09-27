@@ -182,7 +182,7 @@ void Loader::update(real updateTime)
 			{
 				UnackedLoadsTimeType::const_iterator i = m_unackedLoadsTime.begin();
 
-				LOG("LoadTimes",("Load queue status:  %i queued locators, %i unacked loads (oldest is %i/%is), %i pending tasks, %i active threads, %i completed tasks", m_numQueuedLocators, m_unackedLoadsTime.size(), i->second.first, (time(0) - i->first), taskQ->getNumPendingTasks(), taskQ->getNumActiveTasks(), taskQ->getNumFinishedTasks()));
+				LOG("LoadTimes",("Load queue status:  %i queued locators, %zu unacked loads (oldest is %i/%llds), %i pending tasks, %i active threads, %i completed tasks", m_numQueuedLocators, m_unackedLoadsTime.size(), i->second.first, static_cast<long long>(time(0) - i->first), taskQ->getNumPendingTasks(), taskQ->getNumActiveTasks(), taskQ->getNumFinishedTasks()));
 			}
 		}
 
@@ -266,7 +266,7 @@ void Loader::startLoad()
 		if ((static_cast<int>(i->second.size()) < ConfigServerDatabase::getMaxUnackedLoadCountPerServer()) && (m_locatorList.find(lastEarlyServer) != m_locatorList.end()))
 		{
 			numberOfIterationsWithoutMatch = 0;
-			LOG("LoadTimes",("Early load (server %lu unacked loads=%i, all server unacked loads=%i)", lastEarlyServer, i->second.size(), m_unackedLoadsTime.size()));
+			LOG("LoadTimes",("Early load (server %u unacked loads=%zu, all server unacked loads=%zu)", lastEarlyServer, i->second.size(), m_unackedLoadsTime.size()));
 			startLoadForServer(lastEarlyServer);
 
 			if (static_cast<int>(m_unackedLoadsTime.size()) >= ConfigServerDatabase::getMaxUnackedLoadCount())
@@ -284,7 +284,7 @@ void Loader::startLoad()
 void Loader::startLoadForServer(uint32 serverId)
 {
 	std::list<std::pair<ObjectLocator*, ObjectLocator*> > *locators = m_locatorList[serverId];
-	DEBUG_FATAL(!locators,("Programmer bug:  called startLoadForServer(%lu), but the server had no pending ObjectLocators",serverId));
+	DEBUG_FATAL(!locators,("Programmer bug:  called startLoadForServer(%u), but the server had no pending ObjectLocators",serverId));
 	if (locators)
 	{
 		if (!locators->empty())
@@ -303,7 +303,7 @@ void Loader::startLoadForServer(uint32 serverId)
 					++discardCount;
 				}
 
-				LOG("LoadTimes",("Discarding %d pending load request for disconnected server %lu", discardCount, serverId));
+				LOG("LoadTimes",("Discarding %d pending load request for disconnected server %u", discardCount, serverId));
 			}
 			else
 			{
@@ -444,7 +444,7 @@ void Loader::receiveMessage(const MessageDispatch::Emitter & source, const Messa
 			RequestOIDsMessage m(ri);
 
 			if (m.getLogRequest())
-				LOG("ObjectIdManager", ("Received RequestOIDsMessage for %lu more object ids for pid %lu", m.getHowMany(), m.getServerId()));
+				LOG("ObjectIdManager", ("Received RequestOIDsMessage for %u more object ids for pid %u", m.getHowMany(), m.getServerId()));
 
 			getObjectIds(static_cast<int>(m.getServerId()),static_cast<int>(m.getHowMany()), m.getLogRequest());
 			break;
@@ -749,7 +749,7 @@ void Loader::shutdown()
 
 void Loader::preloadRequestComplete(uint32 processId, uint32 preloadAreaId)
 {
-	LOG("Preload",("Received all preload requests for server %lu",processId));
+	LOG("Preload",("Received all preload requests for server %u",processId));
 	if (getUnackedLoadCount(processId) > 0 || m_locatorList.find(processId)!=m_locatorList.end())
 	{
 		if (m_serverDiscardList.find(processId) == m_serverDiscardList.end())
@@ -759,7 +759,7 @@ void Loader::preloadRequestComplete(uint32 processId, uint32 preloadAreaId)
 	}
 	else
 	{
-		LOG("Preload",("Done sending preload objects to server %lu.",processId));
+		LOG("Preload",("Done sending preload objects to server %u.",processId));
 		PreloadRequestCompleteMessage msg(processId, preloadAreaId);
 		DatabaseProcess::getInstance().sendToGameServer(processId, msg);
 	}
@@ -946,7 +946,7 @@ void Loader::handleLoadAck(uint32 serverId, int serialNumber)
 	{
 		// Server was preloading, and it has acknowledged all the requested loads
 		// Tell it that preloading is done
-		LOG("Preload",("Done sending preload objects to server %lu.",serverId));
+		LOG("Preload",("Done sending preload objects to server %u.",serverId));
 		PreloadRequestCompleteMessage msg(serverId, j->second);
 		DatabaseProcess::getInstance().sendToGameServer(serverId, msg);
 		m_preloadingProcesses.erase(j);

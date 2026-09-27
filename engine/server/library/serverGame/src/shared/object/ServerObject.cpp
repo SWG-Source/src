@@ -3143,7 +3143,7 @@ void ServerObject::createFarNetworkUpdateVolume(float const overrideVal)
 	Object const *const containedByObject = ContainerInterface::getContainedByObject(*this);
 	if (containedByObject)
 	{
-		DEBUG_REPORT_LOG(true, ("SO::createFarNetworkUpdateVolume(): server id=[%lu],object id=[%s],container id=[%s]: skipping creation of far network update volume because item is contained.\n",
+		DEBUG_REPORT_LOG(true, ("SO::createFarNetworkUpdateVolume(): server id=[%u],object id=[%s],container id=[%s]: skipping creation of far network update volume because item is contained.\n",
 								GameServer::getInstance().getProcessId(),
 								getNetworkId().getValueString().c_str(),
 								containedByObject->getNetworkId().getValueString().c_str()));
@@ -5549,16 +5549,16 @@ void ServerObject::handleCMessageTo(const MessageToPayload &message)
 				if (msg.getResultCode() == RESULT_SUCCESS)
 				{
 					if (msg.getResultCameFromSession())
-						ConsoleMgr::broadcastString(FormattedString<1024>().sprintf("feature Id (%lu) on account (%lu) has been adjusted from (%d) to (%d); session/Platform reported successful result code (%u, %s:%s)", msg.getFeatureId(), msg.getTargetStationId(), msg.getOldValue(), msg.getNewValue(), msg.getResultCode(), msg.getSessionResultString().c_str(), msg.getSessionResultText().c_str()), getClient());
+						ConsoleMgr::broadcastString(FormattedString<1024>().sprintf("feature Id (%u) on account (%u) has been adjusted from (%d) to (%d); session/Platform reported successful result code (%u, %s:%s)", msg.getFeatureId(), msg.getTargetStationId(), msg.getOldValue(), msg.getNewValue(), msg.getResultCode(), msg.getSessionResultString().c_str(), msg.getSessionResultText().c_str()), getClient());
 					else
-						ConsoleMgr::broadcastString(FormattedString<1024>().sprintf("feature Id (%lu) on account (%lu) has been adjusted from (%d) to (%d)", msg.getFeatureId(), msg.getTargetStationId(), msg.getOldValue(), msg.getNewValue()), getClient());
+						ConsoleMgr::broadcastString(FormattedString<1024>().sprintf("feature Id (%u) on account (%u) has been adjusted from (%d) to (%d)", msg.getFeatureId(), msg.getTargetStationId(), msg.getOldValue(), msg.getNewValue()), getClient());
 				}
 				else
 				{
 					if (msg.getResultCameFromSession())
-						ConsoleMgr::broadcastString(FormattedString<1024>().sprintf("request to adjust feature Id for account (%lu) failed with error code (%u, %s:%s)", msg.getTargetStationId(), msg.getResultCode(), msg.getSessionResultString().c_str(), msg.getSessionResultText().c_str()), getClient());
+						ConsoleMgr::broadcastString(FormattedString<1024>().sprintf("request to adjust feature Id for account (%u) failed with error code (%u, %s:%s)", msg.getTargetStationId(), msg.getResultCode(), msg.getSessionResultString().c_str(), msg.getSessionResultText().c_str()), getClient());
 					else
-						ConsoleMgr::broadcastString(FormattedString<1024>().sprintf("request to adjust feature Id for account (%lu) failed", msg.getTargetStationId()), getClient());
+						ConsoleMgr::broadcastString(FormattedString<1024>().sprintf("request to adjust feature Id for account (%u) failed", msg.getTargetStationId()), getClient());
 				}
 			}
 
@@ -6691,7 +6691,7 @@ void ServerObject::handleDisconnect(bool immediate)
 				logText += "|";
 
 				// station id
-				snprintf(buffer, sizeof(buffer)-1, "%lu", playerObject->getStationId());
+				snprintf(buffer, sizeof(buffer)-1, "%u", playerObject->getStationId());
 				buffer[sizeof(buffer)-1] = '\0';
 				logText += buffer;
 				logText += "|";
@@ -6705,7 +6705,7 @@ void ServerObject::handleDisconnect(bool immediate)
 				logText += "|";
 
 				// session activity
-				snprintf(buffer, sizeof(buffer)-1, "%lu", playerObject->getSessionActivity());
+				snprintf(buffer, sizeof(buffer)-1, "%u", playerObject->getSessionActivity());
 				buffer[sizeof(buffer)-1] = '\0';
 				logText += buffer;
 				logText += "|";
@@ -6746,7 +6746,7 @@ void ServerObject::handleDisconnect(bool immediate)
 				logText += "|";
 
 				// current quest id
-				snprintf(buffer, sizeof(buffer)-1, "%lu", playerObject->getCurrentQuest());
+				snprintf(buffer, sizeof(buffer)-1, "%u", playerObject->getCurrentQuest());
 				buffer[sizeof(buffer)-1] = '\0';
 				logText += buffer;
 				logText += "|";

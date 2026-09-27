@@ -97,7 +97,7 @@ void TreeFile::SearchPath::makeAbsolutePath(const char *fileName, char *buffer) 
 {
 	NOT_NULL(fileName);
 	NOT_NULL(buffer);
-	DEBUG_FATAL(strlen(m_pathName) + 1 + strlen(fileName) + 1 > Os::MAX_PATH_LENGTH, ("file name to long %d/%d", strlen(m_pathName) + strlen(fileName) + 1, Os::MAX_PATH_LENGTH));
+	DEBUG_FATAL(strlen(m_pathName) + 1 + strlen(fileName) + 1 > Os::MAX_PATH_LENGTH, ("file name to long %zu/%d", strlen(m_pathName) + strlen(fileName) + 1, Os::MAX_PATH_LENGTH));
 
 	strcpy(buffer, m_pathName);
 	buffer[m_pathNameLength] = '/';
@@ -127,7 +127,7 @@ int TreeFile::SearchPath::getFileSize(const char *fileName, bool &) const
 void TreeFile::SearchPath::getPathName(const char *fileName, char *outPathName, int outPathNameLength) const
 {
 	UNREF(outPathNameLength);
-	DEBUG_FATAL(istrlen(m_pathName) + 1 + istrlen(fileName) + 1 > outPathNameLength, ("file name too long %d/%d", strlen(m_pathName) + 1 + strlen(fileName) + 1, outPathNameLength));
+	DEBUG_FATAL(istrlen(m_pathName) + 1 + istrlen(fileName) + 1 > outPathNameLength, ("file name too long %zu/%d", strlen(m_pathName) + 1 + strlen(fileName) + 1, outPathNameLength));
 
 #ifdef _DEBUG
 	bool deleted = false;
@@ -172,7 +172,7 @@ void TreeFile::SearchAbsolute::debugPrint(void)
 
 bool TreeFile::SearchAbsolute::exists(const char *fileName, bool &) const
 {
-	DEBUG_FATAL(strlen(fileName) + 1 > Os::MAX_PATH_LENGTH, ("Filename too long %d/%d", strlen(fileName) + 1, Os::MAX_PATH_LENGTH));
+	DEBUG_FATAL(strlen(fileName) + 1 > Os::MAX_PATH_LENGTH, ("Filename too long %zu/%d", strlen(fileName) + 1, Os::MAX_PATH_LENGTH));
 	return FileStreamer::exists(fileName);
 }
 
@@ -180,7 +180,7 @@ bool TreeFile::SearchAbsolute::exists(const char *fileName, bool &) const
 
 int TreeFile::SearchAbsolute::getFileSize(const char *fileName, bool &) const
 {
-	DEBUG_FATAL(strlen(fileName) + 1 > Os::MAX_PATH_LENGTH, ("Filename too long %d/%d", strlen(fileName) + 1, Os::MAX_PATH_LENGTH));
+	DEBUG_FATAL(strlen(fileName) + 1 > Os::MAX_PATH_LENGTH, ("Filename too long %zu/%d", strlen(fileName) + 1, Os::MAX_PATH_LENGTH));
 	return FileStreamer::getFileSize(fileName);
 }
 
@@ -196,7 +196,7 @@ void TreeFile::SearchAbsolute::getPathName(const char *fileName, char *pathName,
 #endif
 
 	UNREF(pathNameLength);
-	DEBUG_FATAL(istrlen(fileName) + 1 > pathNameLength, ("Filename too long %d/%d", strlen(fileName) + 1, pathNameLength));
+	DEBUG_FATAL(istrlen(fileName) + 1 > pathNameLength, ("Filename too long %zu/%d", strlen(fileName) + 1, pathNameLength));
 	strcpy(pathName, fileName);
 }
 
@@ -205,7 +205,7 @@ void TreeFile::SearchAbsolute::getPathName(const char *fileName, char *pathName,
 AbstractFile *TreeFile::SearchAbsolute::open(const char *fileName, AbstractFile::PriorityType priority, bool &)
 {
 	NOT_NULL(fileName);
-	DEBUG_FATAL(strlen(fileName) + 1 > Os::MAX_PATH_LENGTH, ("Filename too long %d/%d", strlen(fileName) + 1, Os::MAX_PATH_LENGTH));
+	DEBUG_FATAL(strlen(fileName) + 1 > Os::MAX_PATH_LENGTH, ("Filename too long %zu/%d", strlen(fileName) + 1, Os::MAX_PATH_LENGTH));
 
 	FileStreamer::File *file = FileStreamer::open(fileName);
 	if (!file)
@@ -359,7 +359,7 @@ TreeFile::SearchTree::SearchTree(int priority, const char *fileName)
 
 bool TreeFile::SearchTree::localExists(const char *fileName, int *index, bool &deleted) const
 {
-	DEBUG_FATAL(strlen(fileName) + 1 > Os::MAX_PATH_LENGTH,("file name too long %d/%d", strlen(fileName) + 1, Os::MAX_PATH_LENGTH));
+	DEBUG_FATAL(strlen(fileName) + 1 > Os::MAX_PATH_LENGTH,("file name too long %zu/%d", strlen(fileName) + 1, Os::MAX_PATH_LENGTH));
 
 	const uint32 crc = Crc::calculate(fileName);
 
@@ -478,7 +478,7 @@ void TreeFile::SearchTree::getPathName(const char *fileName, char *pathName, int
 AbstractFile *TreeFile::SearchTree::open(const char *fileName, AbstractFile::PriorityType priority, bool &deleted)
 {
 	NOT_NULL(fileName);
-	DEBUG_FATAL(strlen(fileName) + 1 > Os::MAX_PATH_LENGTH,("file name too long %d/%d", strlen(fileName) + 1, Os::MAX_PATH_LENGTH));
+	DEBUG_FATAL(strlen(fileName) + 1 > Os::MAX_PATH_LENGTH,("file name too long %zu/%d", strlen(fileName) + 1, Os::MAX_PATH_LENGTH));
 
 	int tableOfContentsIndex = -1;
 	if (localExists(fileName, &tableOfContentsIndex, deleted))
@@ -734,7 +734,7 @@ void TreeFile::SearchTOC::debugPrint(void)
 bool TreeFile::SearchTOC::localExists(const char *fileName, int *index) const
 {
 	NOT_NULL(fileName);
-	DEBUG_FATAL(strlen(fileName) + 1 > Os::MAX_PATH_LENGTH,("file name too long %d/%d", strlen(fileName) + 1, Os::MAX_PATH_LENGTH));
+	DEBUG_FATAL(strlen(fileName) + 1 > Os::MAX_PATH_LENGTH,("file name too long %zu/%d", strlen(fileName) + 1, Os::MAX_PATH_LENGTH));
 
 	const uint32 crc = Crc::calculate(fileName);
 
@@ -842,7 +842,7 @@ void TreeFile::SearchTOC::getPathName(const char *fileName, char *pathName, int 
 AbstractFile *TreeFile::SearchTOC::open(const char *fileName, AbstractFile::PriorityType priority, bool &deleted)
 {
 	NOT_NULL(fileName);
-	DEBUG_FATAL(strlen(fileName) + 1 > Os::MAX_PATH_LENGTH,("file name too long %d/%d", strlen(fileName) + 1, Os::MAX_PATH_LENGTH));
+	DEBUG_FATAL(strlen(fileName) + 1 > Os::MAX_PATH_LENGTH,("file name too long %zu/%d", strlen(fileName) + 1, Os::MAX_PATH_LENGTH));
 	deleted = false;
 
 	int tableOfContentsIndex = -1;
@@ -1044,8 +1044,8 @@ int TreeFile::SearchCache::addCachedFile(char const * const fileName)
 
 void TreeFile::SearchCache::debugPrint()
 {
-	DEBUG_REPORT_PRINT(true, ("  %d=priority SearchCache [%i]\n", getPriority(), m_cachedFileMap->size()));
-	DEBUG_OUTPUT_STATIC_VIEW("Foundation\\Treefile", ("  %d=priority SearchCache [%i]\n", getPriority(), m_cachedFileMap->size()));
+	DEBUG_REPORT_PRINT(true, ("  %d=priority SearchCache [%zu]\n", getPriority(), m_cachedFileMap->size()));
+	DEBUG_OUTPUT_STATIC_VIEW("Foundation\\Treefile", ("  %d=priority SearchCache [%zu]\n", getPriority(), m_cachedFileMap->size()));
 }
 
 // ----------------------------------------------------------------------

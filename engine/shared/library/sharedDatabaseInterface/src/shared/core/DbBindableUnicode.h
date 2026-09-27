@@ -198,7 +198,7 @@ namespace DB
                 size_t bufsize = str.size();
 
                 if (bufsize >= S) {
-                        WARNING(true, ("Attmpted to insert %s which is too long. Truncating.", buffer.c_str()));
+                        WARNING(true, ("Attmpted to insert %s which is too long. Truncating.", str.c_str()));
                         indicator = S;
                 } else {
                         indicator = bufsize;

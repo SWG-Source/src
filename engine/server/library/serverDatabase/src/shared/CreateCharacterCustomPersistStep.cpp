@@ -64,7 +64,7 @@ void CreateCharacterCustomPersistStep::onComplete()
 {
 	Persister::getInstance().onNewCharacterSaved(m_stationId,m_characterObject,m_characterName,m_templateId,m_special);
 	DataLookup::getInstance().releaseName(m_stationId, NetworkId::cms_invalid);
-	LOG("TraceCharacterCreation", ("%d CreateCharacterCustomPersistStep(%s) complete", m_stationId, Unicode::wideToNarrow(m_characterName).c_str()));
+	LOG("TraceCharacterCreation", ("%u CreateCharacterCustomPersistStep(%s) complete", m_stationId, Unicode::wideToNarrow(m_characterName).c_str()));
 }
 
 // ======================================================================

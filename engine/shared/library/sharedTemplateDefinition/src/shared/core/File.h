@@ -9,6 +9,8 @@
 #ifndef _INCLUDED_File_H
 #define _INCLUDED_File_H
 
+
+#include "sharedFoundation/FormatAttribute.h"
 #include "Filename.h"
 
 #include <cstdio>
@@ -33,7 +35,7 @@ public:
 	int readLine(char *buffer, int bufferSize);
 
 	int puts(const char *string);
-	int print(const char *format, ...);
+	int print(const char *format, ...) SWG_FORMAT_PRINTF(2, 3);
 
 	void printWarning(const char *buffer) const;
 	void printError(const char *buffer) const;

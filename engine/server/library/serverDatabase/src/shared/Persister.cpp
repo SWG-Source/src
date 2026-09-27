@@ -236,7 +236,7 @@ void Persister::onFrameBarrierReached()
 			else
 			{
 				delayedSaves[i->first]=i->second;
-				DEBUG_REPORT_LOG(true,("New character persistence for server %lu delayed because the server split character baselines across a frame boundary.\n",i->first));
+				DEBUG_REPORT_LOG(true,("New character persistence for server %u delayed because the server split character baselines across a frame boundary.\n",i->first));
 			}
 		}
 		m_newCharacterSnapshots.swap(delayedSaves);
@@ -275,7 +275,7 @@ void Persister::onFrameBarrierReached()
 		}
 		else if (ConfigServerDatabase::getReportSaveTimes())
 		{
-			DEBUG_REPORT_LOG(true,("Waiting for previous save.  %i objects queued (%i new).\n",m_objectSnapshotMap.size(),m_newObjectCount));
+			DEBUG_REPORT_LOG(true,("Waiting for previous save.  %zu objects queued (%i new).\n",m_objectSnapshotMap.size(),m_newObjectCount));
 			taskQueue->report();
 		}
 	}
@@ -290,8 +290,8 @@ void Persister::onFrameBarrierReached()
 
 void Persister::startSave(void)
 {
-	DEBUG_REPORT_LOG(ConfigServerDatabase::getReportSaveTimes(),("Starting save with data for %i objects (%i new)\n",m_objectSnapshotMap.size(), m_newObjectCount));
-	LOG("SaveTimes",("Starting save with data for %i objects (%i new)",m_objectSnapshotMap.size(), m_newObjectCount));
+	DEBUG_REPORT_LOG(ConfigServerDatabase::getReportSaveTimes(),("Starting save with data for %zu objects (%i new)\n",m_objectSnapshotMap.size(), m_newObjectCount));
+	LOG("SaveTimes",("Starting save with data for %zu objects (%i new)",m_objectSnapshotMap.size(), m_newObjectCount));
 	// notify Central that a save is starting.  It needs this to determine when it can perform graceful shutdowns
 	LOG("Database",("Sending DatabaseSaveStart network message to Central."));
 	DatabaseSaveStart const startSaveMessage;
@@ -1142,9 +1142,9 @@ void Persister::renameCharacter(uint32 sourceServer, int8 renameCharacterMessage
 	}
 
 	if (requestedBy.isValid())
-		LOG("CustomerService", ("Player:rename character request submitted for %s (%s -> %s) for stationId %lu by %s", characterId.getValueString().c_str(), Unicode::wideToNarrow(oldName).c_str(), Unicode::wideToNarrow(newName).c_str(), stationId, requestedBy.getValueString().c_str()));
+		LOG("CustomerService", ("Player:rename character request submitted for %s (%s -> %s) for stationId %u by %s", characterId.getValueString().c_str(), Unicode::wideToNarrow(oldName).c_str(), Unicode::wideToNarrow(newName).c_str(), stationId, requestedBy.getValueString().c_str()));
 	else
-		LOG("CustomerService", ("Player:rename character request submitted for %s (%s -> %s) for stationId %lu", characterId.getValueString().c_str(), Unicode::wideToNarrow(oldName).c_str(), Unicode::wideToNarrow(newName).c_str(), stationId));
+		LOG("CustomerService", ("Player:rename character request submitted for %s (%s -> %s) for stationId %u", characterId.getValueString().c_str(), Unicode::wideToNarrow(oldName).c_str(), Unicode::wideToNarrow(newName).c_str(), stationId));
 }
 
 // ----------------------------------------------------------------------

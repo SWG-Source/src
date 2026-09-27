@@ -95,13 +95,13 @@ bool ConsoleCommandParserCity::performParsing (const NetworkId & userId, const S
 				continue;
 
 			CitizenInfo const * const mayor = CityInterface::getCitizenInfo(iter->first, ci.getLeaderId());
-			cityInfo.insert(std::make_pair(iter->first, std::string(FormattedString<2048>().sprintf("%d, %s, %s (%s), %s, %s (%d, %d), %dm, %lu (%s), %d, %d, %d (%s)\n", iter->first, ci.getCityName().c_str(), ci.getLeaderId().getValueString().c_str(), (mayor ? mayor->m_citizenName.c_str() : ""), ci.getCityHallId().getValueString().c_str(), ci.getPlanet().c_str(), ci.getX(), ci.getZ(), ci.getRadius(), ci.getFaction(), getFactionString(ci.getFaction()).c_str(), ci.getCitizenCount(), ci.getStructureCount(), ci.getCreationTime(), ((ci.getCreationTime() > 0) ? CalendarTime::convertEpochToTimeStringLocal(ci.getCreationTime()).c_str() : "N/A")))));
+			cityInfo.insert(std::make_pair(iter->first, std::string(FormattedString<2048>().sprintf("%d, %s, %s (%s), %s, %s (%d, %d), %dm, %u (%s), %d, %d, %d (%s)\n", iter->first, ci.getCityName().c_str(), ci.getLeaderId().getValueString().c_str(), (mayor ? mayor->m_citizenName.c_str() : ""), ci.getCityHallId().getValueString().c_str(), ci.getPlanet().c_str(), ci.getX(), ci.getZ(), ci.getRadius(), ci.getFaction(), getFactionString(ci.getFaction()).c_str(), ci.getCitizenCount(), ci.getStructureCount(), ci.getCreationTime(), ((ci.getCreationTime() > 0) ? CalendarTime::convertEpochToTimeStringLocal(ci.getCreationTime()).c_str() : "N/A")))));
 		}
 
 		for (std::multimap<int, std::string>::const_iterator iter2 = cityInfo.begin(); iter2 != cityInfo.end(); ++iter2)
 			result += Unicode::narrowToWide(iter2->second);
 
-		result += Unicode::narrowToWide(FormattedString<2048>().sprintf("%d cities listed\n", cityInfo.size()));
+		result += Unicode::narrowToWide(FormattedString<2048>().sprintf("%zu cities listed\n", cityInfo.size()));
 
 		if (!cityInfo.empty())
 			result += Unicode::narrowToWide("Output format is: \"id, name, mayor, cityHallId, location, radius, faction, number of citizens, number of structures, creationTime\"\n");
@@ -120,13 +120,13 @@ bool ConsoleCommandParserCity::performParsing (const NetworkId & userId, const S
 				continue;
 
 			CitizenInfo const * const mayor = CityInterface::getCitizenInfo(iter->first, ci.getLeaderId());
-			cityInfo.insert(std::make_pair(ci.getCityName(), std::string(FormattedString<2048>().sprintf("%d, %s, %s (%s), %s, %s (%d, %d), %dm, %lu (%s), %d, %d, %d (%s)\n", iter->first, ci.getCityName().c_str(), ci.getLeaderId().getValueString().c_str(), (mayor ? mayor->m_citizenName.c_str() : ""), ci.getCityHallId().getValueString().c_str(), ci.getPlanet().c_str(), ci.getX(), ci.getZ(), ci.getRadius(), ci.getFaction(), getFactionString(ci.getFaction()).c_str(), ci.getCitizenCount(), ci.getStructureCount(), ci.getCreationTime(), ((ci.getCreationTime() > 0) ? CalendarTime::convertEpochToTimeStringLocal(ci.getCreationTime()).c_str() : "N/A")))));
+			cityInfo.insert(std::make_pair(ci.getCityName(), std::string(FormattedString<2048>().sprintf("%d, %s, %s (%s), %s, %s (%d, %d), %dm, %u (%s), %d, %d, %d (%s)\n", iter->first, ci.getCityName().c_str(), ci.getLeaderId().getValueString().c_str(), (mayor ? mayor->m_citizenName.c_str() : ""), ci.getCityHallId().getValueString().c_str(), ci.getPlanet().c_str(), ci.getX(), ci.getZ(), ci.getRadius(), ci.getFaction(), getFactionString(ci.getFaction()).c_str(), ci.getCitizenCount(), ci.getStructureCount(), ci.getCreationTime(), ((ci.getCreationTime() > 0) ? CalendarTime::convertEpochToTimeStringLocal(ci.getCreationTime()).c_str() : "N/A")))));
 		}
 
 		for (std::multimap<std::string, std::string>::const_iterator iter2 = cityInfo.begin(); iter2 != cityInfo.end(); ++iter2)
 			result += Unicode::narrowToWide(iter2->second);
 
-		result += Unicode::narrowToWide(FormattedString<2048>().sprintf("%d cities listed\n", cityInfo.size()));
+		result += Unicode::narrowToWide(FormattedString<2048>().sprintf("%zu cities listed\n", cityInfo.size()));
 
 		if (!cityInfo.empty())
 			result += Unicode::narrowToWide("Output format is: \"id, name, mayor, cityHallId, location, radius, faction, number of citizens, number of structures, creationTime\"\n");
@@ -145,13 +145,13 @@ bool ConsoleCommandParserCity::performParsing (const NetworkId & userId, const S
 				continue;
 
 			CitizenInfo const * const mayor = CityInterface::getCitizenInfo(iter->first, ci.getLeaderId());
-			cityInfo.insert(std::make_pair(-ci.getRadius(), std::string(FormattedString<2048>().sprintf("%d, %s, %s (%s), %s, %s (%d, %d), %dm, %lu (%s), %d, %d, %d (%s)\n", iter->first, ci.getCityName().c_str(), ci.getLeaderId().getValueString().c_str(), (mayor ? mayor->m_citizenName.c_str() : ""), ci.getCityHallId().getValueString().c_str(), ci.getPlanet().c_str(), ci.getX(), ci.getZ(), ci.getRadius(), ci.getFaction(), getFactionString(ci.getFaction()).c_str(), ci.getCitizenCount(), ci.getStructureCount(), ci.getCreationTime(), ((ci.getCreationTime() > 0) ? CalendarTime::convertEpochToTimeStringLocal(ci.getCreationTime()).c_str() : "N/A")))));
+			cityInfo.insert(std::make_pair(-ci.getRadius(), std::string(FormattedString<2048>().sprintf("%d, %s, %s (%s), %s, %s (%d, %d), %dm, %u (%s), %d, %d, %d (%s)\n", iter->first, ci.getCityName().c_str(), ci.getLeaderId().getValueString().c_str(), (mayor ? mayor->m_citizenName.c_str() : ""), ci.getCityHallId().getValueString().c_str(), ci.getPlanet().c_str(), ci.getX(), ci.getZ(), ci.getRadius(), ci.getFaction(), getFactionString(ci.getFaction()).c_str(), ci.getCitizenCount(), ci.getStructureCount(), ci.getCreationTime(), ((ci.getCreationTime() > 0) ? CalendarTime::convertEpochToTimeStringLocal(ci.getCreationTime()).c_str() : "N/A")))));
 		}
 
 		for (std::multimap<int, std::string>::const_iterator iter2 = cityInfo.begin(); iter2 != cityInfo.end(); ++iter2)
 			result += Unicode::narrowToWide(iter2->second);
 
-		result += Unicode::narrowToWide(FormattedString<2048>().sprintf("%d cities listed\n", cityInfo.size()));
+		result += Unicode::narrowToWide(FormattedString<2048>().sprintf("%zu cities listed\n", cityInfo.size()));
 
 		if (!cityInfo.empty())
 			result += Unicode::narrowToWide("Output format is: \"id, name, mayor, cityHallId, location, radius, faction, number of citizens, number of structures, creationTime\"\n");
@@ -170,13 +170,13 @@ bool ConsoleCommandParserCity::performParsing (const NetworkId & userId, const S
 				continue;
 
 			CitizenInfo const * const mayor = CityInterface::getCitizenInfo(iter->first, ci.getLeaderId());
-			cityInfo.insert(std::make_pair(ci.getPlanet(), std::string(FormattedString<2048>().sprintf("%d, %s, %s (%s), %s, %s (%d, %d), %dm, %lu (%s), %d, %d, %d (%s)\n", iter->first, ci.getCityName().c_str(), ci.getLeaderId().getValueString().c_str(), (mayor ? mayor->m_citizenName.c_str() : ""), ci.getCityHallId().getValueString().c_str(), ci.getPlanet().c_str(), ci.getX(), ci.getZ(), ci.getRadius(), ci.getFaction(), getFactionString(ci.getFaction()).c_str(), ci.getCitizenCount(), ci.getStructureCount(), ci.getCreationTime(), ((ci.getCreationTime() > 0) ? CalendarTime::convertEpochToTimeStringLocal(ci.getCreationTime()).c_str() : "N/A")))));
+			cityInfo.insert(std::make_pair(ci.getPlanet(), std::string(FormattedString<2048>().sprintf("%d, %s, %s (%s), %s, %s (%d, %d), %dm, %u (%s), %d, %d, %d (%s)\n", iter->first, ci.getCityName().c_str(), ci.getLeaderId().getValueString().c_str(), (mayor ? mayor->m_citizenName.c_str() : ""), ci.getCityHallId().getValueString().c_str(), ci.getPlanet().c_str(), ci.getX(), ci.getZ(), ci.getRadius(), ci.getFaction(), getFactionString(ci.getFaction()).c_str(), ci.getCitizenCount(), ci.getStructureCount(), ci.getCreationTime(), ((ci.getCreationTime() > 0) ? CalendarTime::convertEpochToTimeStringLocal(ci.getCreationTime()).c_str() : "N/A")))));
 		}
 
 		for (std::multimap<std::string, std::string>::const_iterator iter2 = cityInfo.begin(); iter2 != cityInfo.end(); ++iter2)
 			result += Unicode::narrowToWide(iter2->second);
 
-		result += Unicode::narrowToWide(FormattedString<2048>().sprintf("%d cities listed\n", cityInfo.size()));
+		result += Unicode::narrowToWide(FormattedString<2048>().sprintf("%zu cities listed\n", cityInfo.size()));
 
 		if (!cityInfo.empty())
 			result += Unicode::narrowToWide("Output format is: \"id, name, mayor, cityHallId, location, radius, faction, number of citizens, number of structures, creationTime\"\n");
@@ -195,13 +195,13 @@ bool ConsoleCommandParserCity::performParsing (const NetworkId & userId, const S
 				continue;
 
 			CitizenInfo const * const mayor = CityInterface::getCitizenInfo(iter->first, ci.getLeaderId());
-			cityInfo.insert(std::make_pair(-ci.getCitizenCount(), std::string(FormattedString<2048>().sprintf("%d, %s, %s (%s), %s, %s (%d, %d), %dm, %lu (%s), %d, %d, %d (%s)\n", iter->first, ci.getCityName().c_str(), ci.getLeaderId().getValueString().c_str(), (mayor ? mayor->m_citizenName.c_str() : ""), ci.getCityHallId().getValueString().c_str(), ci.getPlanet().c_str(), ci.getX(), ci.getZ(), ci.getRadius(), ci.getFaction(), getFactionString(ci.getFaction()).c_str(), ci.getCitizenCount(), ci.getStructureCount(), ci.getCreationTime(), ((ci.getCreationTime() > 0) ? CalendarTime::convertEpochToTimeStringLocal(ci.getCreationTime()).c_str() : "N/A")))));
+			cityInfo.insert(std::make_pair(-ci.getCitizenCount(), std::string(FormattedString<2048>().sprintf("%d, %s, %s (%s), %s, %s (%d, %d), %dm, %u (%s), %d, %d, %d (%s)\n", iter->first, ci.getCityName().c_str(), ci.getLeaderId().getValueString().c_str(), (mayor ? mayor->m_citizenName.c_str() : ""), ci.getCityHallId().getValueString().c_str(), ci.getPlanet().c_str(), ci.getX(), ci.getZ(), ci.getRadius(), ci.getFaction(), getFactionString(ci.getFaction()).c_str(), ci.getCitizenCount(), ci.getStructureCount(), ci.getCreationTime(), ((ci.getCreationTime() > 0) ? CalendarTime::convertEpochToTimeStringLocal(ci.getCreationTime()).c_str() : "N/A")))));
 		}
 
 		for (std::multimap<int, std::string>::const_iterator iter2 = cityInfo.begin(); iter2 != cityInfo.end(); ++iter2)
 			result += Unicode::narrowToWide(iter2->second);
 
-		result += Unicode::narrowToWide(FormattedString<2048>().sprintf("%d cities listed\n", cityInfo.size()));
+		result += Unicode::narrowToWide(FormattedString<2048>().sprintf("%zu cities listed\n", cityInfo.size()));
 
 		if (!cityInfo.empty())
 			result += Unicode::narrowToWide("Output format is: \"id, name, mayor, cityHallId, location, radius, faction, number of citizens, number of structures, creationTime\"\n");
@@ -220,13 +220,13 @@ bool ConsoleCommandParserCity::performParsing (const NetworkId & userId, const S
 				continue;
 
 			CitizenInfo const * const mayor = CityInterface::getCitizenInfo(iter->first, ci.getLeaderId());
-			cityInfo.insert(std::make_pair(-ci.getStructureCount(), std::string(FormattedString<2048>().sprintf("%d, %s, %s (%s), %s, %s (%d, %d), %dm, %lu (%s), %d, %d, %d (%s)\n", iter->first, ci.getCityName().c_str(), ci.getLeaderId().getValueString().c_str(), (mayor ? mayor->m_citizenName.c_str() : ""), ci.getCityHallId().getValueString().c_str(), ci.getPlanet().c_str(), ci.getX(), ci.getZ(), ci.getRadius(), ci.getFaction(), getFactionString(ci.getFaction()).c_str(), ci.getCitizenCount(), ci.getStructureCount(), ci.getCreationTime(), ((ci.getCreationTime() > 0) ? CalendarTime::convertEpochToTimeStringLocal(ci.getCreationTime()).c_str() : "N/A")))));
+			cityInfo.insert(std::make_pair(-ci.getStructureCount(), std::string(FormattedString<2048>().sprintf("%d, %s, %s (%s), %s, %s (%d, %d), %dm, %u (%s), %d, %d, %d (%s)\n", iter->first, ci.getCityName().c_str(), ci.getLeaderId().getValueString().c_str(), (mayor ? mayor->m_citizenName.c_str() : ""), ci.getCityHallId().getValueString().c_str(), ci.getPlanet().c_str(), ci.getX(), ci.getZ(), ci.getRadius(), ci.getFaction(), getFactionString(ci.getFaction()).c_str(), ci.getCitizenCount(), ci.getStructureCount(), ci.getCreationTime(), ((ci.getCreationTime() > 0) ? CalendarTime::convertEpochToTimeStringLocal(ci.getCreationTime()).c_str() : "N/A")))));
 		}
 
 		for (std::multimap<int, std::string>::const_iterator iter2 = cityInfo.begin(); iter2 != cityInfo.end(); ++iter2)
 			result += Unicode::narrowToWide(iter2->second);
 
-		result += Unicode::narrowToWide(FormattedString<2048>().sprintf("%d cities listed\n", cityInfo.size()));
+		result += Unicode::narrowToWide(FormattedString<2048>().sprintf("%zu cities listed\n", cityInfo.size()));
 
 		if (!cityInfo.empty())
 			result += Unicode::narrowToWide("Output format is: \"id, name, mayor, cityHallId, location, radius, faction, number of citizens, number of structures, creationTime\"\n");
@@ -245,13 +245,13 @@ bool ConsoleCommandParserCity::performParsing (const NetworkId & userId, const S
 				continue;
 
 			CitizenInfo const * const mayor = CityInterface::getCitizenInfo(iter->first, ci.getLeaderId());
-			cityInfo.insert(std::make_pair(ci.getCreationTime(), std::string(FormattedString<2048>().sprintf("%d, %s, %s (%s), %s, %s (%d, %d), %dm, %lu (%s), %d, %d, %d (%s)\n", iter->first, ci.getCityName().c_str(), ci.getLeaderId().getValueString().c_str(), (mayor ? mayor->m_citizenName.c_str() : ""), ci.getCityHallId().getValueString().c_str(), ci.getPlanet().c_str(), ci.getX(), ci.getZ(), ci.getRadius(), ci.getFaction(), getFactionString(ci.getFaction()).c_str(), ci.getCitizenCount(), ci.getStructureCount(), ci.getCreationTime(), ((ci.getCreationTime() > 0) ? CalendarTime::convertEpochToTimeStringLocal(ci.getCreationTime()).c_str() : "N/A")))));
+			cityInfo.insert(std::make_pair(ci.getCreationTime(), std::string(FormattedString<2048>().sprintf("%d, %s, %s (%s), %s, %s (%d, %d), %dm, %u (%s), %d, %d, %d (%s)\n", iter->first, ci.getCityName().c_str(), ci.getLeaderId().getValueString().c_str(), (mayor ? mayor->m_citizenName.c_str() : ""), ci.getCityHallId().getValueString().c_str(), ci.getPlanet().c_str(), ci.getX(), ci.getZ(), ci.getRadius(), ci.getFaction(), getFactionString(ci.getFaction()).c_str(), ci.getCitizenCount(), ci.getStructureCount(), ci.getCreationTime(), ((ci.getCreationTime() > 0) ? CalendarTime::convertEpochToTimeStringLocal(ci.getCreationTime()).c_str() : "N/A")))));
 		}
 
 		for (std::multimap<int, std::string>::const_iterator iter2 = cityInfo.begin(); iter2 != cityInfo.end(); ++iter2)
 			result += Unicode::narrowToWide(iter2->second);
 
-		result += Unicode::narrowToWide(FormattedString<2048>().sprintf("%d cities listed\n", cityInfo.size()));
+		result += Unicode::narrowToWide(FormattedString<2048>().sprintf("%zu cities listed\n", cityInfo.size()));
 
 		if (!cityInfo.empty())
 			result += Unicode::narrowToWide("Output format is: \"id, name, mayor, cityHallId, location, radius, faction, number of citizens, number of structures, creationTime\"\n");
@@ -275,14 +275,14 @@ bool ConsoleCommandParserCity::performParsing (const NetworkId & userId, const S
 			if (ci.getTravelCost() > 0)
 			{
 				CitizenInfo const * const mayor = CityInterface::getCitizenInfo(iter->first, ci.getLeaderId());
-				cityInfo.insert(std::make_pair(iter->first, std::string(FormattedString<2048>().sprintf("%d, %s, %s (%s), %s, %s (%d, %d), %dm, %lu (%s), %d, %d, %d (%s)\n", iter->first, ci.getCityName().c_str(), ci.getLeaderId().getValueString().c_str(), (mayor ? mayor->m_citizenName.c_str() : ""), ci.getCityHallId().getValueString().c_str(), ci.getPlanet().c_str(), ci.getX(), ci.getZ(), ci.getRadius(), ci.getFaction(), getFactionString(ci.getFaction()).c_str(), ci.getCitizenCount(), ci.getStructureCount(), ci.getCreationTime(), ((ci.getCreationTime() > 0) ? CalendarTime::convertEpochToTimeStringLocal(ci.getCreationTime()).c_str() : "N/A")))));
+				cityInfo.insert(std::make_pair(iter->first, std::string(FormattedString<2048>().sprintf("%d, %s, %s (%s), %s, %s (%d, %d), %dm, %u (%s), %d, %d, %d (%s)\n", iter->first, ci.getCityName().c_str(), ci.getLeaderId().getValueString().c_str(), (mayor ? mayor->m_citizenName.c_str() : ""), ci.getCityHallId().getValueString().c_str(), ci.getPlanet().c_str(), ci.getX(), ci.getZ(), ci.getRadius(), ci.getFaction(), getFactionString(ci.getFaction()).c_str(), ci.getCitizenCount(), ci.getStructureCount(), ci.getCreationTime(), ((ci.getCreationTime() > 0) ? CalendarTime::convertEpochToTimeStringLocal(ci.getCreationTime()).c_str() : "N/A")))));
 			}
 		}
 
 		for (std::multimap<int, std::string>::const_iterator iter2 = cityInfo.begin(); iter2 != cityInfo.end(); ++iter2)
 			result += Unicode::narrowToWide(iter2->second);
 
-		result += Unicode::narrowToWide(FormattedString<2048>().sprintf("%d cities with illegal shuttleport listed\n", cityInfo.size()));
+		result += Unicode::narrowToWide(FormattedString<2048>().sprintf("%zu cities with illegal shuttleport listed\n", cityInfo.size()));
 
 		if (!cityInfo.empty())
 			result += Unicode::narrowToWide("Output format is: \"id, name, mayor, cityHallId, location, radius, faction, number of citizens, number of structures, creationTime\"\n");
@@ -295,7 +295,7 @@ bool ConsoleCommandParserCity::performParsing (const NetworkId & userId, const S
 
 		std::map<std::pair<std::string, int>, uint32> const & gcwRegionDefenderCities = CityInterface::getGcwRegionDefenderCities();
 		for (std::map<std::pair<std::string, int>, uint32>::const_iterator iterCity = gcwRegionDefenderCities.begin(); iterCity != gcwRegionDefenderCities.end(); ++iterCity)
-			result += Unicode::narrowToWide(FormattedString<2048>().sprintf("(%s) (%d, %s) (%lu) (%s)\n", iterCity->first.first.c_str(), iterCity->first.second, CityInterface::getCityInfo(iterCity->first.second).getCityName().c_str(), iterCity->second, getFactionString(iterCity->second).c_str()));
+			result += Unicode::narrowToWide(FormattedString<2048>().sprintf("(%s) (%d, %s) (%u) (%s)\n", iterCity->first.first.c_str(), iterCity->first.second, CityInterface::getCityInfo(iterCity->first.second).getCityName().c_str(), iterCity->second, getFactionString(iterCity->second).c_str()));
 
 		result += Unicode::narrowToWide("\n");
 
@@ -337,7 +337,7 @@ bool ConsoleCommandParserCity::performParsing (const NetworkId & userId, const S
 			result += Unicode::narrowToWide(FormattedString<2048>().sprintf("radius: %dm\n", ci.getRadius()));
 
 			// faction
-			result += Unicode::narrowToWide(FormattedString<2048>().sprintf("faction: %lu (%s)\n", ci.getFaction(), getFactionString(ci.getFaction()).c_str()));
+			result += Unicode::narrowToWide(FormattedString<2048>().sprintf("faction: %u (%s)\n", ci.getFaction(), getFactionString(ci.getFaction()).c_str()));
 
 			// GCW region defender
 			if (ci.getGcwDefenderRegion().empty())

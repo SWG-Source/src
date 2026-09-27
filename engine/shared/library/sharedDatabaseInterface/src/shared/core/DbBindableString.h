@@ -268,7 +268,7 @@ namespace DB
                 size_t bufsize = buffer.size();
 
                 if (bufsize >= S) {
-                        WARNING(true, ("Attmpted to insert %s which is too long. Truncating.", buffer.c_str()));
+                        WARNING(true, ("Attmpted to insert %s which is too long. Truncating.", Unicode::wideToNarrow(buffer).c_str()));
                         indicator = S;
 			memcpy(m_value, Unicode::wideToNarrow(buffer).c_str(), indicator-1);
                 } else {

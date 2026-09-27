@@ -227,7 +227,7 @@ void CustomizationData::LocalDirectory::deleteDirectory(Directory *childDirector
 
 	if (it == m_directories.end())
 	{
-		WARNING(true, ("deleteDirectory(): specified directory 0x%08x is not a child of this directory", childDirectory));
+		WARNING(true, ("deleteDirectory(): specified directory %p is not a child of this directory", childDirectory));
 		return;
 	}
 
@@ -258,7 +258,7 @@ void CustomizationData::LocalDirectory::iterateOverConstVariables(const std::str
 			//-- check for nullptr directory pointer (shouldn't happen but shouldn't FATAL)
 			if (!it->second)
 			{
-				WARNING(true, ("iterateOverConstVariables(): directory 0x%08x has nullptr child directory for [%s].", this, it->first.getString()));
+				WARNING(true, ("iterateOverConstVariables(): directory %p has nullptr child directory for [%s].", this, it->first.getString()));
 				return;
 			}
 
@@ -295,7 +295,7 @@ void CustomizationData::LocalDirectory::iterateOverVariables(const std::string &
 			//-- check for nullptr directory pointer (shouldn't happen but shouldn't FATAL)
 			if (!it->second)
 			{
-				WARNING(true, ("iterateOverConstVariables(): directory 0x%08x has nullptr child directory for [%s].", this, it->first.getString()));
+				WARNING(true, ("iterateOverConstVariables(): directory %p has nullptr child directory for [%s].", this, it->first.getString()));
 				return;
 			}
 

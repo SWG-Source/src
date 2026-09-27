@@ -135,7 +135,7 @@ bool ConsoleCommandParserScript::performParsing (const NetworkId & userId, const
 			{
 				ScriptList const & scripts = specifiedServerObject->getScriptObject()->getScripts();
 				FormattedString<1024> fs;
-				result += Unicode::narrowToWide(fs.sprintf("script list for object %s, num %d\n", specifiedServerObject->getNetworkId().getValueString().c_str(), scripts.size()));
+				result += Unicode::narrowToWide(fs.sprintf("script list for object %s, num %zu\n", specifiedServerObject->getNetworkId().getValueString().c_str(), scripts.size()));
 
 				if (scripts.size() == 0)
 				{

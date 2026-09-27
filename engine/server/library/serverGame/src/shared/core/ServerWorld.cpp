@@ -188,7 +188,7 @@ void compare_results_int(std::set<TriggerVolume *> &results, const std::set<Trig
 
 	std::set<TriggerVolume*>::iterator iter;
 
-	LOG("SphereGrid", ("=============== Tree Results %d =================", results.size()));
+	LOG("SphereGrid", ("=============== Tree Results %zu =================", results.size()));
 	for (iter = results.begin(); iter != results.end(); ++iter)
 	{
 		TriggerVolume* volume = *iter;
@@ -199,7 +199,7 @@ void compare_results_int(std::set<TriggerVolume *> &results, const std::set<Trig
 		Vector c = world.getCenter();
 		LOG("SphereGrid", (" (%f %f %f) %f POB = %p  DIST=%f", c.x, c.y, c.z, world.getRadius(), pob, c.magnitudeBetween(v)));
 	}
-	LOG("SphereGrid", ("------------------ Grid Results %d ------------------", results2.size()));
+	LOG("SphereGrid", ("------------------ Grid Results %zu ------------------", results2.size()));
 	for (iter = results2.begin(); iter != results2.end(); ++iter)
 	{
 		TriggerVolume* volume = *iter;
@@ -2237,7 +2237,7 @@ void ServerWorld::triggerMovingObjects(ServerObject &movingObject, Vector const 
 
 			if (system == 1)
 			{
-				DEBUG_FATAL(results.size() != results2.size(), ("SphereGrid failed (%d vs. %d).", results.size(), results2.size()));
+				DEBUG_FATAL(results.size() != results2.size(), ("SphereGrid failed (%zu vs. %zu).", results.size(), results2.size()));
 			}
 
 			if (system != 2)
@@ -2368,7 +2368,7 @@ void ServerWorld::triggerMovingTriggers(ServerObject &movingObject, Vector const
 	{
 		ServerObject::TriggerVolumeMap &volumes = movingObject.getTriggerVolumeMap();
 
-		DEBUG_REPORT_LOG(ms_logTriggerStats, ("**** Outloop %d\n", volumes.size()));
+		DEBUG_REPORT_LOG(ms_logTriggerStats, ("**** Outloop %zu\n", volumes.size()));
 		for (ServerObject::TriggerVolumeMap::iterator v = volumes.begin(); v != volumes.end(); ++v)
 		{
 			TriggerVolume * const t = (*v).second;
@@ -2381,7 +2381,7 @@ void ServerWorld::triggerMovingTriggers(ServerObject &movingObject, Vector const
 				g_objectSphereTree->findInRange(queryCapsule, TriggerVolumeFilter(), results);
 			}
 
-			DEBUG_REPORT_LOG(ms_logTriggerStats, ("     **** Innerloop %d\n", results.size()));
+			DEBUG_REPORT_LOG(ms_logTriggerStats, ("     **** Innerloop %zu\n", results.size()));
 			{
 				PROFILER_AUTO_BLOCK_DEFINE("MoveTriggerVolumes");
 				int clcount = 0;
@@ -2481,7 +2481,7 @@ void ServerWorld::internalMoveObject(ServerObject & movingObject, const Vector &
 		DEBUG_FATAL(start != start, ("Object %s:%s is moving from an invalid start position (NaN)", movingObject.getObjectTemplateName(), movingObject.getNetworkId().getValueString().c_str()));
 		DEBUG_FATAL(end != end, ("Object %s:%s is moving to an invalid end position (NaN)", movingObject.getObjectTemplateName(), movingObject.getNetworkId().getValueString().c_str()));
 		DEBUG_FATAL(start != start, ("Object %s:%s is moving from an invalid start position (NaN)", movingObject.getObjectTemplateName(), movingObject.getNetworkId().getValueString().c_str()));
-		DEBUG_FATAL(movingObject.getSphereExtent().getRadius() != movingObject.getSphereExtent().getRadius(), ("Object %s:%s has an invalid sphere extent radius %f", movingObject.getNetworkId().getValueString().c_str(), movingObject.getSphereExtent().getRadius()));
+		DEBUG_FATAL(movingObject.getSphereExtent().getRadius() != movingObject.getSphereExtent().getRadius(), ("Object %s:%s has an invalid sphere extent radius %f", movingObject.getObjectTemplateName(), movingObject.getNetworkId().getValueString().c_str(), movingObject.getSphereExtent().getRadius()));
 	}
 }
 

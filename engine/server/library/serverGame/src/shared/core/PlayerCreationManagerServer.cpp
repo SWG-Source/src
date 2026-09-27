@@ -91,7 +91,7 @@ bool PlayerCreationManagerServer::setupPlayer(CreatureObject & obj, const std::s
 	//-- setup attribs
 	if (!attribs.empty())
 	{
-		WARNING(attribs.size() != static_cast<size_t>(Attributes::NumberOfAttributes), ("Bad number of attribs %d when creating avatar", attribs.size()));
+		WARNING(attribs.size() != static_cast<size_t>(Attributes::NumberOfAttributes), ("Bad number of attribs %zu when creating avatar", attribs.size()));
 		int i = 0;
 		for (AttribVector::const_iterator it = attribs.begin (); it != attribs.end (); ++it)
 		{

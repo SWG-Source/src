@@ -164,7 +164,7 @@ MatchMakingId::IntVector MatchMakingId::getInts() const
 		}
 	}
 
-	DEBUG_FATAL((ints.size() > 4), ("Too many ints: %d", ints.size()));
+	DEBUG_FATAL((ints.size() > 4), ("Too many ints: %zu", ints.size()));
 
 	return ints;
 }
@@ -375,7 +375,7 @@ void MatchMakingId::packIntString(std::string &value) const
 
 		// Put the size of the vector
 
-		sprintf(text, "%d ", ints.size());
+		sprintf(text, "%zu ", ints.size());
 		result += text;
 
 		// Put each int value from the vector

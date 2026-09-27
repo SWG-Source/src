@@ -53,14 +53,14 @@ void MarketAuctionsBufferCreate::removeObject(const NetworkId &object)
 
 void MarketAuctionsBufferCreate::removeMarketAuctions(const NetworkId &itemId)
 {
-	DEBUG_REPORT_LOG(true, ("MarketAuctionsBufferCreate Removing Market Auctions Buffer Row. rowcount:%d\n", m_rows.size()));
+	DEBUG_REPORT_LOG(true, ("MarketAuctionsBufferCreate Removing Market Auctions Buffer Row. rowcount:%zu\n", m_rows.size()));
 	DBSchema::MarketAuctionsRow *row=findRowByIndex(itemId);
 	if (row)
 	{
 		delete row;
 		IGNORE_RETURN(m_rows.erase(itemId));
 		IGNORE_RETURN(m_attributes.erase(itemId));
-		DEBUG_REPORT_LOG(true, ("MarketAuctionsBufferCreate Removing Market Auctions Buffer Row. rowcount:%d\n", m_rows.size()));
+		DEBUG_REPORT_LOG(true, ("MarketAuctionsBufferCreate Removing Market Auctions Buffer Row. rowcount:%zu\n", m_rows.size()));
 	}
 }
 
@@ -140,8 +140,8 @@ bool MarketAuctionsBufferCreate::save(DB::Session *session)
 		for (AttributesType::const_iterator i=m_attributes.begin(); i!=m_attributes.end(); ++i)
 			numAttributes += i->second.size();
 
-		LOG("SaveCounts",("MarketAuctionsBufferCreate: %i auctions, %i auction attributes saved to db",m_rows.size(), numAttributes));
-		DEBUG_REPORT_LOG(true, ("MarketAuctionsBufferCreate Saving Market Auctions Buffer. rowcount:%d auctions, %d auction attributes\n", m_rows.size(), numAttributes));
+		LOG("SaveCounts",("MarketAuctionsBufferCreate: %zu auctions, %zu auction attributes saved to db",m_rows.size(), numAttributes));
+		DEBUG_REPORT_LOG(true, ("MarketAuctionsBufferCreate Saving Market Auctions Buffer. rowcount:%zu auctions, %zu auction attributes\n", m_rows.size(), numAttributes));
 	}
 
 	{
@@ -239,13 +239,13 @@ void MarketAuctionsBufferDelete::removeObject(const NetworkId &object)
 
 void MarketAuctionsBufferDelete::removeMarketAuctions(const NetworkId &itemId)
 {
-	DEBUG_REPORT_LOG(true, ("MarketAuctionsBufferDelete Removing Market Auctions Buffer Row. rowcount:%d\n", m_rows.size()));
+	DEBUG_REPORT_LOG(true, ("MarketAuctionsBufferDelete Removing Market Auctions Buffer Row. rowcount:%zu\n", m_rows.size()));
 	DBSchema::MarketAuctionsRowDelete *row=findRowByIndex(itemId);
 	if (row)
 	{
 		delete row;
 		IGNORE_RETURN(m_rows.erase(itemId));
-		DEBUG_REPORT_LOG(true, ("MarketAuctionsBufferDelete Removing Market Auctions Buffer Row. rowcount:%d\n", m_rows.size()));
+		DEBUG_REPORT_LOG(true, ("MarketAuctionsBufferDelete Removing Market Auctions Buffer Row. rowcount:%zu\n", m_rows.size()));
 	}
 }
 
@@ -286,8 +286,8 @@ void MarketAuctionsBufferDelete::addRowToIndex (const NetworkId &itemId, DBSchem
 
 bool MarketAuctionsBufferDelete::save(DB::Session *session)
 {
-	LOG("SaveCounts",("MarketAuctionsBufferDelete: %i saved to db",m_rows.size()));
-	DEBUG_REPORT_LOG(true, ("MarketAuctionsBufferDelete Saving Market Auctions Buffer. rowcount:%d\n", m_rows.size()));
+	LOG("SaveCounts",("MarketAuctionsBufferDelete: %zu saved to db",m_rows.size()));
+	DEBUG_REPORT_LOG(true, ("MarketAuctionsBufferDelete Saving Market Auctions Buffer. rowcount:%zu\n", m_rows.size()));
 
 	DBQuery::MarketAuctionsQuery qry;
 	qry.deleteMode();
@@ -352,13 +352,13 @@ void MarketAuctionsBufferUpdate::removeObject(const NetworkId &object)
 
 void MarketAuctionsBufferUpdate::removeMarketAuctions(const NetworkId &itemId)
 {
-	DEBUG_REPORT_LOG(true, ("MarketAuctionsBufferUpdate Removing Market Auctions Buffer Row. rowcount:%d\n", m_rows.size()));
+	DEBUG_REPORT_LOG(true, ("MarketAuctionsBufferUpdate Removing Market Auctions Buffer Row. rowcount:%zu\n", m_rows.size()));
 	DBSchema::MarketAuctionsRowUpdate *row=findRowByIndex(itemId);
 	if (row)
 	{
 		delete row;
 		IGNORE_RETURN(m_rows.erase(itemId));
-		DEBUG_REPORT_LOG(true, ("MarketAuctionsBufferUpdate Removing Market Auctions Buffer Row. rowcount:%d\n", m_rows.size()));
+		DEBUG_REPORT_LOG(true, ("MarketAuctionsBufferUpdate Removing Market Auctions Buffer Row. rowcount:%zu\n", m_rows.size()));
 	}
 }
 
@@ -401,8 +401,8 @@ void MarketAuctionsBufferUpdate::addRowToIndex (const NetworkId &itemId, DBSchem
 
 bool MarketAuctionsBufferUpdate::save(DB::Session *session)
 {
-	LOG("SaveCounts",("MarketAuctionsBufferUpdate: %i saved to db",m_rows.size()));
-	DEBUG_REPORT_LOG(true, ("MarketAuctionsBufferUpdate Saving Market Auctions Buffer. rowcount:%d\n", m_rows.size()));
+	LOG("SaveCounts",("MarketAuctionsBufferUpdate: %zu saved to db",m_rows.size()));
+	DEBUG_REPORT_LOG(true, ("MarketAuctionsBufferUpdate Saving Market Auctions Buffer. rowcount:%zu\n", m_rows.size()));
 
 	DBQuery::MarketAuctionsQuery qry;
 	qry.updateMode();

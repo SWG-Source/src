@@ -110,7 +110,7 @@ bool MessageBuffer::save(DB::Session *session)
 	ackqry.freeData();
 
 
-	LOG("SaveCounts",("Messages:  %i out of %i saved in db, %i acks sent to db",actualSaves,m_data.size(),m_ackedMessages.size()));
+	LOG("SaveCounts",("Messages:  %i out of %zu saved in db, %zu acks sent to db",actualSaves,m_data.size(),m_ackedMessages.size()));
 	return true;
 }
 

@@ -356,7 +356,7 @@ jstring JNICALL ScriptMethodsInteriorsNamespace::getCellName(JNIEnv *env, jobjec
 	if (static_cast<size_t>(cellIndex) > nameList.size())
 	{
 		WARNING(true, ("JavaLibrary::getCellName cell %s has a cell index of %d"
-			"(base-1), when its owner building %s has only %u cells(base-0)",
+			"(base-1), when its owner building %s has only %zu cells(base-0)",
 			cellObject->getNetworkId().getValueString().c_str(), cellIndex,
 			portallizedObject->getNetworkId().getValueString().c_str(), nameList.size()));
 		return 0;

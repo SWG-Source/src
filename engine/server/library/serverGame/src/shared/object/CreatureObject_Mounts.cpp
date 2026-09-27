@@ -803,7 +803,7 @@ bool CreatureObject::detachRider(NetworkId const riderId)
 	}
 
 	//-- Validate preconditions.
-	DEBUG_FATAL(!isMountable(), ("CreatureObject::detachRider(): called on an object id=[%s],template=[%s] that is not mountable, makes no sense.", getNetworkId().getValueString().c_str()));
+	DEBUG_FATAL(!isMountable(), ("CreatureObject::detachRider(): called on an object id=[%s],template=[%s] that is not mountable, makes no sense.", getNetworkId().getValueString().c_str(), getObjectTemplateName()));
 
 	int const maxSlots = getSaddleSeatingCapacity(this);
 	bool forceDetachAll = false; // incase riderId is the first person
@@ -857,7 +857,7 @@ bool CreatureObject::detachAllRiders()
 	}
 
 	//-- Validate preconditions.
-	DEBUG_FATAL(!isMountable(), ("CreatureObject::detachRider(): called on an object id=[%s],template=[%s] that is not mountable, makes no sense.", getNetworkId().getValueString().c_str()));
+	DEBUG_FATAL(!isMountable(), ("CreatureObject::detachRider(): called on an object id=[%s],template=[%s] that is not mountable, makes no sense.", getNetworkId().getValueString().c_str(), getObjectTemplateName()));
 
 	int const maxSlots = getSaddleSeatingCapacity(this);
 	int numberOfSuccesses = 0;
