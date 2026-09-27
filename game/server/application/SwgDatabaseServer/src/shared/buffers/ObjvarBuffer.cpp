@@ -298,11 +298,14 @@ ObjvarBuffer::updateObjvars(const NetworkId &objectId, const std::vector <Dynami
                 {
                     DataType::iterator row = m_data.find(IndexKey(objectId, nameId));
                     if (row == m_data.end()) {
-                        if (i->value.getPosition() == -1 || override) {
-                            row = m_data.insert(std::make_pair(IndexKey(objectId, nameId), ObjvarValue())).first;
-                            row->second.m_inDatabase = true; // deleting existing variable
+                        if (i->value.getPosition() != -1 && !override) {
+                            // A packed objvar lives in the objects table, not here, so there is
+                            // nothing to record. (This used to fall through and write through
+                            // end(), the map's header, corrupting the next member of SwgSnapshot.)
+                            break;
                         }
-                        // else it was a packed objvar, and no update is necessary
+                        row = m_data.insert(std::make_pair(IndexKey(objectId, nameId), ObjvarValue())).first;
+                        row->second.m_inDatabase = true; // deleting existing variable
                     }
 
                     row->second.m_type = i->value.getType();
