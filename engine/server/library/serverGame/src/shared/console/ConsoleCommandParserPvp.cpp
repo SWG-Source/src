@@ -255,7 +255,12 @@ bool ConsoleCommandParserPvp::performParsing (const NetworkId & userId, const St
 			}
 			else
 			{
-				int const adjustment = atoi(Unicode::wideToNarrow(argv[2]).c_str());
+				int32 adjustment = 0;
+				if (!parseArg(argv[2], adjustment))
+				{
+					result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+					return true;
+				}
 				result += Unicode::narrowToWide(FormattedString<512>().sprintf("character object %s (%s) adjusting current GCW point (%d) by (%d)\n", oid.getValueString().c_str(), Unicode::wideToNarrow(o->getAssignedObjectName()).c_str(), p->getCurrentGcwPoints(), adjustment));
 				p->modifyCurrentGcwPoints(adjustment, false);
 			}
@@ -291,7 +296,12 @@ bool ConsoleCommandParserPvp::performParsing (const NetworkId & userId, const St
 			}
 			else
 			{
-				int const adjustment = atoi(Unicode::wideToNarrow(argv[2]).c_str());
+				int32 adjustment = 0;
+				if (!parseArg(argv[2], adjustment))
+				{
+					result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+					return true;
+				}
 				result += Unicode::narrowToWide(FormattedString<512>().sprintf("character object %s (%s) adjusting current GCW rating (%d) by (%d)\n", oid.getValueString().c_str(), Unicode::wideToNarrow(o->getAssignedObjectName()).c_str(), p->getCurrentGcwRating(), adjustment));
 				p->modifyCurrentGcwRating(adjustment, false);
 			}
@@ -327,7 +337,12 @@ bool ConsoleCommandParserPvp::performParsing (const NetworkId & userId, const St
 			}
 			else
 			{
-				int const adjustment = atoi(Unicode::wideToNarrow(argv[2]).c_str());
+				int32 adjustment = 0;
+				if (!parseArg(argv[2], adjustment))
+				{
+					result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+					return true;
+				}
 				result += Unicode::narrowToWide(FormattedString<512>().sprintf("character object %s (%s) adjusting current PvP kill (%d) by (%d)\n", oid.getValueString().c_str(), Unicode::wideToNarrow(o->getAssignedObjectName()).c_str(), p->getCurrentPvpKills(), adjustment));
 				p->modifyCurrentPvpKills(adjustment, false);
 			}
@@ -363,7 +378,12 @@ bool ConsoleCommandParserPvp::performParsing (const NetworkId & userId, const St
 			}
 			else
 			{
-				int const adjustment = atoi(Unicode::wideToNarrow(argv[2]).c_str());
+				int32 adjustment = 0;
+				if (!parseArg(argv[2], adjustment))
+				{
+					result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+					return true;
+				}
 				result += Unicode::narrowToWide(FormattedString<512>().sprintf("character object %s (%s) adjusting lifetime GCW point (", oid.getValueString().c_str(), Unicode::wideToNarrow(o->getAssignedObjectName()).c_str()));
 				result += Unicode::narrowToWide(FormattedString<512>().sprintf(INT64_FORMAT_SPECIFIER,p->getLifetimeGcwPoints()));
 				result += Unicode::narrowToWide(FormattedString<512>().sprintf(") by (%d)\n", adjustment));
@@ -401,7 +421,12 @@ bool ConsoleCommandParserPvp::performParsing (const NetworkId & userId, const St
 			}
 			else
 			{
-				int const adjustment = atoi(Unicode::wideToNarrow(argv[2]).c_str());
+				int32 adjustment = 0;
+				if (!parseArg(argv[2], adjustment))
+				{
+					result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+					return true;
+				}
 				result += Unicode::narrowToWide(FormattedString<512>().sprintf("character object %s (%s) adjusting maximum attained Imperial rating (%d) by (%d)\n", oid.getValueString().c_str(), Unicode::wideToNarrow(o->getAssignedObjectName()).c_str(), p->getMaxGcwImperialRating(), adjustment));
 				p->modifyMaxGcwImperialRating(adjustment);
 			}
@@ -437,7 +462,12 @@ bool ConsoleCommandParserPvp::performParsing (const NetworkId & userId, const St
 			}
 			else
 			{
-				int const adjustment = atoi(Unicode::wideToNarrow(argv[2]).c_str());
+				int32 adjustment = 0;
+				if (!parseArg(argv[2], adjustment))
+				{
+					result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+					return true;
+				}
 				result += Unicode::narrowToWide(FormattedString<512>().sprintf("character object %s (%s) adjusting maximum attained Rebel rating (%d) by (%d)\n", oid.getValueString().c_str(), Unicode::wideToNarrow(o->getAssignedObjectName()).c_str(), p->getMaxGcwRebelRating(), adjustment));
 				p->modifyMaxGcwRebelRating(adjustment);
 			}
@@ -473,7 +503,12 @@ bool ConsoleCommandParserPvp::performParsing (const NetworkId & userId, const St
 			}
 			else
 			{
-				int const adjustment = atoi(Unicode::wideToNarrow(argv[2]).c_str());
+				int32 adjustment = 0;
+				if (!parseArg(argv[2], adjustment))
+				{
+					result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+					return true;
+				}
 				result += Unicode::narrowToWide(FormattedString<512>().sprintf("character object %s (%s) adjusting lifetime PvP kill (%d) by (%d)\n", oid.getValueString().c_str(), Unicode::wideToNarrow(o->getAssignedObjectName()).c_str(), p->getLifetimePvpKills(), adjustment));
 				p->modifyLifetimePvpKills(adjustment);
 			}
@@ -515,7 +550,12 @@ bool ConsoleCommandParserPvp::performParsing (const NetworkId & userId, const St
 			return true;
 		}
 
-		int const adjustment = atoi(Unicode::wideToNarrow(argv[2]).c_str());
+		int32 adjustment = 0;
+		if (!parseArg(argv[2], adjustment))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
 
 		if ((p->getNextGcwRatingCalcTime() <= 0) && (adjustment != 0))
 		{
@@ -537,8 +577,18 @@ bool ConsoleCommandParserPvp::performParsing (const NetworkId & userId, const St
 
 	else if (isCommand (argv [0], "testGcwPointToRatingConversion"))
 	{
-		int const gcwPoints = atoi(Unicode::wideToNarrow(argv[1]).c_str());
-		int const currentRating = atoi(Unicode::wideToNarrow(argv[2]).c_str());
+		int32 gcwPoints = 0;
+		if (!parseArg(argv[1], gcwPoints))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
+		int32 currentRating = 0;
+		if (!parseArg(argv[2], currentRating))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
 
 		int totalEarnedRating, totalEarnedRatingAfterDecay, cappedRatingAdjustment;
 		int const ratingAdjustment = Pvp::calculateRatingAdjustment(gcwPoints, currentRating, totalEarnedRating, totalEarnedRatingAfterDecay, cappedRatingAdjustment);

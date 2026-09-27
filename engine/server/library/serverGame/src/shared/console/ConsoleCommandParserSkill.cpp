@@ -145,7 +145,12 @@ bool ConsoleCommandParserSkill::performParsing (const NetworkId & userId, const 
 		else
 		{
 			const std::string skillModName = Unicode::wideToNarrow (argv[1]);
-			int value = atoi (Unicode::wideToNarrow (argv [2]).c_str ());
+			int32 value = 0;
+			if (!parseArg(argv[2], value))
+			{
+				result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+				return true;
+			}
 			creature->setModValue(skillModName, value);
 			result += getErrorMessage (argv[0], ERR_SUCCESS);
 		}
@@ -220,7 +225,12 @@ bool ConsoleCommandParserSkill::performParsing (const NetworkId & userId, const 
 			
 			if (argv.size () > 3)
 			{
-				const int amount = atoi (Unicode::wideToNarrow (argv [3]).c_str ());
+				int32 amount = 0;
+				if (!parseArg(argv[3], amount))
+				{
+					result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+					return true;
+				}
 				creature->grantExperiencePoints (expType, amount);
 				result += Unicode::narrowToWide ("granted");
 			}

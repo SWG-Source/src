@@ -203,7 +203,13 @@ bool ConsoleCommandParserScript::performParsing (const NetworkId & userId, const
 		int trigger = Scripting::TRIG_LAST_TRIGGER;
 		std::string triggerName = Unicode::wideToNarrow(argv[1]).c_str();
 		if (isdigit(triggerName[0]))
-			trigger = atoi(Unicode::wideToNarrow(argv[1]).c_str());
+		{
+			if (!parseArg(argv[1], trigger))
+			{
+				result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+				return true;
+			}
+		}
 		else
 		{
 			Scripting::_ScriptFuncHashMap::const_iterator iter;

@@ -8,6 +8,7 @@
 #include "serverNetworkMessages/CSDBNetMessages.h"
 #include "serverNetworkMessages/TransferCharacterData.h"
 #include "serverNetworkMessages/TransferCharacterDataArchive.h"
+#include "sharedFoundation/FixedWidthParse.h"
 #include "sharedNetworkMessages/GenericValueTypeMessage.h"
 #include "serverNetworkMessages/StructureListMessage.h"
 
@@ -332,12 +333,17 @@ CS_CMD( login_character )
 	id = request.getCommandString().substr(pos, pos2 - pos);
 	account = request.getCommandString().substr(pos2 + 1);
 
+	// the account is a station id; reject anything that is not one
+	uint32 stationId = 0;
+	if (account.find('\0') != std::string::npos || !FixedWidthParse::parseUint32(account.c_str(), 10, stationId))
+		return;
+
 	// TODO:  Find a way to tell if the player is logged into a different
 	// character on the same account.
 
 	TransferCharacterData data(TransferRequestMoveValidation::TRS_transfer_server);
 	data.setCharacterId(NetworkId(id));
-	data.setSourceStationId(atoi(account.c_str()));
+	data.setSourceStationId(stationId);
 	data.setCSToolId(request.getToolId());
 	const GenericValueTypeMessage<TransferCharacterData> loginCharacter("TransferGetLoginLocationData", data);
 	CentralServer::getInstance().sendToDBProcess( loginCharacter, true );

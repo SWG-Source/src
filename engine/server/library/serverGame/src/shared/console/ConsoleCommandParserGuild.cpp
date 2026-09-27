@@ -742,7 +742,12 @@ bool ConsoleCommandParserGuild::performParsing (const NetworkId & userId, const 
 	}
 	else if (isCommand(argv [0], "showGuildDetails"))
 	{
-		int const guildId = atoi(Unicode::wideToNarrow(argv[1]).c_str());
+		int32 guildId = 0;
+		if (!parseArg(argv[1], guildId))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
 		GuildInfo const * const gi = GuildInterface::getGuildInfo(guildId);
 
 		if (!gi || gi->m_name.empty())
@@ -1058,7 +1063,12 @@ bool ConsoleCommandParserGuild::performParsing (const NetworkId & userId, const 
 	}
 	else if (isCommand(argv [0], "setGuildName"))
 	{
-		int const guildId = atoi(Unicode::wideToNarrow(argv[1]).c_str());
+		int32 guildId = 0;
+		if (!parseArg(argv[1], guildId))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
 		std::string const guildName = Unicode::getTrim(Unicode::wideToNarrow(argv[2]), " \t");
 		bool const overrideReservedNameCheck = argv.size() == 4 && argv[3] == Unicode::narrowToWide("override");
 
@@ -1114,7 +1124,12 @@ bool ConsoleCommandParserGuild::performParsing (const NetworkId & userId, const 
 	}
 	else if (isCommand(argv [0], "setGuildAbbrev"))
 	{
-		int const guildId = atoi(Unicode::wideToNarrow(argv[1]).c_str());
+		int32 guildId = 0;
+		if (!parseArg(argv[1], guildId))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
 		std::string const guildAbbrev = Unicode::getTrim(Unicode::wideToNarrow(argv[2]), " \t");
 		std::string reasonReserved;
 		int existingGuildId;
@@ -1168,7 +1183,12 @@ bool ConsoleCommandParserGuild::performParsing (const NetworkId & userId, const 
 	}
 	else if (isCommand(argv [0], "setGuildLeader"))
 	{
-		int const guildId = atoi(Unicode::wideToNarrow(argv[1]).c_str());
+		int32 guildId = 0;
+		if (!parseArg(argv[1], guildId))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
 		NetworkId const leaderOid(Unicode::wideToNarrow(argv[2]));
 
 		char buffer[1024];

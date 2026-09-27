@@ -152,7 +152,15 @@ bool ConsoleCommandParserObjvar::performParsing (const NetworkId & userId, const
 			switch (getArgumentType(nString))
 			{
 				case INT_ARGUMENT:
-					object->setObjVarItem(objvarName, atoi(nString.c_str()));
+					{
+						int32 value = 0;
+						if (!parseArg(argv[3], value))
+						{
+							result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+							return true;
+						}
+						object->setObjVarItem(objvarName, value);
+					}
 					break;
 				case REAL_ARGUMENT:
 					object->setObjVarItem(objvarName, static_cast<real>(atof(nString.c_str())));
@@ -173,9 +181,10 @@ bool ConsoleCommandParserObjvar::performParsing (const NetworkId & userId, const
 				case DynamicVariable::INT:
 					{
 						const Unicode::NarrowString &nString = Unicode::wideToNarrow(argv[3]);
-						if (getArgumentType(nString) == INT_ARGUMENT)
+						int32 value = 0;
+						if (getArgumentType(nString) == INT_ARGUMENT && parseArg(argv[3], value))
 						{
-							object->setObjVarItem(objvarName, atoi(nString.c_str()));
+							object->setObjVarItem(objvarName, value);
 							result += getErrorMessage(argv[0], ERR_SUCCESS);
 						}
 						else

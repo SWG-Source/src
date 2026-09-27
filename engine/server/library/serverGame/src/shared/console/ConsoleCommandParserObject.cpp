@@ -64,6 +64,7 @@
 #include "sharedFoundation/CalendarTime.h"
 #include "sharedFoundation/ConstCharCrcLowerString.h"
 #include "sharedFoundation/Crc.h"
+#include "sharedFoundation/FixedWidthParse.h"
 #include "sharedFoundation/FormattedString.h"
 #include "sharedFoundation/GameControllerMessage.h"
 #include "sharedFoundation/Production.h"
@@ -156,14 +157,14 @@ namespace ConsoleCommandParserObjectNamespace
 
 	std::string getStringShortcut(NetworkId const & userId, std::string const & tmpString, PlayerStoredStringMap const & playerStoredStringMap)
 	{
-		int stringIndex = 0;
-		sscanf(tmpString.c_str(), "%d", &stringIndex);
+		// if no shortcut number was entered, return the original string;
+		// only an argument that is entirely a positive number is a shortcut
+		int32 stringIndex = 0;
+		if (tmpString.find('\0') != std::string::npos || !FixedWidthParse::parseInt32(tmpString.c_str(), 10, stringIndex) || stringIndex <= 0)
+			return tmpString;
+
 		// decrement the string index so it starts at 0
 		--stringIndex;
-
-		// if no shortcut number was entered, return the original string
-		if (stringIndex < 0)
-			return tmpString;
 
 		PlayerStoredStringMap::const_iterator objectMapIter = playerStoredStringMap.find(userId);
 
@@ -617,7 +618,12 @@ bool ConsoleCommandParserObject::performParsing (const NetworkId & userId, const
 		ServerObject * const object = dynamic_cast<ServerObject *>(NetworkIdManager::getObjectById(oid));
 		if (object)
 		{
-			uint32 const pid = (strtoul(Unicode::wideToNarrow(argv[2]).c_str (), nullptr, 10));
+			uint32 pid = 0;
+			if (!parseArg(argv[2], pid))
+			{
+				result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+				return true;
+			}
 			GenericValueTypeMessage<std::pair<NetworkId, uint32> > const msg(
 				"RequestAuthTransfer",
 				std::make_pair(
@@ -876,7 +882,12 @@ bool ConsoleCommandParserObject::performParsing (const NetworkId & userId, const
 		}
 
 		Vector const      position  = userObject->getPosition_p();
-		int const         count     = atoi(Unicode::wideToNarrow (argv [1]).c_str());
+		int32             count     = 0;
+		if (!parseArg(argv[1], count))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
 		std::string const tmpString = getObjectTemplateShortcut(userId, Unicode::wideToNarrow(argv[2]));
 
 #if defined(_WIN32) && PRODUCTION == 0
@@ -1601,7 +1612,12 @@ bool ConsoleCommandParserObject::performParsing (const NetworkId & userId, const
 			result += getErrorMessage(argv[0], ERR_INVALID_OBJECT);
 			return true;
 		}
-		int index = atoi(Unicode::wideToNarrow(argv[2]).c_str());
+		int32 index = 0;
+		if (!parseArg(argv[2], index))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
 		o->movePobItemToPlayer(*userObject, index, true); // Note: no need to check for gold oids here, because moveItemToPlayer() only succeeds if the house is player-placed
 		result += getErrorMessage(argv[0], ERR_SUCCESS);
 	}
@@ -1628,14 +1644,24 @@ bool ConsoleCommandParserObject::performParsing (const NetworkId & userId, const
             result += getErrorMessage(argv[0], ERR_INVALID_OBJECT);
             return true;
         }
-		int status  = atoi (Unicode::wideToNarrow (argv [2]).c_str ());
+		int32 status = 0;
+		if (!parseArg(argv[2], status))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
 		CommoditiesMarket::vendorStatusChange(oid, status);
 		
         result += getErrorMessage(argv[0], ERR_SUCCESS);
     }
 	else if (isCommand(argv[0], "setAdminTitle"))
 	{
-		int which  = atoi (Unicode::wideToNarrow (argv [1]).c_str ());
+		int32 which = 0;
+		if (!parseArg(argv[1], which))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
 		if (which < 0 || which > 3)
 		{
 			result += Unicode::narrowToWide("Invalid argument.  0=none, 1=csr, 2=dev, 3=qa");
@@ -2045,7 +2071,13 @@ bool ConsoleCommandParserObject::performParsing (const NetworkId & userId, const
 	{
 		RequestWatchObjectPath rwop;
 		NetworkId oid(Unicode::wideToNarrow(argv[1]));
-		bool enable = strtoul(Unicode::wideToNarrow(argv[2]).c_str(), 0, 10) != 0;
+		int32 enableValue = 0;
+		if (!parseArg(argv[2], enableValue))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
+		bool const enable = enableValue != 0;
 		rwop.setClientId(userId);
 		rwop.setObjectId(NetworkId(oid));
 		rwop.setEnable(enable);
@@ -2057,7 +2089,13 @@ bool ConsoleCommandParserObject::performParsing (const NetworkId & userId, const
 	else if(isCommand(argv[0], "watchPathMap"))
 	{
 		RequestWatchPathMap rwpm;
-		bool enable = strtoul(Unicode::wideToNarrow(argv[1]).c_str(), 0, 10) != 0;
+		int32 enableValue = 0;
+		if (!parseArg(argv[1], enableValue))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
+		bool const enable = enableValue != 0;
 		rwpm.setClientId(userId);
 		rwpm.setEnable(enable);
 		emitMessage(rwpm);
@@ -2138,7 +2176,13 @@ bool ConsoleCommandParserObject::performParsing (const NetworkId & userId, const
 	else if (isCommand(argv[0], "hide"))
 	{
 		NetworkId actorId(Unicode::wideToNarrow(argv[1]));
-		bool value = strtoul(Unicode::wideToNarrow(argv[2]).c_str(), 0, 10) != 0;
+		int32 flag = 0;
+		if (!parseArg(argv[2], flag))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
+		bool const value = flag != 0;
 
 		TangibleObject *actorObj = dynamic_cast<TangibleObject *>(ServerWorld::findObjectByNetworkId(actorId));
 		if (actorObj)
@@ -2155,7 +2199,13 @@ bool ConsoleCommandParserObject::performParsing (const NetworkId & userId, const
 	else if (isCommand(argv[0], "setCoverVisibility"))
 	{
 		NetworkId actorId(Unicode::wideToNarrow(argv[1]));
-		bool value = strtoul(Unicode::wideToNarrow(argv[2]).c_str(), 0, 10) != 0;
+		int32 flag = 0;
+		if (!parseArg(argv[2], flag))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
+		bool const value = flag != 0;
 
 		ServerObject * const o = dynamic_cast<ServerObject *>(ServerWorld::findObjectByNetworkId(actorId));
 		CreatureObject * const c = (o ? o->asCreatureObject() : nullptr);
@@ -2650,7 +2700,13 @@ bool ConsoleCommandParserObject::performParsing2(const NetworkId & userId, const
 	else if(isCommand(argv[0], "debugFar"))
 	{
 		CachedNetworkId oid(Unicode::wideToNarrow(argv[1]));
-		bool create = strtoul(Unicode::wideToNarrow(argv[2]).c_str(), 0, 10) != 0;
+		int32 createValue = 0;
+		if (!parseArg(argv[2], createValue))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
+		bool const create = createValue != 0;
 		
 		float overrideVal = 0.0f;
 		if(argv.size() > 3)
@@ -3161,7 +3217,12 @@ bool ConsoleCommandParserObject::performParsing2(const NetworkId & userId, const
 
 	else if(isCommand(argv[0], "enableCharacter"))
 	{
-		StationId stationId = static_cast<StationId>(atoi (Unicode::wideToNarrow (argv [1]).c_str ()));
+		StationId stationId = 0;
+		if (!parseArg(argv[1], stationId))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
 		NetworkId playerId(Unicode::wideToNarrow(argv[2]));
 
 		GenericValueTypeMessage<std::pair<std::pair<StationId, NetworkId>, std::string> > msg("EnableCharacterMessage", std::make_pair(std::make_pair(stationId, playerId), Unicode::wideToNarrow(playerObject->getAssignedObjectFirstName())));
@@ -3174,7 +3235,12 @@ bool ConsoleCommandParserObject::performParsing2(const NetworkId & userId, const
 
 	else if(isCommand(argv[0], "disableCharacter"))
 	{
-		StationId stationId = static_cast<StationId>(atoi (Unicode::wideToNarrow (argv [1]).c_str ()));
+		StationId stationId = 0;
+		if (!parseArg(argv[1], stationId))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
 		NetworkId playerId(Unicode::wideToNarrow(argv[2]));
 
 		GenericValueTypeMessage<std::pair<std::pair<StationId, NetworkId>, std::string> > msg("DisableCharacterMessage", std::make_pair(std::make_pair(stationId, playerId), Unicode::wideToNarrow(playerObject->getAssignedObjectFirstName())));
@@ -3269,7 +3335,12 @@ bool ConsoleCommandParserObject::performParsing2(const NetworkId & userId, const
 	{
 		NetworkId topmostObject(Unicode::wideToNarrow(argv[1]));
 		NetworkId startingLoadWith(Unicode::wideToNarrow(argv[2]));
-		int maxDepth = atoi(Unicode::wideToNarrow(argv[3]).c_str());
+		int32 maxDepth = 0;
+		if (!parseArg(argv[3], maxDepth))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
 
 		if (topmostObject < ConfigServerGame::getMaxGoldNetworkId() || startingLoadWith < ConfigServerGame::getMaxGoldNetworkId())
 			result += getErrorMessage(argv[0], ERR_INVALID_OBJECT);
@@ -3287,15 +3358,18 @@ bool ConsoleCommandParserObject::performParsing2(const NetworkId & userId, const
 
 	else if (isCommand (argv [0], "moveSimStart"))
 	{
-		int countNpc    = 1;
-		int countPc     = 1;
+		int32 countNpc  = 1;
+		int32 countPc   = 1;
 		float radius    = 20.0f;
 		float moveSpeed = 1.0f;
 
 		if (argv.size () > 3)
 		{
-			countNpc  = atoi (Unicode::wideToNarrow (argv [1]).c_str ());
-			countPc   = atoi (Unicode::wideToNarrow (argv [2]).c_str ());
+			if (!parseArg(argv[1], countNpc) || !parseArg(argv[2], countPc))
+			{
+				result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+				return true;
+			}
 			radius    = static_cast<float>(atof (Unicode::wideToNarrow (argv [3]).c_str ()));
 			moveSpeed = static_cast<float>(atof (Unicode::wideToNarrow (argv [4]).c_str ()));
 		}
@@ -3644,7 +3718,12 @@ bool ConsoleCommandParserObject::performParsing2(const NetworkId & userId, const
 			}
 			else
 			{
-				int const adjustment = atoi(Unicode::wideToNarrow(argv[2]).c_str());
+				int32 adjustment = 0;
+				if (!parseArg(argv[2], adjustment))
+				{
+					result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+					return true;
+				}
 				int const existingBornDate = p->getBornDate();
 				int const todayBornDate = PlayerObject::getCurrentBornDate();
 				int const currentAge = todayBornDate - existingBornDate;
@@ -3831,7 +3910,12 @@ bool ConsoleCommandParserObject::performParsing2(const NetworkId & userId, const
 			return true;
 		}
 
-		int const range = atoi(Unicode::wideToNarrow(argv[3]).c_str());
+		int32 range = 0;
+		if (!parseArg(argv[3], range))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
 
 		result += Unicode::narrowToWide(FormattedString<512>().sprintf("Updating %s's passive reveal list: adding %s, range=%d\n", sourceTo->getNetworkId().getValueString().c_str(), targetTo->getNetworkId().getValueString().c_str(), range));
 		sourceTo->addPassiveReveal(*targetTo, range);
@@ -4019,8 +4103,13 @@ bool ConsoleCommandParserObject::performParsing2(const NetworkId & userId, const
 			return true;
 		}
 
-		uint32 const featureId = static_cast<uint32>(::atoi(Unicode::wideToNarrow(argv[2]).c_str()));
-		int const adjustment = ::atoi(Unicode::wideToNarrow(argv[3]).c_str());
+		uint32 featureId = 0;
+		int32 adjustment = 0;
+		if (!parseArg(argv[2], featureId) || !parseArg(argv[3], adjustment))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
 
 		if (featureId == 0)
 		{

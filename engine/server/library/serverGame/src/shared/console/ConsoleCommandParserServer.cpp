@@ -316,7 +316,12 @@ bool ConsoleCommandParserServer::performParsing(const NetworkId & userId, const 
 			return true;
 		}
 
-		unsigned long val = strtoul(Unicode::wideToNarrow(argv[1]).c_str(), nullptr, 10);
+		int32 val = 0;
+		if (!parseArg(argv[1], val))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
 		const bool isPublic = (val != 0);
 		SetConnectionServerPublic const p(isPublic);
 
@@ -369,8 +374,13 @@ bool ConsoleCommandParserServer::performParsing(const NetworkId & userId, const 
 			return true;
 		}
 
-		unsigned long secsToWait = strtoul(Unicode::wideToNarrow(argv[1]).c_str(), nullptr, 10);
-		unsigned long maxSecs = strtoul(Unicode::wideToNarrow(argv[2]).c_str(), nullptr, 10);
+		uint32 secsToWait = 0;
+		uint32 maxSecs = 0;
+		if (!parseArg(argv[1], secsToWait) || !parseArg(argv[2], maxSecs))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
 		Unicode::String systemMessage;
 		for (size_t i = 3; i < argv.size(); ++i)
 		{
@@ -401,7 +411,12 @@ bool ConsoleCommandParserServer::performParsing(const NetworkId & userId, const 
 			return true;
 		}
 
-		unsigned long val = strtoul(Unicode::wideToNarrow(argv[1]).c_str(), nullptr, 10);
+		int32 val = 0;
+		if (!parseArg(argv[1], val))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
 		switch (val)
 		{
 		case 1:
@@ -582,7 +597,12 @@ bool ConsoleCommandParserServer::performParsing(const NetworkId & userId, const 
 			return true;
 		}
 
-		unsigned long val = strtoul(Unicode::wideToNarrow(argv[1]).c_str(), nullptr, 10);
+		int32 val = 0;
+		if (!parseArg(argv[1], val))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
 		if (user->getClient()->setGodMode(val != 0))
 			result += getErrorMessage(argv[0], ERR_SUCCESS);
 		else
@@ -640,8 +660,18 @@ bool ConsoleCommandParserServer::performParsing(const NetworkId & userId, const 
 	{
 		std::string tableName;
 		tableName = Unicode::wideToNarrow(argv[1]);
-		int col = atoi(Unicode::wideToNarrow(argv[2]).c_str());
-		int row = atoi(Unicode::wideToNarrow(argv[3]).c_str());
+		int32 col = 0;
+		if (!parseArg(argv[2], col))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
+		int32 row = 0;
+		if (!parseArg(argv[3], row))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
 		DataTable * dt = DataTableManager::getTable(tableName);
 		if (dt)
 		{
@@ -727,8 +757,11 @@ bool ConsoleCommandParserServer::performParsing(const NetworkId & userId, const 
 				if (argv.size() > 2)
 				{
 					uint32 processId = GameServer::getInstance().getProcessId();
-					if (argv.size() > 3)
-						processId = strtoul(Unicode::wideToNarrow(argv[3]).c_str(), nullptr, 10);
+					if (argv.size() > 3 && !parseArg(argv[3], processId))
+					{
+						result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+						return true;
+					}
 
 					std::string op = Unicode::wideToNarrow(argv[1]) + " " + Unicode::wideToNarrow(argv[2]);
 
@@ -744,8 +777,11 @@ bool ConsoleCommandParserServer::performParsing(const NetworkId & userId, const 
 			else
 			{
 				uint32 processId = GameServer::getInstance().getProcessId();
-				if (argv.size() > 2)
-					processId = strtoul(Unicode::wideToNarrow(argv[2]).c_str(), nullptr, 10);
+				if (argv.size() > 2 && !parseArg(argv[2], processId))
+				{
+					result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+					return true;
+				}
 
 				std::string op(Unicode::wideToNarrow(argv[1]));
 				if (processId == GameServer::getInstance().getProcessId())
@@ -817,7 +853,12 @@ bool ConsoleCommandParserServer::performParsing(const NetworkId & userId, const 
 	}
 	else if (isAbbrev(argv[0], "setUniverseProcess"))
 	{
-		int processId = atoi(Unicode::wideToNarrow(argv[1]).c_str());
+		int32 processId = 0;
+		if (!parseArg(argv[1], processId))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
 		//Send message to central
 		ChangeUniverseProcessMessage const m(processId);
 		GameServer::getInstance().sendToCentralServer(m);
@@ -950,12 +991,22 @@ bool ConsoleCommandParserServer::performParsing(const NetworkId & userId, const 
 	}
 	else if (isAbbrev(argv[0], "setAiCombatPulseQueueNumber"))
 	{
-		int limit = atol(Unicode::wideToNarrow(argv[1]).c_str());
+		int32 limit = 0;
+		if (!parseArg(argv[1], limit))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
 		AiCombatPulseQueue::setAiPerFrame(limit);
 	}
 	else if (isAbbrev(argv[0], "setAiCombatPulseQueueMaxWaitTimeMs"))
 	{
-		int limit = atol(Unicode::wideToNarrow(argv[1]).c_str());
+		int32 limit = 0;
+		if (!parseArg(argv[1], limit))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
 		AiCombatPulseQueue::setAiMaxWaitTimeMs(limit);
 	}
 	else if (isAbbrev(argv[0], "reloadQuests"))
@@ -1039,7 +1090,12 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 		if (argv.size() == 2)
 		{
 			// specify server by process id
-			uint32 serverId = strtoul(Unicode::wideToNarrow(argv[1]).c_str(), nullptr, 10);
+			uint32 serverId = 0;
+			if (!parseArg(argv[1], serverId))
+			{
+				result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+				return true;
+			}
 			if (serverId != 0)
 			{
 				ExcommunicateGameServerMessage exmsg(serverId, 0, "");
@@ -1053,7 +1109,12 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 		{
 			// specify server by scene & preload role number
 			std::string const &scene = Unicode::wideToNarrow(argv[1]);
-			uint32 preloadRole = strtoul(Unicode::wideToNarrow(argv[2]).c_str(), nullptr, 10);
+			uint32 preloadRole = 0;
+			if (!parseArg(argv[2], preloadRole))
+			{
+				result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+				return true;
+			}
 
 			GenericValueTypeMessage<std::pair<std::string, uint32> > msg("RestartServerByRoleMessage", std::make_pair(scene, preloadRole));
 			if (scene == ConfigServerGame::getSceneID())
@@ -1282,7 +1343,12 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 	}
 	else if (isAbbrev(argv[0], "setNumberOfMoveObjectLists"))
 	{
-		int numMoveLists = atoi(Unicode::wideToNarrow(argv[1]).c_str());
+		int32 numMoveLists = 0;
+		if (!parseArg(argv[1], numMoveLists))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
 
 		ServerWorld::setNumMoveLists(numMoveLists);
 
@@ -1349,7 +1415,12 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 			return true;
 		}
 
-		int const range = atoi(Unicode::wideToNarrow(argv[1]).c_str());
+		int32 range = 0;
+		if (!parseArg(argv[1], range))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
 		if (range < 0)
 		{
 			result += Unicode::narrowToWide("range must be >= 0\n");
@@ -1426,7 +1497,12 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 			return true;
 		}
 
-		int const range = atoi(Unicode::wideToNarrow(argv[1]).c_str());
+		int32 range = 0;
+		if (!parseArg(argv[1], range))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
 		if (range < 0)
 		{
 			result += Unicode::narrowToWide("range must be >= 0\n");
@@ -1695,7 +1771,12 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 	}
 	else if (isAbbrev(argv[0], "listCharacterLastLoginTimeBrief"))
 	{
-		int const days = atoi(Unicode::wideToNarrow(argv[1]).c_str());
+		int32 days = 0;
+		if (!parseArg(argv[1], days))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
 		time_t const cutoff = std::max(static_cast<time_t>(0), static_cast<time_t>(::time(nullptr) - (60 * 60 * 24 * days)));
 
 		std::multimap<time_t, std::pair<std::pair<NetworkId, uint32>, std::string> > resultList;
@@ -1707,12 +1788,11 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 	{
 		time_t const rawtime = ::time(nullptr);
 		struct tm * timeinfo = ::localtime(&rawtime);
-		timeinfo->tm_year = atoi(Unicode::wideToNarrow(argv[1]).c_str()) - 1900;
-		timeinfo->tm_mon = atoi(Unicode::wideToNarrow(argv[2]).c_str()) - 1;
-		timeinfo->tm_mday = atoi(Unicode::wideToNarrow(argv[3]).c_str());
-		timeinfo->tm_hour = atoi(Unicode::wideToNarrow(argv[4]).c_str());
-		timeinfo->tm_min = atoi(Unicode::wideToNarrow(argv[5]).c_str());
-		timeinfo->tm_sec = atoi(Unicode::wideToNarrow(argv[6]).c_str());
+		if (!parseDateTimeArgs(argv, 1, *timeinfo))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
 		time_t const cutoff = ::mktime(timeinfo);
 
 		if (cutoff <= 0)
@@ -1730,12 +1810,11 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 	{
 		time_t const rawtime = ::time(nullptr);
 		struct tm * timeinfo = ::localtime(&rawtime);
-		timeinfo->tm_year = atoi(Unicode::wideToNarrow(argv[1]).c_str()) - 1900;
-		timeinfo->tm_mon = atoi(Unicode::wideToNarrow(argv[2]).c_str()) - 1;
-		timeinfo->tm_mday = atoi(Unicode::wideToNarrow(argv[3]).c_str());
-		timeinfo->tm_hour = atoi(Unicode::wideToNarrow(argv[4]).c_str());
-		timeinfo->tm_min = atoi(Unicode::wideToNarrow(argv[5]).c_str());
-		timeinfo->tm_sec = atoi(Unicode::wideToNarrow(argv[6]).c_str());
+		if (!parseDateTimeArgs(argv, 1, *timeinfo))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
 		time_t const cutoff = ::mktime(timeinfo);
 
 		if (cutoff <= 0)
@@ -1753,12 +1832,11 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 	{
 		time_t const rawtime = ::time(nullptr);
 		struct tm * timeinfo = ::localtime(&rawtime);
-		timeinfo->tm_year = atoi(Unicode::wideToNarrow(argv[1]).c_str()) - 1900;
-		timeinfo->tm_mon = atoi(Unicode::wideToNarrow(argv[2]).c_str()) - 1;
-		timeinfo->tm_mday = atoi(Unicode::wideToNarrow(argv[3]).c_str());
-		timeinfo->tm_hour = atoi(Unicode::wideToNarrow(argv[4]).c_str());
-		timeinfo->tm_min = atoi(Unicode::wideToNarrow(argv[5]).c_str());
-		timeinfo->tm_sec = atoi(Unicode::wideToNarrow(argv[6]).c_str());
+		if (!parseDateTimeArgs(argv, 1, *timeinfo))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
 		time_t const cutoffLower = ::mktime(timeinfo);
 
 		if (cutoffLower <= 0)
@@ -1768,12 +1846,11 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 		}
 
 		timeinfo = ::localtime(&rawtime);
-		timeinfo->tm_year = atoi(Unicode::wideToNarrow(argv[7]).c_str()) - 1900;
-		timeinfo->tm_mon = atoi(Unicode::wideToNarrow(argv[8]).c_str()) - 1;
-		timeinfo->tm_mday = atoi(Unicode::wideToNarrow(argv[9]).c_str());
-		timeinfo->tm_hour = atoi(Unicode::wideToNarrow(argv[10]).c_str());
-		timeinfo->tm_min = atoi(Unicode::wideToNarrow(argv[11]).c_str());
-		timeinfo->tm_sec = atoi(Unicode::wideToNarrow(argv[12]).c_str());
+		if (!parseDateTimeArgs(argv, 7, *timeinfo))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
 		time_t const cutoffUpper = ::mktime(timeinfo);
 
 		if (cutoffUpper <= 0)
@@ -1795,7 +1872,12 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 	}
 	else if (isAbbrev(argv[0], "listCharacterLastLoginTimeDetailed"))
 	{
-		int const days = atoi(Unicode::wideToNarrow(argv[1]).c_str());
+		int32 days = 0;
+		if (!parseArg(argv[1], days))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
 		time_t const cutoff = std::max(static_cast<time_t>(0), static_cast<time_t>(::time(nullptr) - (60 * 60 * 24 * days)));
 
 		std::multimap<time_t, std::pair<std::pair<NetworkId, uint32>, std::string> > resultList;
@@ -1810,12 +1892,11 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 	{
 		time_t const rawtime = ::time(nullptr);
 		struct tm * timeinfo = ::localtime(&rawtime);
-		timeinfo->tm_year = atoi(Unicode::wideToNarrow(argv[1]).c_str()) - 1900;
-		timeinfo->tm_mon = atoi(Unicode::wideToNarrow(argv[2]).c_str()) - 1;
-		timeinfo->tm_mday = atoi(Unicode::wideToNarrow(argv[3]).c_str());
-		timeinfo->tm_hour = atoi(Unicode::wideToNarrow(argv[4]).c_str());
-		timeinfo->tm_min = atoi(Unicode::wideToNarrow(argv[5]).c_str());
-		timeinfo->tm_sec = atoi(Unicode::wideToNarrow(argv[6]).c_str());
+		if (!parseDateTimeArgs(argv, 1, *timeinfo))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
 		time_t const cutoff = ::mktime(timeinfo);
 
 		if (cutoff <= 0)
@@ -1836,12 +1917,11 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 	{
 		time_t const rawtime = ::time(nullptr);
 		struct tm * timeinfo = ::localtime(&rawtime);
-		timeinfo->tm_year = atoi(Unicode::wideToNarrow(argv[1]).c_str()) - 1900;
-		timeinfo->tm_mon = atoi(Unicode::wideToNarrow(argv[2]).c_str()) - 1;
-		timeinfo->tm_mday = atoi(Unicode::wideToNarrow(argv[3]).c_str());
-		timeinfo->tm_hour = atoi(Unicode::wideToNarrow(argv[4]).c_str());
-		timeinfo->tm_min = atoi(Unicode::wideToNarrow(argv[5]).c_str());
-		timeinfo->tm_sec = atoi(Unicode::wideToNarrow(argv[6]).c_str());
+		if (!parseDateTimeArgs(argv, 1, *timeinfo))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
 		time_t const cutoff = ::mktime(timeinfo);
 
 		if (cutoff <= 0)
@@ -1862,12 +1942,11 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 	{
 		time_t const rawtime = ::time(nullptr);
 		struct tm * timeinfo = ::localtime(&rawtime);
-		timeinfo->tm_year = atoi(Unicode::wideToNarrow(argv[1]).c_str()) - 1900;
-		timeinfo->tm_mon = atoi(Unicode::wideToNarrow(argv[2]).c_str()) - 1;
-		timeinfo->tm_mday = atoi(Unicode::wideToNarrow(argv[3]).c_str());
-		timeinfo->tm_hour = atoi(Unicode::wideToNarrow(argv[4]).c_str());
-		timeinfo->tm_min = atoi(Unicode::wideToNarrow(argv[5]).c_str());
-		timeinfo->tm_sec = atoi(Unicode::wideToNarrow(argv[6]).c_str());
+		if (!parseDateTimeArgs(argv, 1, *timeinfo))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
 		time_t const cutoffLower = ::mktime(timeinfo);
 
 		if (cutoffLower <= 0)
@@ -1877,12 +1956,11 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 		}
 
 		timeinfo = ::localtime(&rawtime);
-		timeinfo->tm_year = atoi(Unicode::wideToNarrow(argv[7]).c_str()) - 1900;
-		timeinfo->tm_mon = atoi(Unicode::wideToNarrow(argv[8]).c_str()) - 1;
-		timeinfo->tm_mday = atoi(Unicode::wideToNarrow(argv[9]).c_str());
-		timeinfo->tm_hour = atoi(Unicode::wideToNarrow(argv[10]).c_str());
-		timeinfo->tm_min = atoi(Unicode::wideToNarrow(argv[11]).c_str());
-		timeinfo->tm_sec = atoi(Unicode::wideToNarrow(argv[12]).c_str());
+		if (!parseDateTimeArgs(argv, 7, *timeinfo))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
 		time_t const cutoffUpper = ::mktime(timeinfo);
 
 		if (cutoffUpper <= 0)
@@ -1907,7 +1985,12 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 	}
 	else if (isAbbrev(argv[0], "sendMailToCharacterLastLoginTime"))
 	{
-		int const days = atoi(Unicode::wideToNarrow(argv[1]).c_str());
+		int32 days = 0;
+		if (!parseArg(argv[1], days))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
 		time_t const cutoff = std::max(static_cast<time_t>(0), static_cast<time_t>(::time(nullptr) - (60 * 60 * 24 * days)));
 
 		int const argc = argv.size();
@@ -1972,12 +2055,11 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 	{
 		time_t const rawtime = ::time(nullptr);
 		struct tm * timeinfo = ::localtime(&rawtime);
-		timeinfo->tm_year = atoi(Unicode::wideToNarrow(argv[1]).c_str()) - 1900;
-		timeinfo->tm_mon = atoi(Unicode::wideToNarrow(argv[2]).c_str()) - 1;
-		timeinfo->tm_mday = atoi(Unicode::wideToNarrow(argv[3]).c_str());
-		timeinfo->tm_hour = atoi(Unicode::wideToNarrow(argv[4]).c_str());
-		timeinfo->tm_min = atoi(Unicode::wideToNarrow(argv[5]).c_str());
-		timeinfo->tm_sec = atoi(Unicode::wideToNarrow(argv[6]).c_str());
+		if (!parseDateTimeArgs(argv, 1, *timeinfo))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
 		time_t const cutoff = ::mktime(timeinfo);
 
 		if (cutoff <= 0)
@@ -2048,12 +2130,11 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 	{
 		time_t const rawtime = ::time(nullptr);
 		struct tm * timeinfo = ::localtime(&rawtime);
-		timeinfo->tm_year = atoi(Unicode::wideToNarrow(argv[1]).c_str()) - 1900;
-		timeinfo->tm_mon = atoi(Unicode::wideToNarrow(argv[2]).c_str()) - 1;
-		timeinfo->tm_mday = atoi(Unicode::wideToNarrow(argv[3]).c_str());
-		timeinfo->tm_hour = atoi(Unicode::wideToNarrow(argv[4]).c_str());
-		timeinfo->tm_min = atoi(Unicode::wideToNarrow(argv[5]).c_str());
-		timeinfo->tm_sec = atoi(Unicode::wideToNarrow(argv[6]).c_str());
+		if (!parseDateTimeArgs(argv, 1, *timeinfo))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
 		time_t const cutoff = ::mktime(timeinfo);
 
 		if (cutoff <= 0)
@@ -2124,12 +2205,11 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 	{
 		time_t const rawtime = ::time(nullptr);
 		struct tm * timeinfo = ::localtime(&rawtime);
-		timeinfo->tm_year = atoi(Unicode::wideToNarrow(argv[1]).c_str()) - 1900;
-		timeinfo->tm_mon = atoi(Unicode::wideToNarrow(argv[2]).c_str()) - 1;
-		timeinfo->tm_mday = atoi(Unicode::wideToNarrow(argv[3]).c_str());
-		timeinfo->tm_hour = atoi(Unicode::wideToNarrow(argv[4]).c_str());
-		timeinfo->tm_min = atoi(Unicode::wideToNarrow(argv[5]).c_str());
-		timeinfo->tm_sec = atoi(Unicode::wideToNarrow(argv[6]).c_str());
+		if (!parseDateTimeArgs(argv, 1, *timeinfo))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
 		time_t const cutoffLower = ::mktime(timeinfo);
 
 		if (cutoffLower <= 0)
@@ -2139,12 +2219,11 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 		}
 
 		timeinfo = ::localtime(&rawtime);
-		timeinfo->tm_year = atoi(Unicode::wideToNarrow(argv[7]).c_str()) - 1900;
-		timeinfo->tm_mon = atoi(Unicode::wideToNarrow(argv[8]).c_str()) - 1;
-		timeinfo->tm_mday = atoi(Unicode::wideToNarrow(argv[9]).c_str());
-		timeinfo->tm_hour = atoi(Unicode::wideToNarrow(argv[10]).c_str());
-		timeinfo->tm_min = atoi(Unicode::wideToNarrow(argv[11]).c_str());
-		timeinfo->tm_sec = atoi(Unicode::wideToNarrow(argv[12]).c_str());
+		if (!parseDateTimeArgs(argv, 7, *timeinfo))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
 		time_t const cutoffUpper = ::mktime(timeinfo);
 
 		if (cutoffUpper <= 0)
@@ -2222,7 +2301,12 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 	}
 	else if (isAbbrev(argv[0], "listCharacterCreateTimeBrief"))
 	{
-		int const days = atoi(Unicode::wideToNarrow(argv[1]).c_str());
+		int32 days = 0;
+		if (!parseArg(argv[1], days))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
 		time_t const cutoff = std::max(static_cast<time_t>(0), static_cast<time_t>(::time(nullptr) - (60 * 60 * 24 * days)));
 
 		std::multimap<time_t, std::pair<std::pair<NetworkId, uint32>, std::string> > resultList;
@@ -2234,12 +2318,11 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 	{
 		time_t const rawtime = ::time(nullptr);
 		struct tm * timeinfo = ::localtime(&rawtime);
-		timeinfo->tm_year = atoi(Unicode::wideToNarrow(argv[1]).c_str()) - 1900;
-		timeinfo->tm_mon = atoi(Unicode::wideToNarrow(argv[2]).c_str()) - 1;
-		timeinfo->tm_mday = atoi(Unicode::wideToNarrow(argv[3]).c_str());
-		timeinfo->tm_hour = atoi(Unicode::wideToNarrow(argv[4]).c_str());
-		timeinfo->tm_min = atoi(Unicode::wideToNarrow(argv[5]).c_str());
-		timeinfo->tm_sec = atoi(Unicode::wideToNarrow(argv[6]).c_str());
+		if (!parseDateTimeArgs(argv, 1, *timeinfo))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
 		time_t const cutoff = ::mktime(timeinfo);
 
 		if (cutoff <= 0)
@@ -2257,12 +2340,11 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 	{
 		time_t const rawtime = ::time(nullptr);
 		struct tm * timeinfo = ::localtime(&rawtime);
-		timeinfo->tm_year = atoi(Unicode::wideToNarrow(argv[1]).c_str()) - 1900;
-		timeinfo->tm_mon = atoi(Unicode::wideToNarrow(argv[2]).c_str()) - 1;
-		timeinfo->tm_mday = atoi(Unicode::wideToNarrow(argv[3]).c_str());
-		timeinfo->tm_hour = atoi(Unicode::wideToNarrow(argv[4]).c_str());
-		timeinfo->tm_min = atoi(Unicode::wideToNarrow(argv[5]).c_str());
-		timeinfo->tm_sec = atoi(Unicode::wideToNarrow(argv[6]).c_str());
+		if (!parseDateTimeArgs(argv, 1, *timeinfo))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
 		time_t const cutoff = ::mktime(timeinfo);
 
 		if (cutoff <= 0)
@@ -2280,12 +2362,11 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 	{
 		time_t const rawtime = ::time(nullptr);
 		struct tm * timeinfo = ::localtime(&rawtime);
-		timeinfo->tm_year = atoi(Unicode::wideToNarrow(argv[1]).c_str()) - 1900;
-		timeinfo->tm_mon = atoi(Unicode::wideToNarrow(argv[2]).c_str()) - 1;
-		timeinfo->tm_mday = atoi(Unicode::wideToNarrow(argv[3]).c_str());
-		timeinfo->tm_hour = atoi(Unicode::wideToNarrow(argv[4]).c_str());
-		timeinfo->tm_min = atoi(Unicode::wideToNarrow(argv[5]).c_str());
-		timeinfo->tm_sec = atoi(Unicode::wideToNarrow(argv[6]).c_str());
+		if (!parseDateTimeArgs(argv, 1, *timeinfo))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
 		time_t const cutoffLower = ::mktime(timeinfo);
 
 		if (cutoffLower <= 0)
@@ -2295,12 +2376,11 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 		}
 
 		timeinfo = ::localtime(&rawtime);
-		timeinfo->tm_year = atoi(Unicode::wideToNarrow(argv[7]).c_str()) - 1900;
-		timeinfo->tm_mon = atoi(Unicode::wideToNarrow(argv[8]).c_str()) - 1;
-		timeinfo->tm_mday = atoi(Unicode::wideToNarrow(argv[9]).c_str());
-		timeinfo->tm_hour = atoi(Unicode::wideToNarrow(argv[10]).c_str());
-		timeinfo->tm_min = atoi(Unicode::wideToNarrow(argv[11]).c_str());
-		timeinfo->tm_sec = atoi(Unicode::wideToNarrow(argv[12]).c_str());
+		if (!parseDateTimeArgs(argv, 7, *timeinfo))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
 		time_t const cutoffUpper = ::mktime(timeinfo);
 
 		if (cutoffUpper <= 0)
@@ -2322,7 +2402,12 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 	}
 	else if (isAbbrev(argv[0], "listCharacterCreateTimeDetailed"))
 	{
-		int const days = atoi(Unicode::wideToNarrow(argv[1]).c_str());
+		int32 days = 0;
+		if (!parseArg(argv[1], days))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
 		time_t const cutoff = std::max(static_cast<time_t>(0), static_cast<time_t>(::time(nullptr) - (60 * 60 * 24 * days)));
 
 		std::multimap<time_t, std::pair<std::pair<NetworkId, uint32>, std::string> > resultList;
@@ -2337,12 +2422,11 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 	{
 		time_t const rawtime = ::time(nullptr);
 		struct tm * timeinfo = ::localtime(&rawtime);
-		timeinfo->tm_year = atoi(Unicode::wideToNarrow(argv[1]).c_str()) - 1900;
-		timeinfo->tm_mon = atoi(Unicode::wideToNarrow(argv[2]).c_str()) - 1;
-		timeinfo->tm_mday = atoi(Unicode::wideToNarrow(argv[3]).c_str());
-		timeinfo->tm_hour = atoi(Unicode::wideToNarrow(argv[4]).c_str());
-		timeinfo->tm_min = atoi(Unicode::wideToNarrow(argv[5]).c_str());
-		timeinfo->tm_sec = atoi(Unicode::wideToNarrow(argv[6]).c_str());
+		if (!parseDateTimeArgs(argv, 1, *timeinfo))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
 		time_t const cutoff = ::mktime(timeinfo);
 
 		if (cutoff <= 0)
@@ -2363,12 +2447,11 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 	{
 		time_t const rawtime = ::time(nullptr);
 		struct tm * timeinfo = ::localtime(&rawtime);
-		timeinfo->tm_year = atoi(Unicode::wideToNarrow(argv[1]).c_str()) - 1900;
-		timeinfo->tm_mon = atoi(Unicode::wideToNarrow(argv[2]).c_str()) - 1;
-		timeinfo->tm_mday = atoi(Unicode::wideToNarrow(argv[3]).c_str());
-		timeinfo->tm_hour = atoi(Unicode::wideToNarrow(argv[4]).c_str());
-		timeinfo->tm_min = atoi(Unicode::wideToNarrow(argv[5]).c_str());
-		timeinfo->tm_sec = atoi(Unicode::wideToNarrow(argv[6]).c_str());
+		if (!parseDateTimeArgs(argv, 1, *timeinfo))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
 		time_t const cutoff = ::mktime(timeinfo);
 
 		if (cutoff <= 0)
@@ -2389,12 +2472,11 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 	{
 		time_t const rawtime = ::time(nullptr);
 		struct tm * timeinfo = ::localtime(&rawtime);
-		timeinfo->tm_year = atoi(Unicode::wideToNarrow(argv[1]).c_str()) - 1900;
-		timeinfo->tm_mon = atoi(Unicode::wideToNarrow(argv[2]).c_str()) - 1;
-		timeinfo->tm_mday = atoi(Unicode::wideToNarrow(argv[3]).c_str());
-		timeinfo->tm_hour = atoi(Unicode::wideToNarrow(argv[4]).c_str());
-		timeinfo->tm_min = atoi(Unicode::wideToNarrow(argv[5]).c_str());
-		timeinfo->tm_sec = atoi(Unicode::wideToNarrow(argv[6]).c_str());
+		if (!parseDateTimeArgs(argv, 1, *timeinfo))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
 		time_t const cutoffLower = ::mktime(timeinfo);
 
 		if (cutoffLower <= 0)
@@ -2404,12 +2486,11 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 		}
 
 		timeinfo = ::localtime(&rawtime);
-		timeinfo->tm_year = atoi(Unicode::wideToNarrow(argv[7]).c_str()) - 1900;
-		timeinfo->tm_mon = atoi(Unicode::wideToNarrow(argv[8]).c_str()) - 1;
-		timeinfo->tm_mday = atoi(Unicode::wideToNarrow(argv[9]).c_str());
-		timeinfo->tm_hour = atoi(Unicode::wideToNarrow(argv[10]).c_str());
-		timeinfo->tm_min = atoi(Unicode::wideToNarrow(argv[11]).c_str());
-		timeinfo->tm_sec = atoi(Unicode::wideToNarrow(argv[12]).c_str());
+		if (!parseDateTimeArgs(argv, 7, *timeinfo))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
 		time_t const cutoffUpper = ::mktime(timeinfo);
 
 		if (cutoffUpper <= 0)
@@ -2434,7 +2515,12 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 	}
 	else if (isAbbrev(argv[0], "sendMailToCharacterCreateTime"))
 	{
-		int const days = atoi(Unicode::wideToNarrow(argv[1]).c_str());
+		int32 days = 0;
+		if (!parseArg(argv[1], days))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
 		time_t const cutoff = std::max(static_cast<time_t>(0), static_cast<time_t>(::time(nullptr) - (60 * 60 * 24 * days)));
 
 		int const argc = argv.size();
@@ -2499,12 +2585,11 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 	{
 		time_t const rawtime = ::time(nullptr);
 		struct tm * timeinfo = ::localtime(&rawtime);
-		timeinfo->tm_year = atoi(Unicode::wideToNarrow(argv[1]).c_str()) - 1900;
-		timeinfo->tm_mon = atoi(Unicode::wideToNarrow(argv[2]).c_str()) - 1;
-		timeinfo->tm_mday = atoi(Unicode::wideToNarrow(argv[3]).c_str());
-		timeinfo->tm_hour = atoi(Unicode::wideToNarrow(argv[4]).c_str());
-		timeinfo->tm_min = atoi(Unicode::wideToNarrow(argv[5]).c_str());
-		timeinfo->tm_sec = atoi(Unicode::wideToNarrow(argv[6]).c_str());
+		if (!parseDateTimeArgs(argv, 1, *timeinfo))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
 		time_t const cutoff = ::mktime(timeinfo);
 
 		if (cutoff <= 0)
@@ -2575,12 +2660,11 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 	{
 		time_t const rawtime = ::time(nullptr);
 		struct tm * timeinfo = ::localtime(&rawtime);
-		timeinfo->tm_year = atoi(Unicode::wideToNarrow(argv[1]).c_str()) - 1900;
-		timeinfo->tm_mon = atoi(Unicode::wideToNarrow(argv[2]).c_str()) - 1;
-		timeinfo->tm_mday = atoi(Unicode::wideToNarrow(argv[3]).c_str());
-		timeinfo->tm_hour = atoi(Unicode::wideToNarrow(argv[4]).c_str());
-		timeinfo->tm_min = atoi(Unicode::wideToNarrow(argv[5]).c_str());
-		timeinfo->tm_sec = atoi(Unicode::wideToNarrow(argv[6]).c_str());
+		if (!parseDateTimeArgs(argv, 1, *timeinfo))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
 		time_t const cutoff = ::mktime(timeinfo);
 
 		if (cutoff <= 0)
@@ -2651,12 +2735,11 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 	{
 		time_t const rawtime = ::time(nullptr);
 		struct tm * timeinfo = ::localtime(&rawtime);
-		timeinfo->tm_year = atoi(Unicode::wideToNarrow(argv[1]).c_str()) - 1900;
-		timeinfo->tm_mon = atoi(Unicode::wideToNarrow(argv[2]).c_str()) - 1;
-		timeinfo->tm_mday = atoi(Unicode::wideToNarrow(argv[3]).c_str());
-		timeinfo->tm_hour = atoi(Unicode::wideToNarrow(argv[4]).c_str());
-		timeinfo->tm_min = atoi(Unicode::wideToNarrow(argv[5]).c_str());
-		timeinfo->tm_sec = atoi(Unicode::wideToNarrow(argv[6]).c_str());
+		if (!parseDateTimeArgs(argv, 1, *timeinfo))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
 		time_t const cutoffLower = ::mktime(timeinfo);
 
 		if (cutoffLower <= 0)
@@ -2666,12 +2749,11 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 		}
 
 		timeinfo = ::localtime(&rawtime);
-		timeinfo->tm_year = atoi(Unicode::wideToNarrow(argv[7]).c_str()) - 1900;
-		timeinfo->tm_mon = atoi(Unicode::wideToNarrow(argv[8]).c_str()) - 1;
-		timeinfo->tm_mday = atoi(Unicode::wideToNarrow(argv[9]).c_str());
-		timeinfo->tm_hour = atoi(Unicode::wideToNarrow(argv[10]).c_str());
-		timeinfo->tm_min = atoi(Unicode::wideToNarrow(argv[11]).c_str());
-		timeinfo->tm_sec = atoi(Unicode::wideToNarrow(argv[12]).c_str());
+		if (!parseDateTimeArgs(argv, 7, *timeinfo))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
 		time_t const cutoffUpper = ::mktime(timeinfo);
 
 		if (cutoffUpper <= 0)
@@ -2749,10 +2831,16 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 	}
 	else if (isAbbrev(argv[0], "freeCtsTest"))
 	{
-		time_t const sourceCharacterCreateTime = static_cast<time_t>(atoi(Unicode::wideToNarrow(argv[1]).c_str()));
-		uint32 const sourceStationId = static_cast<uint32>(atoi(Unicode::wideToNarrow(argv[2]).c_str()));
+		int32 characterCreateTime = 0;
+		uint32 sourceStationId = 0;
+		uint32 targetStationId = 0;
+		if (!parseArg(argv[1], characterCreateTime) || !parseArg(argv[2], sourceStationId) || !parseArg(argv[4], targetStationId))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
+		time_t const sourceCharacterCreateTime = static_cast<time_t>(characterCreateTime);
 		std::string const sourceCluster = Unicode::wideToNarrow(argv[3]);
-		uint32 const targetStationId = static_cast<uint32>(atoi(Unicode::wideToNarrow(argv[4]).c_str()));
 		std::string const targetCluster = Unicode::wideToNarrow(argv[5]);
 
 		time_t const timeNow = ::time(nullptr);
@@ -2955,9 +3043,7 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 			{
 				if (argv.size() == 4)
 				{
-					destStationId = static_cast<unsigned int>(::atoi(Unicode::wideToNarrow(argv[3]).c_str()));
-
-					if (destStationId == 0)
+					if (!parseArg(argv[3], destStationId) || destStationId == 0)
 					{
 						parseSuccess = false;
 						result += Unicode::narrowToWide(FormattedString<512>().sprintf("invalid destination station id (%s) specified\n", Unicode::wideToNarrow(argv[3]).c_str()));
@@ -3087,7 +3173,12 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 	else if (isAbbrev(argv[0], "adjustGcwImperialScore"))
 	{
 		std::string category = Unicode::wideToNarrow(argv[1]);
-		int adjustment = ::atoi(Unicode::wideToNarrow(argv[2]).c_str());
+		int32 adjustment = 0;
+		if (!parseArg(argv[2], adjustment))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
 
 		if (!Pvp::getGcwScoreCategory(category))
 		{
@@ -3110,7 +3201,12 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 	else if (isAbbrev(argv[0], "adjustGcwRebelScore"))
 	{
 		std::string category = Unicode::wideToNarrow(argv[1]);
-		int adjustment = ::atoi(Unicode::wideToNarrow(argv[2]).c_str());
+		int32 adjustment = 0;
+		if (!parseArg(argv[2], adjustment))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
 
 		if (!Pvp::getGcwScoreCategory(category))
 		{
@@ -3315,7 +3411,11 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 						continue;
 					}
 
-					throttle = ::atoi(argvNarrow.c_str());
+					if (!parseArg(argv[i], throttle))
+					{
+						result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+						return true;
+					}
 					if (throttle <= 0)
 						throttle = 100;
 				}
@@ -3357,7 +3457,11 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 							continue;
 						}
 
-						throttle = ::atoi(argvNarrow.c_str());
+						if (!parseArg(argv[i], throttle))
+						{
+							result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+							return true;
+						}
 						if (throttle <= 0)
 							throttle = 100;
 					}
@@ -3378,7 +3482,13 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 		}
 		else
 		{
-			GenericValueTypeMessage<std::pair<NetworkId, int> > const msg("GetALPQ", std::make_pair(userId, atoi(Unicode::wideToNarrow(argv[1]).c_str())));
+			int32 count = 0;
+			if (!parseArg(argv[1], count))
+			{
+				result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+				return true;
+			}
+			GenericValueTypeMessage<std::pair<NetworkId, int> > const msg("GetALPQ", std::make_pair(userId, count));
 			CommoditiesMarket::sendToCommoditiesServer(msg);
 
 			result += Unicode::narrowToWide("getCommoditiesAuctionLocationPriorityQueue request sent to the commodities server.  Please wait for reply.\n");
@@ -3458,7 +3568,12 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 #ifdef _DEBUG
 	else if (isAbbrev(argv[0], "setExtraDelayPerFrameMs"))
 	{
-		int const ms = ::atoi(Unicode::wideToNarrow(argv[1]).c_str());
+		int32 ms = 0;
+		if (!parseArg(argv[1], ms))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
 		result += Unicode::narrowToWide(FormattedString<512>().sprintf("Setting extra sleep time per frame to %dms.\n", ms));
 		GameServer::setExtraDelayPerFrameMs(ms);
 	}

@@ -153,7 +153,12 @@ bool ConsoleCommandParserVeteran::performParsing (const NetworkId & userId, cons
 	{
 		if (ConfigServerGame::getVeteranDebugEnableOverrideAccountAge())
 		{
-			int age(atoi(Unicode::wideToNarrow(argv[1]).c_str()));
+			int32 age = 0;
+			if (!parseArg(argv[1], age))
+			{
+				result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+				return true;
+			}
 			VeteranRewardManager::setOverrideAccountAge(age);
 			ServerMessageForwarding::beginBroadcast();
 			ServerMessageForwarding::send(GenericValueTypeMessage<int>("SetOverrideAccountAgeMessage",age));

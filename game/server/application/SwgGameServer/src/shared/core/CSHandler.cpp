@@ -25,6 +25,7 @@
 #include "sharedFoundation/DynamicVariableList.h"
 #include "sharedFoundation/DynamicVariableListNestedList.h"
 #include "sharedFoundation/DynamicVariableLocationData.h"
+#include "sharedFoundation/FixedWidthParse.h"
 #include "sharedLog/Log.h"
 #include "sharedNetworkMessages/GenericValueTypeMessage.h"
 #include "sharedObject/SlottedContainer.h"
@@ -46,6 +47,12 @@ namespace CSHandlerNamespace
 	typedef std::map< std::string, std::string > CSLogData;
 	typedef std::vector< std::string > CSArgs;
 	std::map< std::string, CSHandlerEntry > cmdMap;
+
+	// The whole argument must be one decimal integer that fits in 32 bits.
+	bool parseInt32Arg( std::string const & arg, int32 & value )
+	{
+		return arg.find( '\0' ) == std::string::npos && FixedWidthParse::parseInt32( arg.c_str(), 10, value );
+	}
 
 	// from CommandCppFuncs.cpp
 	ShipObject const *getFirstPackedShipForCreature(CreatureObject const &creature)
@@ -740,7 +747,9 @@ CS_CMD( adjust_lots )
 	if( !player )
 		return; // not a player, can't adjust lots.
 
-	int count = atoi( args[ 1 ].c_str() );
+	int32 count = 0;
+	if( !CSHandlerNamespace::parseInt32Arg( args[ 1 ], count ) )
+		return; // not an integer lot count.
 
 	CSHandlerNamespace::CSLogData data;
 	data[ "command" ] = "adjust_lots";
@@ -1033,10 +1042,17 @@ CS_CMD( set_objvar )
 	}
 
 
-	switch (getArgumentType(objvarvalue))
+	int32 intValue = 0;
+	int const argumentType = getArgumentType(objvarvalue);
+	if (argumentType == INT_ARGUMENT && !CSHandlerNamespace::parseInt32Arg(objvarvalue, intValue))
+	{
+		return; // integer text that does not fit the objvar.
+	}
+
+	switch (argumentType)
 	{
 	case INT_ARGUMENT:
-		object->setObjVarItem(objvar, atoi(objvarvalue.c_str()));
+		object->setObjVarItem(objvar, intValue);
 		break;
 	case REAL_ARGUMENT:
 		object->setObjVarItem(objvar, static_cast<real>(atof(objvarvalue.c_str())));
@@ -1204,7 +1220,9 @@ CS_CMD( set_bank_credits )
 	}
 
 	std::transform( args[ 0 ].begin(), args[ 0 ].end(), args[ 0 ].begin(), tolower );
-	int amount = atoi( args[ 1 ].c_str() );
+	int32 amount = 0;
+	if( !CSHandlerNamespace::parseInt32Arg( args[ 1 ], amount ) )
+		return; // not an integer amount.
 
 	DEBUG_REPORT_LOG( true, ( "set_bank_credits: %d\n", amount ) );
 	NetworkId player_id = NameManager::getInstance().getPlayerId( args[ 0 ] );
