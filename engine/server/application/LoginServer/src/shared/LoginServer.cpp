@@ -1243,18 +1243,21 @@ LoginServer::onValidateClient(StationId suid, const std::string &username, Clien
     // the cipher text to the client for use as a connection
     // token with the central server
 
-    //Also the sizeof(int) is likewise magic from the session api
-    size_t len = sizeof(uint32) + sizeof(bool) + MAX_ACCOUNT_NAME_LENGTH + 1;
-    unsigned char *keyBuffer = new unsigned char[len];
-    unsigned char *keyBufferPointer = keyBuffer;
+    // The token's layout follows what the client authenticated with: a
+    // session id followed by the station id when the client has a session
+    // (see ConnectionServer::decryptToken), otherwise the station id, the
+    // security flag and the account name. The buffer is sized for either.
+    size_t const accountTokenLength = sizeof(uint32) + sizeof(bool) + MAX_ACCOUNT_NAME_LENGTH + 1;
+    size_t const sessionTokenLength = apiSessionIdWidth + sizeof(StationId);
+    std::vector<unsigned char> keyBuffer(std::max(accountTokenLength, sessionTokenLength), 0);
+    unsigned char *keyBufferPointer = keyBuffer.data();
+    size_t len = 0;
 
-    IGNORE_RETURN(memset(keyBuffer, 0, len));
-
-    if (ConfigLoginServer::getDoConsumption() || ConfigLoginServer::getDoSessionLogin()) {
-        // pass the sessionkey
-        len = apiSessionIdWidth + sizeof(StationId);
+    if (sessionKey != nullptr) {
+        len = sessionTokenLength;
         memcpy(keyBufferPointer, sessionKey, apiSessionIdWidth);
         keyBufferPointer += apiSessionIdWidth;
+        memcpy(keyBufferPointer, &suid, sizeof(StationId));
 
         // if LoginServer did session login, send the session key back to the client;
         // the client normally gets the session key from the LaunchPad, but in this mode
