@@ -11,7 +11,7 @@ create table objects
 	node_x int,
 	node_y int,
 	node_z int,
-	type_id int,
+	type_id int, -- BIND_AS(DB::BindableUint32)
 	scene_id varchar(50),
 	controller_type int,
 	deleted int,

@@ -470,16 +470,18 @@ size_t DB::OCIQueryImpl::BindRec::getLengthSkipSize()
 	
 // ======================================================================
 
-bool DB::OCIQueryImpl::bindCol(BindableLong &buffer)
+// Integers are bound as SQLT_INT at the size of the buffer that holds them.
+
+bool DB::OCIQueryImpl::bindIntegerCol(Bindable &owner, void *buffer, int size)
 {
-	BindRec *br=addBindRec(buffer);
+	BindRec *br=addBindRec(owner);
 
 	if(!(m_server->checkerr(*m_session, OCIDefineByPos(m_cursorhp,
 														&(br->defnp),
 														m_session->errhp,
 														nextColumn++,
-														buffer.getBuffer(),
-														sizeof(long),
+														buffer,
+														size,
 														SQLT_INT,
 														br->getIndicatorPointer(),
 														br->getLengthPointer(),
@@ -504,16 +506,16 @@ bool DB::OCIQueryImpl::bindCol(BindableLong &buffer)
 
 // ----------------------------------------------------------------------
 
-bool DB::OCIQueryImpl::bindParameter(BindableLong &buffer)
+bool DB::OCIQueryImpl::bindIntegerParameter(Bindable &owner, void *buffer, int size)
 {
-	BindRec *br=addBindRec(buffer);
+	BindRec *br=addBindRec(owner);
 
 	if(!(m_server->checkerr(*m_session, OCIBindByPos (m_stmthp,
 															 &(br->bindp),
 															 m_session->errhp,
 															 nextParameter++,
-															 buffer.getBuffer(),
-															 sizeof(long),
+															 buffer,
+															 size,
 															 SQLT_INT,
 															 &(br->indicator),
 															 &(br->length),
@@ -525,6 +527,34 @@ bool DB::OCIQueryImpl::bindParameter(BindableLong &buffer)
 	    return false;
 	}
     return true;
+}
+
+// ----------------------------------------------------------------------
+
+bool DB::OCIQueryImpl::bindCol(BindableLong &buffer)
+{
+	return bindIntegerCol(buffer, buffer.getBuffer(), sizeof(long));
+}
+
+// ----------------------------------------------------------------------
+
+bool DB::OCIQueryImpl::bindParameter(BindableLong &buffer)
+{
+	return bindIntegerParameter(buffer, buffer.getBuffer(), sizeof(long));
+}
+
+// ----------------------------------------------------------------------
+
+bool DB::OCIQueryImpl::bindCol(BindableUint32 &buffer)
+{
+	return bindIntegerCol(buffer, buffer.getBuffer(), sizeof(int32_t));
+}
+
+// ----------------------------------------------------------------------
+
+bool DB::OCIQueryImpl::bindParameter(BindableUint32 &buffer)
+{
+	return bindIntegerParameter(buffer, buffer.getBuffer(), sizeof(int32_t));
 }
 
 // ----------------------------------------------------------------------

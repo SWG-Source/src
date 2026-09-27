@@ -33,7 +33,7 @@ class TaskGetClusterList : public DB::TaskRequest
 	  public:
 		DB::BindableLong group_id; //lint !e1925 // public data member
 				
-		DB::BindableLong cluster_id; //lint !e1925 // public data member
+		DB::BindableUint32 cluster_id; //lint !e1925 // public data member
 		DB::BindableString<255> cluster_name; //lint !e1925 // public data member
 		DB::BindableString<255> address; //lint !e1925 // public data member
 		DB::BindableLong port; //lint !e1925 // public data member

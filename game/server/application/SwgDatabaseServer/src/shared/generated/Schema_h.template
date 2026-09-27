@@ -23,7 +23,7 @@ struct PlayerObjectRow : public DB::Row
 	enum {QUEST_DATA_SIZE=4000};
 
 	DB::BindableNetworkId object_id;
-	DB::BindableLong station_id;
+	DB::BindableUint32 station_id;
 	DB::BindableNetworkId house_id;
 	DB::BindableLong account_num_lots;
 	DB::BindableBool account_is_outcast;
@@ -39,7 +39,7 @@ struct PlayerObjectRow : public DB::Row
 	DB::BindableLong max_force_power;
 	DB::BindableBitArray<2047> active_quests;
 	DB::BindableBitArray<2047> completed_quests;
-	DB::BindableLong current_quest;
+	DB::BindableUint32 current_quest;
 	DB::BindableString<QUEST_DATA_SIZE> quests;
 	DB::BindableLong role_icon_choice;
 	DB::BindableString<QUEST_DATA_SIZE> quests2;
@@ -80,7 +80,7 @@ struct PlayerObjectRow : public DB::Row
 struct PlayerObjectBufferRow : public DB::Row
 {
 	DB::BindableNetworkId object_id;
-	DB::BindableLong station_id;
+	DB::BindableUint32 station_id;
 	DB::BindableNetworkId house_id;
 	DB::BindableLong account_num_lots;
 	DB::BindableBool account_is_outcast;
@@ -96,7 +96,7 @@ struct PlayerObjectBufferRow : public DB::Row
 	DB::BindableLong max_force_power;
 	DB::BindableBitArray<2047> active_quests;
 	DB::BindableBitArray<2047> completed_quests;
-	DB::BindableLong current_quest;
+	DB::BindableUint32 current_quest;
 	DB::BufferString quests;
 	DB::BindableLong role_icon_choice;
 	DB::BufferString quests2;
@@ -234,12 +234,12 @@ struct WaypointRow : public DB::Row
 {
 	DB::BindableNetworkId object_id;
 	DB::BindableNetworkId waypoint_id;
-	DB::BindableLong appearance_name_crc;
+	DB::BindableUint32 appearance_name_crc;
 	DB::BindableDouble location_x;
 	DB::BindableDouble location_y;
 	DB::BindableDouble location_z;
 	DB::BindableNetworkId location_cell;
-	DB::BindableLong location_scene;
+	DB::BindableUint32 location_scene;
 	DB::BindableUnicode<512> name;
 	DB::BindableLong color;
 	DB::BindableBool active;
@@ -2363,7 +2363,7 @@ struct ResourceTypeRow : public DB::Row
 	DB::BindableString<100> resource_class;
 	DB::BindableString<1024> attributes;
 	DB::BindableString<1024> fractal_seeds;
-	DB::BindableLong depleted_timestamp;
+	DB::BindableUint32 depleted_timestamp;
 
 	virtual void copy(const DB::Row &rhs)
 	{
@@ -2378,7 +2378,7 @@ struct ResourceTypeBufferRow : public DB::Row
 	DB::BufferString resource_class;
 	DB::BufferString attributes;
 	DB::BufferString fractal_seeds;
-	DB::BindableLong depleted_timestamp;
+	DB::BindableUint32 depleted_timestamp;
 
 	ResourceTypeBufferRow() :
 		resource_id(),

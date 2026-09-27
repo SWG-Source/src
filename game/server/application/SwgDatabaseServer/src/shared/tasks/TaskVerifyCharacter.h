@@ -47,7 +47,7 @@ class TaskVerifyCharacter:public DB::TaskRequest
 		
 	  public:
 		// input:
-		DB::BindableLong        station_id; //lint !e1925 public data member Suppresed because it's in a private inner class
+		DB::BindableUint32      station_id; //lint !e1925 public data member Suppresed because it's in a private inner class
 		DB::BindableNetworkId   character_id; //lint !e1925 public data member Suppresed because it's in a private inner class
 		DB::BindableString<50>  gold_schema; //lint !e1925 public data member Suppresed because it's in a private inner class
 		

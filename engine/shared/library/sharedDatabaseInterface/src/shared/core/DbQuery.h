@@ -18,6 +18,7 @@ namespace DB {
     class Session;
 	class QueryImpl;
 	class BindableLong;
+	class BindableUint32;
 	class BindableVarray;
 	
     class Query
@@ -72,6 +73,8 @@ namespace DB {
 			
 			bool bindCol(BindableLong &buffer);
 			bool bindParameter(BindableLong &buffer);
+			bool bindCol(BindableUint32 &buffer);
+			bool bindParameter(BindableUint32 &buffer);
 			bool bindCol(BindableDouble &buffer);
 			bool bindParameter(BindableDouble &buffer);
 			bool bindCol(BindableStringBase &buffer);

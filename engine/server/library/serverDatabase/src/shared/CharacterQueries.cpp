@@ -55,7 +55,7 @@ const GetCharacters::GetCharactersRow &GetCharacters::getData() const
 
 void GetCharacters::setStationId(StationId station_id)
 {
-	data.station_id.setValue(static_cast<int32>(station_id));
+	data.station_id.setValue(station_id);
 }
 		
 // ----------------------------------------------------------------------
@@ -69,7 +69,7 @@ DB::Query::QueryMode GetCharacters::getExecutionMode() const
 
 AddCharacter::AddCharacter(StationId stationId, const NetworkId &objectId, const Unicode::String &characterName, const std::string &normalizedName) :
 		DB::Query(),
-		station_id(static_cast<int32>(stationId)),
+		station_id(stationId),
 		object_id(objectId),
 		character_name(characterName),
 		normalized_name(normalizedName)

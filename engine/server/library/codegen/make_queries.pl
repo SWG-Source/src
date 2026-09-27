@@ -222,7 +222,8 @@ sub BindableTypeConvert
 	SWITCH: {
 
 		
-		if ($bind_type eq "VAOFNUMBER") {return ".getValue()"; last SWITCH; }
+		# Numbers are pushed as their column, which supplies its database form.
+		if ($bind_type eq "VAOFNUMBER") {return ""; last SWITCH; }
 		if ($bind_type eq "VAOFSTRING") {return ".getValueASCII()"; last SWITCH; }
 		if ($bind_type eq "VAOFLONGSTRING") {return ".getValueASCII()"; last SWITCH; }
 		print "Warning unknown type: ".$bind_type."\n";

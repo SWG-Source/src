@@ -36,8 +36,8 @@ class TaskUpgradeAccount : public DB::TaskRequest
 	public:
 		SetCharacterTypeQuery();
 
-		DB::BindableLong         cluster_id; //lint !e1925 // public data member
-		DB::BindableLong         station_id; //lint !e1925 // public data member
+		DB::BindableUint32       cluster_id; //lint !e1925 // public data member
+		DB::BindableUint32       station_id; //lint !e1925 // public data member
 		DB::BindableNetworkId    character; //lint !e1925 // public data member
 		DB::BindableLong         character_type; //lint !e1925 // public data member
 
@@ -56,7 +56,7 @@ class TaskUpgradeAccount : public DB::TaskRequest
 	public:
 		QueryJediQuery();
 
-		DB::BindableLong         station_id; //lint !e1925 // public data member
+		DB::BindableUint32       station_id; //lint !e1925 // public data member
 		DB::BindableLong         character_type; //lint !e1925 // public data member
 		DB::BindableLong         result; //lint !e1925 // public data member
 
@@ -76,8 +76,8 @@ class TaskUpgradeAccount : public DB::TaskRequest
 	  public:
 		AddJediQuery();
 
-		DB::BindableLong         cluster_id; //lint !e1925 // public data member
-		DB::BindableLong         station_id; //lint !e1925 // public data member
+		DB::BindableUint32       cluster_id; //lint !e1925 // public data member
+		DB::BindableUint32       station_id; //lint !e1925 // public data member
 
 		virtual void getSQL                (std::string &sql);
 		virtual bool bindParameters        ();
@@ -140,8 +140,8 @@ public:
 	public:
 		GetOnlyOpenCharacterSlotsQuery();
 
-		DB::BindableLong station_id; //lint !e1925 // public data member
-		DB::BindableLong cluster_id; //lint !e1925 // public data member
+		DB::BindableUint32 station_id; //lint !e1925 // public data member
+		DB::BindableUint32 cluster_id; //lint !e1925 // public data member
 		DB::BindableLong character_type_id; //lint !e1925 // public data member
 		DB::BindableLong num_open_slots; //lint !e1925 // public data member
 

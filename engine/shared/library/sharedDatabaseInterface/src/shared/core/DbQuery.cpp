@@ -193,6 +193,18 @@ bool Query::bindParameter(BindableLong &buffer)
 	return impl->bindParameter(buffer);
 }
 
+bool Query::bindCol(BindableUint32 &buffer)
+{
+	NOT_NULL(impl);
+	return impl->bindCol(buffer);
+}
+
+bool Query::bindParameter(BindableUint32 &buffer)
+{
+	NOT_NULL(impl);
+	return impl->bindParameter(buffer);
+}
+
 bool Query::bindCol(BindableDouble &buffer)
 {
 	NOT_NULL(impl);

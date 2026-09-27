@@ -33,8 +33,8 @@ class TaskCreateCharacter : public DB::TaskRequest
 	  public:
 		CreateCharacterQuery();
 
-		DB::BindableLong         cluster_id; //lint !e1925 // public data member
-		DB::BindableLong         station_id; //lint !e1925 // public data member
+		DB::BindableUint32       cluster_id; //lint !e1925 // public data member
+		DB::BindableUint32       station_id; //lint !e1925 // public data member
 		DB::BindableString<127>  character_name; //lint !e1925 // public data member
 		DB::BindableNetworkId    character_id; //lint !e1925 // public data member
 		DB::BindableLong         template_id; //lint !e1925 // public data member

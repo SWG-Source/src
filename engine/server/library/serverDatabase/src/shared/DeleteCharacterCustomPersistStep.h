@@ -45,7 +45,7 @@ class DeleteCharacterCustomPersistStep : public CustomPersistStep
 		virtual QueryMode getExecutionMode() const;
 
 	  public:
-		DB::BindableLong         station_id;
+		DB::BindableUint32       station_id;
 		DB::BindableNetworkId    character_id;
 		DB::BindableLong         delete_minutes;
 		DB::BindableLong         result;

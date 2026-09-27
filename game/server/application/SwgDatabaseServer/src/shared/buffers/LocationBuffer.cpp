@@ -30,7 +30,7 @@ LocationBuffer::~LocationBuffer()
 
 bool LocationBuffer::save(DB::Session *session)
 {
-	LOG("SaveCounts",("Locations:  %i saved to db",m_saveData.size()));
+	LOG("SaveCounts",("Locations:  %zu saved to db",m_saveData.size()));
 	
 	DBQuery::SaveLocationQuery qry;
 	for (SaveDataType::const_iterator i=m_saveData.begin(); i!=m_saveData.end(); ++i)
@@ -77,7 +77,10 @@ bool LocationBuffer::load(DB::Session *session, const DB::TagSet &tags, const st
 				temp.location.setCenter(static_cast<float>(i->x.getValue()),static_cast<float>(i->y.getValue()),static_cast<float>(i->z.getValue()));
 				temp.location.setRadius(static_cast<float>(i->radius.getValue()));
 		
-				m_loadData[IndexKey(i->object_id.getValue(),i->list_id.getValue(),i->index.getValue())]=temp;
+				// list ids and indexes are 32-bit (SaveLocationQuery::setData writes them as int);
+				// read them back through uint32 so a legacy negative value does not become a
+				// 64-bit size_t key (on 32-bit builds this is the conversion that always happened)
+				m_loadData[IndexKey(i->object_id.getValue(),static_cast<uint32>(i->list_id.getValue()),static_cast<uint32>(i->index.getValue()))]=temp;
 			}
 		}
 		qry.done();
@@ -110,7 +113,7 @@ void LocationBuffer::getLocationList(const NetworkId &objectId, size_t listId, s
 	for (LoadDataType::const_iterator i=m_loadData.find(IndexKey(objectId, listId, 0)); (i!=m_loadData.end()) && (i->first.m_objectId == objectId) && (i->first.m_listId == listId); ++i)
 	{
 #ifdef _DEBUG
-		DEBUG_FATAL(i->first.m_index != expectedIndex++,("Programmer bug:  location list was not sorted or had gaps in the sequence.  Object id %s, list id %i, sequence %i\n",objectId.getValueString().c_str(), listId, i->first.m_index));
+		DEBUG_FATAL(i->first.m_index != expectedIndex++,("Programmer bug:  location list was not sorted or had gaps in the sequence.  Object id %s, list id %zu, sequence %zu\n",objectId.getValueString().c_str(), listId, i->first.m_index));
 #endif
 
 		values.push_back(i->second);

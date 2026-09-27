@@ -33,8 +33,8 @@ TaskCreateCharacter::TaskCreateCharacter(uint32 clusterId, StationId stationId, 
 bool TaskCreateCharacter::process(DB::Session *session)
 {
 	CreateCharacterQuery qry;
-	qry.cluster_id = static_cast<long>(m_clusterId);
-	qry.station_id = static_cast<long>(m_stationId);
+	qry.cluster_id = m_clusterId;
+	qry.station_id = m_stationId;
 	qry.character_name = m_characterName;
 	qry.character_id = m_characterId;
 	qry.template_id = m_templateId;

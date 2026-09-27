@@ -24,6 +24,7 @@ set(SHARED_SOURCES
 	shared/core/DbBindableString.h
 	shared/core/DbBindableUnicode.cpp
 	shared/core/DbBindableUnicode.h
+	shared/core/DbBindableUint32.h
 	shared/core/DbBufferRow.cpp
 	shared/core/DbBufferRow.h
 	shared/core/DbException.cpp

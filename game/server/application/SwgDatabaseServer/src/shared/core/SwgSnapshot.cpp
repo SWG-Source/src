@@ -1035,7 +1035,7 @@ void SwgSnapshot::encodeComponents(const NetworkId &objectId, Archive::ByteStrea
 // ----------------------------------------------------------------------
 
 void
-SwgSnapshot::decodeLocation(Archive::ReadIterator &data, DB::BindableDouble &x, DB::BindableDouble &y, DB::BindableDouble &z, DB::BindableNetworkId &cell, DB::BindableLong &planet) const {
+SwgSnapshot::decodeLocation(Archive::ReadIterator &data, DB::BindableDouble &x, DB::BindableDouble &y, DB::BindableDouble &z, DB::BindableNetworkId &cell, DB::BindableUint32 &planet) const {
     Location temp;
     Archive::get(data, temp);
     Vector vec = temp.getCoordinates();
@@ -1049,7 +1049,7 @@ SwgSnapshot::decodeLocation(Archive::ReadIterator &data, DB::BindableDouble &x, 
 // ----------------------------------------------------------------------
 
 void
-SwgSnapshot::encodeLocation(Archive::ByteStream &data, const DB::BindableDouble &x, const DB::BindableDouble &y, const DB::BindableDouble &z, const DB::BindableNetworkId &cell, const DB::BindableLong &planet) const {
+SwgSnapshot::encodeLocation(Archive::ByteStream &data, const DB::BindableDouble &x, const DB::BindableDouble &y, const DB::BindableDouble &z, const DB::BindableNetworkId &cell, const DB::BindableUint32 &planet) const {
     Location temp(Vector(static_cast<float>(x.getValue()), static_cast<float>(y.getValue()), static_cast<float>(z.getValue())), cell.getValue(), planet.getValue());
     Archive::put(data, temp);
 }
@@ -1118,7 +1118,7 @@ void SwgSnapshot::encodeSingleWaypoint(const NetworkId &objectId, Archive::ByteS
     m_waypointBuffer.getWaypointsForObject(objectId, values);
 
     DEBUG_FATAL(values.size() !=
-                1, ("Object %s should have exactly 1 waypoint, but it has %i", objectId.getValueString().c_str(), values.size()));
+                1, ("Object %s should have exactly 1 waypoint, but it has %zu", objectId.getValueString().c_str(), values.size()));
 
     ValuesType::const_iterator i = values.begin();
     if (i != values.end()) {

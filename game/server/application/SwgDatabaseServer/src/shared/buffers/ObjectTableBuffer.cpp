@@ -60,7 +60,7 @@ void ObjectTableBuffer::newObject(const NetworkId &objectId, int templateId, Tag
 {
 	DBSchema::ObjectBufferRow *row=addEmptyRow(objectId);
     row->object_template_id.setValue(templateId);
-	row->type_id.setValue(static_cast<long>(typeId)); // cast because tags are unsigned
+	row->type_id.setValue(typeId);
 	row->deleted.setValue(0);
 	row->controller_type.setValue(0);
 }
@@ -318,7 +318,7 @@ bool ObjectTableBuffer::save(DB::Session *session)
 	}
 	
 	if (getMode()==DB::ModeQuery::mode_INSERT)
-		LOG("SaveCounts",("Object table new objects:  %i (out of %i) total, %i only position or delete, %i delete\n",updates,m_rows.size(),onlyPositionOrDeletes,deletes));
+		LOG("SaveCounts",("Object table new objects:  %i (out of %zu) total, %i only position or delete, %i delete\n",updates,m_rows.size(),onlyPositionOrDeletes,deletes));
 	else
 		LOG("SaveCounts",("Object table updates:  %i total, %i only position or delete, %i delete\n",updates,onlyPositionOrDeletes,deletes));
 	return true;

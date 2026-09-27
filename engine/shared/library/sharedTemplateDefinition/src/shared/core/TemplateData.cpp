@@ -14,6 +14,7 @@
 #include "TpfTemplate.h"
 
 #include <cstdio>
+#include "sharedFoundation/FixedWidthParse.h"
 
 //==============================================================================
 // constants
@@ -610,7 +611,11 @@ ParamState paramState = STATE_LIST;
 						tempToken = getNextToken(tempToken, tempBuf);
 						if (parameter.type == TYPE_INTEGER)
 						{
-							parameter.min_int_limit = strtol(tempBuf, nullptr, 10);
+							if (!FixedWidthParse::toInt32(tempBuf, nullptr, 10, parameter.min_int_limit))
+							{
+								fp.printError("integer limit does not fit in 32 bits");
+								return CHAR_ERROR;
+							}
 						}
 						else
 						{
@@ -624,7 +629,13 @@ ParamState paramState = STATE_LIST;
 						if (isdigit(*tempBuf) || *tempBuf == '-')
 						{
 							if (parameter.type == TYPE_INTEGER)
-								parameter.max_int_limit = atoi(tempBuf);
+							{
+								if (!FixedWidthParse::toInt32(tempBuf, nullptr, 10, parameter.max_int_limit))
+								{
+									fp.printError("integer limit does not fit in 32 bits");
+									return CHAR_ERROR;
+								}
+							}
 							else
 							{
 								parameter.max_float_limit = static_cast<float>(
@@ -897,17 +908,32 @@ int TemplateData::parseIntValue(const File &fp, const char * line, const char **
 	}
 	else if (*line == '0' && *(line + 1) == 'x')
 	{
-		// a hex vale
+		// a hex value: the 32 bits of the field
 		line += 2;
 		char * tempLine;
-		value = static_cast<int>(strtoul(line, &tempLine, 16));
+		uint32_t bits = 0;
+		if (!FixedWidthParse::toUint32(line, &tempLine, 16, bits))
+		{
+			fp.printError("TemplateData::parseIntValue: hex value does not fit in 32 bits");
+			*endLine = CHAR_ERROR;
+			return 0;
+		}
+		value = static_cast<int>(bits);
 		line = tempLine;
 	}
 	else if (isdigit(*line))
 	{
-		// a regular integer
+		// a regular integer; with its sign it must fit in 32 bits
 		char * tempLine;
-		value = static_cast<int>(strtol(line, &tempLine, 10));
+		uint32_t magnitude = 0;
+		if (!FixedWidthParse::toUint32(line, &tempLine, 10, magnitude) || magnitude > (negative ? 2147483648u : 2147483647u))
+		{
+			fp.printError("TemplateData::parseIntValue: value does not fit in 32 bits");
+			*endLine = CHAR_ERROR;
+			return 0;
+		}
+		value = static_cast<int>(negative ? -static_cast<int64_t>(magnitude) : static_cast<int64_t>(magnitude));
+		negative = false; // the sign is applied
 		line = tempLine;
 	}
 	else
@@ -4242,7 +4268,7 @@ void TemplateData::writeStructParameterDefault(File &fp, const Parameter &param,
 		case LIST_LIST:
 			fp.print("\t%s = [ ", param.name.c_str());
 //			writeDefaultValue(fp, param);
-			fp.print(" ]", param.name.c_str());
+			fp.print(" ]");
 			break;
 		case LIST_INT_ARRAY:
 			{
@@ -4251,7 +4277,7 @@ void TemplateData::writeStructParameterDefault(File &fp, const Parameter &param,
 					fp.print("\t%s[%d] = ", param.name.c_str(), i);
 					writeDefaultValue(fp, param);
 					if (i < param.list_size - 1)
-						fp.print(",\n", param.name.c_str());
+						fp.print(",\n");
 				}
 			}
 			break;
@@ -4267,7 +4293,7 @@ void TemplateData::writeStructParameterDefault(File &fp, const Parameter &param,
 					fp.print("\t%s[%s] = ", param.name.c_str(), (*listIter).name.c_str());
 					writeDefaultValue(fp, param);
 					if (listIter + 1 != enumList->end())
-						fp.print(",\n", param.name.c_str());
+						fp.print(",\n");
 				}
 			}
 			break;
@@ -4275,7 +4301,7 @@ void TemplateData::writeStructParameterDefault(File &fp, const Parameter &param,
 			break;
 	}
 	if (!final)
-		fp.print(",\n", param.name.c_str());
+		fp.print(",\n");
 }	// TemplateData::writeStructParameterDefault
 
 /**

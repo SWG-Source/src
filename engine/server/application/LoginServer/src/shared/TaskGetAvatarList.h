@@ -37,12 +37,12 @@ class TaskGetAvatarList : public DB::TaskRequest
 	class GetCharactersQuery : public DB::Query
 	{
 	public:
-		DB::BindableLong station_id; //lint !e1925 // public data member
+		DB::BindableUint32 station_id; //lint !e1925 // public data member
 		DB::BindableLong cluster_group_id; //lint !e1925 // public data member
 		DB::BindableString<128> character_name; //lint !e1925 // public data member
-		DB::BindableLong object_template_id; //lint !e1925 // public data member
+		DB::BindableUint32 object_template_id; //lint !e1925 // public data member
 		DB::BindableNetworkId object_id; //lint !e1925 // public data member
-		DB::BindableLong cluster_id; //lint !e1925 // public data member
+		DB::BindableUint32 cluster_id; //lint !e1925 // public data member
 		DB::BindableLong character_type; //lint !e1925 // public data member
 
 		GetCharactersQuery();

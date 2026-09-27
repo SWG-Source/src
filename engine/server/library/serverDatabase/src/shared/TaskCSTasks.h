@@ -44,7 +44,7 @@ class TaskGetCharactersForAccount:public DB::TaskRequest
 		
 	  public:
 		// input:
-		DB::BindableLong        station_id; //lint !e1925 public data member Suppresed because it's in a private inner class
+		DB::BindableUint32      station_id; //lint !e1925 public data member Suppresed because it's in a private inner class
 		DB::BindableNetworkId   character_id; //lint !e1925 public data member Suppresed because it's in a private inner class
 		
 		//output:
@@ -122,7 +122,7 @@ class TaskGetDeletedItems:public DB::TaskRequest
 	  public:
 		// input:
 		DB::BindableNetworkId        character_id; //lint !e1925 public data member Suppresed because it's in a private inner class
-		DB::BindableLong	     page_number;
+		DB::BindableUint32	     page_number;
 
 	  private:
 		CSGetDeletedItemsQuery(const CSGetDeletedItemsQuery&);
@@ -211,7 +211,7 @@ class TaskGetCharacterId:public DB::TaskRequest
 		struct CharacterIdRow
 		{
 			DB::BindableNetworkId characterId;
-			DB::BindableLong stationId;
+			DB::BindableUint32 stationId;
 			DB::BindableString<TaskGetCharacterId::MAX_NAME_LENGTH> characterName;
 		};
 

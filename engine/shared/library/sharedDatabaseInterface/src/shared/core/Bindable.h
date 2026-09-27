@@ -25,6 +25,7 @@
 #include "sharedDatabaseInterface/DbBindableInt64.h"
 #include "sharedDatabaseInterface/DbBindableLong.h"
 #include "sharedDatabaseInterface/DbBindableString.h"
+#include "sharedDatabaseInterface/DbBindableUint32.h"
 #include "sharedDatabaseInterface/DbBindableUnicode.h"
 
 #endif

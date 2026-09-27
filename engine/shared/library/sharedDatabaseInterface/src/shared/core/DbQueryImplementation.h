@@ -20,6 +20,7 @@ namespace DB
 	class BindableDouble;
 	class BindableInt64;
 	class BindableLong;
+	class BindableUint32;
 	class BindableStringBase;
 	class BindableUnicodeBase;
 	class BindableVarray;
@@ -56,6 +57,8 @@ namespace DB
 		
 		virtual bool bindCol(BindableLong &buffer) =0;
 		virtual bool bindParameter(BindableLong &buffer) =0;
+		virtual bool bindCol(BindableUint32 &buffer) =0;
+		virtual bool bindParameter(BindableUint32 &buffer) =0;
 		virtual bool bindCol(BindableDouble &buffer) =0;
 		virtual bool bindParameter(BindableDouble &buffer) =0;
 		virtual bool bindCol(BindableStringBase &buffer) =0;

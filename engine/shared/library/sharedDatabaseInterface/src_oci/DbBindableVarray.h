@@ -57,16 +57,37 @@ namespace DB
 	class BindableVarrayNumber : public BindableVarray
 	{
 	  public:
-		bool push_back(bool IsNULL, int16_t value);
+		// Integer values are bound at the width of their own type. The
+		// overloads name the fundamental types rather than int32_t/int64_t so
+		// that every signed integer type has an exact match on both ILP32 and
+		// LP64. Unsigned types have no overload (an unsigned argument is
+		// ambiguous): a uint32 column value is pushed as its column, below,
+		// so it is stored in the column's own encoding.
+		bool push_back(bool IsNULL, short value);
+		bool push_back(bool IsNULL, int value);
+		bool push_back(bool IsNULL, long value);
+		bool push_back(bool IsNULL, long long value);
 		bool push_back(bool IsNULL, double value);
-		bool push_back(bool IsNULL, int32_t value);
-		bool push_back(bool IsNULL, int64_t value);
-		bool push_back(int16_t value);
+		bool push_back(short value);
+		bool push_back(int value);
+		bool push_back(long value);
+		bool push_back(long long value);
 		bool push_back(double value);
-		bool push_back(int32_t value);
-		bool push_back(int64_t value);
+
+		// Push a column's value in its database form.
+		bool push_back(bool IsNULL, BindableLong const & column)   { return push_back(IsNULL, column.getValue()); }
+		bool push_back(bool IsNULL, BindableUint32 const & column) { return push_back(IsNULL, column.getDatabaseValue()); }
+		bool push_back(bool IsNULL, BindableInt64 const & column)  { return push_back(IsNULL, column.getValue()); }
+		bool push_back(bool IsNULL, BindableDouble const & column) { return push_back(IsNULL, column.getValue()); }
+		bool push_back(BindableLong const & column)   { return push_back(column.getValue()); }
+		bool push_back(BindableUint32 const & column) { return push_back(column.getDatabaseValue()); }
+		bool push_back(BindableInt64 const & column)  { return push_back(column.getValue()); }
+		bool push_back(BindableDouble const & column) { return push_back(column.getValue()); }
 
 		virtual std::string outputValue() const;
+
+	  private:
+		template <typename T> bool appendInteger(bool IsNULL, T value);
 	};
 
 // ======================================================================

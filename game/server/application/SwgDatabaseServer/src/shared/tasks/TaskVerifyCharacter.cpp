@@ -48,9 +48,9 @@ bool TaskVerifyCharacter::process(DB::Session *session)
 	
 	for (std::vector<CharacterRecord*>::iterator i=m_characters.begin(); i!=m_characters.end(); ++i)
 	{
-		query.station_id = static_cast<long>((*i)->m_suid);
+		query.station_id = (*i)->m_suid;
 		query.character_id = (*i)->m_characterId;
-		LOG("TRACE_LOGIN", ("TaskVerifyCharacter(%d, %s) -- processing", (*i)->m_suid, (*i)->m_characterId.getValueString().c_str()));
+		LOG("TRACE_LOGIN", ("TaskVerifyCharacter(%u, %s) -- processing", (*i)->m_suid, (*i)->m_characterId.getValueString().c_str()));
 
 		if(session->exec(&query))
 		{
@@ -94,9 +94,9 @@ void TaskVerifyCharacter::onComplete()
 				(*i)->m_characterName);
 			DatabaseProcess::getInstance().sendToCentralServer(msg,true);
 			if ((*i)->m_approved)
-				LOG("TRACE_LOGIN", ("TaskVerifyCharacter(%d, %s) completed -- success", (*i)->m_suid, (*i)->m_characterId.getValueString().c_str()));
+				LOG("TRACE_LOGIN", ("TaskVerifyCharacter(%u, %s) completed -- success", (*i)->m_suid, (*i)->m_characterId.getValueString().c_str()));
 			else
-				LOG("TRACE_LOGIN", ("TaskVerifyCharacter(%d, %s) completed -- failure", (*i)->m_suid, (*i)->m_characterId.getValueString().c_str()));
+				LOG("TRACE_LOGIN", ("TaskVerifyCharacter(%u, %s) completed -- failure", (*i)->m_suid, (*i)->m_characterId.getValueString().c_str()));
 			
 			// 0 = there was a database error trying to fix containment
 			// 1 = there is a recursive containment error in the character object chain that wasn't fixed
@@ -105,33 +105,33 @@ void TaskVerifyCharacter::onComplete()
 			// 4 = there was a recursive containment error in the character object chain that was fixed	
 			switch ((*i)->m_containment_flag )
 			{
-				case 0: LOG("TRACE_LOGIN", ("TaskVerifyCharacter(%d, %s) completed -- containment error (database error verifying containment)", (*i)->m_suid, (*i)->m_characterId.getValueString().c_str()));
+				case 0: LOG("TRACE_LOGIN", ("TaskVerifyCharacter(%u, %s) completed -- containment error (database error verifying containment)", (*i)->m_suid, (*i)->m_characterId.getValueString().c_str()));
 				
-					LOG("CustomerService", ("Login: TaskVerifyCharacter(%d, %s) completed -- containment error (database error verifying containment)", (*i)->m_suid, (*i)->m_characterId.getValueString().c_str()));
+					LOG("CustomerService", ("Login: TaskVerifyCharacter(%u, %s) completed -- containment error (database error verifying containment)", (*i)->m_suid, (*i)->m_characterId.getValueString().c_str()));
 				break;
 				
-				case 1: LOG("TRACE_LOGIN", ("TaskVerifyCharacter(%d, %s) completed -- containment error (recursive containment error in the character object that wasn't fixed)", (*i)->m_suid, (*i)->m_characterId.getValueString().c_str()));
+				case 1: LOG("TRACE_LOGIN", ("TaskVerifyCharacter(%u, %s) completed -- containment error (recursive containment error in the character object that wasn't fixed)", (*i)->m_suid, (*i)->m_characterId.getValueString().c_str()));
 				
-					LOG("CustomerService", ("Login: TaskVerifyCharacter(%d, %s) completed -- containment error (recursive containment error in the character object that wasn't fixed)", (*i)->m_suid, (*i)->m_characterId.getValueString().c_str()));
+					LOG("CustomerService", ("Login: TaskVerifyCharacter(%u, %s) completed -- containment error (recursive containment error in the character object that wasn't fixed)", (*i)->m_suid, (*i)->m_characterId.getValueString().c_str()));
 				break;  
 			
-				case 2: LOG("TRACE_LOGIN", ("TaskVerifyCharacter(%d, %s) completed -- containment error (recursive containment error not in the character chain that must be fix manually)", (*i)->m_suid, (*i)->m_characterId.getValueString().c_str()));
+				case 2: LOG("TRACE_LOGIN", ("TaskVerifyCharacter(%u, %s) completed -- containment error (recursive containment error not in the character chain that must be fix manually)", (*i)->m_suid, (*i)->m_characterId.getValueString().c_str()));
 				
-					LOG("CustomerService", ("Login: TaskVerifyCharacter(%d, %s) completed -- containment error (recursive containment error not in the character chain that must be fix manually)", (*i)->m_suid, (*i)->m_characterId.getValueString().c_str()));
+					LOG("CustomerService", ("Login: TaskVerifyCharacter(%u, %s) completed -- containment error (recursive containment error not in the character chain that must be fix manually)", (*i)->m_suid, (*i)->m_characterId.getValueString().c_str()));
 				break;  
 			
 				case 3:  //containment was OK so we don't need to log it
 				break;  
 				
-				case 4: LOG("TRACE_LOGIN", ("TaskVerifyCharacter(%d, %s) completed -- containment error (recursive containment error in the character object that was fixed)", (*i)->m_suid, (*i)->m_characterId.getValueString().c_str()));
+				case 4: LOG("TRACE_LOGIN", ("TaskVerifyCharacter(%u, %s) completed -- containment error (recursive containment error in the character object that was fixed)", (*i)->m_suid, (*i)->m_characterId.getValueString().c_str()));
 				
-					LOG("CustomerService", ("Login: TaskVerifyCharacter(%d, %s) completed -- containment error (recursive containment error in the character object that was fixed)", (*i)->m_suid, (*i)->m_characterId.getValueString().c_str()));
+					LOG("CustomerService", ("Login: TaskVerifyCharacter(%u, %s) completed -- containment error (recursive containment error in the character object that was fixed)", (*i)->m_suid, (*i)->m_characterId.getValueString().c_str()));
 				break;  
 				
 				default:
-					LOG("TRACE_LOGIN", ("TaskVerifyCharacter(%d, %s) completed -- containment error (unknown containment flag)", (*i)->m_suid, (*i)->m_characterId.getValueString().c_str()));
+					LOG("TRACE_LOGIN", ("TaskVerifyCharacter(%u, %s) completed -- containment error (unknown containment flag)", (*i)->m_suid, (*i)->m_characterId.getValueString().c_str()));
 					
-					LOG("CustomerService", ("Login: TaskVerifyCharacter(%d, %s) completed -- containment error (unknown containment flag)", (*i)->m_suid, (*i)->m_characterId.getValueString().c_str()));
+					LOG("CustomerService", ("Login: TaskVerifyCharacter(%u, %s) completed -- containment error (unknown containment flag)", (*i)->m_suid, (*i)->m_characterId.getValueString().c_str()));
 					
 					break;
 				
@@ -221,7 +221,7 @@ TaskVerifyCharacter::VerifyCharacterQuery::VerifyCharacterQuery() :
 
 void TaskVerifyCharacter::addCharacter(StationId suid, const NetworkId &characterId, const TransferCharacterData * transferCharacterData)
 {
-	LOG("TRACE_LOGIN", ("TaskVerifyCharacter(%d, %s) -- adding", suid, characterId.getValueString().c_str()));
+	LOG("TRACE_LOGIN", ("TaskVerifyCharacter(%u, %s) -- adding", suid, characterId.getValueString().c_str()));
 
 	CharacterRecord *cr = new CharacterRecord;
 	cr->m_suid = suid;

@@ -52,6 +52,8 @@ namespace DB
 
 		virtual bool bindCol(BindableLong &buffer);
 		virtual bool bindParameter(BindableLong &buffer);
+		virtual bool bindCol(BindableUint32 &buffer);
+		virtual bool bindParameter(BindableUint32 &buffer);
 		virtual bool bindCol(BindableDouble &buffer);
 		virtual bool bindParameter(BindableDouble &buffer);
 		virtual bool bindCol(BindableStringBase &buffer);
@@ -92,6 +94,8 @@ namespace DB
 	  protected:
 
 		BindRec *addBindRec(Bindable &owner);
+		bool bindIntegerCol(Bindable &owner, void *buffer, int size);
+		bool bindIntegerParameter(Bindable &owner, void *buffer, int size);
 		void preprocessBinds();
 		void postProcessResults();
 		

@@ -50,6 +50,8 @@ set(SHARED_SOURCES
     shared/TaskGetCharactersForDelete.h
     shared/TaskGetClusterList.cpp
     shared/TaskGetClusterList.h
+    shared/TaskGetStationIdScheme.cpp
+    shared/TaskGetStationIdScheme.h
     shared/TaskGetValidationData.cpp
     shared/TaskGetValidationData.h
 	shared/TaskMapAccount.h

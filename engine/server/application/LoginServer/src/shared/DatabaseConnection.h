@@ -14,6 +14,9 @@
 #include "serverNetworkMessages/AvatarList.h"
 #include "sharedFoundation/NetworkId.h"
 #include "sharedFoundation/StationId.h"
+#include "sharedFoundation/StationIdFromAccountName.h"
+
+#include <string>
 
 namespace DB
 {
@@ -70,10 +73,18 @@ class DatabaseConnection : public Singleton<DatabaseConnection>
 	void swapUnlockedSlot              (uint32 clusterId, StationId stationId, NetworkId const & sourceCharacterId, NetworkId const & targetCharacterId, uint32 replyGameServerId);
 	void featureIdTransactionRequest   (uint32 clusterId, StationId stationId, NetworkId const & characterId, uint32 replyGameServerId);
 	void featureIdTransactionSyncUpdate(uint32 clusterId, StationId stationId, NetworkId const & characterId, std::string const & itemId, int adjustment);
-		
+
+	// The station id scheme recorded in the login database; see
+	// TaskGetStationIdScheme. Clients are not validated until it is known.
+	void onStationIdSchemeRetrieved    (bool queried, int rows, std::string const & scheme, std::string const & basis);
+	bool hasStationIdScheme            () const;
+	StationIdFromAccountName::Algorithm getStationIdScheme() const;
+
   private:
 	DB::Server *m_databaseServer;
 	DB::TaskQueue *m_taskQueue;
+	bool m_hasStationIdScheme;
+	StationIdFromAccountName::Algorithm m_stationIdScheme;
 };
 
 // ======================================================================

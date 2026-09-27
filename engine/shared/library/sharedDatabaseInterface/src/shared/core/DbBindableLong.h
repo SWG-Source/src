@@ -9,6 +9,10 @@
 // must be 8 bytes in size simply because the OCI libraries read
 // the data type from the database of a NUMBER field and convert to
 // either 4 bytes or 8 bytes depending on architecture used.
+//
+// Unsigned values have no overloads here: their stored form would depend on
+// the width of long. An unsigned 32-bit column (station id, CRC, Tag) is a
+// DB::BindableUint32, which owns its database encoding.
 // ======================================================================
 
 #ifndef INCLUDED_DBBindableLong_H
@@ -29,11 +33,23 @@ namespace DB {
 	{
 		public:
 		BindableLong();
+		explicit BindableLong(int _value);
 		explicit BindableLong(long _value);
+		BindableLong(unsigned int) = delete;
+		BindableLong(unsigned long) = delete;
+		BindableLong(unsigned long long) = delete;
 
 		long getValue() const;
+		void setValue(const int rhs);
 		void setValue(const long rhs);
+		void setValue(unsigned int) = delete;
+		void setValue(unsigned long) = delete;
+		void setValue(unsigned long long) = delete;
+		BindableLong &operator=(const int rhs);
 		BindableLong &operator=(const long rhs);
+		BindableLong &operator=(unsigned int) = delete;
+		BindableLong &operator=(unsigned long) = delete;
+		BindableLong &operator=(unsigned long long) = delete;
 
 		// following alternate getValue's are provided for convenience, particularly in
 		// the auto-generated code:
@@ -42,9 +58,9 @@ namespace DB {
 		void getValue(int16_t &buffer) const;
 		void getValue(uint16_t &buffer) const;
 		void getValue(int &buffer) const;
-		void getValue(unsigned int &buffer) const;
 		void getValue(long &buffer) const;
-		void getValue(unsigned long &buffer) const;
+		void getValue(unsigned int &buffer) const = delete;
+		void getValue(unsigned long &buffer) const = delete;
 		
 		void *getBuffer();
 
@@ -92,22 +108,9 @@ inline void DB::BindableLong::getValue(int &buffer) const
 
 // ----------------------------------------------------------------------
 
-inline void DB::BindableLong::getValue(unsigned int &buffer) const
-{
-	buffer=static_cast<unsigned int>(getValue());
-}
-// ----------------------------------------------------------------------
-
 inline void DB::BindableLong::getValue(long &buffer) const
 {
 	buffer=getValue();
-}
-
-// ----------------------------------------------------------------------
-
-inline void DB::BindableLong::getValue(unsigned long &buffer) const
-{
-	buffer=static_cast<unsigned long>(getValue());
 }
 
 // ======================================================================

@@ -16,7 +16,7 @@
 
 // ======================================================================
 
-TaskUpdateSPCharacterProfileData::TaskUpdateSPCharacterProfileData(const std::string & clusterName,const NetworkId & characterId,const std::string & characterName,const std::string & objectName,float x,float y,float z,const std::string & sceneId,float cash_balance,float bank_balance,const std::string & objectTemplateName,int   stationId,const NetworkId & containedBy,int   createTime,int   playedTime,int   numLots) :
+TaskUpdateSPCharacterProfileData::TaskUpdateSPCharacterProfileData(const std::string & clusterName,const NetworkId & characterId,const std::string & characterName,const std::string & objectName,float x,float y,float z,const std::string & sceneId,float cash_balance,float bank_balance,const std::string & objectTemplateName,StationId stationId,const NetworkId & containedBy,int   createTime,int   playedTime,int   numLots) :
 		TaskRequest(),
 		m_clusterName(clusterName),
 		m_characterId(characterId),
@@ -54,7 +54,7 @@ bool TaskUpdateSPCharacterProfileData::process(DB::Session *session)
 	qry.cash_balance = m_cash_balance;
 	qry.bank_balance = m_bank_balance;
 	qry.objectTemplateName = m_objectTemplateName;
-	qry.stationId = static_cast<long>(m_stationId);
+	qry.stationId = m_stationId;
 	qry.containedBy = m_containedby;
 	qry.createTime = m_createTime;
 	qry.playedTime = m_playedTime;

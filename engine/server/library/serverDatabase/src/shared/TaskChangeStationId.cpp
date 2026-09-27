@@ -57,15 +57,15 @@ bool TaskChangeStationId::process(DB::Session *session)
 
 void TaskChangeStationId::onComplete()
 {
-	LOG("CustomerService", ("CharacterTransfer: Completed changing station id from %lu to %lu in game database", m_sourceStationId, m_destinationStationId));
+	LOG("CustomerService", ("CharacterTransfer: Completed changing station id from %u to %u in game database", m_sourceStationId, m_destinationStationId));
 }
 
 // ======================================================================
 
 TaskChangeStationId::ChangeStationIdQuery::ChangeStationIdQuery() :
 		Query(),
-		destination_station_id(0),
-		source_station_id(0)
+		destination_station_id(0u),
+		source_station_id(0u)
 {
 }
 

@@ -35,8 +35,8 @@ TaskRestoreCharacter::TaskRestoreCharacter(uint32 clusterId, const std::string &
 bool TaskRestoreCharacter::process(DB::Session *session)
 {
 	RestoreCharacterQuery qry;
-	qry.cluster_id = static_cast<long>(m_clusterId);
-	qry.station_id = static_cast<long>(m_stationId);
+	qry.cluster_id = m_clusterId;
+	qry.station_id = m_stationId;
 	qry.character_name = m_characterName;
 	qry.character_id = m_characterId;
 	qry.template_id = m_templateId;

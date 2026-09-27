@@ -20,6 +20,7 @@
 #include "sharedNetworkMessages/LoginEnumCluster.h"
 
 #include "sharedFoundation/CrcConstexpr.hpp"
+#include "sharedFoundation/StationIdFromAccountName.h"
 
 #include "Session/CommonAPI/CommonAPI.h"
 #include "webAPI.h"
@@ -43,8 +44,8 @@ ClientConnection::~ClientConnection() {
 void ClientConnection::onConnectionClosed() {
     // client has disconnected
     if (m_stationId) {
-        DEBUG_REPORT_LOG(true, ("Client %lu disconnected\n", m_stationId));
-        LOG("LoginClientConnection", ("onConnectionClosed() for stationId (%lu) at IP (%s)", m_stationId, getRemoteAddress().c_str()));
+        DEBUG_REPORT_LOG(true, ("Client %u disconnected\n", m_stationId));
+        LOG("LoginClientConnection", ("onConnectionClosed() for stationId (%u) at IP (%s)", m_stationId, getRemoteAddress().c_str()));
     }
 
     LoginServer::getInstance().removeClient(m_clientId);
@@ -64,7 +65,7 @@ void ClientConnection::onConnectionOpened() {
     m_clientId = LoginServer::getInstance().addClient(*this);
     setOverflowLimit(ConfigLoginServer::getClientOverflowLimit());
 
-    LOG("LoginClientConnection", ("onConnectionOpened() for stationId (%lu) at IP (%s)", m_stationId, getRemoteAddress().c_str()));
+    LOG("LoginClientConnection", ("onConnectionOpened() for stationId (%u) at IP (%s)", m_stationId, getRemoteAddress().c_str()));
 }
 
 //-----------------------------------------------------------------------
@@ -103,7 +104,7 @@ void ClientConnection::onReceive(const Archive::ByteStream &message) {
                 }
                 else
                 {
-                    LOG("CustomerService", ("Login:LoginServer dropping client (stationId=[%lu], ip=[%s], id=[%s], key=[%s], version=[%s]) because of network version mismatch (required version=[%s])", m_stationId, getRemoteAddress().c_str(), id.getId().c_str(), id.getKey().c_str(), id.getVersion().c_str(), GameNetworkMessage::NetworkVersionId.c_str()));
+                    LOG("CustomerService", ("Login:LoginServer dropping client (stationId=[%u], ip=[%s], id=[%s], key=[%s], version=[%s]) because of network version mismatch (required version=[%s])", m_stationId, getRemoteAddress().c_str(), id.getId().c_str(), id.getKey().c_str(), id.getVersion().c_str(), GameNetworkMessage::NetworkVersionId.c_str()));
                     // disconnect is handled on the client side, as soon as it recieves this message
 #if _DEBUG
                     LoginIncorrectClientId incorrectId(GameNetworkMessage::NetworkVersionId, ApplicationVersion::getInternalVersion());
@@ -170,15 +171,16 @@ void ClientConnection::validateClient(const std::string & id, const std::string 
         return;
     }
 
-    // hash username into station id
-    StationId suid = atoi(lcaseId.c_str());
-    if (suid == 0)
-    {
-        std::hash<std::string> h;
-        suid = h(lcaseId.c_str()); //lint !e603 // Symbol 'h' not initialized (it's a functor)
+    // the station id is derived with the scheme recorded in the login database
+    DatabaseConnection const & database = DatabaseConnection::getInstance();
+    if (!database.hasStationIdScheme()) {
+        ErrorMessage err("Login Failed", "The login server is starting. Please try again shortly.");
+        this->send(err, true);
+        return;
     }
+    StationId suid = StationIdFromAccountName::derive(lcaseId, database.getStationIdScheme());
 
-    LOG("LoginClientConnection", ("validateClient() for stationId (%lu) at IP (%s), id (%s)", m_stationId, getRemoteAddress().c_str(), lcaseId.c_str()));
+    LOG("LoginClientConnection", ("validateClient() for stationId (%u) at IP (%s), id (%s)", suid, getRemoteAddress().c_str(), lcaseId.c_str()));
 
     int authOK = 0;
     std::string authURL(ConfigLoginServer::getExternalAuthUrl());
@@ -190,7 +192,9 @@ void ClientConnection::validateClient(const std::string & id, const std::string 
 
             api.addJsonData<std::string>("user_name", trimmedId);
             api.addJsonData<std::string>("user_password", trimmedKey);
-            api.addJsonData<long>("stationID", suid);
+            // Sent as the signed 32-bit value 32-bit builds always sent here
+            // (their long is 32 bits), so auth services see the same id.
+            api.addJsonData<int>("stationID", static_cast<int32>(suid));
             api.addJsonData<std::string>("ip", getRemoteAddress());
             api.addJsonData<std::string>("secretKey", ConfigLoginServer::getExternalAuthSecretKey());
 

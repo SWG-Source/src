@@ -19,6 +19,7 @@
 #include "TaskGetAvatarList.h"
 #include "TaskGetCharactersForDelete.h"
 #include "TaskGetClusterList.h"
+#include "TaskGetStationIdScheme.h"
 #include "TaskGetValidationData.h"
 #include "TaskMapAccount.h"
 #include "TaskRegisterNewCluster.h"
@@ -39,7 +40,9 @@
 DatabaseConnection::DatabaseConnection() :
 		Singleton<DatabaseConnection>(),
 		m_databaseServer(0),
-		m_taskQueue(0)
+		m_taskQueue(0),
+		m_hasStationIdScheme(false),
+		m_stationIdScheme(StationIdFromAccountName::Gcc32Murmur2)
 {
 }
 
@@ -75,6 +78,8 @@ void DatabaseConnection::connect()
 		DB::Server::enableVerboseMode();
 
 	DB::TaskQueue::enableWorkerThreadsLogging(ConfigLoginServer::getLogWorkerThreads());
+
+	m_taskQueue->asyncRequest(new TaskGetStationIdScheme());
 }
 
 // ----------------------------------------------------------------------
@@ -261,6 +266,40 @@ void DatabaseConnection::toggleCompletedTutorial(StationId stationId, bool newVa
 {
 	NOT_NULL(m_taskQueue);
 	m_taskQueue->asyncRequest(new TaskToggleCompletedTutorial(stationId, newValue));
+}
+
+// ----------------------------------------------------------------------
+
+void DatabaseConnection::onStationIdSchemeRetrieved(bool const queried, int const rows, std::string const & scheme, std::string const & basis)
+{
+	static char const * const howToLabel = "Apply database update 272, then label the login database with its station id scheme using game/server/database/tools/station_id_scheme (see its README)";
+
+	FATAL(!queried, ("LoginServer: cannot read the login database's station id scheme (table station_id_scheme). %s.", howToLabel));
+	FATAL(rows == 0, ("LoginServer: the login database has no station id scheme recorded. %s.", howToLabel));
+
+	StationIdFromAccountName::Algorithm algorithm = StationIdFromAccountName::Gcc32Murmur2;
+	FATAL(!StationIdFromAccountName::parseAlgorithm(scheme.c_str(), algorithm), ("LoginServer: the login database records an unknown station id scheme [%s].", scheme.c_str()));
+
+	char const * const asserted = ConfigLoginServer::getStationIdScheme();
+	FATAL(asserted[0] != '\0' && scheme != asserted, ("LoginServer: [LoginServer] stationIdScheme=%s, but the login database records %s (%s). The database is authoritative; correct the configuration.", asserted, scheme.c_str(), basis.c_str()));
+
+	m_stationIdScheme = algorithm;
+	m_hasStationIdScheme = true;
+	REPORT_LOG(true, ("LoginServer: station ids are derived with the %s scheme recorded in the login database (%s)\n", scheme.c_str(), basis.c_str()));
+}
+
+// ----------------------------------------------------------------------
+
+bool DatabaseConnection::hasStationIdScheme() const
+{
+	return m_hasStationIdScheme;
+}
+
+// ----------------------------------------------------------------------
+
+StationIdFromAccountName::Algorithm DatabaseConnection::getStationIdScheme() const
+{
+	return m_stationIdScheme;
 }
 
 // ----------------------------------------------------------------------

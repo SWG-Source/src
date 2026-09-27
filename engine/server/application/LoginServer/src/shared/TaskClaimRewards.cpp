@@ -33,9 +33,9 @@ namespace TaskClaimRewardsNamespace
 		bool getResult() const;
 		
 	private:
-		DB::BindableLong station_id;
+		DB::BindableUint32 station_id;
 		DB::BindableNetworkId character_id;
-		DB::BindableLong cluster_id;
+		DB::BindableUint32 cluster_id;
 		DB::BindableString<255> event_id;
 		DB::BindableLong result;
 
@@ -58,9 +58,9 @@ namespace TaskClaimRewardsNamespace
 		bool getResult() const;
 		
 	private:
-		DB::BindableLong station_id;
+		DB::BindableUint32 station_id;
 		DB::BindableNetworkId character_id;
-		DB::BindableLong cluster_id;
+		DB::BindableUint32 cluster_id;
 		DB::BindableString<255> item_id;
 		DB::BindableLong result;
 
@@ -83,9 +83,9 @@ namespace TaskClaimRewardsNamespace
 		bool getResult() const;
 
 	private:
-		DB::BindableLong station_id;
+		DB::BindableUint32 station_id;
 		DB::BindableNetworkId character_id;
-		DB::BindableLong cluster_id;
+		DB::BindableUint32 cluster_id;
 		DB::BindableString<255> item_id;
 		DB::BindableLong count_adjustment;
 		DB::BindableLong result;
@@ -110,9 +110,9 @@ namespace TaskClaimRewardsNamespace
 		virtual QueryMode getExecutionMode() const;
 
 	private:
-		DB::BindableLong station_id;
+		DB::BindableUint32 station_id;
 		DB::BindableNetworkId character_id;
-		DB::BindableLong cluster_id;
+		DB::BindableUint32 cluster_id;
 
 	private:  //disable
 		GetFeatureIdTransactionsQuery(const GetFeatureIdTransactionsQuery&);
@@ -282,9 +282,9 @@ void TaskFeatureIdTransactionSyncUpdate::onComplete()
 
 TaskClaimRewardsNamespace::ConsumeEventQuery::ConsumeEventQuery(StationId stationId, NetworkId const & characterId, uint32 clusterId, std::string const & eventId) :
 		DB::Query(),
-		station_id(static_cast<long>(stationId)),
+		station_id(stationId),
 		character_id(characterId),
-		cluster_id(static_cast<long>(clusterId)),
+		cluster_id(clusterId),
 		event_id(eventId),
 		result(0)
 {
@@ -334,9 +334,9 @@ bool TaskClaimRewardsNamespace::ConsumeEventQuery::getResult() const
 
 TaskClaimRewardsNamespace::ClaimItemQuery::ClaimItemQuery(StationId stationId, NetworkId const & characterId, uint32 clusterId, std::string const & itemId) :
 		DB::Query(),
-		station_id(static_cast<long>(stationId)),
+		station_id(stationId),
 		character_id(characterId),
-		cluster_id(static_cast<long>(clusterId)),
+		cluster_id(clusterId),
 		item_id(itemId),
 		result(0)
 {
@@ -386,9 +386,9 @@ bool TaskClaimRewardsNamespace::ClaimItemQuery::getResult() const
 
 TaskClaimRewardsNamespace::UpdateFeatureIdTransactionQuery::UpdateFeatureIdTransactionQuery(StationId stationId, NetworkId const & characterId, uint32 clusterId, std::string const & itemId, int countAdjustment) :
 DB::Query(),
-station_id(static_cast<long>(stationId)),
+station_id(stationId),
 character_id(characterId),
-cluster_id(static_cast<long>(clusterId)),
+cluster_id(clusterId),
 item_id(itemId),
 count_adjustment(static_cast<long>(countAdjustment)),
 result(0)
@@ -442,9 +442,9 @@ TaskClaimRewardsNamespace::GetFeatureIdTransactionsQuery::GetFeatureIdTransactio
 DB::Query(),
 item_id(),
 count(0),
-station_id(static_cast<long>(stationId)),
+station_id(stationId),
 character_id(characterId),
-cluster_id(static_cast<long>(clusterId))
+cluster_id(clusterId)
 {
 }
 

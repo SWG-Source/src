@@ -295,7 +295,7 @@ void ClientConnection::handleClientIdMessage(const ClientIdMsg& msg)
 		}
 
 		static const std::string loginTrace("TRACE_LOGIN");
-		LOG(loginTrace, ("ClientConnection SUID = %d", m_suid));
+		LOG(loginTrace, ("ClientConnection SUID = %u", m_suid));
 
 	}
 	if (result)
@@ -335,12 +335,10 @@ void ClientConnection::handleClientIdMessage(const ClientIdMsg& msg)
 		}
 		else
 		{
-			m_suid = atoi(m_accountName.c_str());
-			if (m_suid == 0)
-			{
-				std::hash<std::string> h;
-				m_suid = h(m_accountName.c_str());
-			}
+			// m_suid came from the LoginServer's token (decryptToken above). Only
+			// the LoginServer derives station ids from account names; deriving it
+			// again here could disagree (a different build or hash rule) and log
+			// the player into a different account.
 			onValidateClient(m_suid, m_accountName, m_isSecure, nullptr, ConfigConnectionServer::getDefaultGameFeatures(), ConfigConnectionServer::getDefaultSubscriptionFeatures(), 0, 0, 0, 0, ConfigConnectionServer::getFakeBuddyPoints());
 		}
 	}
@@ -348,7 +346,7 @@ void ClientConnection::handleClientIdMessage(const ClientIdMsg& msg)
 	{
 		// They sent us a token that was no good -- either a hack attempt, or
 		// possibly it was just too old.
-		LOG("ClientDisconnect", ("SUID %d passed a bad token to the connections erver. Disconnecting.", m_suid));
+		LOG("ClientDisconnect", ("SUID %u passed a bad token to the connections erver. Disconnecting.", m_suid));
 		disconnect();
 	}
 }
@@ -430,7 +428,7 @@ ClientConnection::onIdValidated(bool canLogin, bool canCreateRegularCharacter, b
     ClientPermissionsMessage c(canLogin, canCreateRegularCharacter, canCreateJediCharacter, canSkipTutorial, isAdmin);
     send(c, true);
 
-    DEBUG_REPORT_LOG(true, ("Permissions for %lu:\n", getSUID()));
+    DEBUG_REPORT_LOG(true, ("Permissions for %u:\n", getSUID()));
     DEBUG_REPORT_LOG(canLogin, ("\tcanLogin\n"));
     DEBUG_REPORT_LOG(canCreateRegularCharacter, ("\tcanCreateRegularCharacter\n"));
     DEBUG_REPORT_LOG(canCreateJediCharacter, ("\tcanCreateJediCharacter\n"));
@@ -931,7 +929,7 @@ void ClientConnection::onReceive(const Archive::ByteStream &message) {
                     if (m_hasBeenValidated && !m_hasSelectedCharacter) //lint !e774 no this doesn't always eval to true
                     {
                         ClientCreateCharacter clientCreate(ri);
-                        DEBUG_REPORT_LOG(true, ("Got ClientCreateCharacter message for %lu with name %s\n", m_suid, Unicode::wideToNarrow(clientCreate.getCharacterName()).c_str()));
+                        DEBUG_REPORT_LOG(true, ("Got ClientCreateCharacter message for %u with name %s\n", m_suid, Unicode::wideToNarrow(clientCreate.getCharacterName()).c_str()));
                         LOG("TraceCharacterCreation", ("%d sent ClientCreateCharacter(charaterName=%s, templateName=%s, scaleFactor=%f, startingLocation=%s, hairTemplateName=%s, profession=%s, jedi=%d, useNewbieTutorial=%d, skillTemplate=%s, workingSkill=%s)", getSUID(), Unicode::wideToNarrow(clientCreate.getCharacterName()).c_str(), clientCreate.getTemplateName().c_str(), clientCreate.getScaleFactor(), clientCreate.getStartingLocation().c_str(), clientCreate.getHairTemplateName().c_str(), clientCreate.getProfession().c_str(), static_cast<int>(clientCreate.getJedi()), static_cast<int>(clientCreate.getUseNewbieTutorial()), clientCreate.getSkillTemplate().c_str(), clientCreate.getWorkingSkill().c_str()));
 
                         if (!clientCreate.getUseNewbieTutorial() && !m_canSkipTutorial) {
@@ -1210,7 +1208,7 @@ void
 ClientConnection::onCharacterValidated(bool isValid, const NetworkId &character, const std::string &characterName, const NetworkId &container, const std::string &scene, const Vector &coordinates) {
     if (!m_validatingCharacter) {
         LOG("TraceCharacterSelection", ("%d received a validation response, but is not in the process of validation", getSUID()));
-        DEBUG_REPORT_LOG(true, ("Got unexpected onCharacterValidated() for account %lu.\n", getSUID()));
+        DEBUG_REPORT_LOG(true, ("Got unexpected onCharacterValidated() for account %u.\n", getSUID()));
         return;
     }
     m_validatingCharacter = false;
@@ -1274,17 +1272,17 @@ ClientConnection::onValidateClient(StationId suid, const std::string &username, 
         //verify internal, secure, is on the god list
         bool loginOK = false;
         if (!secure) {
-            LOG("CustomerService", ("AdminLogin:  User %s (account %li) attempted to log into account %li, but was not using a SecureID token", username.c_str(), suid, m_requestedSuid));
+            LOG("CustomerService", ("AdminLogin:  User %s (account %u) attempted to log into account %u, but was not using a SecureID token", username.c_str(), suid, m_requestedSuid));
         } else {
             if (!AdminAccountManager::isInternalIp(getRemoteAddress())) {
-                LOG("CustomerService", ("AdminLogin:  User %s (account %li) attempted to log into account %li, but was not logging in from an internal IP", username.c_str(), suid, m_requestedSuid));
+                LOG("CustomerService", ("AdminLogin:  User %s (account %u) attempted to log into account %u, but was not logging in from an internal IP", username.c_str(), suid, m_requestedSuid));
             } else {
                 int adminLevel = 0;
                 if (!AdminAccountManager::isAdminAccount(Unicode::toLower(username), adminLevel) || adminLevel < 10) {
-                    LOG("CustomerService", ("AdminLogin:  User %s (account %li) attempted to log into account %li, but did not have sufficient permissions", username.c_str(), suid, m_requestedSuid));
+                    LOG("CustomerService", ("AdminLogin:  User %s (account %u) attempted to log into account %u, but did not have sufficient permissions", username.c_str(), suid, m_requestedSuid));
                 } else {
-                    LOG("CustomerService", ("AdminLogin:  User %s (account %li) logged into account %li", username.c_str(), m_suid, m_requestedSuid));
-                    DEBUG_REPORT_LOG(true, ("AdminLogin:  User %s (account %li) logged into account %li\n", username.c_str(), m_suid, m_requestedSuid));
+                    LOG("CustomerService", ("AdminLogin:  User %s (account %u) logged into account %u", username.c_str(), m_suid, m_requestedSuid));
+                    DEBUG_REPORT_LOG(true, ("AdminLogin:  User %s (account %u) logged into account %u\n", username.c_str(), m_suid, m_requestedSuid));
                     m_suid = m_requestedSuid;
                     m_usingAdminLogin = true;
                     loginOK = true;
@@ -1350,7 +1348,7 @@ ClientConnection::onValidateClient(StationId suid, const std::string &username, 
     uint32 const requiredSubscriptionBits = ConfigConnectionServer::getRequiredSubscriptionBits();
     if (requiredSubscriptionBits != 0) {
         if ((subscriptionFeatures & requiredSubscriptionBits) != requiredSubscriptionBits) {
-            LOG("ClientDisconnect", ("Suid %d (%s) by session denial reason 'Invalid Subscription Bits'.", suid, username.c_str()));
+            LOG("ClientDisconnect", ("Suid %u (%s) by session denial reason 'Invalid Subscription Bits'.", suid, username.c_str()));
             LOG("CustomerService", ("Login: %s by session denial reason 'Invalid Subscription Bits'.", describeAccount(this).c_str()));
             disconnect();
             return;
@@ -1360,7 +1358,7 @@ ClientConnection::onValidateClient(StationId suid, const std::string &username, 
     uint32 const requiredGameBits = ConfigConnectionServer::getRequiredGameBits();
     if (requiredGameBits != 0) {
         if ((gameFeatures & requiredGameBits) != requiredGameBits) {
-            LOG("ClientDisconnect", ("Suid %d (%s) by session denial reason 'Invalid Game Bits'.", suid, username.c_str()));
+            LOG("ClientDisconnect", ("Suid %u (%s) by session denial reason 'Invalid Game Bits'.", suid, username.c_str()));
             LOG("CustomerService", ("Login: %s by session denial reason 'Invalid Game Bits'.", describeAccount(this).c_str()));
             disconnect();
             return;
@@ -1394,9 +1392,9 @@ std::string ClientConnection::describeAccount(const ClientConnection *c) {
         char idbuf[512] = {"\0"};
         const std::string &sessionId = c->getSessionId();
         if (sessionId.empty()) {
-            snprintf(idbuf, sizeof(idbuf), " (%lu)", c->m_suid);
+            snprintf(idbuf, sizeof(idbuf), " (%u)", c->m_suid);
         } else {
-            snprintf(idbuf, sizeof(idbuf), " (%lu, %s)", c->m_suid, sessionId.c_str());
+            snprintf(idbuf, sizeof(idbuf), " (%u, %s)", c->m_suid, sessionId.c_str());
         }
 
         result = c->m_accountName;

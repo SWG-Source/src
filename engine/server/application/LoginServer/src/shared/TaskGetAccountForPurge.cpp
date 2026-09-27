@@ -32,7 +32,7 @@ namespace TaskGetAccountForPurgeNamespace
 		StationId getAccount() const;
 
 	private:
-		DB::BindableLong m_account;
+		DB::BindableUint32 m_account;
 		DB::BindableLong m_min_age;
 		DB::BindableLong m_purge_phase;
 

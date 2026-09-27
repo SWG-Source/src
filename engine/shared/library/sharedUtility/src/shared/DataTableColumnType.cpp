@@ -15,6 +15,7 @@
 #include "sharedUtility/DataTableManager.h"
 #include <cstdio>
 #include <map>
+#include "sharedFoundation/FixedWidthParse.h"
 
 // ----------------------------------------------------------------------
 
@@ -148,7 +149,9 @@ DataTableColumnType::DataTableColumnType(std::string const &desc) :
 			std::string::size_type endPos = enumList.find(',');
 			std::string label = enumList.substr(0, eqPos);
 			std::string val = enumList.substr(eqPos+1, endPos-eqPos-1);
-			(*m_enumMap)[label] = static_cast<int>(strtol(val.c_str(), nullptr, 0));
+			int32_t enumValue = 0;
+			FATAL(!FixedWidthParse::toInt32(val.c_str(), nullptr, 0, enumValue), ("Enumeration value [%s] for [%s] does not fit in 32 bits", val.c_str(), label.c_str()));
+			(*m_enumMap)[label] = enumValue;
 			enumList.erase(0, endPos+1);
 		}
 		// assure the default is a member of the enumeration
@@ -173,7 +176,8 @@ DataTableColumnType::DataTableColumnType(std::string const &desc) :
 			std::string::size_type endPos = enumList.find(',');
 			std::string label = enumList.substr(0, eqPos);
 			std::string val = enumList.substr(eqPos+1, endPos-eqPos-1);
-			int bit = static_cast<int>(strtol(val.c_str(), nullptr, 0));
+			int32_t bit = 0;
+			IGNORE_RETURN(FixedWidthParse::toInt32(val.c_str(), nullptr, 0, bit)); // out of range stays 0, rejected below
 			if((bit < 1) || (bit > 32))
 			{
 				WARNING(true, ("Flags value [%s] is not a whole number from 1 to 32", label.c_str()));
@@ -247,7 +251,11 @@ void DataTableColumnType::createDefaultCell()
 	switch(m_basicType)
 	{
 	case DT_Int:
-		m_defaultCell = new DataTableCell(static_cast<int>(strtol(value.c_str(), nullptr, 0)));
+		{
+			int32_t defaultValue = 0;
+			FATAL(!FixedWidthParse::toInt32(value.c_str(), nullptr, 0, defaultValue), ("Default value [%s] does not fit in 32 bits", value.c_str()));
+			m_defaultCell = new DataTableCell(defaultValue);
+		}
 		break;
 	case DT_Float:
 		m_defaultCell = new DataTableCell(static_cast<float>(atof(value.c_str())));
@@ -413,9 +421,16 @@ bool DataTableColumnType::mangleValue(std::string &value) const
 		}
 	}
 
+	// an integer cell is a 32-bit field; its value must fit
+	if (m_type == DT_Int)
+	{
+		int32_t intValue;
+		return FixedWidthParse::toInt32(value.c_str(), nullptr, 0, intValue);
+	}
+
 	// only basic type DT_Int are complex types that use value mangling other
 	// than default values
-	if (m_basicType != DT_Int || m_type == DT_Int)
+	if (m_basicType != DT_Int)
 		return true;
 	// complex type which needs mangling
 	switch (m_type)

@@ -44,7 +44,7 @@ bool TaskUpgradeAccount::process(DB::Session *session)
 		case LoginUpgradeAccountMessage::UT_addJedi:
 		{
 			QueryJediQuery qryHasJediSlot;
-			qryHasJediSlot.station_id = static_cast<long>(m_message->getStationId());
+			qryHasJediSlot.station_id = m_message->getStationId();
 			qryHasJediSlot.character_type = 2;
 
 			rval = session->exec(&qryHasJediSlot);
@@ -55,8 +55,8 @@ bool TaskUpgradeAccount::process(DB::Session *session)
 			if (!rval || (qryHasJediSlot.result.getValue() == 0))
 			{
 				AddJediQuery qry;
-				qry.cluster_id = static_cast<long>(m_clusterId);
-				qry.station_id = static_cast<long>(m_message->getStationId());
+				qry.cluster_id = m_clusterId;
+				qry.station_id = m_message->getStationId();
 				
 				rval = session->exec(&qry);
 				
@@ -68,8 +68,8 @@ bool TaskUpgradeAccount::process(DB::Session *session)
 		case LoginUpgradeAccountMessage::UT_setSpectral:
 		{
 			SetCharacterTypeQuery qry;
-			qry.cluster_id = static_cast<long>(m_clusterId);
-			qry.station_id = static_cast<long>(m_message->getStationId());
+			qry.cluster_id = m_clusterId;
+			qry.station_id = m_message->getStationId();
 			qry.character = m_message->getCharacter();
 			qry.character_type = 3;
 			
@@ -246,7 +246,7 @@ bool TaskOccupyUnlockedSlot::process(DB::Session *session)
 
 	// see if account has an unlocked slot
 	TaskUpgradeAccount::QueryJediQuery qryHasJediSlot;
-	qryHasJediSlot.station_id = static_cast<long>(m_stationId);
+	qryHasJediSlot.station_id = m_stationId;
 	qryHasJediSlot.character_type = 2;
 
 	rval = session->exec(&qryHasJediSlot);
@@ -289,7 +289,7 @@ bool TaskOccupyUnlockedSlot::process(DB::Session *session)
 		{
 			++numberUnlockedSlotCharacter;
 			
-			if (qryGetCharacters.cluster_id.getValue() == static_cast<long>(m_clusterId))
+			if (qryGetCharacters.cluster_id.getValue() == m_clusterId)
 				hasUnlockedSlotCharacterOnCluster = true;
 		}
 	}
@@ -310,8 +310,8 @@ bool TaskOccupyUnlockedSlot::process(DB::Session *session)
 
 	// make the character an unlocked slot character
 	TaskUpgradeAccount::SetCharacterTypeQuery qrySetUnlocked;
-	qrySetUnlocked.cluster_id = static_cast<long>(m_clusterId);
-	qrySetUnlocked.station_id = static_cast<long>(m_stationId);
+	qrySetUnlocked.cluster_id = m_clusterId;
+	qrySetUnlocked.station_id = m_stationId;
 	qrySetUnlocked.character = m_characterId;
 	qrySetUnlocked.character_type = 2;
 
@@ -364,7 +364,7 @@ bool TaskVacateUnlockedSlot::process(DB::Session *session)
 
 	// see if account has an unlocked slot
 	TaskUpgradeAccount::QueryJediQuery qryHasJediSlot;
-	qryHasJediSlot.station_id = static_cast<long>(m_stationId);
+	qryHasJediSlot.station_id = m_stationId;
 	qryHasJediSlot.character_type = 2;
 
 	rval = session->exec(&qryHasJediSlot);
@@ -401,7 +401,7 @@ bool TaskVacateUnlockedSlot::process(DB::Session *session)
 	int rowsFetched;
 	while ((rowsFetched = qryGetCharacters.fetch()) > 0)
 	{
-		if ((qryGetCharacters.cluster_id.getValue() == static_cast<long>(m_clusterId)) && (qryGetCharacters.object_id.getValue() == m_characterId))
+		if ((qryGetCharacters.cluster_id.getValue() == m_clusterId) && (qryGetCharacters.object_id.getValue() == m_characterId))
 		{
 			if (qryGetCharacters.character_type.getValue() == 2)
 			{
@@ -424,8 +424,8 @@ bool TaskVacateUnlockedSlot::process(DB::Session *session)
 	// we are going to be making the character into a normal character, and
 	// we must be sure that doing will not violate the normal character limit
 	GetOnlyOpenCharacterSlotsQuery qryGetOnlyOpenCharacterSlots;
-	qryGetOnlyOpenCharacterSlots.station_id = static_cast<long>(m_stationId);
-	qryGetOnlyOpenCharacterSlots.cluster_id = static_cast<long>(m_clusterId);
+	qryGetOnlyOpenCharacterSlots.station_id = m_stationId;
+	qryGetOnlyOpenCharacterSlots.cluster_id = m_clusterId;
 
 	rval = session->exec(&qryGetOnlyOpenCharacterSlots);
 	if (!rval)
@@ -450,8 +450,8 @@ bool TaskVacateUnlockedSlot::process(DB::Session *session)
 
 	// make the character a normal slot character
 	TaskUpgradeAccount::SetCharacterTypeQuery qrySetNormal;
-	qrySetNormal.cluster_id = static_cast<long>(m_clusterId);
-	qrySetNormal.station_id = static_cast<long>(m_stationId);
+	qrySetNormal.cluster_id = m_clusterId;
+	qrySetNormal.station_id = m_stationId;
 	qrySetNormal.character = m_characterId;
 	qrySetNormal.character_type = 1;
 
@@ -551,7 +551,7 @@ bool TaskSwapUnlockedSlot::process(DB::Session *session)
 
 	// see if account has an unlocked slot
 	TaskUpgradeAccount::QueryJediQuery qryHasJediSlot;
-	qryHasJediSlot.station_id = static_cast<long>(m_stationId);
+	qryHasJediSlot.station_id = m_stationId;
 	qryHasJediSlot.character_type = 2;
 
 	rval = session->exec(&qryHasJediSlot);
@@ -593,7 +593,7 @@ bool TaskSwapUnlockedSlot::process(DB::Session *session)
 	int rowsFetched;
 	while ((rowsFetched = qryGetCharacters.fetch()) > 0)
 	{
-		if ((qryGetCharacters.cluster_id.getValue() == static_cast<long>(m_clusterId)) && (qryGetCharacters.object_id.getValue() == m_sourceCharacterId))
+		if ((qryGetCharacters.cluster_id.getValue() == m_clusterId) && (qryGetCharacters.object_id.getValue() == m_sourceCharacterId))
 		{
 			foundSourceCharacter = true;
 
@@ -604,7 +604,7 @@ bool TaskSwapUnlockedSlot::process(DB::Session *session)
 		}
 
 		// this is not a "else if" because we don't trust that m_sourceCharacterId is always different from m_targetCharacterId
-		if ((qryGetCharacters.cluster_id.getValue() == static_cast<long>(m_clusterId)) && (qryGetCharacters.object_id.getValue() == m_targetCharacterId))
+		if ((qryGetCharacters.cluster_id.getValue() == m_clusterId) && (qryGetCharacters.object_id.getValue() == m_targetCharacterId))
 		{
 			qryGetCharacters.character_name.getValue(m_targetCharacterName);
 			isTargetOnSameCluster = true;
@@ -641,8 +641,8 @@ bool TaskSwapUnlockedSlot::process(DB::Session *session)
 
 	// make the source character a normal slot character
 	TaskUpgradeAccount::SetCharacterTypeQuery qrySetNormal;
-	qrySetNormal.cluster_id = static_cast<long>(m_clusterId);
-	qrySetNormal.station_id = static_cast<long>(m_stationId);
+	qrySetNormal.cluster_id = m_clusterId;
+	qrySetNormal.station_id = m_stationId;
 	qrySetNormal.character = m_sourceCharacterId;
 	qrySetNormal.character_type = 1;
 
@@ -658,8 +658,8 @@ bool TaskSwapUnlockedSlot::process(DB::Session *session)
 
 	// make the target character an unlocked slot character
 	TaskUpgradeAccount::SetCharacterTypeQuery qrySetUnlocked;
-	qrySetUnlocked.cluster_id = static_cast<long>(m_clusterId);
-	qrySetUnlocked.station_id = static_cast<long>(m_stationId);
+	qrySetUnlocked.cluster_id = m_clusterId;
+	qrySetUnlocked.station_id = m_stationId;
 	qrySetUnlocked.character = m_targetCharacterId;
 	qrySetUnlocked.character_type = 2;
 

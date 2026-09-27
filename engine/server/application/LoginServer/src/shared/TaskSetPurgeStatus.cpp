@@ -29,7 +29,7 @@ namespace TaskSetPurgeStatusNamespace
 		virtual QueryMode getExecutionMode() const;
 
 	private:
-		DB::BindableLong m_account;
+		DB::BindableUint32 m_account;
 		DB::BindableLong m_purge_phase;
 
 	private: //disable

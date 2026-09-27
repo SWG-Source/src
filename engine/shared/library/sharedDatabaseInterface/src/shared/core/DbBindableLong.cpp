@@ -18,6 +18,12 @@ BindableLong::BindableLong() : Bindable(), value(-999)
 {
 }
 
+BindableLong::BindableLong(int _value) : Bindable(sizeof(value)), value(_value)
+{
+}
+
+// ----------------------------------------------------------------------
+
 BindableLong::BindableLong(long _value) : Bindable(sizeof(value)), value(_value)
 {
 }
@@ -37,11 +43,26 @@ long BindableLong::getValue() const
 
 // ----------------------------------------------------------------------
 
+BindableLong &BindableLong::operator=(int rhs)
+{
+	setValue(rhs);
+	return *this;
+}
+
+// ----------------------------------------------------------------------
+
 BindableLong &BindableLong::operator=(long rhs)
 {
 	indicator=sizeof(value); 
 	value=rhs;
 	return *this;
+}
+
+// ----------------------------------------------------------------------
+
+void BindableLong::setValue(int rhs)
+{
+	setValue(static_cast<long>(rhs));
 }
 
 // ----------------------------------------------------------------------
