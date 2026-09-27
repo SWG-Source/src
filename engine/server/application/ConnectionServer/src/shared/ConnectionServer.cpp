@@ -52,9 +52,10 @@
 #include "sharedNetworkMessages/ClientCentralMessages.h"
 #include "sharedNetworkMessages/GenericValueTypeMessage.h"
 #include "sharedUtility/DataTableManager.h"
-#include <vector>
 
 #include "sharedFoundation/CrcConstexpr.hpp"
+
+#include <vector>
 
 // ======================================================================
 namespace ConnectionServerNamespace {
@@ -164,50 +165,43 @@ bool
 ConnectionServer::decryptToken(const KeyShare::Token &token, uint32 &stationUserId, bool &secure, std::string &accountName) {
     static ConnectionServer &cs = instance();
 
-    //Also the sizeof(int) is likewise magic from the session api
-    uint32 len = sizeof(uint32) + sizeof(bool) + MAX_ACCOUNT_NAME_LENGTH + 1;
-    unsigned char *keyBuffer = new unsigned char[len];
-    unsigned char *keyBufferPointer = keyBuffer;
-    memset(keyBuffer, 0, len);
+    // The account token holds the station id, the security flag and the
+    // account name (MAX_ACCOUNT_NAME_LENGTH bytes, zero-padded).
+    uint32 len = sizeof(uint32) + sizeof(bool) + MAX_ACCOUNT_NAME_LENGTH + 1; // in: buffer size; out: bytes deciphered
+    std::vector<unsigned char> keyBuffer(len, 0);
 
-    bool retval = cs.loginServerKeys->decipherToken(token, keyBuffer, len);
+    bool const retval = cs.loginServerKeys->decipherToken(token, keyBuffer.data(), len);
 
     if (!retval) {
         return retval;
     }
 
-    char *tmpBuffer = new char[MAX_ACCOUNT_NAME_LENGTH + 1];
-    memset(tmpBuffer, 0, MAX_ACCOUNT_NAME_LENGTH + 1);
-
+    unsigned char const *keyBufferPointer = keyBuffer.data();
     memcpy(&stationUserId, keyBufferPointer, sizeof(uint32));
     keyBufferPointer += sizeof(uint32);
     memcpy(&secure, keyBufferPointer, sizeof(bool));
     keyBufferPointer += sizeof(bool);
-    memcpy(tmpBuffer, keyBufferPointer, MAX_ACCOUNT_NAME_LENGTH);
-    accountName = tmpBuffer;
-    delete[] tmpBuffer;
-    delete[] keyBuffer;
+    char const * const name = reinterpret_cast<char const *>(keyBufferPointer);
+    accountName.assign(name, strnlen(name, MAX_ACCOUNT_NAME_LENGTH));
     return retval;
 }
 
 bool ConnectionServer::decryptToken(const KeyShare::Token &token, char *sessionKey, StationId &stationId) {
     static ConnectionServer &cs = instance();
 
-    uint32 len = apiSessionIdWidth + sizeof(StationId);
-    unsigned char *keyBuffer = new unsigned char[len + 1];
-    unsigned char *keyBufferPointer = keyBuffer;
-    memset(keyBuffer, 0, sizeof(*keyBuffer));
+    // The token holds the session id (apiSessionIdWidth bytes) followed by
+    // the station id; sessionKey receives only the session id.
+    uint32 len = apiSessionIdWidth + sizeof(StationId); // in: buffer size; out: bytes deciphered
+    std::vector<unsigned char> keyBuffer(len + 1, 0);
 
-    bool retval = cs.loginServerKeys->decipherToken(token, keyBuffer, len);
+    bool const retval = cs.loginServerKeys->decipherToken(token, keyBuffer.data(), len);
 
     if (!retval) {
         return retval;
     }
 
-    memcpy(sessionKey, keyBufferPointer, len);
-    keyBufferPointer += apiSessionIdWidth;
-    memcpy(&stationId, keyBufferPointer, sizeof(StationId));
-    delete[] keyBuffer;
+    memcpy(sessionKey, keyBuffer.data(), apiSessionIdWidth);
+    memcpy(&stationId, keyBuffer.data() + apiSessionIdWidth, sizeof(StationId));
     return retval;
 }
 
