@@ -10,11 +10,14 @@
 #include "sharedSynchronization/Mutex.h"
 #include <execinfo.h>
 #include <elf.h>
+#include <link.h>
 #include <sys/mman.h>
 #include <fcntl.h>
 #include <unistd.h>
 #include <dlfcn.h>
 #include <cstddef>
+#include <cstring>
+#include <limits>
 #include <map>
 #include <vector>
 
@@ -94,57 +97,176 @@ static UniqueStringVector ms_uniqueStringVector;
 
 // ----------------------------------------------------------------------
 
-static Elf32_Shdr const *elfGetObjSectionHeader(void const *objBaseAddr, int sectionIndex)
+// Read-only mapping of an object file on disk, parsed with the ELF types
+// of this build (ElfW is Elf32 on ILP32 and Elf64 on LP64). A file whose
+// ELF class does not match the build, or whose headers do not fit inside
+// the file, is treated as having no sections.
+//
+// This runs while reporting a crash or warning, so it must not log.
+
+class MappedElfFile
 {
-	Elf32_Ehdr const *eh = reinterpret_cast<Elf32_Ehdr const *>(objBaseAddr);
-	if (sectionIndex >= 0 && sectionIndex < eh->e_shnum)
-		return reinterpret_cast<Elf32_Shdr const *>(static_cast<char const *>(objBaseAddr)+eh->e_shoff+sectionIndex*eh->e_shentsize);
-	return 0;
-}
+public:
+
+	explicit MappedElfFile(char const *fileName);
+	~MappedElfFile();
+
+	int         getSectionByName(char const *sectionName) const;
+	char const *getSectionData(int sectionIndex) const;
+	size_t      getSectionSize(int sectionIndex) const;
+
+private:
+
+	MappedElfFile(MappedElfFile const &);
+	MappedElfFile &operator =(MappedElfFile const &);
+
+	bool                 parseHeaders();
+	ElfW(Shdr) const    *getSectionHeader(int sectionIndex) const;
+	char const          *getSectionName(int sectionIndex) const;
+
+private:
+
+	char const        *m_base;
+	size_t             m_size;
+	ElfW(Shdr) const  *m_sectionHeaders;
+	size_t             m_numberOfSections;
+	int                m_sectionNameIndex;
+};
 
 // ----------------------------------------------------------------------
 
-static char const *elfGetObjSectionData(void const *objBaseAddr, int sectionIndex)
+MappedElfFile::MappedElfFile(char const *fileName) :
+	m_base(0),
+	m_size(0),
+	m_sectionHeaders(0),
+	m_numberOfSections(0),
+	m_sectionNameIndex(-1)
 {
-	Elf32_Shdr const *sh = elfGetObjSectionHeader(objBaseAddr, sectionIndex);
-	if (sh)
-		return reinterpret_cast<char const *>(objBaseAddr)+sh->sh_offset;
-	return 0;
-}
+	int const fd = open(fileName, O_RDONLY);
+	if (fd == -1)
+		return;
 
-// ----------------------------------------------------------------------
-
-static unsigned int elfGetObjSectionSize(void const *objBaseAddr, int sectionIndex)
-{
-	Elf32_Shdr const *sh = elfGetObjSectionHeader(objBaseAddr, sectionIndex);
-	if (sh)
-		return sh->sh_size;
-	return 0;
-}
-
-// ----------------------------------------------------------------------
-
-static char const *elfGetObjSectionName(void const *objBaseAddr, int sectionIndex)
-{
-	Elf32_Ehdr const *eh = reinterpret_cast<Elf32_Ehdr const *>(objBaseAddr);
-	char const *sectionStr = elfGetObjSectionData(objBaseAddr, eh->e_shstrndx);
-	if (sectionStr)
+	off_t const fileSize = lseek(fd, 0, SEEK_END);
+	size_t const mapSize = static_cast<size_t>(fileSize);
+	if (fileSize > 0 && static_cast<off_t>(mapSize) == fileSize)
 	{
-		Elf32_Shdr const *sh = elfGetObjSectionHeader(objBaseAddr, sectionIndex);
-		if (sh)
-			return sectionStr+sh->sh_name;
+		void * const mappedAddr = mmap(0, mapSize, PROT_READ, MAP_PRIVATE, fd, 0);
+		if (mappedAddr != MAP_FAILED)
+		{
+			m_base = static_cast<char const *>(mappedAddr);
+			m_size = mapSize;
+		}
 	}
+	close(fd);
+
+	if (m_base && !parseHeaders())
+		m_numberOfSections = 0;
+}
+
+// ----------------------------------------------------------------------
+
+MappedElfFile::~MappedElfFile()
+{
+	if (m_base)
+		munmap(const_cast<char *>(m_base), m_size);
+}
+
+// ----------------------------------------------------------------------
+
+bool MappedElfFile::parseHeaders()
+{
+#if defined(__LP64__)
+	unsigned char const nativeElfClass = ELFCLASS64;
+#else
+	unsigned char const nativeElfClass = ELFCLASS32;
+#endif
+
+	if (m_size < sizeof(ElfW(Ehdr)))
+		return false;
+
+	ElfW(Ehdr) const * const eh = reinterpret_cast<ElfW(Ehdr) const *>(m_base);
+	if (memcmp(eh->e_ident, ELFMAG, SELFMAG) != 0 || eh->e_ident[EI_CLASS] != nativeElfClass)
+		return false;
+
+	if (eh->e_shoff == 0 || eh->e_shentsize != sizeof(ElfW(Shdr)) || eh->e_shoff > m_size)
+		return false;
+
+	size_t const maximumNumberOfSections = (m_size - eh->e_shoff) / sizeof(ElfW(Shdr));
+	if (maximumNumberOfSections == 0)
+		return false;
+
+	m_sectionHeaders = reinterpret_cast<ElfW(Shdr) const *>(m_base + eh->e_shoff);
+
+	// With extended section numbering the real count and string table
+	// index live in section header 0.
+	size_t numberOfSections = eh->e_shnum;
+	if (numberOfSections == 0)
+		numberOfSections = m_sectionHeaders[0].sh_size;
+	size_t sectionNameIndex = eh->e_shstrndx;
+	if (sectionNameIndex == SHN_XINDEX)
+		sectionNameIndex = m_sectionHeaders[0].sh_link;
+
+	if (numberOfSections > maximumNumberOfSections || numberOfSections > static_cast<size_t>(std::numeric_limits<int>::max()) || sectionNameIndex >= numberOfSections)
+		return false;
+
+	m_numberOfSections = numberOfSections;
+	m_sectionNameIndex = static_cast<int>(sectionNameIndex);
+	return true;
+}
+
+// ----------------------------------------------------------------------
+
+ElfW(Shdr) const *MappedElfFile::getSectionHeader(int sectionIndex) const
+{
+	if (sectionIndex >= 0 && static_cast<size_t>(sectionIndex) < m_numberOfSections)
+		return m_sectionHeaders + sectionIndex;
 	return 0;
 }
 
 // ----------------------------------------------------------------------
 
-static int elfGetObjSectionByName(void const *objBaseAddr, char const *sectionName)
+char const *MappedElfFile::getSectionData(int sectionIndex) const
 {
-	int n = reinterpret_cast<Elf32_Ehdr const *>(objBaseAddr)->e_shnum;
-	for (int i = 0; i < n; ++i)
-		if (!strcmp(elfGetObjSectionName(objBaseAddr, i), sectionName))
-			return i;
+	ElfW(Shdr) const * const sh = getSectionHeader(sectionIndex);
+	if (!sh || sh->sh_type == SHT_NOBITS || sh->sh_offset > m_size || sh->sh_size > m_size - sh->sh_offset)
+		return 0;
+	return m_base + sh->sh_offset;
+}
+
+// ----------------------------------------------------------------------
+
+size_t MappedElfFile::getSectionSize(int sectionIndex) const
+{
+	if (!getSectionData(sectionIndex))
+		return 0;
+	return static_cast<size_t>(getSectionHeader(sectionIndex)->sh_size);
+}
+
+// ----------------------------------------------------------------------
+
+char const *MappedElfFile::getSectionName(int sectionIndex) const
+{
+	char const * const names = getSectionData(m_sectionNameIndex);
+	ElfW(Shdr) const * const sh = getSectionHeader(sectionIndex);
+	if (!names || !sh)
+		return 0;
+
+	size_t const namesSize = getSectionSize(m_sectionNameIndex);
+	if (sh->sh_name >= namesSize || !memchr(names + sh->sh_name, '\0', namesSize - sh->sh_name))
+		return 0;
+	return names + sh->sh_name;
+}
+
+// ----------------------------------------------------------------------
+
+int MappedElfFile::getSectionByName(char const *sectionName) const
+{
+	for (size_t i = 0; i < m_numberOfSections; ++i)
+	{
+		char const * const name = getSectionName(static_cast<int>(i));
+		if (name && !strcmp(name, sectionName))
+			return static_cast<int>(i);
+	}
 	return -1;
 }
 
@@ -236,7 +358,7 @@ inline unsigned int dwarfGet(char const *src, LEB128u &dest)
 
 // ----------------------------------------------------------------------
 
-static bool dwarfSearch(char const *dwarfLines, unsigned int linesLength, void const *addr, Dl_info const &info, char const *&retSrcFile, int &retSrcLine)
+static bool dwarfSearch(char const *dwarfLines, size_t linesLength, void const *addr, Dl_info const &info, char const *&retSrcFile, int &retSrcLine)
 {
 	enum
 	{
@@ -254,47 +376,80 @@ static bool dwarfSearch(char const *dwarfLines, unsigned int linesLength, void c
 		DW_LNS_fixed_advance_pc = 9,
 	};
 ////
-	void const *bestOverAddr = reinterpret_cast<void const *>(0xffffffff);
+	// Addresses are compared as pointers, so no sentinel address can be
+	// assumed out of range (a 64-bit process maps code above 4 GiB).
+	bool foundOver = false;
+	void const *bestOverAddr = 0;
 	void const *bestUnderAddr = 0;
+	bool bestUnderIsEndSequence = false;
 	char const *bestUnderSrcFileTable = 0;
+	char const *bestUnderSrcFileTableEnd = 0;
 	int bestUnderSrcFileNum = 0;
 	int bestUnderSrcLine = 0;
 
-	unsigned int stmtProgMaxLen = linesLength;
-	u_int32_t stmtProgLen = 0;
-
-	for (unsigned int progBeginOffset = 0; progBeginOffset < linesLength; progBeginOffset += stmtProgLen+4, stmtProgMaxLen -= stmtProgLen+4)
+	size_t nextUnitOffset = 0;
+	while (linesLength - nextUnitOffset >= 4)
 	{
-		char const *stmtProg = dwarfLines+progBeginOffset;
-		// get program length
-		stmtProg += dwarfGet(stmtProg, stmtProgLen);
-		if (stmtProgLen < 12 || stmtProgLen+4 > stmtProgMaxLen)
+		char const *stmtProg = dwarfLines+nextUnitOffset;
+		size_t const remaining = linesLength - nextUnitOffset;
+
+		// get unit length
+		u_int32_t stmtProgLen; stmtProg += dwarfGet(stmtProg, stmtProgLen);
+		if (stmtProgLen == 0xffffffff)
+		{
+			// 64-bit DWARF unit: its header layout is not supported, skip it
+			u_int64_t stmtProgLen64;
+			if (remaining < 12)
+				break;
+			stmtProg += dwarfGet(stmtProg, stmtProgLen64);
+			if (stmtProgLen64 > remaining - 12)
+				break;
+			nextUnitOffset += 12 + static_cast<size_t>(stmtProgLen64);
+			continue;
+		}
+		if (stmtProgLen >= 0xfffffff0 || stmtProgLen > remaining - 4)
+			break;
+		nextUnitOffset += 4 + stmtProgLen;
+
+		char const * const stmtProgEnd = stmtProg+stmtProgLen;
+		if (stmtProgLen < 12)
 			continue;
 
-		char const *stmtProgEnd = stmtProg+stmtProgLen;
-		stmtProg += 2; // skip version
+		// DWARF 2-4 share this header; version 4 adds maximum_operations_per_instruction.
+		// DWARF 5 uses a different directory and file table encoding.
+		u_int16_t stmtProgVersion; stmtProg += dwarfGet(stmtProg, stmtProgVersion);
+		if (stmtProgVersion < 2 || stmtProgVersion > 4)
+			continue;
+
 		// get prologue length
 		u_int32_t stmtProgPrologueLen; stmtProg += dwarfGet(stmtProg, stmtProgPrologueLen);
-		if (stmtProgPrologueLen+10 > stmtProgMaxLen)
+		if (stmtProgPrologueLen > static_cast<size_t>(stmtProgEnd-stmtProg) || stmtProgPrologueLen < (stmtProgVersion >= 4 ? 7u : 6u))
 			continue;
 
-		char const *stmtProgStart = stmtProg;
+		char const * const stmtProgStart = stmtProg;
+		char const * const stmtProgPrologueEnd = stmtProgStart+stmtProgPrologueLen;
 		u_int8_t stmtProgMinInstructionLen; stmtProg += dwarfGet(stmtProg, stmtProgMinInstructionLen);
 		if (stmtProgMinInstructionLen == 0)
 			continue;
+		if (stmtProgVersion >= 4)
+			++stmtProg; // skip maximum_operations_per_instruction (1 for non-VLIW targets)
 		++stmtProg; // skip default_is_stmt
 		int8_t stmtProgLineBase; stmtProg += dwarfGet(stmtProg, *(u_int8_t*)&stmtProgLineBase);
 		u_int8_t stmtProgLineRange; stmtProg += dwarfGet(stmtProg, stmtProgLineRange);
 		if (stmtProgLineRange == 0)
 			continue;
 		u_int8_t stmtProgOpcodeBase; stmtProg += dwarfGet(stmtProg, stmtProgOpcodeBase);
+		if (stmtProgOpcodeBase == 0 || stmtProgOpcodeBase-1 > stmtProgPrologueEnd-stmtProg)
+			continue;
 		u_int8_t const *stmtProgOpcodeLengths = reinterpret_cast<u_int8_t const *>(stmtProg);
 		stmtProg += stmtProgOpcodeBase-1;
 		// include dirs here
-		while (*stmtProg)
-			while (*stmtProg++);
+		while (stmtProg < stmtProgPrologueEnd && *stmtProg)
+			while (stmtProg < stmtProgPrologueEnd && *stmtProg++);
+		if (stmtProg >= stmtProgPrologueEnd)
+			continue;
 		char const *stmtProgFilenames = stmtProg;
-		stmtProg = stmtProgStart+stmtProgPrologueLen;
+		stmtProg = stmtProgPrologueEnd;
 
 		// run program
 
@@ -306,7 +461,7 @@ static bool dwarfSearch(char const *dwarfLines, unsigned int linesLength, void c
 			bool done = false;
 			bool valid = false;
 
-			while (!done)
+			while (!done && stmtProg < stmtProgEnd)
 			{
 				u_int8_t opcode = *stmtProg++;
 				if (opcode < stmtProgOpcodeBase)
@@ -315,9 +470,13 @@ static bool dwarfSearch(char const *dwarfLines, unsigned int linesLength, void c
 					{
 					case 0: // extended
 						{
-							u_int8_t size, extendedOpcode;
-							stmtProg += dwarfGet(stmtProg, size);
-							stmtProg += dwarfGet(stmtProg, extendedOpcode);
+							LEB128u size; stmtProg += dwarfGet(stmtProg, size);
+							if (size == 0 || size > static_cast<size_t>(stmtProgEnd-stmtProg))
+							{
+								stmtProg = stmtProgEnd;
+								break;
+							}
+							u_int8_t extendedOpcode; stmtProg += dwarfGet(stmtProg, extendedOpcode);
 							switch (extendedOpcode)
 							{
 							case DW_LNE_end_sequence:
@@ -325,7 +484,16 @@ static bool dwarfSearch(char const *dwarfLines, unsigned int linesLength, void c
 								done = true;
 								break;
 							case DW_LNE_set_address:
-								stmtProg += dwarfGet(stmtProg, progAddr);
+								// the operand is a target address: 4 bytes in ELF32, 8 in ELF64
+								if (size-1 == sizeof(u_int64_t))
+									stmtProg += dwarfGet(stmtProg, progAddr);
+								else if (size-1 == sizeof(u_int32_t))
+								{
+									u_int32_t progAddr32; stmtProg += dwarfGet(stmtProg, progAddr32);
+									progAddr = progAddr32;
+								}
+								else
+									stmtProg += size-1;
 								break;
 							default: // unimplemented extended opcode, skip parms
 								stmtProg += size-1;
@@ -398,74 +566,74 @@ static bool dwarfSearch(char const *dwarfLines, unsigned int linesLength, void c
 					const void *testAddr = reinterpret_cast<const void *>(progAddr+addrOffset);
 					if (testAddr >= addr)
 					{
-						if (testAddr < bestOverAddr)
+						if (!foundOver || testAddr < bestOverAddr)
+						{
+							foundOver = true;
 							bestOverAddr = testAddr;
+						}
 					}
-					else if (testAddr > bestUnderAddr)
+					else if (testAddr > bestUnderAddr || (testAddr == bestUnderAddr && bestUnderIsEndSequence && !done))
 					{
+						// an end_sequence row marks the first address past the
+						// sequence; prefer a real row that starts at the same address
 						bestUnderAddr = testAddr;
+						bestUnderIsEndSequence = done;
 						bestUnderSrcFileTable = stmtProgFilenames;
+						bestUnderSrcFileTableEnd = stmtProgPrologueEnd;
 						bestUnderSrcFileNum = progFile;
 						bestUnderSrcLine = progLine;
 					}
+
+					// a row is emitted only by the opcode that appends it
+					valid = false;
 				}
 			}
 		}
 	}
 
-	if (bestUnderAddr && bestOverAddr != reinterpret_cast<void const *>(0xffffffff))
+	// an address past the end of the nearest sequence has no line information
+	if (!bestUnderAddr || bestUnderIsEndSequence || !foundOver || bestUnderSrcFileNum < 0)
+		return false;
+
+	// Each file entry is a name followed by three ULEB128 values
+	// (directory index, modification time, length).
+	char const *srcFile = bestUnderSrcFileTable+1;
+	for (int i = 0; i < bestUnderSrcFileNum; ++i)
 	{
-		char const *srcFile = bestUnderSrcFileTable+1;
-		for (int i = 0; i < bestUnderSrcFileNum; ++i)
-		{
-			while (*srcFile++) {
-				srcFile += 3;
-			}
-		}
-		retSrcFile = SymbolCache::uniqueString(srcFile);
-		retSrcLine = bestUnderSrcLine;
-		return true;
+		if (srcFile >= bestUnderSrcFileTableEnd)
+			return false;
+		void const * const nameEnd = memchr(srcFile, '\0', static_cast<size_t>(bestUnderSrcFileTableEnd-srcFile));
+		if (!nameEnd || nameEnd == srcFile)
+			return false;
+		srcFile = static_cast<char const *>(nameEnd)+1;
+		LEB128u skipped;
+		for (int j = 0; j < 3 && srcFile < bestUnderSrcFileTableEnd; ++j)
+			srcFile += dwarfGet(srcFile, skipped);
 	}
-	return false;
+	if (srcFile >= bestUnderSrcFileTableEnd || !*srcFile || !memchr(srcFile, '\0', static_cast<size_t>(bestUnderSrcFileTableEnd-srcFile)))
+		return false;
+
+	retSrcFile = SymbolCache::uniqueString(srcFile);
+	retSrcLine = bestUnderSrcLine;
+	return true;
 }
 
 // ----------------------------------------------------------------------
 
 static bool dwarfFind(void const *addr, Dl_info const &info, char const *& retSrcFile, int &retSrcLine)
 {
-	bool found = false;
-	int fd = open(info.dli_fname, O_RDONLY);
-	if (fd != -1)
-	{
-		int fileSize = lseek(fd, 0, SEEK_END);
-		lseek(fd, 0, SEEK_SET);
-		void const *mappedAddr = reinterpret_cast<void const *>(mmap(0, fileSize, PROT_READ, MAP_PRIVATE, fd, 0));
-		close(fd);
-		if (mappedAddr != MAP_FAILED)
-		{
-			int dwarfLinesIndex = elfGetObjSectionByName(mappedAddr, ".debug_line");
-			if (dwarfLinesIndex != -1)
-			{
-				try
-				{
-					found = dwarfSearch(
-						elfGetObjSectionData(mappedAddr, dwarfLinesIndex),
-						elfGetObjSectionSize(mappedAddr, dwarfLinesIndex),
-						addr,
-						info,
-						retSrcFile,
-						retSrcLine);
-				}
-				catch (std::bad_alloc &)
-				{
-					munmap(const_cast<void *>(mappedAddr), fileSize);
-					throw std::bad_alloc();
-				}
-			}
-			munmap(const_cast<void *>(mappedAddr), fileSize);
-		}
-	}
-	return found;
+	MappedElfFile const elfFile(info.dli_fname);
+	int const dwarfLinesIndex = elfFile.getSectionByName(".debug_line");
+	if (dwarfLinesIndex == -1 || !elfFile.getSectionData(dwarfLinesIndex))
+		return false;
+
+	return dwarfSearch(
+		elfFile.getSectionData(dwarfLinesIndex),
+		elfFile.getSectionSize(dwarfLinesIndex),
+		addr,
+		info,
+		retSrcFile,
+		retSrcLine);
 }
 
 // ----------------------------------------------------------------------
@@ -481,7 +649,7 @@ struct Stab
 	
 // ----------------------------------------------------------------------
 
-static bool stabSearch(Stab const *stab, unsigned int stabSize, char const *stabStr, void const *addr, Dl_info const &info, char const *&retSrcFile, int &retSrcLine)
+static bool stabSearch(Stab const *stab, size_t stabSize, char const *stabStr, void const *addr, Dl_info const &info, char const *&retSrcFile, int &retSrcLine)
 {
 	enum
 	{
@@ -492,12 +660,12 @@ static bool stabSearch(Stab const *stab, unsigned int stabSize, char const *stab
 		N_SOL   = 0x84  // local source file name
 	};
 
-	unsigned int stabCount = stabSize/sizeof(Stab);
+	size_t const stabCount = stabSize/sizeof(Stab);
 	char const *srcFile = "";
 	void const *funcBase = 0;
 	int foundSrcLine = -1;
 
-	for (unsigned int i = 0; i < stabCount; ++i, ++stab)
+	for (size_t i = 0; i < stabCount; ++i, ++stab)
 	{
 		if (stab->n_type == N_UNDF) // new stabs section, do a recursive search of it
 		{
@@ -540,41 +708,20 @@ static bool stabSearch(Stab const *stab, unsigned int stabSize, char const *stab
 
 static bool stabsFind(void const *addr, Dl_info const &info, char const *& retSrcFile, int &retSrcLine)
 {
-	bool found = false;
-	int fd = open(info.dli_fname, O_RDONLY);
-	if (fd != -1)
-	{
-		int fileSize = lseek(fd, 0, SEEK_END);
-		lseek(fd, 0, SEEK_SET);
-		void const *mappedAddr = reinterpret_cast<void const *>(mmap(0, fileSize, PROT_READ, MAP_PRIVATE, fd, 0));
-		close(fd);
-		if (mappedAddr != MAP_FAILED)
-		{
-			int stabIndex = elfGetObjSectionByName(mappedAddr, ".stab");
-			int stabStrIndex = elfGetObjSectionByName(mappedAddr, ".stabstr");
-			if (stabIndex != -1 && stabStrIndex != -1)
-			{
-				try
-				{
-					found = stabSearch(
-						reinterpret_cast<Stab const *>(elfGetObjSectionData(mappedAddr, stabIndex)),
-						elfGetObjSectionSize(mappedAddr, stabIndex),
-						elfGetObjSectionData(mappedAddr, stabStrIndex),
-						addr,
-						info,
-						retSrcFile,
-						retSrcLine);
-				}
-				catch (std::bad_alloc &)
-				{
-					munmap(const_cast<void *>(mappedAddr), fileSize);
-					throw std::bad_alloc();
-				}
-			}
-			munmap(const_cast<void *>(mappedAddr), fileSize);
-		}
-	}
-	return found;
+	MappedElfFile const elfFile(info.dli_fname);
+	int const stabIndex = elfFile.getSectionByName(".stab");
+	int const stabStrIndex = elfFile.getSectionByName(".stabstr");
+	if (stabIndex == -1 || stabStrIndex == -1 || !elfFile.getSectionData(stabIndex) || !elfFile.getSectionData(stabStrIndex))
+		return false;
+
+	return stabSearch(
+		reinterpret_cast<Stab const *>(elfFile.getSectionData(stabIndex)),
+		elfFile.getSectionSize(stabIndex),
+		elfFile.getSectionData(stabStrIndex),
+		addr,
+		info,
+		retSrcFile,
+		retSrcLine);
 }
 
 // ----------------------------------------------------------------------
