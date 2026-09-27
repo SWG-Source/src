@@ -659,7 +659,12 @@ AuctionMarket::~AuctionMarket()
 	{
 		delete (*i).second;
 	}
-	for (std::map<NetworkId, AuctionLocation *>::iterator i = m_locationIdMap.begin(); i != m_locationIdMap.end(); ++i)
+	// Each ~AuctionLocation removes itself from m_locationIdMap (and the other
+	// location indexes), so take the map's contents first instead of iterating
+	// a map that the destructors erase from.
+	std::map<NetworkId, AuctionLocation *> locations;
+	locations.swap(m_locationIdMap);
+	for (std::map<NetworkId, AuctionLocation *>::iterator i = locations.begin(); i != locations.end(); ++i)
 	{
 		delete (*i).second;
 	}
