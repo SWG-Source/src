@@ -1096,10 +1096,17 @@ void JavaLibrary::initializeJavaThread()
 	tempOption.optionString = "-XX:MaxMetaspaceSize=96m";
 	options.push_back(tempOption);
 
-	// rice options!!!!1! yay - actually after much trial and error these are a good mix for speed and efficiency
-	// i should split these someday into separate optionStrings...or not
-	// some may be default, not needed, or ignored by whatever version we're using -darth
-	tempOption.optionString = "-Xrs -XX:-UsePerfData -XX:-AllowUserSignalHandlers -XX:UseSSE=3 -XX+DoEscapeAnalysis -XX:AutoBoxCacheMax:2000 -XX:+OptimizeStringConcat -XX:+OptimizeFill -XX:+EliminateAutoBox -XX:+UseCompressedStrings -XX:+UseCompressedOops -XX:+EliminateLocks -XX:UseFastAccessorMethods -XX:+UseStringCache -XgcPrio:throughput -XXkeepAreaRatio:1 -XXlazyUnlocking -XXcallProfiling -XXcompactRatio:1";
+	// -Xrs: the server owns the process's signals. Without it the JVM installs
+	// its own SIGTERM handler, and a SIGTERM (e.g. killall) halts the VM from
+	// Java: the VM thread then runs exit(), whose C++ static destructors call
+	// back into JNI while that thread holds a safepoint, and the process hangs.
+	//
+	// Each JavaVMOption is one option. These used to be packed into a single
+	// string, which the JVM ignored as unrecognized (ignoreUnrecognized below),
+	// so -Xrs and the tuning flags that followed it never took effect; several
+	// of those flags are malformed, removed from current JVMs, or JRockit-only.
+	// They are not carried over: enabling them now would be an untested change.
+	tempOption.optionString = "-Xrs";
 	options.push_back(tempOption);
 
 	// left over from SOE, below...probably won't use these most of the time
