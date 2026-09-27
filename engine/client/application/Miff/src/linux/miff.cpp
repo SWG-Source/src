@@ -174,7 +174,7 @@ extern "C" void MIFFinsertChunkData(void * buffer, unsigned bufferSize);
 extern "C" int  MIFFloadRawData(char *fname, void * buffer, unsigned maxBufferSize);
 extern "C" void MIFFexitChunk(void);
 extern "C" void MIFFexitForm(void);
-extern "C" unsigned long MIFFgetLabelHash(char *inputStream);
+extern "C" uint32_t MIFFgetLabelHash(char *inputStream);
 
 // external functions found in parser.lex file
 extern "C" void MIFFCompile(char *inputStream, char *inputFname);
@@ -750,9 +750,9 @@ extern "C" void MIFFfreeString(char * pointer)
 	delete [] pointer;
 }
 
-extern "C" unsigned long MIFFgetLabelHash(char * inputStream)
+extern "C" uint32_t MIFFgetLabelHash(char * inputStream)
 {
-	return (unsigned long)Crc::calculate(inputStream);
+	return Crc::calculate(inputStream);
 }
 
 //===========================================================================
