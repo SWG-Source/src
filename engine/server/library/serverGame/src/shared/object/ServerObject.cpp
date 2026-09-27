@@ -469,11 +469,14 @@ namespace ServerObjectNamespace
 
 	// ----------------------------------------------------------------------
 
-	unsigned int getPackedObjVarField(std::string const &buf, unsigned int offset, int &result)
+	// An int field. Packed objvar strings reach setPackedObjVars() from
+	// scripts as well as from buildout data, so the field must be exactly
+	// one int32; valid is false otherwise.
+	unsigned int getPackedObjVarField(std::string const &buf, unsigned int offset, int32 &result, bool &valid)
 	{
 		std::string s;
 		offset = getPackedObjVarField(buf, offset, s);
-		result = atoi(s.c_str());
+		valid = FixedWidthParse::parseInt32(s, 10, result);
 		return offset;
 	}
 
@@ -5093,8 +5096,11 @@ bool ServerObject::setPackedObjVars(std::string const &packedVarString)
 		offset = getPackedObjVarField(packedVarString, offset, name);
 		if (name == "$")
 	return true;
-		int typeId;
-		offset = getPackedObjVarField(packedVarString, offset, typeId);
+		int32 typeId = 0;
+		bool typeIdValid = false;
+		offset = getPackedObjVarField(packedVarString, offset, typeId, typeIdValid);
+		if (!typeIdValid)
+			return false;
 		std::string valueString;
 		offset = getPackedObjVarField(packedVarString, offset, valueString);
 		DynamicVariable value;

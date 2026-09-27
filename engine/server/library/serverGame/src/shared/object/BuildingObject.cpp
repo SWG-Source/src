@@ -34,6 +34,7 @@
 #include "serverUtility/ServerClock.h"
 #include "sharedFoundation/ConstCharCrcLowerString.h"
 #include "sharedFoundation/DynamicVariableList.h"
+#include "sharedFoundation/FixedWidthParse.h"
 #include "sharedGame/SharedBuildingObjectTemplate.h"
 #include "sharedGame/SharedObjectTemplate.h"
 #include "sharedLog/Log.h"
@@ -985,8 +986,10 @@ void BuildingObject::handleCMessageTo(const MessageToPayload &message)
 		if (!message.getPackedDataVector().empty())
 		{
 			std::string const packedData(message.getPackedDataVector().begin(), message.getPackedDataVector().end());
-			int const cityShareOfGroupPickupPointTravelCost = atoi(packedData.c_str());
-			if (cityShareOfGroupPickupPointTravelCost > 0)
+			int32 cityShareOfGroupPickupPointTravelCost = 0;
+			if (!FixedWidthParse::parseInt32(packedData, 10, cityShareOfGroupPickupPointTravelCost))
+				WARNING(true, ("C++CityShareGroupPickupPointTravelCost for %s: the amount is not a 32-bit integer", getNetworkId().getValueString().c_str()));
+			else if (cityShareOfGroupPickupPointTravelCost > 0)
 				transferBankCreditsFrom("GroupPickupPointTravel", cityShareOfGroupPickupPointTravelCost);
 		}
 	}

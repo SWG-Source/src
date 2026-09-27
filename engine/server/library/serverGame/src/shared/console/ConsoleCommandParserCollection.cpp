@@ -21,6 +21,8 @@
 #include "sharedFoundation/FormattedString.h"
 #include "sharedFoundation/NetworkId.h"
 
+#include <limits>
+
 // ======================================================================
  
 static const CommandParser::CmdInfo cmds[] =
@@ -796,7 +798,8 @@ bool ConsoleCommandParserCollection::performParsing (const NetworkId & userId, c
 		}
 		time_t const specifiedTime = ::mktime(timeinfo);
 
-		if (specifiedTime <= 0)
+		// The "server first" time is stored as an int32 claim time.
+		if (specifiedTime <= 0 || specifiedTime > std::numeric_limits<int32>::max())
 		{
 			result += Unicode::narrowToWide("specified time is invalid\n");
 			return true;

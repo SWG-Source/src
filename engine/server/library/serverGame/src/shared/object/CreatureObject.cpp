@@ -1870,7 +1870,7 @@ void CreatureObject::onLoadedFromDatabase()
 				// check for Jedi initialization
 				if (getObjVars().hasItem(OBJVAR_NEW_JEDI_FORCE))
 				{
-					int start_force;
+					int start_force = 0;
 					getObjVars().getItem(OBJVAR_NEW_JEDI_FORCE, start_force);
 					removeObjVarItem(OBJVAR_NEW_JEDI_FORCE);
 					if (start_force > 0)
@@ -1944,9 +1944,11 @@ void CreatureObject::onLoadedFromDatabase()
 							if (i.getValue(ctsTransactionDetail))
 							{
 								Unicode::UnicodeStringVector tokens;
-								if (Unicode::tokenize(ctsTransactionDetail, tokens, nullptr, nullptr) && (tokens.size() >= 4))
+								// ctsHistory is an objvar, which scripts can also write;
+								// an entry whose time is not one int32 is skipped
+								int32 transferTime = 0;
+								if (Unicode::tokenize(ctsTransactionDetail, tokens, nullptr, nullptr) && (tokens.size() >= 4) && FixedWidthParse::parseInt32(tokens[0], 10, transferTime))
 								{
-									int const transferTime = atoi(Unicode::wideToNarrow(tokens[0]).c_str());
 									if ((earliestTransferTime == -1) || (transferTime < earliestTransferTime))
 									{
 										earliestTransferTime = transferTime;
@@ -2655,11 +2657,12 @@ void CreatureObject::setupSkillData()
 		{
 			DynamicVariableList::NestedList mods(getObjVars(), OBJVAR_NOT_SKILL_MODS);
 			DynamicVariableList::NestedList::const_iterator i(mods.begin());
-			int value;
 			for (; i != mods.end(); ++i)
 			{
-				i.getValue(value);
-				addModValue(i.getName(), value, true);
+				// a mod whose text is not one int32 is not applied
+				int value = 0;
+				if (i.getValue(value))
+					addModValue(i.getName(), value, true);
 			}
 		}
 		{
@@ -2682,7 +2685,13 @@ void CreatureObject::setupSkillData()
 			DynamicVariableList::NestedList::const_iterator i(schematics.begin());
 			for (; i != schematics.end(); ++i)
 			{
-				grantSchematic(strtoul(i.getName().c_str(), nullptr, 10), true);
+				// PlayerObject writes the names as "%u" crcs; objvars can also
+				// be written by scripts, so a name that is not one is skipped
+				uint32 schematicCrc = 0;
+				if (FixedWidthParse::parseUint32(i.getName(), 10, schematicCrc))
+					grantSchematic(schematicCrc, true);
+				else
+					WARNING(true, ("CreatureObject %s: %s.%s is not a schematic crc", getNetworkId().getValueString().c_str(), OBJVAR_NOT_SKILL_SCHEMATICS.c_str(), i.getName().c_str()));
 			}
 		}
 
@@ -9480,11 +9489,17 @@ void CreatureObject::handleCMessageTo(MessageToPayload const &message)
 					flip = data.at(locationStart++) != '0';
 					repeat = data.at(locationStart++) != '0';
 				}
-				int startPoint = 0;
+				int32 startPoint = 0;
 				if (data.size() > locationStart && data.at(locationStart) == '*')
 				{
 					++locationStart;
-					startPoint = atoi(data.substr(locationStart).c_str());
+					// the location names are script-supplied text in the same
+					// payload, so the start point is not trusted to be a number
+					if (!FixedWidthParse::parseInt32(data.substr(locationStart), 10, startPoint))
+					{
+						WARNING(true, ("C++WaitForPatrolPreload for %s: the start point is not a 32-bit integer", getNetworkId().getValueString().c_str()));
+						return;
+					}
 				}
 
 				aiCreatureController->patrol(locations, random, flip, repeat, startPoint);

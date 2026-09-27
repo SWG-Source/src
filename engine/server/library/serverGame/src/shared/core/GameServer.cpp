@@ -174,6 +174,7 @@
 #include "sharedFoundation/CalendarTime.h"
 #include "sharedFoundation/Clock.h"
 #include "sharedFoundation/ConfigFile.h"
+#include "sharedFoundation/FixedWidthParse.h"
 #include "sharedFoundation/ConfigSharedFoundation.h"
 #include "sharedFoundation/ConstCharCrcLowerString.h"
 #include "sharedFoundation/ConstCharCrcString.h"
@@ -5386,18 +5387,25 @@ void GameServerNamespace::loadRetroactiveCtsHistory()
 				else
 				{
 					ctsDataFromConfigTokens.clear();
-					if ((Unicode::tokenize(Unicode::narrowToWide(*iterCtsDataFromConfig), ctsDataFromConfigTokens, &ctsDataFromConfigDelimiter, nullptr)) && (ctsDataFromConfigTokens.size() == 7))
+					// the transfer time and born date are int32, as the
+					// datatable form of the same data reads them
+					int32 transferTime = 0;
+					int32 bornDate = 0;
+					if (   (Unicode::tokenize(Unicode::narrowToWide(*iterCtsDataFromConfig), ctsDataFromConfigTokens, &ctsDataFromConfigDelimiter, nullptr))
+					    && (ctsDataFromConfigTokens.size() == 7)
+					    && FixedWidthParse::parseInt32(ctsDataFromConfigTokens[0], 10, transferTime)
+					    && FixedWidthParse::parseInt32(ctsDataFromConfigTokens[4], 10, bornDate))
 					{
 						// sanity check
 						ctsDataFromConfigParsedData = FormattedString<2048>().sprintf("%s|%s|%s|%s|%s|%s|%s", Unicode::wideToNarrow(ctsDataFromConfigTokens[0]).c_str(), Unicode::wideToNarrow(ctsDataFromConfigTokens[1]).c_str(), Unicode::wideToNarrow(ctsDataFromConfigTokens[2]).c_str(), Unicode::wideToNarrow(ctsDataFromConfigTokens[3]).c_str(), Unicode::wideToNarrow(ctsDataFromConfigTokens[4]).c_str(), Unicode::wideToNarrow(ctsDataFromConfigTokens[5]).c_str(), Unicode::wideToNarrow(ctsDataFromConfigTokens[6]).c_str());
 						FATAL((ctsDataFromConfigParsedData != *iterCtsDataFromConfig), ("parsed CTS data (%s) does not equal read CTS data (%s)", ctsDataFromConfigParsedData.c_str(), iterCtsDataFromConfig->c_str()));
 
-						sourceCharacterInfo.transferTime = static_cast<time_t>(::atol(Unicode::wideToNarrow(ctsDataFromConfigTokens[0]).c_str()));
+						sourceCharacterInfo.transferTime = static_cast<time_t>(transferTime);
 
 						sourceCharacterInfo.sourceCluster = Unicode::wideToNarrow(ctsDataFromConfigTokens[1]);
 						sourceCharacterInfo.sourceCharacterId = NetworkId(Unicode::wideToNarrow(ctsDataFromConfigTokens[2]));
 						sourceCharacterInfo.sourceCharacterName = Unicode::wideToNarrow(ctsDataFromConfigTokens[3]);
-						sourceCharacterInfo.sourceCharacterBornDate = ::atoi(Unicode::wideToNarrow(ctsDataFromConfigTokens[4]).c_str());
+						sourceCharacterInfo.sourceCharacterBornDate = bornDate;
 
 						targetCluster = Unicode::wideToNarrow(ctsDataFromConfigTokens[5]);
 						targetCharacterId = NetworkId(Unicode::wideToNarrow(ctsDataFromConfigTokens[6]));
@@ -5617,15 +5625,22 @@ void GameServerNamespace::loadRetroactivePlayerCityCreationTime()
 				else
 				{
 					playerCityCreationTimeDataFromConfigTokens.clear();
-					if ((Unicode::tokenize(Unicode::narrowToWide(*iterPlayerCityCreationTimeDataFromConfig), playerCityCreationTimeDataFromConfigTokens, &playerCityCreationTimeDataFromConfigDelimiter, nullptr)) && (playerCityCreationTimeDataFromConfigTokens.size() == 3))
+					// the creation time and city id are int32, as the datatable
+					// form of the same data reads them and the city stores them
+					int32 creationTime32 = 0;
+					int32 cityId32 = 0;
+					if (   (Unicode::tokenize(Unicode::narrowToWide(*iterPlayerCityCreationTimeDataFromConfig), playerCityCreationTimeDataFromConfigTokens, &playerCityCreationTimeDataFromConfigDelimiter, nullptr))
+					    && (playerCityCreationTimeDataFromConfigTokens.size() == 3)
+					    && FixedWidthParse::parseInt32(playerCityCreationTimeDataFromConfigTokens[0], 10, creationTime32)
+					    && FixedWidthParse::parseInt32(playerCityCreationTimeDataFromConfigTokens[2], 10, cityId32))
 					{
 						// sanity check
 						playerCityCreationTimeDataFromConfigParsedData = FormattedString<2048>().sprintf("%s|%s|%s", Unicode::wideToNarrow(playerCityCreationTimeDataFromConfigTokens[0]).c_str(), Unicode::wideToNarrow(playerCityCreationTimeDataFromConfigTokens[1]).c_str(), Unicode::wideToNarrow(playerCityCreationTimeDataFromConfigTokens[2]).c_str());
 						FATAL((playerCityCreationTimeDataFromConfigParsedData != *iterPlayerCityCreationTimeDataFromConfig), ("parsed player city creation time data (%s) does not equal read player city creation time data (%s)", playerCityCreationTimeDataFromConfigParsedData.c_str(), iterPlayerCityCreationTimeDataFromConfig->c_str()));
 
-						creationTime = static_cast<time_t>(::atol(Unicode::wideToNarrow(playerCityCreationTimeDataFromConfigTokens[0]).c_str()));
+						creationTime = static_cast<time_t>(creationTime32);
 						cluster = Unicode::wideToNarrow(playerCityCreationTimeDataFromConfigTokens[1]);
-						cityId = ::atoi(Unicode::wideToNarrow(playerCityCreationTimeDataFromConfigTokens[2]).c_str());
+						cityId = cityId32;
 
 						FATAL((cluster.empty()), ("cluster name is empty in config option (%s)", iterPlayerCityCreationTimeDataFromConfig->c_str()));
 						FATAL((cityId <= 0), ("city id for player city (%s, %d) is <= 0 in config option (%s)", cluster.c_str(), cityId, iterPlayerCityCreationTimeDataFromConfig->c_str()));

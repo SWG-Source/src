@@ -1051,7 +1051,10 @@ static void commandFuncShowCtsHistory(Command const &, NetworkId const &actor, N
 		if (i.getValue(ctsTransactionDetail))
 		{
 			Unicode::UnicodeStringVector tokens;
-			if (Unicode::tokenize(ctsTransactionDetail, tokens, nullptr, nullptr) && (tokens.size() >= 4))
+			// ctsHistory is an objvar, which scripts can also write; an entry
+			// whose time is not one int32 is skipped
+			int32 transferTime = 0;
+			if (Unicode::tokenize(ctsTransactionDetail, tokens, nullptr, nullptr) && (tokens.size() >= 4) && FixedWidthParse::parseInt32(tokens[0], 10, transferTime))
 			{
 				Unicode::String characterName;
 				for (size_t i = 3, j = tokens.size(); i < j; ++i)
@@ -1062,7 +1065,7 @@ static void commandFuncShowCtsHistory(Command const &, NetworkId const &actor, N
 					characterName += tokens[i];
 				}
 
-				IGNORE_RETURN(orderedCtsHistory.insert(std::make_pair(atoi(Unicode::wideToNarrow(tokens[0]).c_str()), std::make_pair(Unicode::wideToNarrow(characterName), Unicode::wideToNarrow(tokens[1])))));
+				IGNORE_RETURN(orderedCtsHistory.insert(std::make_pair(transferTime, std::make_pair(Unicode::wideToNarrow(characterName), Unicode::wideToNarrow(tokens[1])))));
 			}
 		}
 	}

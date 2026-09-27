@@ -1166,11 +1166,11 @@ bool VeteranRewardManager::checkForTcgRedemptionInProgress(ServerObject const & 
 {
 	if (item.getObjVars().hasItem(ms_tcgRedemptionInProgressObjvar) && (item.getObjVars().getType(ms_tcgRedemptionInProgressObjvar) == DynamicVariable::INT))
 	{
-		int redemptionTimeout;
-		IGNORE_RETURN(item.getObjVars().getItem(ms_tcgRedemptionInProgressObjvar, redemptionTimeout));
+		int redemptionTimeout = 0;
+		bool const hasTimeout = item.getObjVars().getItem(ms_tcgRedemptionInProgressObjvar, redemptionTimeout);
 
 		time_t const currentTime = ::time(nullptr);
-		if (redemptionTimeout > currentTime)
+		if (hasTimeout && redemptionTimeout > currentTime)
 		{
 			// item should be in top level inventory; get the player object the item is in
 			ServerObject const * containingPlayer = safe_cast<ServerObject const *>(ContainerInterface::getContainedByObject(item)); // this gets the player's inventory
@@ -1358,11 +1358,11 @@ bool VeteranRewardManager::checkForTradeInInProgress(ServerObject const & item)
 {
 	if (item.getObjVars().hasItem(ms_tradeInInProgressObjvar) && (item.getObjVars().getType(ms_tradeInInProgressObjvar) == DynamicVariable::INT))
 	{
-		int redemptionTimeout;
-		IGNORE_RETURN(item.getObjVars().getItem(ms_tradeInInProgressObjvar, redemptionTimeout));
+		int redemptionTimeout = 0;
+		bool const hasTimeout = item.getObjVars().getItem(ms_tradeInInProgressObjvar, redemptionTimeout);
 
 		time_t const currentTime = ::time(nullptr);
-		if (redemptionTimeout > currentTime)
+		if (hasTimeout && redemptionTimeout > currentTime)
 		{
 			// item should be in top level inventory; get the player object the item is in
 			ServerObject const * containingPlayer = safe_cast<ServerObject const *>(ContainerInterface::getContainedByObject(item)); // this gets the player's inventory
