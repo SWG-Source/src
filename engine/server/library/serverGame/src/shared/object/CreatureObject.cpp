@@ -103,6 +103,7 @@
 #include "sharedFoundation/DynamicVariableList.h"
 #include "sharedFoundation/DynamicVariableListNestedList.h"
 #include "sharedFoundation/DynamicVariableLocationData.h"
+#include "sharedFoundation/FixedWidthParse.h"
 #include "sharedFoundation/FormattedString.h"
 #include "sharedFoundation/GameControllerMessage.h"
 #include "sharedFoundation/TemporaryCrcString.h"
@@ -9284,8 +9285,11 @@ void CreatureObject::handleCMessageTo(MessageToPayload const &message)
 		std::vector<int8>::const_iterator spacePos = std::find(packedData.begin(), packedData.end(), ' ');
 		if (spacePos != packedData.end())
 		{
-			int amount = atoi(std::string(spacePos + 1, packedData.end()).c_str());
-			grantExperiencePoints(std::string(packedData.begin(), spacePos), amount);
+			int32 amount = 0;
+			if (FixedWidthParse::parseInt32(std::string(spacePos + 1, packedData.end()), 10, amount))
+				grantExperiencePoints(std::string(packedData.begin(), spacePos), amount);
+			else
+				WARNING(true, ("C++experience for %s: the amount is not a 32-bit integer", getNetworkId().getValueString().c_str()));
 		}
 	}
 	else if (message.getMethod() == "C++AddJediSlot")
@@ -9403,13 +9407,17 @@ void CreatureObject::handleCMessageTo(MessageToPayload const &message)
 		{
 			std::string packedData(message.getPackedDataVector().begin(), message.getPackedDataVector().end());
 
-			// Parse the info from the message
-			char     petNetworkIdBuffer[100];
-			unsigned msgSendCount;
-			sscanf(packedData.c_str(), "%s %u", petNetworkIdBuffer, &msgSendCount);
+			// Parse the info from the message: "<pet network id> <send count>"
+			std::string::size_type const spacePos = packedData.find(' ');
+			uint32 msgSendCount = 0;
+			if (spacePos == std::string::npos || !FixedWidthParse::parseUint32(packedData.substr(spacePos + 1), 10, msgSendCount))
+			{
+				WARNING(true, ("C++RemovePetFromGroup for %s: malformed data", getNetworkId().getValueString().c_str()));
+				return;
+			}
 
 			// Turn the string into a network Id
-			NetworkId petNetworkId( petNetworkIdBuffer );
+			NetworkId petNetworkId( packedData.substr(0, spacePos) );
 
 			// Try to remove the pet from the group
 			GroupObject *group = getGroup();
@@ -10238,19 +10246,32 @@ void CreatureObject::handleCMessageTo(MessageToPayload const &message)
 
 			Unicode::String const delimiters(Unicode::narrowToWide("|"));
 			Unicode::UnicodeStringVector tokens;
-			if ((Unicode::tokenize(Unicode::narrowToWide(params), tokens, &delimiters, nullptr)) && (tokens.size() == 10))
+			int32 difficulty = 0;
+			int32 profession = 0;
+			int32 isPC = 0;
+			int32 shipIsPOB = 0;
+			int32 ownsPOB = 0;
+			int32 inCombat = 0;
+			if (   (Unicode::tokenize(Unicode::narrowToWide(params), tokens, &delimiters, nullptr))
+			    && (tokens.size() == 10)
+			    && FixedWidthParse::parseInt32(tokens[3], 10, difficulty)
+			    && FixedWidthParse::parseInt32(tokens[4], 10, profession)
+			    && FixedWidthParse::parseInt32(tokens[5], 10, isPC)
+			    && FixedWidthParse::parseInt32(tokens[7], 10, shipIsPOB)
+			    && FixedWidthParse::parseInt32(tokens[8], 10, ownsPOB)
+			    && FixedWidthParse::parseInt32(tokens[9], 10, inCombat))
 			{
 				success = true;
 				existingGroupId = NetworkId(Unicode::wideToNarrow(tokens[0]));
 				inviterId = NetworkId(Unicode::wideToNarrow(tokens[1]));
 				inviterName = Unicode::wideToNarrow(tokens[2]);
-				inviterDifficulty = atoi(Unicode::wideToNarrow(tokens[3]).c_str());
-				inviterProfession = static_cast<LfgCharacterData::Profession>(atoi(Unicode::wideToNarrow(tokens[4]).c_str()));
-				inviterIsPC = (atoi(Unicode::wideToNarrow(tokens[5]).c_str()) != 0);
+				inviterDifficulty = difficulty;
+				inviterProfession = static_cast<LfgCharacterData::Profession>(profession);
+				inviterIsPC = (isPC != 0);
 				inviterShipId = NetworkId(Unicode::wideToNarrow(tokens[6]));
-				inviterShipIsPOB = (atoi(Unicode::wideToNarrow(tokens[7]).c_str()) != 0);
-				inviterOwnsPOB = (atoi(Unicode::wideToNarrow(tokens[8]).c_str()) != 0);
-				inviterInCombat = (atoi(Unicode::wideToNarrow(tokens[9]).c_str()) != 0);
+				inviterShipIsPOB = (shipIsPOB != 0);
+				inviterOwnsPOB = (ownsPOB != 0);
+				inviterInCombat = (inCombat != 0);
 			}
 
 			GroupObject * existingGroup = nullptr;
@@ -10405,7 +10426,14 @@ void CreatureObject::handleCMessageTo(MessageToPayload const &message)
 
 			Unicode::String const delimiters(Unicode::narrowToWide("|"));
 			Unicode::UnicodeStringVector tokens;
-			if ((Unicode::tokenize(Unicode::narrowToWide(params), tokens, &delimiters, nullptr)) && (tokens.size() == 5))
+			int32 x = 0;
+			int32 y = 0;
+			int32 z = 0;
+			if (   (Unicode::tokenize(Unicode::narrowToWide(params), tokens, &delimiters, nullptr))
+			    && (tokens.size() == 5)
+			    && FixedWidthParse::parseInt32(tokens[1], 10, x)
+			    && FixedWidthParse::parseInt32(tokens[2], 10, y)
+			    && FixedWidthParse::parseInt32(tokens[3], 10, z))
 			{
 				// tell group member that the group pickup point has been created
 				if (getClient())
@@ -10423,9 +10451,6 @@ void CreatureObject::handleCMessageTo(MessageToPayload const &message)
 				if (playerObject)
 				{
 					std::string const planetName = Unicode::wideToNarrow(tokens[0]);
-					int const x = atoi(Unicode::wideToNarrow(tokens[1]).c_str());
-					int const y = atoi(Unicode::wideToNarrow(tokens[2]).c_str());
-					int const z = atoi(Unicode::wideToNarrow(tokens[3]).c_str());
 
 					Location const location(Vector(static_cast<real>(x), static_cast<real>(y), static_cast<real>(z)), NetworkId::cms_invalid, Location::getCrcBySceneName(planetName));
 					playerObject->createOrUpdateReusableWaypoint(location, "groupPickupWp", Unicode::narrowToWide("Group Pickup Point"), Waypoint::White);
@@ -10438,9 +10463,16 @@ void CreatureObject::handleCMessageTo(MessageToPayload const &message)
 		if (!message.getPackedDataVector().empty())
 		{
 			std::string const params(message.getPackedDataVector().begin(), message.getPackedDataVector().end());
-			LoginUpgradeAccountMessage::OccupyUnlockedSlotResponse const response = static_cast<LoginUpgradeAccountMessage::OccupyUnlockedSlotResponse>(::atoi(params.c_str()));
+			int32 responseCode = 0;
+			bool const responseParsed = FixedWidthParse::parseInt32(params, 10, responseCode);
+			LoginUpgradeAccountMessage::OccupyUnlockedSlotResponse const response = static_cast<LoginUpgradeAccountMessage::OccupyUnlockedSlotResponse>(responseCode);
 
-			if (response == LoginUpgradeAccountMessage::OUSR_success)
+			if (!responseParsed)
+			{
+				// CS log the response
+				LOG("CustomerService",("JediUnlockedSlot:%s OccupyUnlockedSlot request FAILED - unparsable result code", PlayerObject::getAccountDescription(this).c_str()));
+			}
+			else if (response == LoginUpgradeAccountMessage::OUSR_success)
 			{
 				// CS log the response
 				LOG("CustomerService",("JediUnlockedSlot:%s OccupyUnlockedSlot request SUCCESS", PlayerObject::getAccountDescription(this).c_str()));
@@ -10494,9 +10526,16 @@ void CreatureObject::handleCMessageTo(MessageToPayload const &message)
 		if (!message.getPackedDataVector().empty())
 		{
 			std::string const params(message.getPackedDataVector().begin(), message.getPackedDataVector().end());
-			LoginUpgradeAccountMessage::VacateUnlockedSlotResponse const response = static_cast<LoginUpgradeAccountMessage::VacateUnlockedSlotResponse>(::atoi(params.c_str()));
+			int32 responseCode = 0;
+			bool const responseParsed = FixedWidthParse::parseInt32(params, 10, responseCode);
+			LoginUpgradeAccountMessage::VacateUnlockedSlotResponse const response = static_cast<LoginUpgradeAccountMessage::VacateUnlockedSlotResponse>(responseCode);
 
-			if (response == LoginUpgradeAccountMessage::VUSR_success)
+			if (!responseParsed)
+			{
+				// CS log the response
+				LOG("CustomerService",("JediUnlockedSlot:%s VacateUnlockedSlot request FAILED - unparsable result code", PlayerObject::getAccountDescription(this).c_str()));
+			}
+			else if (response == LoginUpgradeAccountMessage::VUSR_success)
 			{
 				// CS log the response
 				LOG("CustomerService",("JediUnlockedSlot:%s VacateUnlockedSlot request SUCCESS", PlayerObject::getAccountDescription(this).c_str()));
@@ -11460,8 +11499,8 @@ void CreatureObject::handleCMessageTo(MessageToPayload const &message)
 		if (!message.getPackedDataVector().empty())
 		{
 			std::string const params(message.getPackedDataVector().begin(), message.getPackedDataVector().end());
-			const int cityId = atoi(params.c_str());
-			if (cityId > 0)
+			int32 cityId = 0;
+			if (FixedWidthParse::parseInt32(params, 10, cityId) && cityId > 0)
 				CityInterface::enterCityChatRoom(cityId, *this);
 		}
 	}
@@ -11470,8 +11509,8 @@ void CreatureObject::handleCMessageTo(MessageToPayload const &message)
 		if (!message.getPackedDataVector().empty())
 		{
 			std::string const params(message.getPackedDataVector().begin(), message.getPackedDataVector().end());
-			const int cityId = atoi(params.c_str());
-			if (cityId > 0)
+			int32 cityId = 0;
+			if (FixedWidthParse::parseInt32(params, 10, cityId) && cityId > 0)
 				CityInterface::leaveCityChatRoom(cityId, *this);
 		}
 	}

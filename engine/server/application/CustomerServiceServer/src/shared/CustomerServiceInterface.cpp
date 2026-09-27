@@ -14,6 +14,7 @@
 #include "ConnectionServerConnection.h"
 
 #include "sharedFoundation/Clock.h"
+#include "sharedFoundation/FixedWidthParse.h"
 #include "sharedFoundation/FormattedString.h"
 #include "sharedLog/Log.h"
 #include "sharedNetworkMessages/AppendCommentResponseMessage.h"
@@ -132,10 +133,12 @@ void CustomerServiceInterface::parseIssueChild(CategoryList & categoryList, xmlN
 		categoryName = Unicode::utf8ToWide(val);
 	}
 
+	// a category whose id is not exactly one int32 is skipped as invalid
+	bool validId = true;
 	val = reinterpret_cast<char *>(xmlGetProp(childPtr, (const unsigned char *)"id")); 
 	if (val)
 	{
-		categoryId = atoi(val);
+		validId = FixedWidthParse::parseInt32(val, 10, categoryId);
 	}
 
 	// Check for bug type
@@ -154,7 +157,7 @@ void CustomerServiceInterface::parseIssueChild(CategoryList & categoryList, xmlN
 
 	val = reinterpret_cast<char *>(xmlGetProp(childPtr, (const unsigned char *)"invalid")); 
 
-	bool const invalid = (val != nullptr) && (strcmp(val, "true") == 0);
+	bool const invalid = !validId || ((val != nullptr) && (strcmp(val, "true") == 0));
 
 	if (!invalid)
 	{

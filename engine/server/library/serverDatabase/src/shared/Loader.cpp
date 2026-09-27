@@ -48,6 +48,7 @@
 #include "sharedDatabaseInterface/DbTaskQueue.h"
 #include "sharedDebug/Profiler.h"
 #include "sharedFoundation/ExitChain.h"
+#include "sharedFoundation/FixedWidthParse.h"
 #include "sharedFoundation/NetworkIdArchive.h"
 #include "sharedLog/Log.h"
 #include "sharedNetworkMessages/GenericValueTypeMessage.h"
@@ -803,8 +804,13 @@ void Loader::handleCSGetStructures( const DBCSRequestMessage & msg )
 
 void Loader::handleCSGetCharacters( const DBCSRequestMessage & msg )
 {
+	// "get_characters <station id>"
+	std::string::size_type pos = msg.getCommandLine().find( ' ' );
+	if( pos == std::string::npos )
+		return; // bad parameters.
 	uint32 account_id = 0;
-	sscanf( msg.getCommandLine().c_str(), "get_characters %" SCNu32, &account_id );
+	if( !FixedWidthParse::parseUint32( msg.getCommandLine().substr( pos + 1 ), 10, account_id ) )
+		return; // not a station id.
 	TaskGetCharactersForAccount * req = new TaskGetCharactersForAccount( account_id, msg.getLoginServerId(), msg.getToolId() );
 	taskQ->asyncRequest( req );
 	
@@ -820,12 +826,19 @@ void Loader::handleCSGetCharacters( const CSGetCharactersRequestMessage & msg )
 void Loader::handleCSGetDeletedItems( const DBCSRequestMessage & msg )
 {
 	
-	uint32 page_num;
-	char buf [21];
+	// "get_deleted_items <character id> <page number> ..."
+	std::string const & commandLine = msg.getCommandLine();
+	std::string::size_type const idStart = commandLine.find_first_not_of( " \t\n\v\f\r", commandLine.find( ' ' ) );
+	std::string::size_type const idEnd = commandLine.find_first_of( " \t\n\v\f\r", idStart );
+	std::string::size_type const pageStart = commandLine.find_first_not_of( " \t\n\v\f\r", idEnd );
+	std::string::size_type const pageEnd = commandLine.find_first_of( " \t\n\v\f\r", pageStart );
+	uint32 page_num = 0;
 
-	if (sscanf (msg.getCommandLine().c_str(), "get_deleted_items %20s %" SCNu32, buf, &page_num) == 2)
+	if (   ( idStart != std::string::npos )
+	    && ( pageStart != std::string::npos )
+	    && FixedWidthParse::parseUint32( commandLine.substr( pageStart, pageEnd == std::string::npos ? std::string::npos : pageEnd - pageStart ), 10, page_num ) )
 	{
-		NetworkId netId(buf);
+		NetworkId netId(commandLine.substr( idStart, idEnd - idStart ));
 		if(!netId.isValid())
 			return;
 		TaskGetDeletedItems *req = new TaskGetDeletedItems(netId, msg.getLoginServerId(), msg.getToolId(), page_num);

@@ -16,6 +16,7 @@
 #include "DatabaseServerConnection.h"
 #include "StringId.h"
 #include "sharedFoundation/Crc.h"
+#include "sharedFoundation/FixedWidthParse.h"
 #include "sharedLog/Log.h"
 #include "serverNetworkMessages/AuctionBase.h"
 #include "serverNetworkMessages/CMCreateAuctionMessage.h"
@@ -317,9 +318,13 @@ namespace AuctionMarketNamespace
 
 	// ----------------------------------------------------------------------
 
+	// The leading integer of the field, or 0 if the field does not start
+	// with one that fits int32 (the location string includes the
+	// player-chosen vendor name, so the field is not trusted to be numeric).
 	void nextInt(std::string const &source, unsigned int &pos, int &ret, char const separator)
 	{
-		ret = atoi(source.c_str()+pos);
+		int32 value = 0;
+		ret = FixedWidthParse::parseLeadingInt32(source.c_str() + pos, 10, value) ? value : 0;
 		skipField(source, pos, separator);
 	}
 

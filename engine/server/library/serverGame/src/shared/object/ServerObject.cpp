@@ -89,6 +89,7 @@
 #include "sharedFoundation/Clock.h"
 #include "sharedFoundation/ConstCharCrcString.h"
 #include "sharedFoundation/DynamicVariableLocationData.h"
+#include "sharedFoundation/FixedWidthParse.h"
 #include "sharedFoundation/FormattedString.h"
 #include "sharedFoundation/GameControllerMessage.h"
 #include "sharedFoundation/Os.h"
@@ -5294,9 +5295,16 @@ void ServerObject::handleCMessageTo(const MessageToPayload &message)
 	else if (message.getMethod() == "C++FinishBankTransfer")
 	{
 		std::string packedDataString(packedData.begin(), packedData.end());
-		int m_amount=strtoul(packedDataString.c_str(), 0, 10);
-		DEBUG_FATAL(m_amount < 0,("C++FinishBankTransaction had a negative amount.  This message should always have a positive amount.\n"));
-		internalAdjustBankBalance(m_amount, true);
+		int32 m_amount = 0;
+		if (!FixedWidthParse::parseInt32(packedDataString, 10, m_amount))
+		{
+			WARNING(true, ("C++FinishBankTransfer for %s: the amount is not a 32-bit integer", getNetworkId().getValueString().c_str()));
+		}
+		else
+		{
+			DEBUG_FATAL(m_amount < 0,("C++FinishBankTransaction had a negative amount.  This message should always have a positive amount.\n"));
+			internalAdjustBankBalance(m_amount, true);
+		}
 	}
 	// transfers money from a named account to the bank
 	else if( message.getMethod() == "C++FromNamedAccountToBank")
@@ -5310,18 +5318,32 @@ void ServerObject::handleCMessageTo(const MessageToPayload &message)
 		{
 			*splitPos = 0;
 			std::string const named_account(params);
-			int const amount = atoi(splitPos+1);
-			DEBUG_FATAL(amount < 0,("C++FromNamedAccountToBank had a negative amount.  This message should always have a positive amount.\n"));
-			transferBankCreditsFrom(named_account,  amount);
+			int32 amount = 0;
+			if (!FixedWidthParse::parseInt32(std::string(splitPos + 1, params + packedData.size()), 10, amount))
+			{
+				WARNING(true, ("C++FromNamedAccountToBank for %s: the amount is not a 32-bit integer", getNetworkId().getValueString().c_str()));
+			}
+			else
+			{
+				DEBUG_FATAL(amount < 0,("C++FromNamedAccountToBank had a negative amount.  This message should always have a positive amount.\n"));
+				transferBankCreditsFrom(named_account,  amount);
+			}
 		}
 		delete [] params;
 	}
 	else if (message.getMethod() == "C++FinishCashTransfer")
 	{
 		std::string packedDataString(packedData.begin(), packedData.end());
-		int m_amount=strtoul(packedDataString.c_str(), 0, 10);
-		DEBUG_FATAL(m_amount < 0,("C++FinishCashTransaction had a negative amount.  This message should always have a positive amount.\n"));
-		internalAdjustCashBalance(m_amount, true);
+		int32 m_amount = 0;
+		if (!FixedWidthParse::parseInt32(packedDataString, 10, m_amount))
+		{
+			WARNING(true, ("C++FinishCashTransfer for %s: the amount is not a 32-bit integer", getNetworkId().getValueString().c_str()));
+		}
+		else
+		{
+			DEBUG_FATAL(m_amount < 0,("C++FinishCashTransaction had a negative amount.  This message should always have a positive amount.\n"));
+			internalAdjustCashBalance(m_amount, true);
+		}
 	}
 	else if (message.getMethod() == "C++ModifyCash")
 	{
@@ -5333,8 +5355,11 @@ void ServerObject::handleCMessageTo(const MessageToPayload &message)
 		{
 			*splitPos = 0;
 			NetworkId recipient(atoll(params));
-			int amount = atoi(splitPos+1);
-			transferCashTo(recipient, amount);
+			int32 amount = 0;
+			if (FixedWidthParse::parseInt32(std::string(splitPos + 1, params + packedData.size()), 10, amount))
+				transferCashTo(recipient, amount);
+			else
+				WARNING(true, ("C++ModifyCash for %s: the amount is not a 32-bit integer", getNetworkId().getValueString().c_str()));
 		}
 		delete [] params;
 	}
@@ -5348,8 +5373,11 @@ void ServerObject::handleCMessageTo(const MessageToPayload &message)
 		{
 			*splitPos = 0;
 			NetworkId recipient(atoll(params));
-			int amount = atoi(splitPos+1);
-			transferBankCreditsTo(recipient, amount);
+			int32 amount = 0;
+			if (FixedWidthParse::parseInt32(std::string(splitPos + 1, params + packedData.size()), 10, amount))
+				transferBankCreditsTo(recipient, amount);
+			else
+				WARNING(true, ("C++ModifyBank for %s: the amount is not a 32-bit integer", getNetworkId().getValueString().c_str()));
 		}
 		delete [] params;
 	}
@@ -5362,8 +5390,11 @@ void ServerObject::handleCMessageTo(const MessageToPayload &message)
 		char *params = new char[packedData.size()+1];
 		memcpy(params, &(*packedData.begin()), packedData.size());
 		params[packedData.size()] = 0;
-		int status =  atoi(params);
-		CommoditiesMarket::vendorStatusChange(getNetworkId(), status);
+		int32 status = 0;
+		if (FixedWidthParse::parseInt32(std::string(params, params + packedData.size()), 10, status))
+			CommoditiesMarket::vendorStatusChange(getNetworkId(), status);
+		else
+			WARNING(true, ("C++VendorStatusChange for %s: the status is not a 32-bit integer", getNetworkId().getValueString().c_str()));
 		delete [] params;
 	}
 	else if (message.getMethod() == "C++Unstick")
@@ -5422,8 +5453,11 @@ void ServerObject::handleCMessageTo(const MessageToPayload &message)
 		std::string const & buffer = message.getDataAsString();
 		if (!buffer.empty())
 		{
-			int count = atoi(buffer.c_str());
-			updateObserversCount(count);
+			int32 count = 0;
+			if (FixedWidthParse::parseInt32(buffer, 10, count))
+				updateObserversCount(count);
+			else
+				WARNING(true, ("C++updateObserversCount for %s: the count is not a 32-bit integer", getNetworkId().getValueString().c_str()));
 		}
 	}
 	else if (message.getMethod() == "C++addBroadcastListener")

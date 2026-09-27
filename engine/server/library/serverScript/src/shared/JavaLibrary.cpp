@@ -34,6 +34,7 @@
 #include "sharedFoundation/Crc.h"
 #include "sharedFoundation/DynamicVariable.h"
 #include "sharedFoundation/DynamicVariableList.h"
+#include "sharedFoundation/FixedWidthParse.h"
 #include "sharedFoundation/Os.h"
 #include "sharedGame/TextManager.h"
 #include "sharedLog/Log.h"
@@ -4513,17 +4514,29 @@ int JavaLibrary::runScript(const NetworkId & caller, const std::string& script,
 		return SCRIPT_OVERRIDE;
 	}
 
-	// add the rest of the parameters
+	// add the rest of the parameters; every one argList describes must be present
+	if (args.size() < argList.size())
+	{
+		LOG("ScriptInvestigation", ("runSCripts4 failed because of missing params"));
+		return SCRIPT_OVERRIDE;
+	}
 	for (unsigned i = 0; i < argList.size(); ++i)
 	{
 		LocalRefParamPtr arg = LocalRefParam::cms_nullPtr;
-		const char *stringArg = Unicode::wideToNarrow(args[i]).c_str();
+		// keep the narrow copy alive while stringArg points into it
+		std::string const narrowArg(Unicode::wideToNarrow(args[i]));
+		const char *stringArg = narrowArg.c_str();
 		switch (argList[i])
 		{
 		case 'i':
 		{
-			jint param = atoi(stringArg);
-			arg = createNewObject(ms_clsInteger, ms_midInteger, param);
+			int32 param = 0;
+			if (!FixedWidthParse::parseInt32(args[i], 10, param))
+			{
+				LOG("ScriptInvestigation", ("runSCripts4 failed because of bad int param"));
+				return SCRIPT_OVERRIDE;
+			}
+			arg = createNewObject(ms_clsInteger, ms_midInteger, static_cast<jint>(param));
 		}
 		break;
 		case 'f':

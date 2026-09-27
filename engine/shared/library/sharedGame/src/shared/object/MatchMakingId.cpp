@@ -8,6 +8,8 @@
 #include "sharedGame/FirstSharedGame.h"
 #include "sharedGame/MatchMakingId.h"
 
+#include "sharedFoundation/FixedWidthParse.h"
+
 #include <bitset>
 #include <vector>
 #include "UnicodeUtils.h"
@@ -335,13 +337,19 @@ void MatchMakingId::unPackIntString(std::string const &value)
 
 	if (resultSize > 1)
 	{
-		unsigned int const intCount = Unicode::toInt(result[0]);
+		// The text is "<count> <int> ..." as packIntString() writes it. It
+		// arrives from the client, so every field must be exactly one integer
+		// of its width and all of the ints must be present.
 
-		if (intCount != static_cast<unsigned int>(getBitCount() / 32))
+		uint32 intCount = 0;
+
+		if (   !FixedWidthParse::parseUint32(result[0], 10, intCount)
+		    || (intCount != static_cast<uint32>(getBitCount() / 32))
+		    || (resultSize <= intCount))
 		{
 			// Int count is wrong
 
-			DEBUG_WARNING(true, ("Invalid MatchMakingId size during unpack (%d) expecting (%d)...aborting unpack", static_cast<int>(intCount), getBitCount() / 32));
+			DEBUG_WARNING(true, ("Invalid MatchMakingId size during unpack (%u, %u tokens) expecting (%d)...aborting unpack", intCount, resultSize, getBitCount() / 32));
 
 			reset();
 		}
@@ -354,7 +362,18 @@ void MatchMakingId::unPackIntString(std::string const &value)
 
 			for (unsigned int i = 1; i <= intCount; ++i)
 			{
-				ints.push_back(Unicode::toInt(result[i]));
+				// each int is 32 bits of the id, written as %d; accept the
+				// same bits written unsigned as well
+				uint32 bits = 0;
+				if (!FixedWidthParse::parseBits32(result[i], 10, bits))
+				{
+					DEBUG_WARNING(true, ("Invalid MatchMakingId int %u during unpack...aborting unpack", i));
+
+					reset();
+					return;
+				}
+
+				ints.push_back(static_cast<int>(bits));
 			}
 
 			setBits(ints);

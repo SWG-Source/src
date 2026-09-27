@@ -20,6 +20,7 @@
 #include "UnicodeUtils.h"
 #include "sharedFoundation/Crc.h"
 #include "sharedFoundation/CrcLowerString.h"
+#include "sharedFoundation/FixedWidthParse.h"
 #include "sharedGame/CommoditiesAdvancedSearchAttribute.h"
 #include "sharedGame/GameObjectTypes.h"
 #include "sharedGame/SharedObjectTemplate.h"
@@ -260,6 +261,19 @@ namespace AuctionNamespace
 	// search return value
 	bool s_searchConditionMatchAllAnyActionAllMatch[static_cast<int>(AuctionQueryHeadersMessage::ASMAA_LAST)];
 	bool s_searchConditionMatchAllAnyActionAllNotMatch[static_cast<int>(AuctionQueryHeadersMessage::ASMAA_LAST)];
+
+	// ----------------------------------------------------------------------
+
+	// The value of an int searchable attribute: the leading integer of its
+	// text ("25" or "25m"), or for a range ("22-49m") the integer after the
+	// first '-'. False if there is no such integer or it does not fit int32.
+	bool getSearchableAttributeInt(Unicode::String const & text, bool const rangeForm, int32 & value)
+	{
+		Unicode::String::size_type const dashPos = rangeForm ? text.find(static_cast<Unicode::unicode_char_t>('-')) : Unicode::String::npos;
+		if (dashPos != Unicode::String::npos)
+			return FixedWidthParse::parseLeadingInt32(text.substr(dashPos + 1), 10, value);
+		return FixedWidthParse::parseLeadingInt32(text, 10, value);
+	}
 };
 
 using namespace AuctionNamespace;
@@ -324,8 +338,8 @@ m_trackId(-1)
 
 			if (iter->first == "resource_contents")
 			{
-				int count = ::atoi(Unicode::wideToNarrow(iter->second).c_str());
-				if (count > 0)
+				int32 count = 0;
+				if (FixedWidthParse::parseLeadingInt32(iter->second, 10, count) && (count > 0))
 				{
 					char buffer[128];
 					int const len = snprintf(buffer, sizeof(buffer)-1, "%.6f", (static_cast<double>(m_buyNowPrice) / static_cast<double>(count)));
@@ -426,8 +440,8 @@ m_trackId(-1)
 
 			if (iter->first == "resource_contents")
 			{
-				int count = ::atoi(Unicode::wideToNarrow(iter->second).c_str());
-				if (count > 0)
+				int32 count = 0;
+				if (FixedWidthParse::parseLeadingInt32(iter->second, 10, count) && (count > 0))
 				{
 					char buffer[128];
 					int const len = snprintf(buffer, sizeof(buffer)-1, "%.6f", (static_cast<double>(m_buyNowPrice) / static_cast<double>(count)));
@@ -996,8 +1010,8 @@ void Auction::AddAttributes(const std::string & attributeName, const Unicode::St
 
 			if (attributeName == "resource_contents")
 			{
-				int count = ::atoi(Unicode::wideToNarrow(attributeValue).c_str());
-				if (count > 0)
+				int32 count = 0;
+				if (FixedWidthParse::parseLeadingInt32(attributeValue, 10, count) && (count > 0))
 				{
 					char buffer[128];
 					int const len = snprintf(buffer, sizeof(buffer)-1, "%.6f", (static_cast<double>(m_buyNowPrice) / static_cast<double>(count)));
@@ -1200,40 +1214,15 @@ void Auction::BuildSearchableAttributeList()
 				if (!m_searchableAttributeInt)
 					m_searchableAttributeInt = new std::map<uint32, int>;
 
-				if (attributeName == "cat_wpn_other.wpn_range")
+				// cat_wpn_other.wpn_range is of the "range" form 22-49m and
+				// storage_module_rating of the form "Storage Module Rating - 10";
+				// for both we want the value after the '-'. An attribute
+				// without an int value is not searchable by value.
+				bool const rangeForm = (attributeName == "cat_wpn_other.wpn_range") || (attributeName == "storage_module_rating");
+				int32 value = 0;
+				if (getSearchableAttributeInt(iter->second, rangeForm, value))
 				{
-					// special parsing for cat_wpn_other.wpn_range attribute which is
-					// of the "range" form 22-49m and we want to use the second value
-					std::string const narrowStr(Unicode::wideToNarrow(iter->second));
-
-					char const * const pChar = strchr(narrowStr.c_str(), '-');
-					if (pChar)
-					{
-						(*m_searchableAttributeInt)[iterFind->second->attributeNameCrc] = ::atoi(pChar + 1);
-					}
-					else
-					{
-						(*m_searchableAttributeInt)[iterFind->second->attributeNameCrc] = ::atoi(narrowStr.c_str());
-					}
-				}
-				else if (attributeName == "storage_module_rating")
-				{
-					// Storage Module Rating - 10
-					std::string const narrowStr(Unicode::wideToNarrow(iter->second));
-
-					char const * const pChar = strchr(narrowStr.c_str(), '-');
-					if (pChar)
-					{
-						(*m_searchableAttributeInt)[iterFind->second->attributeNameCrc] = ::atoi(pChar + 1);
-					}
-					else
-					{
-						(*m_searchableAttributeInt)[iterFind->second->attributeNameCrc] = ::atoi(narrowStr.c_str());
-					}
-				}
-				else
-				{
-					(*m_searchableAttributeInt)[iterFind->second->attributeNameCrc] = ::atoi(Unicode::wideToNarrow(iter->second).c_str());
+					(*m_searchableAttributeInt)[iterFind->second->attributeNameCrc] = value;
 				}
 			}
 			else if (iterFind->second->attributeDataType == CommoditiesAdvancedSearchAttribute::SADT_float)

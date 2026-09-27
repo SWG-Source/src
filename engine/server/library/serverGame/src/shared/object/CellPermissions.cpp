@@ -25,6 +25,7 @@
 #include "serverGame/ServerWorld.h"
 #include "serverGame/NameManager.h"
 #include "sharedGame/PvpData.h"
+#include "sharedFoundation/FixedWidthParse.h"
 #include "sharedFoundation/NetworkId.h"
 #include "sharedLog/Log.h"
 #include "sharedObject/Container.h"
@@ -211,8 +212,10 @@ CellPermissions::PermissionObject::PermissionObject(const std::string& name) :
     // If the string starts with "Faction:" it should be the faction hash
     else if (name.rfind("faction:", 0) == 0)
     {
-        const int hash = std::stoi(name.substr(8, name.length()));
-        if(PvpData::isImperialFactionId(hash) || PvpData::isRebelFactionId(hash))
+        // the faction hash is a crc; std::stoi threw (and so crashed the
+        // server) on text that is not a number or does not fit int
+        uint32 hash = 0;
+        if(FixedWidthParse::parseBits32(name.substr(8, name.length()), 10, hash) && (PvpData::isImperialFactionId(hash) || PvpData::isRebelFactionId(hash)))
         {
             m_originalPermissionFormat = PF_FACTION_NAME;
             m_permissionString = name.substr(8, name.length());
@@ -295,8 +298,8 @@ std::string CellPermissions::PermissionObject::getName() const
         }
         case PF_GUILD_NAME:
         {
-            const int guildId = std::stoi(m_permissionString);
-            if(GuildInterface::guildExists(guildId))
+            int32 guildId = 0;
+            if(FixedWidthParse::parseInt32(m_permissionString, 10, guildId) && GuildInterface::guildExists(guildId))
             {
                 nameString = "guild:" + GuildInterface::getGuildAbbrev(guildId);
             }
@@ -304,8 +307,8 @@ std::string CellPermissions::PermissionObject::getName() const
         }
         case PF_CITY_NAME:
         {
-            const int cityId = std::stoi(m_permissionString);
-            if(CityInterface::cityExists(cityId))
+            int32 cityId = 0;
+            if(FixedWidthParse::parseInt32(m_permissionString, 10, cityId) && CityInterface::cityExists(cityId))
             {
                 nameString = "city:" + CityInterface::getCityInfo(cityId).getCityName();
             }
@@ -326,7 +329,11 @@ std::string CellPermissions::PermissionObject::getName() const
         }
         case PF_FACTION_NAME:
         {
-            const int hash = std::stoi(m_permissionString);
+            uint32 hash = 0;
+            if(!FixedWidthParse::parseBits32(m_permissionString, 10, hash))
+            {
+                break;
+            }
             if(PvpData::isImperialFactionId(hash))
             {
                 nameString = "faction:Imperial";
@@ -620,7 +627,10 @@ bool CellPermissions::isOnList(PermissionList const &permList, CreatureObject co
             }
             if (name.rfind("account:", 0) == 0)
             {
-                if (static_cast<uint32>(std::stoi(name.substr(8, name.length()))) == stationId)
+                // the account entry is player-supplied and not validated
+                // when it is added, so it may not be a number at all
+                uint32 accountStationId = 0;
+                if (FixedWidthParse::parseBits32(name.substr(8, name.length()), 10, accountStationId) && accountStationId == stationId)
                 {
                     return true;
                 }
