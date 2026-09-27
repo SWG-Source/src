@@ -82,8 +82,8 @@ namespace CSHandlerNamespace
 
 	std::string getOneArg( std::string input, int position)
 	{
-		unsigned pos; // where we stop looking
-		unsigned lastpos;  // the last character in our argument.
+		std::string::size_type pos; // where we stop looking
+		std::string::size_type lastpos;  // the last character in our argument.
 		// bounds checking.
 		if( position < 0 || position >= (int) input.length() )
 		{
@@ -548,7 +548,7 @@ void CSHandler::handle( GameServerCSRequestMessage & request )
 	std::string command;
 	std::string args;
 
-	unsigned pos = original.find( " " );
+	std::string::size_type pos = original.find( " " );
 	if( pos == std::string::npos )
 	{
 		command = original;

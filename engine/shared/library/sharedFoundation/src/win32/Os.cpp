@@ -664,7 +664,7 @@ bool Os::createDirectories (const char *directory)
 
 		// now strip off current directory
 		const size_t previousDirIndex = currentDirectory.find_last_of (path_seps);
-		if (static_cast<int>(previousDirIndex) == currentDirectory.npos)
+		if (previousDirIndex == currentDirectory.npos)
 			break;
 		else
 			IGNORE_RETURN(currentDirectory.erase(previousDirIndex));

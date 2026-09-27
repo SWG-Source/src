@@ -273,7 +273,7 @@ void CSToolConnection::parse(const std::string command)
 		std::string pw;
 
 		// split apart
-		unsigned pos = args.find(" ");
+		std::string::size_type pos = args.find(" ");
 		if (pos != std::string::npos)
 		{
 			name = args.substr(0, pos);

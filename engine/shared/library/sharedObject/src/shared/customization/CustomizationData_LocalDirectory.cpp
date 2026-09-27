@@ -50,7 +50,7 @@ bool CustomizationData::LocalDirectory::resolvePathNameToDirectory(const std::st
 {
 	//-- check if there's a directory embedded in the path name
 	const std::string::size_type endOfDirectoryName   = pathName.find(CustomizationData::cms_directorySeparator, static_cast<std::string::size_type>(pathStartIndex));
-	const bool                   hasEmbeddedDirectory = (static_cast<int>(endOfDirectoryName) != static_cast<int>(std::string::npos));
+	const bool                   hasEmbeddedDirectory = (endOfDirectoryName != std::string::npos);
 
 	if (!hasEmbeddedDirectory)
 	{

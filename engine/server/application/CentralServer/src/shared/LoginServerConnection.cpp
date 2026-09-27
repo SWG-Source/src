@@ -291,9 +291,6 @@ void LoginServerConnection::onReceive(const Archive::ByteStream & message)
 			// So, for now, we'll just implement a 'central' command here and spam the GameServers with
 			// the original message otherwise.
 			
-			unsigned pos = req.getCommandString().find( " " );
-			pos = pos == std::string::npos ? req.getCommandString().length() : pos;
-			
 			CentralCSHandler::getInstance().handle( req, getProcessId() );
 			
 			break;
