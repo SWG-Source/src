@@ -261,7 +261,14 @@ TreeFile::SearchTree::SearchTree(int priority, const char *fileName)
 	m_treeFileName = DuplicateString(fileName);
 
 	m_treeFile = FileStreamer::open(m_treeFileName, true);
-	DEBUG_FATAL(!m_treeFile, ("failed to open TreeFile %s", m_treeFileName));
+	if (!m_treeFile)
+	{
+		// The file exists but was refused (for example it exceeds the 32-bit
+		// file API). Like a missing tree, leave this node empty in release.
+		DEBUG_FATAL(true, ("failed to open TreeFile %s", m_treeFileName));
+		WARNING(true, ("TreeFile::SearchTree failed to open %s; it will not be searched", m_treeFileName));
+		return;
+	}
 
 	// read the header (the first 32 bytes of the tree file) 
 	Header header;
@@ -538,6 +545,7 @@ TreeFile::SearchTOC::SearchTOC(int priority, const char *fileName)
 	m_TOCFileName(nullptr),
 	m_TOCFile(nullptr),
 	m_treeFiles(nullptr),
+	m_numberOfTreeFiles(0),
 	m_numberOfFiles(0),
 	m_treeFileNames(nullptr),
 	m_treeFileNamePointers(nullptr),
@@ -550,7 +558,14 @@ TreeFile::SearchTOC::SearchTOC(int priority, const char *fileName)
 	m_TOCFileName = DuplicateString(fileName);
 
 	m_TOCFile = FileStreamer::open(m_TOCFileName, true);
-	DEBUG_FATAL(!m_TOCFile, ("failed to open TOCFile %s", m_TOCFileName));
+	if (!m_TOCFile)
+	{
+		// The file exists but was refused (for example it exceeds the 32-bit
+		// file API). Like a missing TOC, leave this node empty in release.
+		DEBUG_FATAL(true, ("failed to open TOCFile %s", m_TOCFileName));
+		WARNING(true, ("TreeFile::SearchTOC failed to open %s; it will not be searched", m_TOCFileName));
+		return;
+	}
 
 	// read the header
 	Header header;
