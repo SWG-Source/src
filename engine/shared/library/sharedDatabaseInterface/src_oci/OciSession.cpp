@@ -104,7 +104,7 @@ bool DB::OCISession::connect()
 	connected = false;
 	while (!connected && retryCount < 5)
 	{
-		LOG("DatabaseConnect", ("calling OCIServerAttach() for OCISession=[%p] with dsn=[%s], uid=[%s], pwd=[%s]", this, m_server->getDSN(), m_server->uid, m_server->pwd));
+		LOG("DatabaseConnect", ("calling OCIServerAttach() for OCISession=[%p] with dsn=[%s], uid=[%s]", this, m_server->getDSN(), m_server->uid));
 
 		connected = DB::OCIServer::checkerr(*this,
 									OCIServerAttach( srvhp, errhp, reinterpret_cast<OraText*>(const_cast<char*>(m_server->getDSN())), dsnLength, 0));
