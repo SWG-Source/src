@@ -211,7 +211,7 @@ protected:
 
 	Vector                  m_groundNormal;
 
-	int                     m_addToWorldTime;   // time in seconds
+	uint64_t                m_addToWorldTime;   // absolute Clock::timeMs()
 	Vector                  m_addToWorldPos;
 	bool                    m_floating;
 	int                     m_floatingTime;

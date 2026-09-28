@@ -5158,7 +5158,7 @@ uint32_t ServerObject::processQueuedMessageTos(uint32_t effectiveMessageToTime)
 	if (isAuthoritative())
 	{
 		int handledMessageCount = 0;
-		uint32_t startTime = Clock::timeMs();
+		uint64_t const startTime = Clock::timeMs();
 		while (!m_messageTos.empty() && m_messageTos.begin()->second.getCallTime() <= effectiveMessageToTime)
 		{
 			++handledMessageCount;
@@ -5180,7 +5180,7 @@ uint32_t ServerObject::processQueuedMessageTos(uint32_t effectiveMessageToTime)
 				break;
 			}
 			if ((ConfigServerGame::getMaxMessageToTimePerObjectPerFrame() != 0) &&
-				(static_cast<int>(Clock::timeMs() - startTime) > ConfigServerGame::getMaxMessageToTimePerObjectPerFrame()))
+				(Clock::durationMs<int>(startTime, Clock::timeMs()) > ConfigServerGame::getMaxMessageToTimePerObjectPerFrame()))
 			{
 				WARNING(true,("MessageTo Backlog:  object %s spent more than %i ms processing messages.  Remaining %d messages will be delayed until next frame.", getNetworkId().getValueString().c_str(), ConfigServerGame::getMaxMessageToTimePerObjectPerFrame(), m_messageTos.size()));
 				MessageToQueue::getInstance().incrementBackloggedObjectCount();

@@ -18,7 +18,7 @@
 /** @brief construct a new Scheduler object
 
 	A system may have any number of schedulers running. Periodically
-	invoke update(const unsigned long) on the Scheduler instance to
+	invoke update(const uint64_t) on the Scheduler instance to
 	trigger callback events.
 
 	\code
@@ -149,7 +149,7 @@ void Scheduler::setCallback(Callback cb, const void *context, unsigned long dela
 /** @brief Trigger pending callbacks
 
 	A scheduler must be periodically updated to trigger callback events
-	that are enqueued. A single unsigned long parameter is passed to the 
+	that are enqueued. A single uint64_t parameter is passed to the 
 	Scheduler indicating the current "time" or "frame" or some other 
 	value that ensures all callbacks with an expireCount value less than
 	t will be triggered.
@@ -171,7 +171,7 @@ void Scheduler::setCallback(Callback cb, const void *context, unsigned long dela
 
 	@author Justin Randall
 */
-void Scheduler::update(const unsigned long t)
+void Scheduler::update(const uint64_t t)
 {
 	// prevent recursive updates on a scheduler
 	if(!updating)

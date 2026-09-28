@@ -15398,7 +15398,7 @@ void CreatureObject::addPackedAppearanceWearable(std::string const &appearanceDa
 void CreatureObject::saveDecorationLayout(ServerObject const & pobSourceObject, int saveSlotNumber, std::string const & description)
 {
 	int debugNumItems = 0;
-	const uint32_t debugStartTimeMs = Clock::timeMs();
+	const uint64_t debugStartTimeMs = Clock::timeMs();
 
 	if (!isAuthoritative())
 		return;
@@ -15592,8 +15592,7 @@ void CreatureObject::saveDecorationLayout(ServerObject const & pobSourceObject, 
 
 	if ((debugNumItems > 0) && getClient()->isGod())
 	{
-		const uint32_t debugEndTimeMs = Clock::timeMs();
-		Chat::sendSystemMessage(*this, Unicode::narrowToWide(FormattedString<256>().sprintf("!!!GOD MODE STATISTICS!!! %d items saved in %ums", debugNumItems, (debugEndTimeMs - debugStartTimeMs))), Unicode::emptyString);
+		Chat::sendSystemMessage(*this, Unicode::narrowToWide(FormattedString<256>().sprintf("!!!GOD MODE STATISTICS!!! %d items saved in %ums", debugNumItems, Clock::durationMs<uint32_t>(debugStartTimeMs, Clock::timeMs()))), Unicode::emptyString);
 	}
 }
 
@@ -15601,7 +15600,7 @@ void CreatureObject::saveDecorationLayout(ServerObject const & pobSourceObject, 
 
 void CreatureObject::restoreDecorationLayout(ServerObject const & pobTargetObject, int saveSlotNumber)
 {
-	const uint32_t debugStartTimeMs = Clock::timeMs();
+	const uint64_t debugStartTimeMs = Clock::timeMs();
 
 	if (!isAuthoritative())
 		return;
@@ -15937,8 +15936,7 @@ void CreatureObject::restoreDecorationLayout(ServerObject const & pobTargetObjec
 
 	if ((debugNumItems > 0) && getClient()->isGod())
 	{
-		const uint32_t debugEndTimeMs = Clock::timeMs();
-		Chat::sendSystemMessage(*this, Unicode::narrowToWide(FormattedString<256>().sprintf("!!!GOD MODE STATISTICS!!! %d items read (%d will be moved) in %ums", debugNumItems, numItemsToBeMoved, (debugEndTimeMs - debugStartTimeMs))), Unicode::emptyString);
+		Chat::sendSystemMessage(*this, Unicode::narrowToWide(FormattedString<256>().sprintf("!!!GOD MODE STATISTICS!!! %d items read (%d will be moved) in %ums", debugNumItems, numItemsToBeMoved, Clock::durationMs<uint32_t>(debugStartTimeMs, Clock::timeMs()))), Unicode::emptyString);
 	}
 }
 

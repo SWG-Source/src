@@ -34,8 +34,9 @@ namespace LineOfSightCacheNamespace
 	typedef std::pair<Object const *, Location> ObjectLocationPair;
 	typedef std::map<ObjectPair, bool> LineOfSightCacheMap;
 	typedef std::map<ObjectLocationPair, bool> LineOfSightLocationCacheMap;
-	typedef std::pair<ObjectPair, unsigned long> LineOfSightCacheExpireQueueEntry;
-	typedef std::pair<ObjectLocationPair, unsigned long> LineOfSightLocationCacheExpireQueueEntry;
+	// expire times are absolute Clock::getFrameStartTimeMs() values
+	typedef std::pair<ObjectPair, uint64_t> LineOfSightCacheExpireQueueEntry;
+	typedef std::pair<ObjectLocationPair, uint64_t> LineOfSightLocationCacheExpireQueueEntry;
 	typedef std::queue<LineOfSightCacheExpireQueueEntry> LineOfSightCacheExpireQueue;
 	typedef std::queue<LineOfSightLocationCacheExpireQueueEntry> LineOfSightLocationCacheExpireQueue;
 
@@ -51,12 +52,12 @@ using namespace LineOfSightCacheNamespace;
 
 void LineOfSightCache::update()
 {
-	unsigned long const frameStartTime = Clock::getFrameStartTimeMs();
+	uint64_t const frameStartTime = Clock::getFrameStartTimeMs();
 
 	while (!s_lineOfSightCacheExpireQueue.empty())
 	{
 		LineOfSightCacheExpireQueueEntry const &entry = s_lineOfSightCacheExpireQueue.front();
-		if (static_cast<int>(entry.second - frameStartTime) > 0)
+		if (entry.second > frameStartTime)
 			break;
 		IGNORE_RETURN(s_lineOfSightCacheMap.erase(entry.first));
 		s_lineOfSightCacheExpireQueue.pop();
@@ -64,7 +65,7 @@ void LineOfSightCache::update()
 	while (!s_lineOfSightLocationCacheExpireQueue.empty())
 	{
 		LineOfSightLocationCacheExpireQueueEntry const &entry = s_lineOfSightLocationCacheExpireQueue.front();
-		if (static_cast<int>(entry.second - frameStartTime) > 0)
+		if (entry.second > frameStartTime)
 			break;
 		IGNORE_RETURN(s_lineOfSightLocationCacheMap.erase(entry.first));
 		s_lineOfSightLocationCacheExpireQueue.pop();

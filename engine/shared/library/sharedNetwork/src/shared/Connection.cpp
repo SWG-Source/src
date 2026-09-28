@@ -751,11 +751,12 @@ void Connection::receive(const Archive::ByteStream & bs)
 			m_lastRecvTime = Clock::getFrameStartTimeMs();
 			if (m_lastRecvTime > m_lastRecvReportTime + reportInterval)
 			{
-				unsigned long lifeTime = (m_lastRecvTime - m_connectionStartTime) / 1000;
+				// Seconds, from the full 64-bit duration (fits uint32 for 136 years).
+				uint32 const lifeTime = static_cast<uint32>(Clock::durationMs<uint64_t>(m_connectionStartTime, m_lastRecvTime) / 1000);
 				// calculate recv stats
 				if (lifeTime > 0)
 				{
-					unsigned long reportTime = (m_lastRecvTime - m_lastRecvReportTime) / 1000;
+					uint32 const reportTime = static_cast<uint32>(Clock::durationMs<uint64_t>(m_lastRecvReportTime, m_lastRecvTime) / 1000);
 					if (reportTime > 0)
 					{
 						int bytesPerSecond = m_recvBytesReportInterval / reportTime;
@@ -769,7 +770,7 @@ void Connection::receive(const Archive::ByteStream & bs)
 						char portBuf[7] = {"\0"};
 						snprintf(portBuf, sizeof(portBuf), "%d", getRemotePort());
 						logChan += portBuf;
-						LOG(logChan, ("Current(%d/sec), Average(%d/sec), Peak(%d/sec) Total Bytes(%d) Total Time(%lu)", bytesPerSecond, m_recvAverageBytesPerSecond, m_recvPeakBytesPerSecond, m_bytesReceived, lifeTime));
+						LOG(logChan, ("Current(%d/sec), Average(%d/sec), Peak(%d/sec) Total Bytes(%d) Total Time(%u)", bytesPerSecond, m_recvAverageBytesPerSecond, m_recvPeakBytesPerSecond, m_bytesReceived, lifeTime));
 						m_lastRecvReportTime = m_lastRecvTime;
 						m_recvBytesReportInterval = 0;
 
@@ -820,10 +821,11 @@ void Connection::reportSend(const int sendSize)
 		if (m_lastSendTime > m_lastSendReportTime + reportInterval)
 		{
 			// calculate send stats
-			unsigned long lifeTime = (m_lastSendTime - m_connectionStartTime) / 1000;
+			// Seconds, from the full 64-bit duration (fits uint32 for 136 years).
+			uint32 const lifeTime = static_cast<uint32>(Clock::durationMs<uint64_t>(m_connectionStartTime, m_lastSendTime) / 1000);
 			if (lifeTime > 0)
 			{
-				unsigned long reportTime = (m_lastSendTime - m_lastSendReportTime) / 1000;
+				uint32 const reportTime = static_cast<uint32>(Clock::durationMs<uint64_t>(m_lastSendReportTime, m_lastSendTime) / 1000);
 				if (reportTime > 0)
 				{
 					int bytesPerSecond = m_sendBytesReportInterval / reportTime;
@@ -837,7 +839,7 @@ void Connection::reportSend(const int sendSize)
 					char portBuf[7] = {"\0"};
 					snprintf(portBuf, sizeof(portBuf), "%d", getRemotePort());
 					logChan += portBuf;
-					LOG(logChan, ("Current(%d/sec), Average(%d/sec), Peak(%d/sec) Total Bytes(%d) Total Time(%lu)", bytesPerSecond, m_sendAverageBytesPerSecond, m_sendPeakBytesPerSecond, m_bytesSent, lifeTime));
+					LOG(logChan, ("Current(%d/sec), Average(%d/sec), Peak(%d/sec) Total Bytes(%d) Total Time(%u)", bytesPerSecond, m_sendAverageBytesPerSecond, m_sendPeakBytesPerSecond, m_bytesSent, lifeTime));
 					m_lastSendReportTime = m_lastSendTime;
 					m_sendBytesReportInterval = 0;
 
@@ -963,9 +965,9 @@ void Connection::sendSharedPacket(const LogicalPacket * packet, const bool relia
 
 //-----------------------------------------------------------------------
 
-void Connection::onConnectionStalled(const unsigned long stallTimeMs)
+void Connection::onConnectionStalled(const uint32_t stallTimeMs)
 {
-	LOG("Network", ("Connection stalled with %d bytes pending for %lu milliseconds", udpConnection->TotalPendingBytes(), stallTimeMs));
+	LOG("Network", ("Connection stalled with %d bytes pending for %u milliseconds", udpConnection->TotalPendingBytes(), stallTimeMs));
 }
 
 //-----------------------------------------------------------------------

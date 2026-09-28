@@ -141,7 +141,7 @@ void NetworkHandler::dispatch()
 	if (!services.inputQueue.empty())
 	{
 		size_t const startQueueSize = services.inputQueue.size();
-		unsigned long const startTime = Clock::timeMs();
+		uint64_t const startTime = Clock::timeMs();
 		bool const throttle =  ConfigSharedNetwork::getNetworkHandlerDispatchThrottle();
 		unsigned int const processTimeMilliseconds = static_cast<unsigned int>(ConfigSharedNetwork::getNetworkHandlerDispatchThrottleTimeMilliseconds());
 		unsigned int const queueSize = static_cast<unsigned int>(ConfigSharedNetwork::getNetworkHandlerDispatchQueueSize());

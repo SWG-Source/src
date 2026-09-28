@@ -1036,7 +1036,7 @@ void LoginServer::run(void) {
     AdminAccountManager::install(ConfigLoginServer::getAdminAccountDataTable());
 
     unsigned long limit = 20;
-    unsigned long startTime;
+    uint64_t startTime;
     unsigned long totalTime = 0;
 
     // load authentication data and bind the monitor to the port

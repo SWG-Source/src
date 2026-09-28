@@ -52,13 +52,13 @@ bool ChunkLocator::locateObjects(DB::Session *session, const std::string &schema
 	
 	DBQuery::GetChunkQuery qry(schema);
 	qry.setChunk(*m_sceneId, m_nodeX, m_nodeZ);
-	int startTime = Clock::timeMs();
+	uint64_t const startTime = Clock::timeMs();
 
 	bool rval = session->exec(&qry);
 	qry.done();
 
 	m_objectCount = qry.getObjectCount();
-	m_queryTime = Clock::timeMs()-startTime;
+	m_queryTime = Clock::durationMs<int>(startTime, Clock::timeMs());
 
 	objectsLocated = m_objectCount;
 	return rval;

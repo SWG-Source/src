@@ -125,7 +125,7 @@ class Persister : public MessageDispatch::Receiver
 	Snapshot *             m_messageSnapshot;
 	Snapshot *             m_commoditiesSnapshot;
 	Snapshot *             m_arbitraryGameDataSnapshot;
-	int                    m_saveStartTime;
+	uint64_t               m_saveStartTime;
 	int                    m_totalSaveTime;
 	int                    m_maxSaveTime;
 	int                    m_saveCount;

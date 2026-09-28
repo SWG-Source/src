@@ -221,13 +221,13 @@ size_t i;
 #ifdef _DEBUG
 			int objectsCreated = 0;
 #endif
-			unsigned long totalTime = 0;
-			unsigned long startTime = Clock::timeMs();
+			uint32 totalTime = 0;
+			uint64_t startTime = Clock::timeMs();
 			const Vector myPos(getPosition_w());
 			size_t count = m_crcs.size();
 			for (i = m_objects.size(); i < count;)
 			{
-				if (ms_theaterTime + totalTime >= static_cast<unsigned long>
+				if (static_cast<uint64_t>(ms_theaterTime) + totalTime >= static_cast<uint64_t>
 					(ConfigServerGame::getTheaterCreationLimitMilliseconds()))
 				{
 					break;
@@ -266,21 +266,12 @@ size_t i;
 				}
 				++i;
 
-				unsigned long endTime = Clock::timeMs();
-				if (endTime >= startTime)
-				{
-					totalTime = endTime - startTime;
-				}
-				else
-				{
-					// time wrapped
-					totalTime = endTime + (ULONG_MAX - startTime);
-				}
+				totalTime = Clock::durationMs<uint32>(startTime, Clock::timeMs());
 			}
 			ms_theaterTime += totalTime;
 #ifdef _DEBUG
 			m_theaterCreationTime += totalTime;
-			DEBUG_LOG("Theater", ("Theater %s created %d objects, time = %lu\n", 
+			DEBUG_LOG("Theater", ("Theater %s created %d objects, time = %u\n", 
 				getNetworkId().getValueString().c_str(), objectsCreated, totalTime));
 #endif
 			if (i == count)
@@ -322,17 +313,8 @@ size_t i;
 				m_headings.clear();
 				m_scripts.clear();
 #ifdef _DEBUG
-				unsigned long endTime = Clock::timeMs();
-				if (endTime >= startTime)
-				{
-					totalTime = endTime - startTime;
-				}
-				else
-				{
-					// time wrapped
-					totalTime = endTime + (ULONG_MAX - startTime);
-				}
-				DEBUG_LOG("Theater", ("Theater %s make visible time = %lu\n", 
+				totalTime = Clock::durationMs<uint32>(startTime, Clock::timeMs());
+				DEBUG_LOG("Theater", ("Theater %s make visible time = %u\n", 
 					getNetworkId().getValueString().c_str(), totalTime));
 #endif
 

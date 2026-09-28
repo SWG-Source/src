@@ -415,12 +415,12 @@ void Clock::limitFrameRate(void)
 
 //-----------------------------------------------------------------------
 
-const unsigned long Clock::timeMs()
+const uint64_t Clock::timeMs()
 {
 	__int64 newPoll;
 	QueryPerformanceCounter(reinterpret_cast<LARGE_INTEGER *>(&newPoll));
 	double const frameTime = static_cast<double>(newPoll - ms_lastPoll) / ms_frameFrequency;
-	return static_cast<unsigned long>(ms_realTimeMilliseconds + frameTime*1000.f);
+	return static_cast<uint64_t>(ms_realTimeMilliseconds + frameTime*1000.f);
 }
 
 //-----------------------------------------------------------------------
@@ -435,9 +435,9 @@ const unsigned long Clock::timeSeconds()
 
 // ----------------------------------------------------------------------
 
-const unsigned long Clock::getFrameStartTimeMs()
+const uint64_t Clock::getFrameStartTimeMs()
 {
-	return static_cast<unsigned long>(ms_realTimeMilliseconds);
+	return static_cast<uint64_t>(ms_realTimeMilliseconds);
 }
 
 // ----------------------------------------------------------------------

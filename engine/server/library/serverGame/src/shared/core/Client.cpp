@@ -181,7 +181,7 @@ Client::ClientMessage::~ClientMessage() {
 
 std::map <std::string, uint32> Client::sm_outgoingBytesMap_Working;  // working stats that will rotate after 1 minute
 std::map <std::string, uint32> Client::sm_outgoingBytesMap_Stats;    // computed stats from the last minute
-uint32                          Client::sm_outgoingBytesMap_Worktime = 0; // time we started filling in the working map
+uint64_t                        Client::sm_outgoingBytesMap_Worktime = 0; // time we started filling in the working map
 
 
 // ======================================================================
@@ -1859,7 +1859,7 @@ void Client::send(GameNetworkMessage const &outgoingMessage, bool reliable) cons
         GameClientMessage const msg(v, reliable, outgoingMessage);
 
 
-        uint32 now = Clock::timeMs();
+        uint64_t const now = Clock::timeMs();
         if (sm_outgoingBytesMap_Worktime == 0) {
             sm_outgoingBytesMap_Worktime = now;
         } else if ((now - sm_outgoingBytesMap_Worktime) > 60000)   // 60 seconds
@@ -1884,7 +1884,7 @@ void Client::send(GameNetworkMessage const &outgoingMessage, bool reliable) cons
 //-----------------------------------------------------------------------
 
 std::map <std::string, uint32> &Client::getPacketBytesPerMinStats() {
-    uint32 now = Clock::timeMs();
+    uint64_t const now = Clock::timeMs();
     if (sm_outgoingBytesMap_Worktime == 0) {
         sm_outgoingBytesMap_Worktime = now;
     } else if ((now - sm_outgoingBytesMap_Worktime) > 60000)   // 60 seconds

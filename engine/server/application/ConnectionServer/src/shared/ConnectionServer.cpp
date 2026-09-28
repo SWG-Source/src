@@ -892,7 +892,7 @@ void ConnectionServer::run(void) {
     static ConnectionServer &cserver = instance();
     DEBUG_FATAL(!cserver.m_metricsData, ("Connection server not installed properly"));
 
-    unsigned long startTime = Clock::timeMs();
+    uint64_t startTime = Clock::timeMs();
     Clock::setFrameRateLimit(50.0f);
 
     LOG("ServerStartup", ("ConnectionServer starting on %s", NetworkHandler::getHostName().c_str()));
@@ -939,7 +939,7 @@ void ConnectionServer::run(void) {
 
             {
                 PROFILER_AUTO_BLOCK_DEFINE("MetricsManager::update");
-                unsigned long curTime = Clock::timeMs();
+                uint64_t curTime = Clock::timeMs();
                 MetricsManager::update(static_cast<float>(curTime - startTime));
                 startTime = curTime;
             }

@@ -202,31 +202,31 @@ void ChatServer::update()
 {
 	PROFILER_BLOCK_DEFINE(profileBlockMainLoop, "main loop");
 	PROFILER_BLOCK_ENTER(profileBlockMainLoop);
-	static unsigned int lastTime = 0;
-unsigned int t1 = Clock::timeMs();
+	static uint64_t lastTime = 0;
+uint64_t t1 = Clock::timeMs();
 	NetworkHandler::update();
-unsigned int t2 = Clock::timeMs();
+uint64_t t2 = Clock::timeMs();
 
 	chatInterface->checkQueuedLogins();
 	chatInterface->sendQueuedHeadersToClient();
 
 if ((t2 - t1) > (1000 * 5))
 {
-	DEBUG_WARNING(true, ("\n\n\n\n\nNetworkHandler::update() took %i ms\n\n\n\n\n", (t2 - t1)));
+	DEBUG_WARNING(true, ("\n\n\n\n\nNetworkHandler::update() took %" PRIu64 " ms\n\n\n\n\n", (t2 - t1)));
 }
 
 	NetworkHandler::dispatch();
-unsigned int t3 = Clock::timeMs();
+uint64_t t3 = Clock::timeMs();
 if ((t3 - t2) > (1000 * 5))
 {
-	DEBUG_WARNING(true, ("\n\n\n\n\nNetworkHandler::dispatch() took %i ms\n\n\n\n\n", (t3 - t2)));
+	DEBUG_WARNING(true, ("\n\n\n\n\nNetworkHandler::dispatch() took %" PRIu64 " ms\n\n\n\n\n", (t3 - t2)));
 }
 	if (lastTime != 0)
 	{
-		unsigned int time = Clock::timeMs();
+		uint64_t time = Clock::timeMs();
 		if ((time - lastTime) > (1000))
 		{
-			//DEBUG_WARNING(true, ("\n\n\n\n\n\nLong Chat Frame (%i ms)\n\n\n\n", (time - lastTime)));
+			//DEBUG_WARNING(true, ("\n\n\n\n\n\nLong Chat Frame (%" PRIu64 " ms)\n\n\n\n", (time - lastTime)));
 		}
 	}
 	lastTime = Clock::timeMs();

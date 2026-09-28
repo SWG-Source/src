@@ -26,7 +26,7 @@ struct AuthTransferInfo
 {
 	uint32 newAuthProcessId;
 	std::vector<uint32> unconfirmedProcessIds;
-	unsigned long startTime;
+	uint64_t startTime;
 };
 
 static std::map<NetworkId, AuthTransferInfo> *s_authTransferMap;

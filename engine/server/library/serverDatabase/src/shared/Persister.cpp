@@ -613,7 +613,7 @@ void Persister::saveCompleted(Snapshot *completedSnapshot)
 	if (m_savingSnapshots.empty())
 	{
 		if (found && ConfigServerDatabase::getReportSaveTimes()) {
-			int saveTime = Clock::timeMs() - m_saveStartTime;
+			int const saveTime = Clock::durationMs<int>(m_saveStartTime, Clock::timeMs());
 			++m_saveCount;
 			m_totalSaveTime += saveTime;
 			if (saveTime > m_maxSaveTime)

@@ -7,6 +7,8 @@
 #include "FirstCentralServer.h"
 #include "CentralServer.h"
 
+#include <cinttypes>
+
 #include "CentralCSHandler.h"
 #include "CentralServerMetricsData.h"
 #include "CharacterCreationTracker.h"
@@ -2710,10 +2712,10 @@ void CentralServer::run(void)
 	// connect to the task manager
 	cserver.m_taskManager = new TaskConnection("127.0.0.1", ConfigCentralServer::getTaskManagerPort());
 
-	unsigned long startTime = Clock::timeMs();
-	unsigned long nextLoadingLogTime=0;
-	unsigned long nextPingTime=0;
-	unsigned long nextPopulationLogTime = 0;
+	uint64_t startTime = Clock::timeMs();
+	uint64_t nextLoadingLogTime=0;
+	uint64_t nextPingTime=0;
+	uint64_t nextPopulationLogTime = 0;
 
 	LOG("ServerStartup",("CentralServer starting"));
 #ifndef WIN32
@@ -2741,8 +2743,8 @@ void CentralServer::run(void)
 
 	while (!cserver.m_done)
 	{
-		unsigned long lastFrameTime = 0;
-		unsigned long frameStartTime = Clock::timeMs();
+		uint64_t lastFrameTime = 0;
+		uint64_t frameStartTime = Clock::timeMs();
 
 		PROFILER_AUTO_BLOCK_DEFINE("main loop");
 
@@ -2762,7 +2764,7 @@ void CentralServer::run(void)
 
 			{
 				PROFILER_AUTO_BLOCK_DEFINE("MetricsManager::update");
-				unsigned long curTime = Clock::timeMs();
+				uint64_t curTime = Clock::timeMs();
 				MetricsManager::update(static_cast<float>(curTime - startTime));
 				startTime = curTime;
 			}
@@ -2790,7 +2792,7 @@ void CentralServer::run(void)
 
 		{
 			//Peridically log loading status
-			unsigned long curTime = Clock::timeMs();
+			uint64_t curTime = Clock::timeMs();
 			if (curTime > nextLoadingLogTime)
 			{
 				nextLoadingLogTime = curTime + 10000;
@@ -2799,9 +2801,9 @@ void CentralServer::run(void)
 			}
 
 			//Perodically ping all the servers
-			if (ConfigCentralServer::getServerPingTimeout() != 0 && static_cast<int>(curTime-nextPingTime) > 0)
+			if (ConfigCentralServer::getServerPingTimeout() > 0 && curTime > nextPingTime)
 			{
-				nextPingTime = curTime + static_cast<uint32>(ConfigCentralServer::getServerPingTimeout() * 1000);
+				nextPingTime = curTime + static_cast<uint64_t>(ConfigCentralServer::getServerPingTimeout()) * 1000;
 				getInstance().doServerPings();
 			}
 
@@ -2822,11 +2824,11 @@ void CentralServer::run(void)
 			cserver.done();
 		}
 
-		unsigned long currentTime = Clock::timeMs();
+		uint64_t currentTime = Clock::timeMs();
 		lastFrameTime = currentTime - frameStartTime;
 		if(lastFrameTime > 1000)
 		{
-			LOG("profile", ("Long loop (%lu ms):\n%s", lastFrameTime, PROFILER_GET_LAST_FRAME_DATA()));
+			LOG("profile", ("Long loop (%" PRIu64 " ms):\n%s", lastFrameTime, PROFILER_GET_LAST_FRAME_DATA()));
 		}
 	}
 

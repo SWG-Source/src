@@ -44,7 +44,7 @@ Query::~Query()
 
 int Query::fetch()
 {
-	int startTime = 0;
+	uint64_t startTime = 0;
 	if (Server::isProfilingEnabled())
 		startTime = Clock::timeMs();
 
@@ -53,7 +53,7 @@ int Query::fetch()
 
 	if (Server::isProfilingEnabled())
 	{
-		m_fetchTime += Clock::timeMs() - startTime;
+		m_fetchTime += Clock::durationMs<int>(startTime, Clock::timeMs());
 	}
 	if (m_rowsFetched >= 0)
 	{
@@ -144,7 +144,7 @@ bool Query::prepare()
 
 bool Query::exec()
 {
-	int startTime = 0;
+	uint64_t startTime = 0;
 	if (Server::isProfilingEnabled())
 		startTime = Clock::timeMs();
 
@@ -161,7 +161,7 @@ bool Query::exec()
 
 	if (Server::isProfilingEnabled())
 	{
-		m_execTime += Clock::timeMs() - startTime;
+		m_execTime += Clock::durationMs<int>(startTime, Clock::timeMs());
 	}
 	++m_execCount;
 

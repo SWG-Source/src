@@ -18,7 +18,7 @@ MEMORY_BLOCK_MANAGER_IMPLEMENTATION_WITH_INSTALL(StaticCallbackEntry, true, 0, 0
 
 // ======================================================================
 
-StaticCallbackEntry::StaticCallbackEntry(unsigned long when, Callback cb, const void *context) :
+StaticCallbackEntry::StaticCallbackEntry(uint64_t when, Callback cb, const void *context) :
 m_expireCount(when),
 m_staticCallbackFunction(cb),
 m_context(context)

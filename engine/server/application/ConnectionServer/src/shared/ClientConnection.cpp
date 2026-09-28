@@ -6,6 +6,8 @@
 #include "FirstConnectionServer.h"
 #include "ClientConnection.h"
 
+#include <cinttypes>
+
 #include "Archive/ByteStream.h"
 #include "ChatServerConnection.h"
 #include "CustomerServiceConnection.h"
@@ -72,7 +74,7 @@ using namespace ClientConnectionNamespace;
 
 std::map <std::string, uint32> ClientConnection::sm_outgoingBytesMap_Working;  // working stats that will rotate after 1 minute
 std::map <std::string, uint32> ClientConnection::sm_outgoingBytesMap_Stats;    // computed stats from the last minute
-uint32                          ClientConnection::sm_outgoingBytesMap_Worktime = 0; // time we started filling in the working map
+uint64_t                        ClientConnection::sm_outgoingBytesMap_Worktime = 0; // time we started filling in the working map
 
 
 
@@ -510,7 +512,7 @@ bool ClientConnection::checkSpamLimit(unsigned int messageSize) {
         return true;
     }
 
-    unsigned long curTimeMs = Clock::timeMs();
+    uint64_t const curTimeMs = Clock::timeMs();
     if (m_receiveLastTimeMs) {
         ++m_receiveHistoryPackets;
         m_receiveHistoryBytes += messageSize;
@@ -535,12 +537,12 @@ bool ClientConnection::checkSpamLimit(unsigned int messageSize) {
         if (m_countSpamLimitResetTime) {
             if (m_receiveHistoryBytes >=
                 m_receiveHistoryMs * ConfigConnectionServer::getSpamLimitBytesPerSec() / 1000) {
-                LOG("Network", ("Client %s disconnected for exceeding bytes/sec limit (bytes=%u, time=%lums)\n", getCharacterId().getValueString().c_str(), m_receiveHistoryBytes, m_receiveHistoryMs));
+                LOG("Network", ("Client %s disconnected for exceeding bytes/sec limit (bytes=%u, time=%" PRIu64 "ms)\n", getCharacterId().getValueString().c_str(), m_receiveHistoryBytes, m_receiveHistoryMs));
                 return false;
             }
             if (m_receiveHistoryPackets >=
                 m_receiveHistoryMs * ConfigConnectionServer::getSpamLimitPacketsPerSec() / 1000) {
-                LOG("Network", ("Client %s disconnected for exceeding packets/sec limit (packets=%u, time=%lums)\n", getCharacterId().getValueString().c_str(), m_receiveHistoryPackets, m_receiveHistoryMs));
+                LOG("Network", ("Client %s disconnected for exceeding packets/sec limit (packets=%u, time=%" PRIu64 "ms)\n", getCharacterId().getValueString().c_str(), m_receiveHistoryPackets, m_receiveHistoryMs));
                 return false;
             }
         }
@@ -558,7 +560,7 @@ void ClientConnection::onReceive(const Archive::ByteStream &message) {
             return;
         }
 
-        unsigned long curTimeMs = Clock::timeMs();
+        uint64_t const curTimeMs = Clock::timeMs();
         if (m_sendLastTimeMs +
             std::min(gs_receiveDelayMaxMs, static_cast<unsigned long>(Clock::frameTime() * 1000.0f)) < curTimeMs) {
             static HeartBeat h;
@@ -1085,7 +1087,7 @@ void ClientConnection::send(const GameNetworkMessage &message, const bool reliab
 //-----------------------------------------------------------------------
 
 std::map <std::string, uint32> &ClientConnection::getPacketBytesPerMinStats() {
-    uint32 now = Clock::timeMs();
+    uint64_t const now = Clock::timeMs();
     if (sm_outgoingBytesMap_Worktime == 0) {
         sm_outgoingBytesMap_Worktime = now;
     } else if ((now - sm_outgoingBytesMap_Worktime) > 60000)   // 60 seconds
