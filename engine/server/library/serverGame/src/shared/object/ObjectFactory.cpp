@@ -52,7 +52,7 @@ ServerObject * ServerWorld::createObjectFromTemplate(uint32 templateCrc, const N
 
 	if (!objectTemplate) {
 		DEBUG_WARNING(!objectTemplate, ("Missing Template!  Can't create object from "
-			"template crc %u(%s), file not found", templateCrc, 
+			"template crc %u(%s), file not found", templateCrc,
 			ObjectTemplateList::lookUp(templateCrc).getString()));
 		return 0;
 	}

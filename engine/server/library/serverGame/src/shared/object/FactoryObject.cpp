@@ -299,7 +299,7 @@ bool FactoryObject::isFactoryOk() const
 		}
 		else
 		{
-			sprintf(errBuffer, "its source draft schematic (crc=%u) not existing", 
+			sprintf(errBuffer, "its source draft schematic (crc=%u) not existing",
 				getDraftSchematic());
 			factoryOk = false;
 		}

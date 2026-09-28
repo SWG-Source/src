@@ -412,7 +412,7 @@ std::string TransferCharacterData::toString() const
 
 	result += " scriptDictionaryData.length=";
 	memset(buf, 0, sizeof(buf));
-	snprintf(buf, sizeof(buf) - 1, "%zu", getScriptDictionaryData().size()); 
+	snprintf(buf, sizeof(buf) - 1, "%zu", getScriptDictionaryData().size());
 	result += buf;
 
 	result += " hairObjectTemplateName=";

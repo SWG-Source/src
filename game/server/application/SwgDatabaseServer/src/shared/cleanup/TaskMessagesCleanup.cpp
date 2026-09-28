@@ -31,7 +31,7 @@ bool TaskMessagesCleanup::process(DB::Session *session)
 		if( qry.result.getValue() == 0 )   // cleanup done
 			break;
 	}
- 	LOG("TaskMessagesCleanup",("TIME = %lld", static_cast<long long>(time(0)-t_start) ));
+	LOG("TaskMessagesCleanup",("TIME = %lld", static_cast<long long>(time(0)-t_start) ));
 	return true;
 }
 

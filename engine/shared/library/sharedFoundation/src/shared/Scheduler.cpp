@@ -149,7 +149,7 @@ void Scheduler::setCallback(Callback cb, const void *context, unsigned long dela
 /** @brief Trigger pending callbacks
 
 	A scheduler must be periodically updated to trigger callback events
-	that are enqueued. A single uint64_t parameter is passed to the 
+	that are enqueued. A single uint64_t parameter is passed to the
 	Scheduler indicating the current "time" or "frame" or some other 
 	value that ensures all callbacks with an expireCount value less than
 	t will be triggered.

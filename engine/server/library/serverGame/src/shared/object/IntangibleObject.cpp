@@ -271,7 +271,7 @@ size_t i;
 			ms_theaterTime += totalTime;
 #ifdef _DEBUG
 			m_theaterCreationTime += totalTime;
-			DEBUG_LOG("Theater", ("Theater %s created %d objects, time = %u\n", 
+			DEBUG_LOG("Theater", ("Theater %s created %d objects, time = %u\n",
 				getNetworkId().getValueString().c_str(), objectsCreated, totalTime));
 #endif
 			if (i == count)
@@ -314,7 +314,7 @@ size_t i;
 				m_scripts.clear();
 #ifdef _DEBUG
 				totalTime = Clock::durationMs<uint32>(startTime, Clock::timeMs());
-				DEBUG_LOG("Theater", ("Theater %s make visible time = %u\n", 
+				DEBUG_LOG("Theater", ("Theater %s make visible time = %u\n",
 					getNetworkId().getValueString().c_str(), totalTime));
 #endif
 

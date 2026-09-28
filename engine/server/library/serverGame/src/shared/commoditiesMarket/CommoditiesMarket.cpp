@@ -2347,7 +2347,7 @@ void CommoditiesMarket::onAuctionComplete(NetworkId const &itemId, NetworkId con
  				{
  				 	salesTax = s->salesTaxAmount;
 					transferToBankFromCommoditiesNamedAccount(s->salesTaxBankId, s->salesTaxAmount, "Credit the sales tax to the city for the sale");
- 					LOG("CustomerService", ("Auction:Crediting sales tax of amount %d to bankId = %" PRId64 " from immediate sale of item %" PRId64 " to player %" PRId64,
+					LOG("CustomerService", ("Auction:Crediting sales tax of amount %d to bankId = %" PRId64 " from immediate sale of item %" PRId64 " to player %" PRId64,
  											s->salesTaxAmount, s->salesTaxBankId.getValue(), s->itemId.getValue(), buyerId.getValue() ));
  					if (buyerId != s->buyerId)
  					{
@@ -3193,7 +3193,7 @@ void CommoditiesMarket::onCleanupInvalidItemRetrieval(  const NetworkId &itemId,
 		}
 		else
 		{
-			LOG("CustomerService", ("Reimbursal:Player %s may need to be reimbursed as a result of an invalid auction item %" PRId64 " cleanup for the amount of %d.  It was greater than the max allowed", PlayerObject::getAccountDescription(playerId).c_str(), itemId.getValue(), reimburseAmt));			
+			LOG("CustomerService", ("Reimbursal:Player %s may need to be reimbursed as a result of an invalid auction item %" PRId64 " cleanup for the amount of %d.  It was greater than the max allowed", PlayerObject::getAccountDescription(playerId).c_str(), itemId.getValue(), reimburseAmt));
 		}
 
 	}

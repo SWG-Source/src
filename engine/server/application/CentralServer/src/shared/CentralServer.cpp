@@ -5,9 +5,8 @@
 //-----------------------------------------------------------------------
 
 #include "FirstCentralServer.h"
-#include "CentralServer.h"
-
 #include <cinttypes>
+#include "CentralServer.h"
 
 #include "CentralCSHandler.h"
 #include "CentralServerMetricsData.h"

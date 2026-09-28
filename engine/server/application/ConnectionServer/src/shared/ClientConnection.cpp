@@ -4,9 +4,8 @@
 //-----------------------------------------------------------------------
 
 #include "FirstConnectionServer.h"
-#include "ClientConnection.h"
-
 #include <cinttypes>
+#include "ClientConnection.h"
 
 #include "Archive/ByteStream.h"
 #include "ChatServerConnection.h"

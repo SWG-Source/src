@@ -511,7 +511,7 @@ ServerIntangibleObjectTemplate::CraftingType ManufactureSchematicObject::getCate
 	}
 	else
 	{
-		sprintf(errBuffer, "its source draft schematic (crc=%u) not existing", 
+		sprintf(errBuffer, "its source draft schematic (crc=%u) not existing",
 			getDraftSchematic());
 		schematicOk = false;
 	}

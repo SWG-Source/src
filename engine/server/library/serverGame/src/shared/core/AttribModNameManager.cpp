@@ -273,7 +273,7 @@ const char * AttribModNameManager::getAttribModName(uint32 crc) const
 		if (result != m_crcMap->end())
 			return (*(*result).second).c_str();
 		LOG("unknown_mods", ("AttribModNameManager::getAttribModName could not find "
-			"mod name for crc %u in frame %u", crc, 
+			"mod name for crc %u in frame %u", crc,
 			ServerClock::getInstance().getServerFrame()));
 		AttribModNameManagerNamespace::unknownCrcs.insert(crc);
 	}
