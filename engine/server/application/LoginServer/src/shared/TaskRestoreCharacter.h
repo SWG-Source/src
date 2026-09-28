@@ -20,7 +20,7 @@
 class TaskRestoreCharacter : public DB::TaskRequest
 {
   public:
-	TaskRestoreCharacter(uint32 clusterId, const std::string &whoRequested, StationId stationId, const Unicode::String &characterName, const NetworkId &characterId, int templateId, bool jedi);
+	TaskRestoreCharacter(uint32 clusterId, const std::string &whoRequested, StationId stationId, const Unicode::String &characterName, const NetworkId &characterId, uint32 templateId, bool jedi);
 	
   public:
 	virtual bool process    (DB::Session *session);
@@ -37,9 +37,9 @@ class TaskRestoreCharacter : public DB::TaskRequest
 		DB::BindableUint32       station_id; //lint !e1925 // public data member
 		DB::BindableString<127>  character_name; //lint !e1925 // public data member
 		DB::BindableNetworkId    character_id; //lint !e1925 // public data member
-		DB::BindableLong         template_id; //lint !e1925 // public data member
-		DB::BindableLong         character_type; //lint !e1925 // public data member
-		DB::BindableLong         result; //lint !e1925 // public data member
+		DB::BindableUint32         template_id; //lint !e1925 // public data member
+		DB::BindableInt32         character_type; //lint !e1925 // public data member
+		DB::BindableInt32         result; //lint !e1925 // public data member
 
 		virtual void getSQL                (std::string &sql);
 		virtual bool bindParameters        ();
@@ -57,7 +57,7 @@ class TaskRestoreCharacter : public DB::TaskRequest
 	StationId        m_stationId;
 	Unicode::String  m_characterName;
 	NetworkId        m_characterId;
-	int              m_templateId;
+	uint32              m_templateId;
 	bool             m_jedi;
 	int              m_result;
 };

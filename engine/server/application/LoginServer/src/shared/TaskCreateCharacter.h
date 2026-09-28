@@ -20,7 +20,7 @@
 class TaskCreateCharacter : public DB::TaskRequest
 {
   public:
-	TaskCreateCharacter(uint32 clusterId, StationId stationId, const Unicode::String &characterName, const NetworkId &characterId, int templateId, bool jedi);
+	TaskCreateCharacter(uint32 clusterId, StationId stationId, const Unicode::String &characterName, const NetworkId &characterId, uint32 templateId, bool jedi);
 	
   public:
 	virtual bool process    (DB::Session *session);
@@ -37,8 +37,8 @@ class TaskCreateCharacter : public DB::TaskRequest
 		DB::BindableUint32       station_id; //lint !e1925 // public data member
 		DB::BindableString<127>  character_name; //lint !e1925 // public data member
 		DB::BindableNetworkId    character_id; //lint !e1925 // public data member
-		DB::BindableLong         template_id; //lint !e1925 // public data member
-		DB::BindableLong         character_type; //lint !e1925 // public data member
+		DB::BindableUint32         template_id; //lint !e1925 // public data member
+		DB::BindableInt32         character_type; //lint !e1925 // public data member
 
 		virtual void getSQL                (std::string &sql);
 		virtual bool bindParameters        ();
@@ -55,7 +55,7 @@ class TaskCreateCharacter : public DB::TaskRequest
 	StationId        m_stationId;
 	Unicode::String  m_characterName;
 	NetworkId        m_characterId;
-	int              m_templateId;
+	uint32              m_templateId;
 	bool             m_jedi;
 };
 

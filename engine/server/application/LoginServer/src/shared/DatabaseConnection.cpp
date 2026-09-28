@@ -222,7 +222,7 @@ void DatabaseConnection::changeStationId(StationId sourceStationId, StationId de
 
 // ----------------------------------------------------------------------
 
-void DatabaseConnection::createCharacter(uint32 clusterId, StationId stationId, const Unicode::String &characterName, const NetworkId &characterObjectId, int templateId, bool jedi)
+void DatabaseConnection::createCharacter(uint32 clusterId, StationId stationId, const Unicode::String &characterName, const NetworkId &characterObjectId, uint32 templateId, bool jedi)
 {
 	NOT_NULL(m_taskQueue);
 	m_taskQueue->asyncRequest(new TaskCreateCharacter(clusterId, stationId, characterName, characterObjectId, templateId, jedi));
@@ -230,7 +230,7 @@ void DatabaseConnection::createCharacter(uint32 clusterId, StationId stationId, 
 
 // ----------------------------------------------------------------------
 
-void DatabaseConnection::restoreCharacter(uint32 clusterId, const std::string &whoRequested, StationId stationId, const Unicode::String &characterName, const NetworkId &characterObjectId, int templateId, bool jedi)
+void DatabaseConnection::restoreCharacter(uint32 clusterId, const std::string &whoRequested, StationId stationId, const Unicode::String &characterName, const NetworkId &characterObjectId, uint32 templateId, bool jedi)
 {
 	NOT_NULL(m_taskQueue);
 	m_taskQueue->asyncRequest(new TaskRestoreCharacter(clusterId, whoRequested, stationId, characterName, characterObjectId, templateId, jedi));

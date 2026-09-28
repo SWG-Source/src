@@ -17,7 +17,7 @@
 
 // ======================================================================
 
-TaskCreateCharacter::TaskCreateCharacter(uint32 clusterId, StationId stationId, const Unicode::String &characterName, const NetworkId &characterId, int templateId, bool jedi) :
+TaskCreateCharacter::TaskCreateCharacter(uint32 clusterId, StationId stationId, const Unicode::String &characterName, const NetworkId &characterId, uint32 templateId, bool jedi) :
 		TaskRequest(),
 		m_clusterId(clusterId),
 		m_stationId(stationId),

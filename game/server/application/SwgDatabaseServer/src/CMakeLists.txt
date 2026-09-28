@@ -196,6 +196,8 @@ include_directories(
 )
 
 set(MAKE_SCHEMA_H ${SWG_ENGINE_SOURCE_DIR}/server/library/codegen/make_schema_h.pl)
+# Schema.h is generated from every table definition, so a changed .tab file
+# (a new column, or a BIND_AS that changes a column's C++ type) regenerates it.
 file(TO_NATIVE_PATH ${MAKE_SCHEMA_H} MAKE_SCHEMA_H_NATIVE)
 
 set(MAKE_PACKAGES ${SWG_ENGINE_SOURCE_DIR}/server/library/codegen/make_packages.pl)
@@ -324,6 +326,18 @@ add_custom_command(
     DEPENDS ${OBJECT_QUERIES_H_TEMPLATE_NATIVE} ${MAKE_QUERIES_NATIVE} ${PERSISTER_PLSQLH_NATIVE}
 )
 
+# Both the server and its snapshot test compile these generated sources.
+# Give their custom commands one owner so parallel target builds cannot run
+# two generators against the same temporary output files.
+add_custom_target(swg_database_codegen DEPENDS
+    ${SCHEMA_H_OUTPUT}
+    ${ENCODER_CPP_OUTPUT}
+    ${DECODER_CPP_OUTPUT}
+    ${LOAD_OBJECT_CPP_OUTPUT}
+    ${OBJECT_QUERIES_CPP_OUTPUT}
+    ${OBJECT_QUERIES_H_OUTPUT}
+)
+
 add_executable(SwgDatabaseServer
 	${SHARED_SOURCES}
 	${PLATFORM_SOURCES}
@@ -334,6 +348,8 @@ add_executable(SwgDatabaseServer
     ${OBJECT_QUERIES_CPP_OUTPUT}
     ${OBJECT_QUERIES_H_OUTPUT}
 )
+
+add_dependencies(SwgDatabaseServer swg_database_codegen)
 
 target_link_libraries(SwgDatabaseServer
     sharedCollision
@@ -375,3 +391,36 @@ target_link_libraries(SwgDatabaseServer
     ${CURL_LIBRARIES}
     ${CMAKE_DL_LIBS}
 )
+
+# ----------------------------------------------------------------------
+# Tests of the 32-bit database bindings. Not built by default:
+#   make int32_db_binding_test int32_snapshot_send_test
+# They connect to a scratch schema named by the environment; see
+# game/server/database/tools/int32_audit/test/README.md.
+
+set(INT32_TEST_DIR ${SWG_GAME_SOURCE_DIR}/server/database/tools/int32_audit/test)
+get_target_property(SWG_DATABASE_SERVER_LIBRARIES SwgDatabaseServer LINK_LIBRARIES)
+
+add_executable(int32_db_binding_test EXCLUDE_FROM_ALL
+    ${INT32_TEST_DIR}/db_binding_test.cpp
+    ${INT32_TEST_DIR}/TestConnection.h
+)
+target_link_libraries(int32_db_binding_test ${SWG_DATABASE_SERVER_LIBRARIES})
+
+# The SwgDatabaseServer sources without its main(), and the test's main().
+add_executable(int32_snapshot_send_test EXCLUDE_FROM_ALL
+    ${SHARED_SOURCES}
+    ${SCHEMA_H_OUTPUT}
+    ${ENCODER_CPP_OUTPUT}
+    ${DECODER_CPP_OUTPUT}
+    ${LOAD_OBJECT_CPP_OUTPUT}
+    ${OBJECT_QUERIES_CPP_OUTPUT}
+    ${OBJECT_QUERIES_H_OUTPUT}
+    ${INT32_TEST_DIR}/snapshot_send_test.cpp
+    ${INT32_TEST_DIR}/TestConnection.h
+)
+add_dependencies(int32_snapshot_send_test swg_database_codegen)
+
+# The server's main() pulls some library objects in first; without it the
+# static libraries need to be searched as a group.
+target_link_libraries(int32_snapshot_send_test -Wl,--start-group ${SWG_DATABASE_SERVER_LIBRARIES} -Wl,--end-group)

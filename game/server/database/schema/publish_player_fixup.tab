@@ -1,9 +1,9 @@
 create table publish_player_fixup --NO_IMPORT
 (
-	player_object_id number(20),
-	x number,
-	y number,
-	z number,
+	player_object_id number(20), -- BIND_AS(DB::BindableNetworkId)
+	x number, -- BIND_AS(DB::BindableDouble)
+	y number, -- BIND_AS(DB::BindableDouble)
+	z number, -- BIND_AS(DB::BindableDouble)
 	constraint pk_publish_player_fixup primary key (player_object_id) 
 );
 grant select on publish_player_fixup to public;

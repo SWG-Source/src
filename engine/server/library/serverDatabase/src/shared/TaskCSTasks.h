@@ -310,7 +310,7 @@ class TaskCsUndeleteItem : public DB::TaskRequest
 		private:
 		DB::BindableNetworkId characterId;
 		DB::BindableNetworkId itemId;
-		DB::BindableLong move;
+		DB::BindableInt32 move;
 	
 		private:
 		CsUndeleteItemQuery(const CsUndeleteItemQuery &); // disable

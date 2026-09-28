@@ -17,7 +17,7 @@
 
 // ======================================================================
 
-CreateCharacterCustomPersistStep::CreateCharacterCustomPersistStep(uint32 stationId, const NetworkId &characterObject, const Unicode::String &characterName, const std::string &normalizedName, int templateId, bool special) :
+CreateCharacterCustomPersistStep::CreateCharacterCustomPersistStep(uint32 stationId, const NetworkId &characterObject, const Unicode::String &characterName, const std::string &normalizedName, uint32 templateId, bool special) :
 		m_stationId(stationId),
 		m_characterObject(characterObject),
 		m_characterName(characterName),

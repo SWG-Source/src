@@ -39,7 +39,8 @@ bool LocationBuffer::save(DB::Session *session)
 		const std::vector<BufferEntry> &data=i->second;
 		for (std::vector<BufferEntry>::const_iterator j=data.begin(); j!=data.end(); ++j)
 		{
-			qry.setData(networkId, j->m_listId, j->m_action, j->m_index, j->m_data);
+			if (!qry.setData(networkId, j->m_listId, j->m_action, j->m_index, j->m_data))
+				return false;
 			if (! (session->exec(&qry)))
 				return false;
 		}
@@ -77,10 +78,9 @@ bool LocationBuffer::load(DB::Session *session, const DB::TagSet &tags, const st
 				temp.location.setCenter(static_cast<float>(i->x.getValue()),static_cast<float>(i->y.getValue()),static_cast<float>(i->z.getValue()));
 				temp.location.setRadius(static_cast<float>(i->radius.getValue()));
 		
-				// list ids and indexes are 32-bit (SaveLocationQuery::setData writes them as int);
-				// read them back through uint32 so a legacy negative value does not become a
-				// 64-bit size_t key (on 32-bit builds this is the conversion that always happened)
-				m_loadData[IndexKey(i->object_id.getValue(),static_cast<uint32>(i->list_id.getValue()),static_cast<uint32>(i->index.getValue()))]=temp;
+				// list ids and indexes are unsigned 32-bit columns: a stored negative
+				// value is a 32-bit server's size_t at or above 2^31
+				m_loadData[IndexKey(i->object_id.getValue(),i->list_id.getValue(),i->index.getValue())]=temp;
 			}
 		}
 		qry.done();

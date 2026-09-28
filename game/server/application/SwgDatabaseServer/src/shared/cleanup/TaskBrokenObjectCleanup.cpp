@@ -27,7 +27,7 @@ bool TaskBrokenObjectCleanup::process(DB::Session *session)
 			LOG("TaskBrokenObjectCleanup::process",( "returned false!" ));
 			return false;
 		}
-		LOG("TaskBrokenObjectCleanup::process",("ROWS = %ld", qry.result.getValue() ));
+		LOG("TaskBrokenObjectCleanup::process",("ROWS = %d", qry.result.getValue() ));
 		if( qry.result.getValue() == 0 )   // cleanup done
 			break;
 	}

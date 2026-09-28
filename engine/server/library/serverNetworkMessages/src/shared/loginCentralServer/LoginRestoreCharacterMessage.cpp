@@ -10,7 +10,7 @@
 
 // ======================================================================
 
-LoginRestoreCharacterMessage::LoginRestoreCharacterMessage(const std::string &whoRequested, const NetworkId &characterId, StationId account, const Unicode::String &characterName, int templateId, bool jedi) :
+LoginRestoreCharacterMessage::LoginRestoreCharacterMessage(const std::string &whoRequested, const NetworkId &characterId, StationId account, const Unicode::String &characterName, uint32 templateId, bool jedi) :
 		GameNetworkMessage("LoginRestoreCharacterMessage"),
 		m_whoRequested(whoRequested),
 		m_characterId(characterId),

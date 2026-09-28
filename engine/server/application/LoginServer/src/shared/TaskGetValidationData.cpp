@@ -28,8 +28,8 @@ namespace TaskGetValidationDataNamespace
 
 		DB::BindableUint32 station_id; //lint !e1925 // public data member
 		DB::BindableUint32 cluster_id; //lint !e1925 // public data member
-		DB::BindableLong character_type_id; //lint !e1925 // public data member
-		DB::BindableLong num_open_slots; //lint !e1925 // public data member
+		DB::BindableInt32 character_type_id; //lint !e1925 // public data member
+		DB::BindableInt32 num_open_slots; //lint !e1925 // public data member
 
 		virtual void getSQL(std::string &sql);
 		virtual bool bindParameters();
@@ -117,7 +117,7 @@ namespace TaskGetValidationDataNamespace
 		IsClusterAtLimitQuery();
 
 		DB::BindableUint32       cluster_id; //lint !e1925 // public data member
-		DB::BindableLong         result; //lint !e1925 // public data member
+		DB::BindableInt32         result; //lint !e1925 // public data member
 
 		virtual void getSQL(std::string &sql);
 		virtual bool bindParameters();
@@ -209,7 +209,13 @@ bool TaskGetValidationData::process(DB::Session *session)
 			if (!(session->exec(&qry)))
 				return false;
 			while ((rowsFetched = qry.fetch()) > 0)
-				m_openCharacterSlots[static_cast<unsigned long>(qry.character_type_id.getValue())] = qry.num_open_slots.getValue();
+			{
+				if (!TaskVacateUnlockedSlot::storeOpenCharacterSlots(m_openCharacterSlots, qry.character_type_id.getValue(), qry.num_open_slots.getValue(), "TaskGetValidationData (cluster at limit)"))
+				{
+					qry.done();
+					return false;
+				}
+			}
 			qry.done();
 			if (rowsFetched < 0)
 				return false;
@@ -225,7 +231,13 @@ bool TaskGetValidationData::process(DB::Session *session)
 		if (!(session->exec(&qry)))
 			return false;
 		while ((rowsFetched = qry.fetch()) > 0)
-			m_openCharacterSlots[static_cast<unsigned long>(qry.character_type_id.getValue())] = qry.num_open_slots.getValue();
+		{
+			if (!TaskVacateUnlockedSlot::storeOpenCharacterSlots(m_openCharacterSlots, qry.character_type_id.getValue(), qry.num_open_slots.getValue(), "TaskGetValidationData"))
+			{
+				qry.done();
+				return false;
+			}
+		}
 		qry.done();
 		if (rowsFetched < 0)
 			return false;

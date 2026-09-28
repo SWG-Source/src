@@ -27,7 +27,7 @@ bool TaskObjvarNameCleanup::process(DB::Session *session)
 			LOG("TaskObjvarNameCleanup::process",( "returned false!" ));
 			return false;
 		}
-		LOG("TaskObjvarNameCleanup::process",("ROWS = %ld", qry.result.getValue() ));
+		LOG("TaskObjvarNameCleanup::process",("ROWS = %d", qry.result.getValue() ));
 		if( qry.result.getValue() == 0 )   // cleanup done
 			break;
 	}

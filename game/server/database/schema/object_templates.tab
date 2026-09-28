@@ -1,6 +1,6 @@
 create table object_templates  -- NO_IMPORT
 (
-	id number,
+	id number, -- BIND_AS(DB::BindableUint32)
 	name varchar2(255),
 	constraint pk_object_templates primary key (id) 
 );

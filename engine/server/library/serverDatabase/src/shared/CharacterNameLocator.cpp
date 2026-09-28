@@ -12,6 +12,7 @@
 #include "serverDatabase/DatabaseProcess.h"
 #include "serverDatabase/GameServerConnection.h"
 #include "serverNetworkMessages/CharacterNamesMessage.h"
+#include "sharedDatabaseInterface/DbCheckedConversion.h"
 #include "sharedDatabaseInterface/DbSession.h"
 
 // ======================================================================
@@ -38,12 +39,26 @@ bool CharacterNameLocator::locateObjects(DB::Session *session, const std::string
 			if (++count > numRows)
 				break;
 
+			// The times are shifted by 7 hours before they are sent as int. The
+			// sum is formed at 64 bits and must still fit an int.
+			int64_t const shift = 7 * 60 * 60;
+			int createTime = 0;
+			int lastLoginTime = 0;
+			auto const where = [&i]() { return "CharacterNameLocator::locateObjects, character " + i->character_id.getValue().getValueString(); };
+			if (!DB::checkedNarrow(static_cast<int64_t>(i->character_create_time.getValue()) + shift, createTime, "character create time + 7 hours", where)
+				|| !DB::checkedNarrow(static_cast<int64_t>(i->character_last_login_time.getValue()) + shift, lastLoginTime, "character last login time + 7 hours", where))
+			{
+				qry.done();
+				objectsLocated = 0;
+				return false;
+			}
+
 			m_characterIds.push_back(i->character_id.getValue());
 			m_stationIds.push_back(i->character_station_id.getValue());
 			m_characterNames.push_back(i->character_name.getValueASCII());
 			m_characterFullNames.push_back(i->character_full_name.getValueASCII());
-			m_characterCreateTime.push_back(i->character_create_time.getValue() + (7 * 60 * 60));			
-			m_characterLastLoginTime.push_back(i->character_last_login_time.getValue() + (7 * 60 * 60));
+			m_characterCreateTime.push_back(createTime);
+			m_characterLastLoginTime.push_back(lastLoginTime);
 			DEBUG_REPORT_LOG(ConfigServerDatabase::getLogObjectLoading(),("\t%s:%s\n", i->character_id.getValue().getValueString().c_str(), i->character_name.getValueASCII().c_str()));
 		}
 	}

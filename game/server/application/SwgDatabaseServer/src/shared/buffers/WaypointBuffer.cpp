@@ -12,8 +12,10 @@
 #include "SwgDatabaseServer/WaypointQuery.h"
 #include "serverGame/ServerMissionObjectTemplate.h"
 #include "serverGame/ServerPlayerObjectTemplate.h"
+#include "sharedDatabaseInterface/DbCheckedConversion.h"
 #include "sharedDatabaseInterface/DbException.h"
 #include "sharedDatabaseInterface/DbSession.h"
+#include "sharedGame/Waypoint.h"
 #include "sharedUtility/Location.h"
 #include "sharedLog/Log.h"
 #include <vector>
@@ -90,7 +92,22 @@ bool WaypointBuffer::load(DB::Session *session,const DB::TagSet &tags, const std
 										   row.location_cell.getValue(),row.location_scene.getValue());
 				temp.m_name = row.name.getValue();
 				temp.m_networkId = row.waypoint_id.getValue();
-				temp.m_color = static_cast<unsigned char>(row.color.getValue());
+				// A NULL color is absent, not bad: it loads as the color a new
+				// waypoint gets (Waypoint's default, Blue). On the 32-bit server a
+				// NULL read left the buffer unchanged (a stale value or a
+				// sentinel); this default is a new, deliberate compatibility policy.
+				if (row.color.isNull())
+				{
+					WARNING(true, ("DatabaseWarning: WaypointBuffer::load: waypoint %s of object %s has a NULL waypoints.color; loading the new-waypoint default Blue",
+						row.waypoint_id.getValue().getValueString().c_str(), row.object_id.getValue().getValueString().c_str()));
+					temp.m_color = static_cast<unsigned char>(Waypoint::Blue);
+				}
+				else if (!DB::checkedNarrow(row.color.getValue(), temp.m_color, "waypoints.color",
+					[&row]() { return "WaypointBuffer::load, waypoint " + row.waypoint_id.getValue().getValueString() + " of object " + row.object_id.getValue().getValueString(); }))
+				{
+					qry.done();
+					return false;
+				}
 				temp.m_active = row.active.getValue();
 				temp.m_detached = false;
 
@@ -129,7 +146,7 @@ bool WaypointBuffer::save(DB::Session *session)
 		row.location_cell = i->second.m_location.getCell();
 		row.location_scene = i->second.m_location.getSceneIdCrc();
 		row.name = i->second.m_name;
-		row.color = i->second.m_color;
+		row.color = static_cast<int32_t>(i->second.m_color); // unsigned char: always representable
 		row.active = i->second.m_active;
 		row.detached = i->second.m_detached;
 		

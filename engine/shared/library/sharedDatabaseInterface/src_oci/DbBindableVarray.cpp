@@ -11,6 +11,7 @@
 #include "OciServer.h"
 #include "OciSession.h"
 #include "sharedFoundation/NetworkId.h"
+#include "sharedDatabaseInterface/DbCheckedConversion.h"
 #include "sharedLog/Log.h"
 #include <oci.h>
 #include <iostream>
@@ -45,14 +46,20 @@ bool BindableVarray::create(DB::Session *session, const std::string &name, const
 	NOT_NULL(session);
 	m_session = session;
 	OCISession *localSession = safe_cast<OCISession*>(session);
+
+	ub4 schemaLength = 0;
+	ub4 nameLength = 0;
+	if (!DB::checkedNarrow(schema.length(), schemaLength, "OCITypeByName schema length", name.c_str())
+		|| !DB::checkedNarrow(name.length(), nameLength, "OCITypeByName type name length", name.c_str()))
+		return false;
 		
 	if (! (localSession->m_server->checkerr(*localSession, OCITypeByName (localSession->envhp,
 					 localSession->errhp,
 					 localSession->svchp,
 					 reinterpret_cast<OraText*>(const_cast<char*>(schema.c_str())),
-					 schema.length(),
+					 schemaLength,
 					 reinterpret_cast<OraText*>(const_cast<char*>(name.c_str())),
-					 name.length(),
+					 nameLength,
 					 nullptr,
 					 0,
 					 OCI_DURATION_SESSION,
@@ -142,7 +149,10 @@ bool BindableVarrayNumber::appendInteger(bool IsNULL, T value)
 
 	OCISession *localSession = safe_cast<OCISession*>(m_session);
 
-	if (! (localSession->m_server->checkerr(*localSession, OCINumberFromInt(localSession->errhp, &value, sizeof(value), OCI_NUMBER_SIGNED, &buffer)))) {
+	// A NULL element has no value to convert; the indicator marks it NULL.
+	if (IsNULL)
+		OCINumberSetZero(localSession->errhp, &buffer);
+	else if (! (localSession->m_server->checkerr(*localSession, OCINumberFromInt(localSession->errhp, &value, sizeof(value), OCI_NUMBER_SIGNED, &buffer)))) {
 		LOG("DatabaseError", ("Could not push back BindableVarrayNumber %d-byte value OCINumberFromInt - %lld", static_cast<int>(sizeof(value)), static_cast<long long>(value)));
 		return false;
 	}
@@ -156,15 +166,11 @@ bool BindableVarrayNumber::appendInteger(bool IsNULL, T value)
 
 // ----------------------------------------------------------------------
 
-bool BindableVarrayNumber::push_back(short value)     { return appendInteger(false, value); }
-bool BindableVarrayNumber::push_back(int value)       { return appendInteger(false, value); }
-bool BindableVarrayNumber::push_back(long value)      { return appendInteger(false, value); }
-bool BindableVarrayNumber::push_back(long long value) { return appendInteger(false, value); }
+bool BindableVarrayNumber::push_back(int32_t value) { return appendInteger(false, value); }
+bool BindableVarrayNumber::push_back(int64_t value) { return appendInteger(false, value); }
 
-bool BindableVarrayNumber::push_back(bool IsNULL, short value)     { return appendInteger(IsNULL, value); }
-bool BindableVarrayNumber::push_back(bool IsNULL, int value)       { return appendInteger(IsNULL, value); }
-bool BindableVarrayNumber::push_back(bool IsNULL, long value)      { return appendInteger(IsNULL, value); }
-bool BindableVarrayNumber::push_back(bool IsNULL, long long value) { return appendInteger(IsNULL, value); }
+bool BindableVarrayNumber::push_back(bool IsNULL, int32_t value) { return appendInteger(IsNULL, value); }
+bool BindableVarrayNumber::push_back(bool IsNULL, int64_t value) { return appendInteger(IsNULL, value); }
 
 // ----------------------------------------------------------------------
 
@@ -233,7 +239,10 @@ bool BindableVarrayNumber::push_back(bool IsNULL, double value)
 
 	OCISession *localSession = safe_cast<OCISession*>(m_session);
 
-	if (! (localSession->m_server->checkerr(*localSession, OCINumberFromReal(localSession->errhp, &value, sizeof(value), &buffer)))) {
+	// A NULL element has no value to convert; the indicator marks it NULL.
+	if (IsNULL)
+		OCINumberSetZero(localSession->errhp, &buffer);
+	else if (! (localSession->m_server->checkerr(*localSession, OCINumberFromReal(localSession->errhp, &value, sizeof(value), &buffer)))) {
         LOG("DatabaseError", ("Could not push back BindableVarrayNumber double value - %g", value));
         return false;
     }
@@ -349,7 +358,12 @@ bool BindableVarrayString::push_back(const std::string &value)
 		}
 	}
 	
-	if (! (localSession->m_server->checkerr(*localSession, OCIStringAssignText(localSession->envhp, localSession->errhp, reinterpret_cast<OraText*>(const_cast<char*>(value.c_str())), effectiveLength, &buffer)))) {
+	// effectiveLength is at most m_maxLength, the column's size; OCI takes it as a ub4.
+	ub4 textLength = 0;
+	if (!DB::checkedNarrow(effectiveLength, textLength, "OCIStringAssignText length", value.c_str()))
+		return false;
+
+	if (! (localSession->m_server->checkerr(*localSession, OCIStringAssignText(localSession->envhp, localSession->errhp, reinterpret_cast<OraText*>(const_cast<char*>(value.c_str())), textLength, &buffer)))) {
         LOG("DatabaseError", ("Could not push back BindableVarrayString string value (OCIStringAssignText) - %s", value.c_str()));
         return false;
     }
@@ -375,7 +389,7 @@ bool BindableVarrayString::push_back(bool bvalue)
 	OCIInd buffer_indicator (OCI_IND_NOTNULL);
 	OCISession *localSession = safe_cast<OCISession*>(m_session);
 
-	if (! (localSession->m_server->checkerr(*localSession, OCIStringAssignText(localSession->envhp, localSession->errhp, reinterpret_cast<OraText*>(const_cast<char*>(value.c_str())), value.length(), &buffer)))) {
+	if (! (localSession->m_server->checkerr(*localSession, OCIStringAssignText(localSession->envhp, localSession->errhp, reinterpret_cast<OraText*>(const_cast<char*>(value.c_str())), 1, &buffer)))) { // "Y" or "N"
         LOG("DatabaseError", ("Could not push back BindableVarrayString string value (OCIStringAssignText) - %s", value.c_str()));
         return false;
     }
@@ -435,7 +449,12 @@ bool BindableVarrayString::push_back(bool IsNULL, const std::string &value)
 
 	OCISession *localSession = safe_cast<OCISession*>(m_session);
 
-	if (! (localSession->m_server->checkerr(*localSession, OCIStringAssignText(localSession->envhp, localSession->errhp, reinterpret_cast<OraText*>(const_cast<char*>(value.c_str())), effectiveLength, &buffer)))) {
+	// effectiveLength is at most m_maxLength, the column's size; OCI takes it as a ub4.
+	ub4 textLength = 0;
+	if (!DB::checkedNarrow(effectiveLength, textLength, "OCIStringAssignText length", value.c_str()))
+		return false;
+
+	if (! (localSession->m_server->checkerr(*localSession, OCIStringAssignText(localSession->envhp, localSession->errhp, reinterpret_cast<OraText*>(const_cast<char*>(value.c_str())), textLength, &buffer)))) {
         LOG("DatabaseError", ("Could not push back BindableVarrayString string value (OCIStringAssignText) - %s", value.c_str()));
         return false;
     }
@@ -470,7 +489,7 @@ bool BindableVarrayString::push_back(bool IsNULL, bool bvalue)
 
 	OCISession *localSession = safe_cast<OCISession*>(m_session);
 
-	if (! (localSession->m_server->checkerr(*localSession, OCIStringAssignText(localSession->envhp, localSession->errhp, reinterpret_cast<OraText*>(const_cast<char*>(value.c_str())), value.length(), &buffer)))) {
+	if (! (localSession->m_server->checkerr(*localSession, OCIStringAssignText(localSession->envhp, localSession->errhp, reinterpret_cast<OraText*>(const_cast<char*>(value.c_str())), 1, &buffer)))) { // "Y" or "N"
         LOG("DatabaseError", ("Could not push back BindableVarrayString boolean value (OCIStringAssignText) - %s", value.c_str()));
         return false;
     }
@@ -486,6 +505,24 @@ bool BindableVarrayString::push_back(bool IsNULL, bool bvalue)
 bool BindableVarrayString::push_back(bool IsNULL, const NetworkId &value)
 {
 	return push_back(IsNULL, value.getValueString());
+}
+
+// ----------------------------------------------------------------------
+
+bool BindableVarrayString::push_back(bool IsNULL, BindableNetworkId const & column)
+{
+	if (IsNULL)
+		return push_back(true, std::string());
+	return push_back(false, column.getValue().getValueString());
+}
+
+// ----------------------------------------------------------------------
+
+bool BindableVarrayString::push_back(bool IsNULL, BindableBool const & column)
+{
+	if (IsNULL)
+		return push_back(true, std::string());
+	return push_back(false, column.getValue());
 }
 
 // ----------------------------------------------------------------------

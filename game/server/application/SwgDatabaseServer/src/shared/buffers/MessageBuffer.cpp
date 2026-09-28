@@ -137,6 +137,18 @@ bool MessageBuffer::load(DB::Session *session, const DB::TagSet &tags, const std
 			if (++count > numRows)
 				break;
 		
+			// call_time is the message's uint32 call time, stored in its signed
+			// 32-bit form. A NULL call time is absent, not bad: it loads as a
+			// new message's default, 0. On the 32-bit server a NULL read left
+			// the buffer unchanged (a stale value or a sentinel); this default
+			// is a new, deliberate compatibility policy.
+			uint32_t callTime = 0;
+			if (i->call_time.isNull())
+				WARNING(true, ("DatabaseWarning: MessageBuffer::load: message %s has a NULL messages.call_time; loading the new-message default 0",
+					i->message_id.getValue().getValueString().c_str()));
+			else
+				callTime = i->call_time.getValue();
+
 			std::string utf8data;
 			i->packed_data.getValue(utf8data);
 			std::vector<int8> packedDataVector;
@@ -146,7 +158,7 @@ bool MessageBuffer::load(DB::Session *session, const DB::TagSet &tags, const std
 															  i->message_id.getValue(),
 															  Unicode::wideToNarrow(i->method.getValue()),
 															  packedDataVector,
-															  i->call_time.getValue(),
+															  callTime,
 															  i->guaranteed.getValue(),
 															  static_cast<MessageToPayload::DeliveryType>(i->delivery_type.getValue()),
 															  NetworkId::cms_invalid,

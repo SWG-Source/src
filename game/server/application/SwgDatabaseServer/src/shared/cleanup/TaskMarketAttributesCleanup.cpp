@@ -27,7 +27,7 @@ bool TaskMarketAttributesCleanup::process(DB::Session *session)
 			LOG("TaskMarketAttributesCleanup::process",( "returned false!" ));
 			return false;
 		}
-		LOG("TaskMarketAttributesCleanup::process",("ROWS = %ld", qry.result.getValue() ));
+		LOG("TaskMarketAttributesCleanup::process",("ROWS = %d", qry.result.getValue() ));
 		if( qry.result.getValue() == 0 )   // cleanup done
 			break;
 	}

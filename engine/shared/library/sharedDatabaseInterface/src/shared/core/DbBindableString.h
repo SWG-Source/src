@@ -34,6 +34,8 @@ namespace DB
 		
 	protected:
 
+		virtual void clearValue();
+
 		BindableStringBase(char *buffer, int s);
 		BindableStringBase(char *buffer, int s, const BindableStringBase &rhs);
 		void operator=(const BindableStringBase &rhs);
@@ -70,6 +72,11 @@ namespace DB
 	inline BindableStringBase::~BindableStringBase()
 	{
 		m_buffer = 0;
+	}
+
+	inline void BindableStringBase::clearValue()
+	{
+		m_buffer[0] = '\0';
 	}
 
 	inline void *BindableStringBase::getBuffer()
@@ -116,6 +123,10 @@ namespace DB
 	template<int S>
 	class BindableString : public BindableStringBase
 	{
+		// A stored value is at most S bytes: its length always fits the int
+		// indicator, and with its terminating null the OCI bind length (a ub2).
+		static_assert(S > 0 && S < 65535, "a bindable string column must be 1 to 65534 bytes");
+
 	  public:
 		BindableString();
 		explicit BindableString(const Unicode::String &_value);
@@ -255,7 +266,7 @@ namespace DB
 			WARNING(true, ("Attmpted to insert %s which is too long. Truncating.", buffer));
 			indicator = S;
 		} else {
-			indicator = bufsize;
+			indicator = static_cast<int>(bufsize); // bufsize < S, so it fits the int
 		}
 
 		memcpy(m_value, buffer, indicator);
@@ -272,7 +283,7 @@ namespace DB
                         indicator = S;
 			memcpy(m_value, Unicode::wideToNarrow(buffer).c_str(), indicator-1);
                 } else {
-                        indicator = bufsize;
+                        indicator = static_cast<int>(bufsize); // bufsize < S, so it fits the int
                 }
 
         	memcpy(m_value, Unicode::wideToNarrow(buffer).c_str(), indicator);
@@ -288,7 +299,7 @@ namespace DB
                         WARNING(true, ("Attmpted to insert %s which is too long. Truncating.", buffer.c_str()));
                         indicator = S;
                 } else {
-                        indicator = bufsize;
+                        indicator = static_cast<int>(bufsize); // bufsize < S, so it fits the int
 			memcpy(m_value, buffer.c_str(), indicator);
                 }
 

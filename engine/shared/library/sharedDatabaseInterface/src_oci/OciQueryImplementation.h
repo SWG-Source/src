@@ -50,8 +50,8 @@ namespace DB
 
 		virtual void setColArrayMode(size_t skipSize, size_t numElements);
 
-		virtual bool bindCol(BindableLong &buffer);
-		virtual bool bindParameter(BindableLong &buffer);
+		virtual bool bindCol(BindableInt32 &buffer);
+		virtual bool bindParameter(BindableInt32 &buffer);
 		virtual bool bindCol(BindableUint32 &buffer);
 		virtual bool bindParameter(BindableUint32 &buffer);
 		virtual bool bindCol(BindableDouble &buffer);
@@ -94,10 +94,13 @@ namespace DB
 	  protected:
 
 		BindRec *addBindRec(Bindable &owner);
+		bool defineArrayOfStruct(BindRec &br);
 		bool bindIntegerCol(Bindable &owner, void *buffer, int size);
 		bool bindIntegerParameter(Bindable &owner, void *buffer, int size);
-		void preprocessBinds();
-		void postProcessResults();
+		bool preprocessBinds();
+		void postProcessResults(size_t rowsFetched);
+		bool getRowsFetched(unsigned int &rows);
+		int finishFetch(unsigned int rows);
 		
 	  protected:
 		/** The OCIStmt handle representing the query.

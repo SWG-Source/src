@@ -16,10 +16,9 @@ set(SHARED_SOURCES
 	shared/core/DbBindableBool.h
 	shared/core/DbBindableDouble.cpp
 	shared/core/DbBindableDouble.h
+	shared/core/DbBindableInt32.h
 	shared/core/DbBindableInt64.cpp
 	shared/core/DbBindableInt64.h
-	shared/core/DbBindableLong.cpp
-	shared/core/DbBindableLong.h
 	shared/core/DbBindableString.cpp
 	shared/core/DbBindableString.h
 	shared/core/DbBindableUnicode.cpp
@@ -27,6 +26,8 @@ set(SHARED_SOURCES
 	shared/core/DbBindableUint32.h
 	shared/core/DbBufferRow.cpp
 	shared/core/DbBufferRow.h
+	shared/core/DbCheckedConversion.cpp
+	shared/core/DbCheckedConversion.h
 	shared/core/DbException.cpp
 	shared/core/DbException.h
 	shared/core/DbModeQuery.cpp

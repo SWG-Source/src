@@ -57,8 +57,8 @@ class DatabaseConnection : public Singleton<DatabaseConnection>
 	void requestAvatarListAccountTransfer (const TransferAccountData * requestData);
 	void onAvatarListRetrievedAccountTransfer (const AvatarList &avatars, TransferAccountData * transferAccountData);
 	void changeStationId               (StationId sourceStationId, StationId destinationStationId, const TransferAccountData * const transferAccountData);
-	void createCharacter               (uint32 clusterId, StationId stationId, const Unicode::String &characterName, const NetworkId &characterObjectId, int templateId, bool jedi);
-	void restoreCharacter              (uint32 clusterId, const std::string &whoRequested, StationId stationId, const Unicode::String &characterName, const NetworkId &characterObjectId, int templateId, bool jedi);
+	void createCharacter               (uint32 clusterId, StationId stationId, const Unicode::String &characterName, const NetworkId &characterObjectId, uint32 templateId, bool jedi);
+	void restoreCharacter              (uint32 clusterId, const std::string &whoRequested, StationId stationId, const Unicode::String &characterName, const NetworkId &characterObjectId, uint32 templateId, bool jedi);
 	void enableCharacter               (StationId stationId, const NetworkId &characterId, const std::string &whoRequested, bool enabled, uint32 clusterId);
 	void upgradeAccount                (LoginUpgradeAccountMessage *msg, uint32 clusterId);
 	void toggleDisableCharacter        (uint32 clusterId, const NetworkId &characterId, StationId stationId, bool enabled);

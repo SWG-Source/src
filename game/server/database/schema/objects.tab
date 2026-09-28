@@ -27,7 +27,7 @@ create table objects
 	complexity float,
 	name_string_table varchar2(500),
 	name_string_text varchar2(500),
-	object_template_id int,
+	object_template_id int, -- BIND_AS(DB::BindableUint32)
 	static_item_name varchar2(128),
 	static_item_version int,
 	conversion_id int,

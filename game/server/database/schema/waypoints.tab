@@ -2,14 +2,14 @@ create table waypoints -- NO_IMPORT
 (
 	object_id number(20),  -- BIND_AS(DB::BindableNetworkId)
 	waypoint_id number(20),  -- BIND_AS(DB::BindableNetworkId)
-	appearance_name_crc int,
+	appearance_name_crc int, -- BIND_AS(DB::BindableUint32)
 	location_x float,
 	location_y float,
 	location_z float,
 	location_cell number(20),  -- BIND_AS(DB::BindableNetworkId)
-	location_scene int,
+	location_scene int, -- BIND_AS(DB::BindableUint32)
 	name varchar2(512),
-        color int,
+        color int, -- LOAD_RANGE(0,255) NULL_LOADS_AS(Waypoint::Blue): WaypointBuffer::load narrows it to unsigned char
         active char(1),
 	constraint pk_waypoints primary key (waypoint_id)
 );

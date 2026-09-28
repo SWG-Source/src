@@ -15,6 +15,9 @@
 #include "sharedDatabaseInterface/DbQuery.h"
 #include "sharedDatabaseInterface/DbTaskRequest.h"
 
+#include <cstdint>
+#include <vector>
+
 // ======================================================================
 
 class LoginUpgradeAccountMessage;
@@ -39,7 +42,7 @@ class TaskUpgradeAccount : public DB::TaskRequest
 		DB::BindableUint32       cluster_id; //lint !e1925 // public data member
 		DB::BindableUint32       station_id; //lint !e1925 // public data member
 		DB::BindableNetworkId    character; //lint !e1925 // public data member
-		DB::BindableLong         character_type; //lint !e1925 // public data member
+		DB::BindableInt32         character_type; //lint !e1925 // public data member
 
 		virtual void getSQL                (std::string &sql);
 		virtual bool bindParameters        ();
@@ -57,8 +60,8 @@ class TaskUpgradeAccount : public DB::TaskRequest
 		QueryJediQuery();
 
 		DB::BindableUint32       station_id; //lint !e1925 // public data member
-		DB::BindableLong         character_type; //lint !e1925 // public data member
-		DB::BindableLong         result; //lint !e1925 // public data member
+		DB::BindableInt32         character_type; //lint !e1925 // public data member
+		DB::BindableInt32         result; //lint !e1925 // public data member
 
 		virtual void getSQL                (std::string &sql);
 		virtual bool bindParameters        ();
@@ -142,8 +145,8 @@ public:
 
 		DB::BindableUint32 station_id; //lint !e1925 // public data member
 		DB::BindableUint32 cluster_id; //lint !e1925 // public data member
-		DB::BindableLong character_type_id; //lint !e1925 // public data member
-		DB::BindableLong num_open_slots; //lint !e1925 // public data member
+		DB::BindableInt32 character_type_id; //lint !e1925 // public data member
+		DB::BindableInt32 num_open_slots; //lint !e1925 // public data member
 
 		virtual void getSQL(std::string &sql);
 		virtual bool bindParameters();
@@ -154,6 +157,11 @@ public:
 		GetOnlyOpenCharacterSlotsQuery(const GetOnlyOpenCharacterSlotsQuery&);
 		GetOnlyOpenCharacterSlotsQuery &operator=(const GetOnlyOpenCharacterSlotsQuery&);
 	};
+
+	// Record the open slot count of one character type read from the
+	// database. The type id indexes the slot table, so a negative or too
+	// large id fails the operation instead of writing outside it.
+	static bool storeOpenCharacterSlots(std::vector<int> &openCharacterSlots, int32_t characterTypeId, int32_t numOpenSlots, char const *where);
 
 private:
 	TaskVacateUnlockedSlot(); // disable default constructor

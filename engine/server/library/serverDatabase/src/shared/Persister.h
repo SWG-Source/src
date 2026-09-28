@@ -65,12 +65,12 @@ class Persister : public MessageDispatch::Receiver
 	bool isIdle();
 	bool isSaveInProgress();
 
-	void newObject(uint32 serverId, const NetworkId &objectId, int templateId, Tag typeId, const NetworkId &container);
+	void newObject(uint32 serverId, const NetworkId &objectId, uint32 templateId, Tag typeId, const NetworkId &container);
 	void beginBaselines(const NetworkId &newObject) const;
 	void endBaselines(const NetworkId &newObject, uint32 serverId);
 
 	void saveCompleted       (Snapshot *completedSnapshot);
-	void onNewCharacterSaved (uint32 stationId, const NetworkId &characterObject, const Unicode::String &characterName, const int templateId, bool special) const;
+	void onNewCharacterSaved (uint32 stationId, const NetworkId &characterObject, const Unicode::String &characterName, uint32 templateId, bool special) const;
 
 	void receiveMessage(const MessageDispatch::Emitter & source, const MessageDispatch::MessageBase & message);
 

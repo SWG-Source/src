@@ -266,7 +266,7 @@ void CharacterCreationTracker::onLoginServerDisconnect(uint32 loginServerId)
 
 // ----------------------------------------------------------------------
 
-void CharacterCreationTracker::handleDatabaseCreateCharacterSuccess(StationId account, const Unicode::String &characterName, const NetworkId &characterObjectId, int templateId, bool jedi)
+void CharacterCreationTracker::handleDatabaseCreateCharacterSuccess(StationId account, const Unicode::String &characterName, const NetworkId &characterObjectId, uint32 templateId, bool jedi)
 {
 	// - Check we are at the right stage
 	LOG("TraceCharacterCreation", ("%d DatabaseCreateCharacterSuccess(%s)", account, characterObjectId.getValueString().c_str()));

@@ -1,6 +1,6 @@
 create table purge_accounts -- NO_IMPORT
 (
-	station_id number,
+	station_id number, -- BIND_AS(DB::BindableUint32)
 	purge_phase number,
 	purge_start_date date,
 	purge_phase_date date,

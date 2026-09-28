@@ -508,7 +508,7 @@ void Persister::handleDeleteMessage(uint32 serverId, const NetworkId &objectId, 
  * Creates a Snapshot to hold the new object and prepares to receive baselines.
  */
 
-void Persister::newObject(uint32 serverId, const NetworkId &objectId, int templateId, Tag typeId, const NetworkId &container)
+void Persister::newObject(uint32 serverId, const NetworkId &objectId, uint32 templateId, Tag typeId, const NetworkId &container)
 {
 	UNREF(serverId);
 
@@ -996,7 +996,7 @@ void Persister::addCharacter(uint32 stationId, const NetworkId &characterObject,
 
 // ----------------------------------------------------------------------
 
-void Persister::onNewCharacterSaved (uint32 stationId, const NetworkId &characterObject, const Unicode::String &characterName, const int templateId, bool special) const
+void Persister::onNewCharacterSaved (uint32 stationId, const NetworkId &characterObject, const Unicode::String &characterName, uint32 templateId, bool special) const
 {
 	DEBUG_REPORT_LOG(true,("Sending  DatabaseCreateCharacterSuccess(%s)\n",characterObject.getValueString().c_str()));
 	DatabaseCreateCharacterSuccess const successMessage(characterObject, stationId, characterName, templateId, special);

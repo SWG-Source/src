@@ -46,7 +46,7 @@ void BattlefieldParticipantBuffer::setParticipantForRegion(const NetworkId &regi
 	}
 	row->region_object_id = regionObjectId;
 	row->character_object_id = characterObjectId;
-	row->faction_id = static_cast<int>(factionId);
+	row->faction_id = factionId;
 }
 
 // ----------------------------------------------------------------------
@@ -61,7 +61,7 @@ bool BattlefieldParticipantBuffer::getParticipantsForRegion(const NetworkId &obj
 	{
 		NetworkId temp;
 		(*i).second->character_object_id.getValue(temp);
-		values.push_back(std::pair<NetworkId, uint32>(temp, static_cast<uint32>((*i).second->faction_id.getValue())));
+		values.push_back(std::pair<NetworkId, uint32>(temp, (*i).second->faction_id.getValue()));
 	}
 	return true;
 }

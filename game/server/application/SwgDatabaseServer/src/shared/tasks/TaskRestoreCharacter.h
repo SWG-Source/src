@@ -43,10 +43,10 @@ class TaskRestoreCharacter:public DB::TaskRequest
 		DB::BindableNetworkId   character_id;
 		
 		//output:
-		DB::BindableLong        result;
+		DB::BindableInt32        result;
 		DB::BindableString<127> character_name;
 		DB::BindableUint32      account;
-		DB::BindableLong        template_id;
+		DB::BindableUint32        template_id;
 		
 	  private:
 		RestoreCharacterQuery(const RestoreCharacterQuery&);
@@ -59,7 +59,7 @@ class TaskRestoreCharacter:public DB::TaskRequest
 	int             m_result;
 	Unicode::String m_characterName;
 	StationId       m_account;
-	int             m_templateId;
+	uint32             m_templateId;
 	
   private:
 	//Disabled:

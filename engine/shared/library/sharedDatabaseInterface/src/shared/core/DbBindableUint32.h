@@ -54,6 +54,9 @@ namespace DB
 
 		virtual std::string outputValue() const;
 
+	  protected:
+		virtual void clearValue();
+
 	  private:
 		int32_t m_value;
 	};
@@ -110,6 +113,13 @@ inline DB::BindableUint32 &DB::BindableUint32::operator=(uint32_t value)
 inline int32_t DB::BindableUint32::getDatabaseValue() const
 {
 	return m_value;
+}
+
+// ----------------------------------------------------------------------
+
+inline void DB::BindableUint32::clearValue()
+{
+	m_value = 0; // the value of a default-constructed (NULL) column
 }
 
 // ----------------------------------------------------------------------

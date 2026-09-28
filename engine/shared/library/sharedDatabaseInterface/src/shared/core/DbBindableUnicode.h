@@ -34,6 +34,9 @@ namespace DB
 
 	protected:
 
+		virtual void clearValue();
+
+
 		BindableUnicodeBase(char *buffer, int s);
 		BindableUnicodeBase(char *buffer, int s, const BindableUnicodeBase &rhs);
 		void operator=(const BindableUnicodeBase &rhs);
@@ -70,6 +73,11 @@ namespace DB
 	inline BindableUnicodeBase::~BindableUnicodeBase()
 	{
 		m_buffer = 0;
+	}
+
+	inline void BindableUnicodeBase::clearValue()
+	{
+		m_buffer[0] = '\0';
 	}
 
 	inline void *BindableUnicodeBase::getBuffer()
@@ -116,6 +124,10 @@ namespace DB
 	template<int S>
 	class BindableUnicode : public BindableUnicodeBase
 	{
+		// A stored value is at most S bytes: its length always fits the int
+		// indicator, and with its terminating null the OCI bind length (a ub2).
+		static_assert(S > 0 && S < 65535, "a bindable string column must be 1 to 65534 bytes");
+
 	  public:
 		BindableUnicode();
 		explicit BindableUnicode(const Unicode::String &_value);
@@ -201,7 +213,7 @@ namespace DB
                         WARNING(true, ("Attmpted to insert %s which is too long. Truncating.", str.c_str()));
                         indicator = S;
                 } else {
-                        indicator = bufsize;
+                        indicator = static_cast<int>(bufsize); // bufsize < S, so it fits the int
                 }	
 
 		memcpy(m_value, str.c_str(), indicator);	

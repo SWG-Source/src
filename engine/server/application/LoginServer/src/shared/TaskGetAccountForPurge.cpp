@@ -33,8 +33,8 @@ namespace TaskGetAccountForPurgeNamespace
 
 	private:
 		DB::BindableUint32 m_account;
-		DB::BindableLong m_min_age;
-		DB::BindableLong m_purge_phase;
+		DB::BindableInt32 m_min_age;
+		DB::BindableInt32 m_purge_phase;
 
 	private: //disable
 		GetAccountForPurgeQuery(const GetAccountForPurgeQuery&);

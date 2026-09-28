@@ -1,6 +1,6 @@
 create table default_character_slots -- NO_IMPORT
 (
-	character_type_id  number not null,
+	character_type_id  number not null, -- LOAD_RANGE(0,3): an index into the LoginServer's 4-entry open slot table
 	num_slots          number not null,
 	constraint pk_default_character_slots primary key (character_type_id) 
 );

@@ -17,7 +17,7 @@
 
 // ======================================================================
 
-TaskRestoreCharacter::TaskRestoreCharacter(uint32 clusterId, const std::string &whoRequested, StationId stationId, const Unicode::String &characterName, const NetworkId &characterId, int templateId, bool jedi) :
+TaskRestoreCharacter::TaskRestoreCharacter(uint32 clusterId, const std::string &whoRequested, StationId stationId, const Unicode::String &characterName, const NetworkId &characterId, uint32 templateId, bool jedi) :
 		TaskRequest(),
 		m_clusterId(clusterId),
 		m_whoRequested(whoRequested),

@@ -30,7 +30,7 @@ namespace TaskSetPurgeStatusNamespace
 
 	private:
 		DB::BindableUint32 m_account;
-		DB::BindableLong m_purge_phase;
+		DB::BindableInt32 m_purge_phase;
 
 	private: //disable
 		SetPurgeStatusQuery(const SetPurgeStatusQuery&);

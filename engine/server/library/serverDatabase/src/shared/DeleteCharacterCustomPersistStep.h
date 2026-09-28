@@ -30,7 +30,7 @@ class DeleteCharacterCustomPersistStep : public CustomPersistStep
   private:
 	NetworkId        m_characterId;
 	uint32           m_stationId;
-	uint32           m_resultCode;
+	int32_t          m_resultCode;
 	
 	class DeleteCharacterQuery : public DB::Query
 	{
@@ -47,8 +47,8 @@ class DeleteCharacterCustomPersistStep : public CustomPersistStep
 	  public:
 		DB::BindableUint32       station_id;
 		DB::BindableNetworkId    character_id;
-		DB::BindableLong         delete_minutes;
-		DB::BindableLong         result;
+		DB::BindableInt32         delete_minutes;
+		DB::BindableInt32         result;
 				
 	  private: // disable:
 		DeleteCharacterQuery(const DeleteCharacterQuery&);

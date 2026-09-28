@@ -11,6 +11,7 @@
 #include "LoginServer.h"
 #include "DatabaseConnection.h"
 #include "serverNetworkMessages/LoginUpgradeAccountMessage.h"
+#include "sharedDatabaseInterface/DbCheckedConversion.h"
 #include "sharedDatabaseInterface/DbSession.h"
 #include "sharedFoundation/NetworkIdArchive.h"
 #include "sharedNetworkMessages/GenericValueTypeMessage.h"
@@ -351,6 +352,20 @@ m_result(static_cast<int>(LoginUpgradeAccountMessage::VUSR_db_error))
 
 // ----------------------------------------------------------------------
 
+bool TaskVacateUnlockedSlot::storeOpenCharacterSlots(std::vector<int> &openCharacterSlots, int32_t characterTypeId, int32_t numOpenSlots, char const *where)
+{
+	size_t index = 0;
+	if (!DB::checkedNarrow(characterTypeId, index, "default_character_slots.character_type_id", where) || index >= openCharacterSlots.size())
+	{
+		WARNING(true, ("%s: character type id %d has no entry in the %zu-entry open slot table; the operation fails", where, characterTypeId, openCharacterSlots.size()));
+		return false;
+	}
+	openCharacterSlots[index] = numOpenSlots;
+	return true;
+}
+
+// ----------------------------------------------------------------------
+
 TaskVacateUnlockedSlot::~TaskVacateUnlockedSlot()
 {
 }
@@ -437,7 +452,12 @@ bool TaskVacateUnlockedSlot::process(DB::Session *session)
 	std::vector<int> openCharacterSlots(4,0);
 	while ((rowsFetched = qryGetOnlyOpenCharacterSlots.fetch()) > 0)
 	{
-		openCharacterSlots[static_cast<unsigned long>(qryGetOnlyOpenCharacterSlots.character_type_id.getValue())]=qryGetOnlyOpenCharacterSlots.num_open_slots.getValue();
+		if (!TaskVacateUnlockedSlot::storeOpenCharacterSlots(openCharacterSlots, qryGetOnlyOpenCharacterSlots.character_type_id.getValue(), qryGetOnlyOpenCharacterSlots.num_open_slots.getValue(), "TaskVacateUnlockedSlot"))
+		{
+			qryGetOnlyOpenCharacterSlots.done();
+			m_result = static_cast<int>(LoginUpgradeAccountMessage::VUSR_db_error);
+			return false;
+		}
 	}
 
 	qryGetOnlyOpenCharacterSlots.done();

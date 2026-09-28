@@ -27,7 +27,7 @@ bool TaskMessagesCleanup::process(DB::Session *session)
 			LOG("TaskMessagesCleanup::process",( "returned false!" ));
 			return false;
 		}
-		LOG("TaskMessagesCleanup::process",("ROWS = %ld", qry.result.getValue() ));
+		LOG("TaskMessagesCleanup::process",("ROWS = %d", qry.result.getValue() ));
 		if( qry.result.getValue() == 0 )   // cleanup done
 			break;
 	}

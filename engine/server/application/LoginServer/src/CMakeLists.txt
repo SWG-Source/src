@@ -162,3 +162,22 @@ target_link_libraries(LoginServer
     ${CURL_LIBRARIES}
     ${CMAKE_DL_LIBS}
 )
+
+# ----------------------------------------------------------------------
+# Test of the cluster list load. Not built by default:
+#   make int32_cluster_list_test
+# It connects to a scratch schema named by the environment; see
+# game/server/database/tools/int32_audit/test/README.md.
+
+set(INT32_TEST_DIR ${SWG_GAME_SOURCE_DIR}/server/database/tools/int32_audit/test)
+get_target_property(SWG_LOGIN_SERVER_LIBRARIES LoginServer LINK_LIBRARIES)
+
+# The LoginServer sources without its main(), and the test's main().
+add_executable(int32_cluster_list_test EXCLUDE_FROM_ALL
+    ${SHARED_SOURCES}
+    ${INT32_TEST_DIR}/cluster_list_test.cpp
+    ${INT32_TEST_DIR}/TestConnection.h
+)
+# The server's main() pulls some library objects in first; without it the
+# static libraries need to be searched as a group.
+target_link_libraries(int32_cluster_list_test -Wl,--start-group ${SWG_LOGIN_SERVER_LIBRARIES} -Wl,--end-group)

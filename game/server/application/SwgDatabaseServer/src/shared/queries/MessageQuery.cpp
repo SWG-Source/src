@@ -179,9 +179,11 @@ bool SaveMessageQuery::addData(const MessageToPayload &data)
 		convertMessageToUTF8(data.getPackedDataVector(), utf8data);
 		WARNING(utf8data.size() > 1000,("Message had data that was over 1000 bytes when packed to UTF8.  Method:  %s,  Target:  %s,  Data:  %s",data.getMethod().c_str(), data.getNetworkId().getValueString().c_str(), utf8data.c_str()));
 		if (!m_packed_datas.push_back(utf8data)) return false;
-		if (!m_call_times.push_back(static_cast<int>(data.getCallTime()))) return false;
+		// The call time is a uint32 (MessageToPayloadImpl::m_callTime, returned
+		// as unsigned long); it is stored in its signed 32-bit form.
+		if (!m_call_times.push_back(DB::BindableUint32(static_cast<uint32_t>(data.getCallTime())))) return false;
 		if (!m_guaranteeds.push_back(data.getGuaranteed())) return false;
-		if (!m_delivery_types.push_back(static_cast<int>(data.getDeliveryType()))) return false;
+		if (!m_delivery_types.push_back(static_cast<int32_t>(data.getDeliveryType()))) return false;
 
 		m_numItems=m_numItems.getValue() + 1;
 

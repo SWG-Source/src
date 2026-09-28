@@ -59,7 +59,7 @@ class TaskVerifyCharacter:public DB::TaskRequest
 		DB::BindableDouble      x; //lint !e1925 public data member Suppresed because it's in a private inner class
 		DB::BindableDouble      y; //lint !e1925 public data member Suppresed because it's in a private inner class
 		DB::BindableDouble      z; //lint !e1925 public data member Suppresed because it's in a private inner class
-		DB::BindableLong        containment_flag;
+		DB::BindableInt32        containment_flag;
 		
 	  private:
 		VerifyCharacterQuery(const VerifyCharacterQuery&);

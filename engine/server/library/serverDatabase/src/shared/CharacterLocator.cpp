@@ -6,9 +6,8 @@
 // ======================================================================
 
 #include "serverDatabase/FirstServerDatabase.h"
-#include "serverDatabase/CharacterLocator.h"
-
 #include <cinttypes>
+#include "serverDatabase/CharacterLocator.h"
 
 #include <vector>
 
@@ -46,7 +45,7 @@ bool CharacterLocator::locateObjects(DB::Session *session, const std::string &sc
 	bool rval = session->exec(&qry);
 	qry.done();
 
-	LOG("TRACE_LOGIN",("Character locator %s -- %ld objects %" PRIu64 " ms",m_characterId.getValueString().c_str(), qry.object_count.getValue(), Clock::timeMs()-startTime));
+	LOG("TRACE_LOGIN",("Character locator %s -- %d objects %" PRIu64 " ms",m_characterId.getValueString().c_str(), qry.object_count.getValue(), Clock::timeMs()-startTime));
 	objectsLocated = qry.object_count.getValue();
 	return rval;
 }

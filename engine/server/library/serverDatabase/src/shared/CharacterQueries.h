@@ -105,7 +105,7 @@ namespace DBQuery {
 		DB::BindableNetworkId    object_id;
 		DB::BindableString<127>  character_name;
 		DB::BindableString<127>  normalized_name;
-		DB::BindableLong         result;
+		DB::BindableInt32         result;
 		
 	  private:
 		RenameCharacter                     (const RenameCharacter&); // disable

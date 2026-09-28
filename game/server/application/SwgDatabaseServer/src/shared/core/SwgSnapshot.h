@@ -86,6 +86,7 @@ public:
 	virtual void handleMessageToAck    (const MessageToId &messageId);
 	virtual void handleAddResourceTypeMessage (AddResourceTypeMessage const & message);
 	virtual void handleBountyHunterTargetMessage (const BountyHunterTargetMessage &message);
+	virtual bool prepareSend           () const;
 	virtual bool send                  (GameServerConnection *connection) const;
 
 	// Misc game-specific persistence
@@ -101,7 +102,7 @@ public:
 	virtual void startLoadAfterSaveComplete();
 
 	// Functions for object creation:
-	virtual void newObject(NetworkId const & objectId, int templateId, Tag typeId);
+	virtual void newObject(NetworkId const & objectId, uint32 templateId, Tag typeId);
 	
 	void newBattlefieldMarkerObject       (NetworkId const & objectId);
 	void newBuildingObject                (NetworkId const & objectId);
@@ -208,6 +209,15 @@ protected:
 
 	ImmediateDeleteCustomPersistStep *m_immediateDeleteStep;
 	OfflineMoneyCustomPersistStep *m_offlineMoneyCustomPersistStep;
+
+	// What prepareSend() encoded for send(). An object whose baselines could
+	// not be encoded (no row) is cms_invalid in m_preparedObjects and is not
+	// sent. m_encodeRejected is set by the generated encoders when a stored
+	// value does not fit the member it is sent as; the load is then rejected.
+	mutable bool m_prepared;
+	mutable bool m_encodeRejected;
+	mutable OIDListType m_preparedObjects;
+	mutable std::vector<BatchBaselinesMessageData> m_preparedBaselines;
 	
   private:
 	void registerTags();

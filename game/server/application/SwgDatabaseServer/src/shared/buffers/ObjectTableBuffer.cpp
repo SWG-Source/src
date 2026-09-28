@@ -56,7 +56,7 @@ ObjectTableBuffer::~ObjectTableBuffer()
  * Sets up the data for the object in the Objects table.
  */
 
-void ObjectTableBuffer::newObject(const NetworkId &objectId, int templateId, Tag typeId)
+void ObjectTableBuffer::newObject(const NetworkId &objectId, uint32 templateId, Tag typeId)
 {
 	DBSchema::ObjectBufferRow *row=addEmptyRow(objectId);
     row->object_template_id.setValue(templateId);
