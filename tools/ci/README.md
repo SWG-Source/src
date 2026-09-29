@@ -17,6 +17,7 @@ Ubuntu 22.04 with `g++-multilib` builds fresh executables on both ABIs:
 | `tools/test-wire-compatibility/run.py` | 19 passes | 20 passes |
 | `tools/test-wire-compatibility/run-timestamps.py` | 16 passes | 22 passes |
 | `tools/ci/run-parsing.py` | 41 oracle lines | 41 oracle lines |
+| `tools/ci/run-debughelp.py` | 7 passes | 7 passes |
 
 Run the same commands locally with `python3 RUNNER --bits 32` (or `64`).
 No cached libraries, Oracle installation, VM or live cluster are needed.
@@ -38,7 +39,9 @@ mount at the path expected by `build.xml`. `ant clean build_src` discards the
 image's build directory before compiling, preventing stale objects from being
 used. Checkout and artifact actions run on the modern host rather than inside
 an legacy Node environment. The image is pinned by digest and its digest/architecture are recorded on every
-run. Ant explicitly requests a 32-bit target build.
+run. Ant explicitly requests a 32-bit target build. The image already contains
+Oracle headers in `/usr/include/oracle/18.3/client`, outside its `ORACLE_HOME`;
+the job adds that existing path to `CMAKE_INCLUDE_PATH`. No SDK is downloaded.
 
 A successful legacy build does not establish a full 64-bit server build or live
 cluster compatibility. The portable suites omit the optional mission fixtures
@@ -48,10 +51,19 @@ byte-buffer overflow. Native full-cluster acceptance remains a separate gate.
 
 Calendar boundaries, the string-search narrowing scan and SQL audit generation
 also run in the portable matrix. The audit test never connects to a database.
-Clock, OsFile, DebugHelp and Miff use the freshly built server libraries/tool in
+Clock, OsFile and Miff use the freshly built server libraries/tool in
 the legacy build via `run-built-regressions.sh`; those checks currently run only
 on the legacy 32-bit build. Their 64-bit automation remains open, not a passing
 or skipped portable-matrix result. Full-library tests are not replaced with
 stand-ins to avoid their real build prerequisites. OsFile requires sparse-file
 support; DebugHelp also builds an opposite-class ELF with multilib and compares
 its symbol lookup to `addr2line`.
+
+The standalone DebugHelp runner builds the original test against production
+DebugHelp.cpp and Mutex.cpp without stand-ins. It requires all six test checks
+and an independent `addr2line` comparison, including an opposite-class ELF
+that must be built rather than skipped. Both the executable and known shared
+object use `-gdwarf-4`, matching the legacy compiler's debug format; this does
+not claim support for modern DWARF5 or PIE binaries. Temporary binaries are
+compiled afresh and removed after the run. The legacy full-library job also
+retains its existing DebugHelp test.
