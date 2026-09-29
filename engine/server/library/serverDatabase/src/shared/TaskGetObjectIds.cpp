@@ -60,7 +60,7 @@ bool TaskGetObjectIds::process(DB::Session *session)
 void TaskGetObjectIds::onComplete()
 {
 	if (m_logRequest)
-		LOG("ObjectIdManager", ("TaskGetObjectIds::onComplete() for %d more object ids for pid %d, returning %d blocks", m_howMany, m_processId, m_blockList.size()));
+		LOG("ObjectIdManager", ("TaskGetObjectIds::onComplete() for %d more object ids for pid %d, returning %zu blocks", m_howMany, m_processId, m_blockList.size()));
 
 	bool logRequest = m_logRequest;
 	for (BlockListType::iterator i=m_blockList.begin(); i!=m_blockList.end(); ++i)

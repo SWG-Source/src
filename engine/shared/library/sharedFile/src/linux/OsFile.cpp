@@ -9,10 +9,26 @@
 #include "sharedFile/FirstSharedFile.h"
 #include "sharedFile/OsFile.h"
 
+#include <cerrno>
+#include <cstring>
+#include <limits>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
 #include <fcntl.h>
+
+// ======================================================================
+
+namespace OsFileNamespace
+{
+	// The file API is 32-bit by contract: AbstractFile::length()/tell()
+	// return int, seek() takes int, and TRE/TOC offsets are 32-bit on disk.
+	// A file whose size cannot be represented in that contract is refused
+	// rather than having its length wrap.
+	off_t const cs_maximumFileSize = static_cast<off_t>(std::numeric_limits<int>::max());
+}
+
+using namespace OsFileNamespace;
 
 // ======================================================================
 
@@ -26,7 +42,11 @@ bool OsFile::exists(const char *fileName)
 {
 	struct stat statBuffer;
 	if (stat(fileName, &statBuffer) != 0)
-		return false;
+	{
+		// A 32-bit off_t cannot describe the file, but the file is there.
+		// open() reports and refuses it instead of it silently vanishing.
+		return errno == EOVERFLOW;
+	}
 
 	if (S_ISDIR(statBuffer.st_mode))
 		return false;
@@ -38,14 +58,16 @@ bool OsFile::exists(const char *fileName)
 
 int OsFile::getFileSize(const char *fileName)
 {
+	// -1 means the file cannot be used, matching the win32 implementation
+	// and TreeFile::getFileSize, which treats any size >= 0 as found.
 	struct stat statBuffer;
-	int fileSize = 0;
+	if (stat(fileName, &statBuffer) != 0 || S_ISDIR(statBuffer.st_mode))
+		return -1;
 
-	if (stat(fileName, &statBuffer) == 0)
-	{
-		fileSize = static_cast<int>(statBuffer.st_size);
-	}
-	return fileSize;
+	if (statBuffer.st_size < 0 || statBuffer.st_size > cs_maximumFileSize)
+		return -1;
+
+	return static_cast<int>(statBuffer.st_size);
 }
 
 // ----------------------------------------------------------------------
@@ -59,22 +81,46 @@ OsFile *OsFile::open(const char *fileName, bool randomAccess)
 
 	// attempt to open the file
 	const int handle = ::open(fileName, O_RDONLY);
+	if (handle < 0 && errno == EOVERFLOW)
+	{
+		// only possible with a 32-bit off_t; the file exceeds the 32-bit file API
+		WARNING(true, ("OsFile::open refusing %s: file is larger than the %d byte limit of the file API", fileName, std::numeric_limits<int>::max()));
+		return 0;
+	}
 	FATAL(handle < 0, ("OsFile::open failed to open file %s, errno=%d, which does exist.", fileName, errno));
 
-	return new OsFile(handle, DuplicateString(fileName));
+	struct stat statBuffer;
+	if (fstat(handle, &statBuffer) != 0)
+	{
+		const int error = errno;
+		IGNORE_RETURN(close(handle));
+		if (error == EOVERFLOW)
+			WARNING(true, ("OsFile::open refusing %s: file is larger than the %d byte limit of the file API", fileName, std::numeric_limits<int>::max()));
+		else
+			WARNING(true, ("OsFile::open failed to stat %s, errno=%d (%s)", fileName, error, strerror(error)));
+		return 0;
+	}
+
+	const off_t fileSize = statBuffer.st_size;
+	if (fileSize < 0 || fileSize > cs_maximumFileSize)
+	{
+		IGNORE_RETURN(close(handle));
+		WARNING(true, ("OsFile::open refusing %s: file size %lld is larger than the %d byte limit of the file API", fileName, static_cast<long long>(fileSize), std::numeric_limits<int>::max()));
+		return 0;
+	}
+
+	return new OsFile(handle, DuplicateString(fileName), static_cast<int>(fileSize));
 }
 
 // ----------------------------------------------------------------------
 
-OsFile::OsFile(int handle, char *fileName)
+OsFile::OsFile(int handle, char *fileName, int length)
 :
 	m_handle(handle),
-	m_length(0),
+	m_length(length),
 	m_offset(0),
 	m_fileName(fileName)
 {
-	m_length = lseek(m_handle, 0, SEEK_END);
-	lseek(m_handle, 0, SEEK_SET);
 }
 
 // ----------------------------------------------------------------------

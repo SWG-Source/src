@@ -104,36 +104,36 @@ void ShipAiReactionManagerNamespace::loadSpaceMobileData()
 
 			if (alliedFactions.size() > 0)
 			{
-				int startPosition = 0;
-				int endPosition = 0;
+				std::string::size_type startPosition = 0;
+				std::string::size_type endPosition = 0;
 				do
 				{
-					endPosition = static_cast<int>(alliedFactions.find_first_of(",", static_cast<unsigned int>(startPosition)));
-					std::string const alliedFaction(alliedFactions.substr(static_cast<unsigned int>(startPosition), static_cast<unsigned int>(endPosition)));
+					endPosition = alliedFactions.find_first_of(",", startPosition);
+					std::string const alliedFaction(alliedFactions.substr(startPosition, endPosition));
 					uint32 const crc = Crc::calculate(alliedFaction.c_str());
 					if (std::find(mobileData.m_alliedFactionList.begin(), mobileData.m_alliedFactionList.end(), crc) == mobileData.m_alliedFactionList.end())
 						mobileData.m_alliedFactionList.push_back(crc);
 					startPosition = endPosition + 1;
 
-				} while (endPosition != static_cast<int>(std::string::npos));
+				} while (endPosition != std::string::npos);
 			}
 
 			std::string const enemyFactions(dataTable.getStringValue("enemyFactions", row));
 
 			if (enemyFactions.size() > 0)
 			{
-				int startPosition = 0;
-				int endPosition = 0;
+				std::string::size_type startPosition = 0;
+				std::string::size_type endPosition = 0;
 				do
 				{
-					endPosition = static_cast<int>(enemyFactions.find_first_of(",", static_cast<unsigned int>(startPosition)));
-					std::string const enemyFaction(enemyFactions.substr(static_cast<unsigned int>(startPosition), static_cast<unsigned int>(endPosition)));
+					endPosition = enemyFactions.find_first_of(",", startPosition);
+					std::string const enemyFaction(enemyFactions.substr(startPosition, endPosition));
 					uint32 const crc = Crc::calculate(enemyFaction.c_str());
 					if (std::find(mobileData.m_enemyFactionList.begin(), mobileData.m_enemyFactionList.end(), crc) == mobileData.m_enemyFactionList.end())
 						mobileData.m_enemyFactionList.push_back(crc);
 					startPosition = endPosition + 1;
 
-				} while (endPosition != static_cast<int>(std::string::npos));
+				} while (endPosition != std::string::npos);
 			}
 
 			mobileData.m_shipClass = static_cast<ShipAiReactionManager::ShipClass>(dataTable.getIntValue("shipClass", row));

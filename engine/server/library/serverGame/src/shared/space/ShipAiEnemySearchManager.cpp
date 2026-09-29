@@ -106,7 +106,7 @@ void ShipAiEnemySearchManagerNamespace::checkForEnemies(ShipObject &ship)
 				{
 					IGNORE_RETURN(shipController->addDamageTaken((*i)->getNetworkId(), damage, false));
 
-					LOGC(ConfigServerGame::isSpaceAiLoggingEnabled(), "space_debug_ai", ("ShipAiEnemySearchManagerNamespace::checkForEnemies() ENEMY DETECTED: enemy(%s) totalEnemies(%u)", (*i)->getNetworkId().getValueString().c_str(), s_enemyList.size()));
+					LOGC(ConfigServerGame::isSpaceAiLoggingEnabled(), "space_debug_ai", ("ShipAiEnemySearchManagerNamespace::checkForEnemies() ENEMY DETECTED: enemy(%s) totalEnemies(%zu)", (*i)->getNetworkId().getValueString().c_str(), s_enemyList.size()));
 				}
 			}	
 			else
@@ -127,7 +127,7 @@ void ShipAiEnemySearchManagerNamespace::checkForEnemies(ShipObject &ship)
 					{
 						IGNORE_RETURN(aiShipController->getAttackSquad().addDamageTaken(enemy->getNetworkId(), damage));
 
-						LOGC(ConfigServerGame::isSpaceAiLoggingEnabled(), "space_debug_ai", ("ShipAiEnemySearchManagerNamespace::checkForEnemies() ENEMY DETECTED: enemy(%s) totalEnemies(%u) numberAttackTheEnemy(%d)", enemy->getNetworkId().getValueString().c_str(), s_enemyList.size(), attackingCount));
+						LOGC(ConfigServerGame::isSpaceAiLoggingEnabled(), "space_debug_ai", ("ShipAiEnemySearchManagerNamespace::checkForEnemies() ENEMY DETECTED: enemy(%s) totalEnemies(%zu) numberAttackTheEnemy(%d)", enemy->getNetworkId().getValueString().c_str(), s_enemyList.size(), attackingCount));
 					}
 				}
 			}

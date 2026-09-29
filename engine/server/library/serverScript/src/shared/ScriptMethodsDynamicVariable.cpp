@@ -241,8 +241,11 @@ LocalRefPtr ScriptMethodsDynamicVariableNamespace::convertDynamicVariableListToO
 		{
 			case DynamicVariable::INT:
 				{
-					int value;
-					objvar.getValue(value);
+					// text that is not one int32 is not an int value: skip this
+					// objvar, as a single get treats it as absent
+					int value = 0;
+					if (!objvar.getValue(value))
+						continue;
 					JavaString name(objvar.getName().c_str());
 					result = callNonvirtualBooleanMethod(*newDynamicVariableList,
 						JavaLibrary::getClsDynamicVariableList(), JavaLibrary::getMidDynamicVariableListSetInt(),
@@ -252,7 +255,8 @@ LocalRefPtr ScriptMethodsDynamicVariableNamespace::convertDynamicVariableListToO
 			case DynamicVariable::INT_ARRAY:
 				{
 					std::vector<int> value;
-					objvar.getValue(value);
+					if (!objvar.getValue(value))
+						continue;
 					LocalIntArrayRefPtr valueArray = createNewIntArray(value.size());
 					if (value.size() > 0)
 						setIntArrayRegion(*valueArray, 0, value.size(), reinterpret_cast<jint *>(const_cast<int *>(&value[0])));
@@ -596,8 +600,10 @@ jobject JNICALL ScriptMethodsDynamicVariableNamespace::getDynamicVariable(JNIEnv
 	{
 		case DynamicVariable::INT:
 			{
-				int value;
-				objvars->getItem(objvarName,value);
+				// text that is not one int32 is not an int value: as if absent
+				int value = 0;
+				if (!objvars->getItem(objvarName,value))
+					return 0;
 				newDynamicVariable = createNewObject(JavaLibrary::getClsDynamicVariable(),
 					JavaLibrary::getMidDynamicVariableInt(), name, value);
 			}
@@ -605,7 +611,8 @@ jobject JNICALL ScriptMethodsDynamicVariableNamespace::getDynamicVariable(JNIEnv
 		case DynamicVariable::INT_ARRAY:
 			{
 				std::vector<int> value;
-				objvars->getItem(objvarName,value);
+				if (!objvars->getItem(objvarName,value))
+					return 0;
 				LocalIntArrayRefPtr valueArray = createNewIntArray(value.size());
 				if (value.size() > 0)
 				{

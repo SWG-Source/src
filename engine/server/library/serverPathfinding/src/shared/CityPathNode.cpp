@@ -502,9 +502,12 @@ void CityPathNode::reload ( void )
 	// ----------
 
 	objvars.getItem(OBJVAR_PATHFINDING_WAYPOINT_NAME,m_name);
-	int pathNodeTypeInt;
-	objvars.getItem(OBJVAR_PATHFINDING_WAYPOINT_TYPE,pathNodeTypeInt);
-	m_type = static_cast<PathNodeType>(pathNodeTypeInt);
+	// as in loadInfoFromObjvars: the objvar is removed for PNT_Invalid, so
+	// a node without a readable type is PNT_Invalid
+	m_type = PNT_Invalid;
+	int pathNodeTypeInt = 0;
+	if (objvars.getItem(OBJVAR_PATHFINDING_WAYPOINT_TYPE,pathNodeTypeInt))
+		m_type = static_cast<PathNodeType>(pathNodeTypeInt);
 }
 
 // ----------------------------------------------------------------------

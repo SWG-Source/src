@@ -93,7 +93,12 @@ bool ConsoleCommandParserNpc::performParsing (const NetworkId & userId, const St
     else if (isAbbrev( argv [0], "respond"))
     {
 		TangibleObject * const playerObject = safe_cast<TangibleObject *>(ServerWorld::findObjectByNetworkId(userId));
-		int const response = strtol(Unicode::wideToNarrow(argv[1]).c_str (), nullptr, 10);
+		int32 response = 0;
+		if (!parseArg(argv[1], response))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
 		playerObject->respondToNpc(response);
         result += getErrorMessage (argv[0], ERR_SUCCESS);
     }

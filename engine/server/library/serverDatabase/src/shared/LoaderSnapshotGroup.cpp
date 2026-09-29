@@ -67,6 +67,17 @@ bool LoaderSnapshotGroup::send() const
 
 	if (!connection)
 		return false;
+
+	// Encode everything before transmitting anything. A snapshot that holds a
+	// value it cannot send (out of range for the member it is sent as) makes
+	// the whole load fail, exactly as a row that does not fit its bound column
+	// does (ORA-01455 in the load task, which ends in a database FATAL): no
+	// partial load reaches the game server, and the load is never reported
+	// complete.
+	bool const goldPrepared = !m_goldSnapshot || m_goldSnapshot->prepareSend();
+	bool const prepared = goldPrepared && m_snapshot->prepareSend();
+	FATAL(!prepared, ("DatabaseError: load %d for process %u holds data that cannot be sent to the game server (see the preceding DatabaseError); the load fails.",
+		m_loadSerialNumber, m_requestingProcess));
 	
 	if (m_goldSnapshot)
 	{

@@ -263,7 +263,7 @@ void SessionApiClient::OnModifyFeature_v2(const apiTrackingNumber trackingNumber
 		if (result != RESULT_SUCCESS)
 		{
 			// if failed to update feature id, send failure message
-			LOG("CustomerService",("VeteranRewards: received non-success result code (%u) from session to adjust feature id %lu (%s -> %s) for account (%lu), character (%s), reward event (%s), reward item (%s), session tracking number (%u)", result, i->second.second->getAccountFeatureId(), i->second.second->getAccountFeatureIdOldValue().c_str(), i->second.second->getAccountFeatureIdNewValue().c_str(), i->second.second->getStationId(), i->second.second->getPlayer().getValueString().c_str(), i->second.second->getRewardEvent().c_str(), i->second.second->getRewardItem().c_str(), trackingNumber));
+			LOG("CustomerService",("VeteranRewards: received non-success result code (%u) from session to adjust feature id %u (%s -> %s) for account (%u), character (%s), reward event (%s), reward item (%s), session tracking number (%u)", result, i->second.second->getAccountFeatureId(), i->second.second->getAccountFeatureIdOldValue().c_str(), i->second.second->getAccountFeatureIdNewValue().c_str(), i->second.second->getStationId(), i->second.second->getPlayer().getValueString().c_str(), i->second.second->getRewardEvent().c_str(), i->second.second->getRewardItem().c_str(), trackingNumber));
 
 			ClaimRewardsReplyMessage const rsp(i->second.second->getGameServer(), i->second.second->getStationId(), i->second.second->getPlayer(), i->second.second->getRewardEvent(), i->second.second->getRewardItem(), i->second.second->getAccountFeatureId(), true, 0, 0, false);
 			LoginServer::getInstance().sendToCluster(i->second.first, rsp);
@@ -336,7 +336,7 @@ void SessionApiClient::handleClaimRewardsMessage(uint32 clusterId, ClaimRewardsM
 	newFeature.SetData(msg->getAccountFeatureIdNewValue());
 
 	apiTrackingNumber const tn = ModifyFeature_v2(msg->getStationId(), PlatformGameCode::getGamecodeName(PlatformGameCode::SWG).c_str(), oldFeature, newFeature);
-	LOG("CustomerService",("VeteranRewards: requesting session to adjust feature id %lu (%s -> %s) for account (%lu), character (%s), reward event (%s), reward item (%s), session tracking number (%u)", msg->getAccountFeatureId(), msg->getAccountFeatureIdOldValue().c_str(), msg->getAccountFeatureIdNewValue().c_str(), msg->getStationId(), msg->getPlayer().getValueString().c_str(), msg->getRewardEvent().c_str(), msg->getRewardItem().c_str(), tn));
+	LOG("CustomerService",("VeteranRewards: requesting session to adjust feature id %u (%s -> %s) for account (%u), character (%s), reward event (%s), reward item (%s), session tracking number (%u)", msg->getAccountFeatureId(), msg->getAccountFeatureIdOldValue().c_str(), msg->getAccountFeatureIdNewValue().c_str(), msg->getStationId(), msg->getPlayer().getValueString().c_str(), msg->getRewardEvent().c_str(), msg->getRewardItem().c_str(), tn));
 	ms_modifyFeatureTrackingNumberMap[tn] = std::make_pair(clusterId, msg);
 }
 
@@ -379,7 +379,7 @@ void SessionApiClient::validateClient (ClientConnection* client, const std::stri
 	apiTrackingNumber track = SessionValidate(key.c_str(), static_cast<apiSessionType>(ConfigLoginServer::getSessionType()));
 	//apiTrackingNumber track = SessionConsume(key.c_str(), static_cast<apiSessionType>(ConfigLoginServer::getSessionType()));
 
-	LOG("LoginClientConnection", ("validateClient() for stationId (%lu) at IP (%s), key (%s), apiTrackingNumber (%u), validating session", client->getStationId(), client->getRemoteAddress().c_str(), key.c_str(), track));
+	LOG("LoginClientConnection", ("validateClient() for stationId (%u) at IP (%s), key (%s), apiTrackingNumber (%u), validating session", client->getStationId(), client->getRemoteAddress().c_str(), key.c_str(), track));
 
 	//Ok to overwrite old or add new here.
 	m_validationMap[track] = client;
@@ -391,7 +391,7 @@ void SessionApiClient::loginClient (ClientConnection* client, const std::string&
 {
 	apiTrackingNumber track = SessionLogin(username.c_str(), password.c_str(), static_cast<apiSessionType>(ConfigLoginServer::getSessionType()), 0, 0);
 
-	LOG("LoginClientConnection", ("loginClient() for stationId (%lu) at IP (%s), key (%s), apiTrackingNumber (%u), validating session", client->getStationId(), client->getRemoteAddress().c_str(), password.c_str(), track));
+	LOG("LoginClientConnection", ("loginClient() for stationId (%u) at IP (%s), key (%s), apiTrackingNumber (%u), validating session", client->getStationId(), client->getRemoteAddress().c_str(), password.c_str(), track));
 
 	//Ok to overwrite old or add new here.
 	m_validationMap[track] = client;

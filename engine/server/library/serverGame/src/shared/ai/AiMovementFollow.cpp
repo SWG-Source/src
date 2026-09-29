@@ -186,7 +186,7 @@ void AiMovementFollow::getDebugInfo ( std::string & outString ) const
 	AiMovementTarget::getDebugInfo(outString);
 
 	Vector const & goalPosition_w = m_target.getPosition_w();
-	outString += FormattedString<1024>().sprintf("AiMovementFollow: following(%d) position(%.2f,%.2f,%.2f)", m_target.getObjectId().getHashValue(), goalPosition_w.x, goalPosition_w.y, goalPosition_w.z);
+	outString += FormattedString<1024>().sprintf("AiMovementFollow: following(%zu) position(%.2f,%.2f,%.2f)", m_target.getObjectId().getHashValue(), goalPosition_w.x, goalPosition_w.y, goalPosition_w.z);
 
 	if (m_offsetTarget.isValid())
 	{
@@ -416,7 +416,7 @@ void AiMovementFollow::addDebug(AiDebugString & aiDebugString)
 	aiDebugString.addText(fs.sprintf("%s\n", m_stateName.c_str()), PackedRgb::solidCyan);
 	aiDebugString.addText(fs.sprintf("target(%s)\n", m_target.getObjectId().getValueString().c_str()), PackedRgb::solidCyan);
 	aiDebugString.addText(fs.sprintf("distance[%.1f...%.1f]\n", m_minDistance, m_maxDistance), PackedRgb::solidCyan);
-	aiDebugString.addText(fs.sprintf("pathSize(%u)\n", path->size()), PackedRgb::solidCyan);
+	aiDebugString.addText(fs.sprintf("pathSize(%zu)\n", path->size()), PackedRgb::solidCyan);
 	aiDebugString.addText(fs.sprintf("stuckCounter(%i)\n", m_controller->getStuckCounter()), PackedRgb::solidCyan);
 	aiDebugString.addText(fs.sprintf("avoidanceStuckTime(%.0f)\n", m_avoidanceStuckTime), PackedRgb::solidCyan);
 	aiDebugString.addText(fs.sprintf("obstacle(%s)\n", m_obstacleLocation.getObjectId().getValueString().c_str()), PackedRgb::solidCyan);

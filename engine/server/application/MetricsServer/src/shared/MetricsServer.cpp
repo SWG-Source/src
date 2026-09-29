@@ -147,7 +147,7 @@ void MetricsServer::run()
 	int nlogin = 0;
 
 
-	unsigned long initialTime = Clock::timeMs();
+	uint64_t const initialTime = Clock::timeMs();
 	bool okToUpdate = false;
 	
 	while(m_soeMonitor)

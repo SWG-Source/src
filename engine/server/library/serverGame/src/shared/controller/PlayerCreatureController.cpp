@@ -611,7 +611,7 @@ bool PlayerCreatureController::checkValidMove(MoveSnapshot const &m, float const
 					if (timeDiffMs > ConfigServerGame::getMoveValidationPastTimestampThresholdMs())
 					{
 						char buf[256];
-						snprintf(buf, sizeof(buf)-1, "out of order timestamps (%dms), oss=%lu, css=%lu (%lud:%luh:%lum:%lus), ssc=%lu",
+						snprintf(buf, sizeof(buf)-1, "out of order timestamps (%dms), oss=%u, css=%u (%ud:%uh:%um:%us), ssc=%u",
 							timeDiffMs,
 							previousClientSyncStamp,
 							currentServerSyncStamp,
@@ -646,7 +646,7 @@ bool PlayerCreatureController::checkValidMove(MoveSnapshot const &m, float const
 					if (timeDiffMs > ConfigServerGame::getMoveValidationFutureTimestampThresholdMs())
 					{
 						char buf[256];
-						snprintf(buf, sizeof(buf)-1, "timestamp from the future (%dms), oss=%lu, css=%lu (%lud:%luh:%lum:%lus), ssc=%lu",
+						snprintf(buf, sizeof(buf)-1, "timestamp from the future (%dms), oss=%u, css=%u (%ud:%uh:%um:%us), ssc=%u",
 							timeDiffMs,
 							previousClientSyncStamp,
 							currentServerSyncStamp,
@@ -670,7 +670,7 @@ bool PlayerCreatureController::checkValidMove(MoveSnapshot const &m, float const
 			if (clientServerTimeDiff > ConfigServerGame::getMoveValidationTimestampDriftThresholdMs())
 			{
 				char buf[256];
-				snprintf(buf, sizeof(buf)-1, "timestamp drift (%dms), oss=%lu, css=%lu (%lud:%luh:%lum:%lus), ssc=%lu",
+				snprintf(buf, sizeof(buf)-1, "timestamp drift (%dms), oss=%u, css=%u (%ud:%uh:%um:%us), ssc=%u",
 					clientServerTimeDiff,
 					previousClientSyncStamp,
 					currentServerSyncStamp,
@@ -720,7 +720,7 @@ bool PlayerCreatureController::checkValidMove(MoveSnapshot const &m, float const
 
 				Vector const serverLoc = creature->getPosition_w();
 				char buf[512];
-				snprintf(buf, sizeof(buf)-1, "too fast (dist=%g, maxDistLower=%g, maxDistUpper=%g, legalSpeed=%g, maxSpeedLower=%g, maxSpeedUpper=%g, reportedSpeed=%g, clientTimeDiff=%d, serverTimeDiff=%d, clientServerTimeDiff=%d, failureInterval=%lds, failureCount=%d, lastVerifiedLoc=(%g,%g,%g,%lu), reportedLoc=(%g,%g,%g,%lu), serverLoc=(%g,%g,%g,%lu))",
+				snprintf(buf, sizeof(buf)-1, "too fast (dist=%g, maxDistLower=%g, maxDistUpper=%g, legalSpeed=%g, maxSpeedLower=%g, maxSpeedUpper=%g, reportedSpeed=%g, clientTimeDiff=%d, serverTimeDiff=%d, clientServerTimeDiff=%d, failureInterval=%lds, failureCount=%d, lastVerifiedLoc=(%g,%g,%g,%u), reportedLoc=(%g,%g,%g,%u), serverLoc=(%g,%g,%g,%u))",
 					sqrt(distSqr),
 					sqrt(maxDistSqr),
 					sqrt(maxDistSqrPerUpdate),
@@ -752,7 +752,7 @@ bool PlayerCreatureController::checkValidMove(MoveSnapshot const &m, float const
 
 					Vector const serverLoc = creature->getPosition_w();
 					char buf[512];
-					snprintf(buf, sizeof(buf)-1, "too fast (dist=%g, maxDistLower=%g, maxDistUpper=%g, legalSpeed=%g, maxSpeedLower=%g, maxSpeedUpper=%g, reportedSpeed=%g, clientTimeDiff=%d, serverTimeDiff=%d, clientServerTimeDiff=%d, failureInterval=%lds, failureCount=%d, lastVerifiedLoc=(%g,%g,%g,%lu), reportedLoc=(%g,%g,%g,%lu), serverLoc=(%g,%g,%g,%lu))",
+					snprintf(buf, sizeof(buf)-1, "too fast (dist=%g, maxDistLower=%g, maxDistUpper=%g, legalSpeed=%g, maxSpeedLower=%g, maxSpeedUpper=%g, reportedSpeed=%g, clientTimeDiff=%d, serverTimeDiff=%d, clientServerTimeDiff=%d, failureInterval=%lds, failureCount=%d, lastVerifiedLoc=(%g,%g,%g,%u), reportedLoc=(%g,%g,%g,%u), serverLoc=(%g,%g,%g,%u))",
 						sqrt(distSqr),
 						sqrt(maxDistSqr),
 						sqrt(maxDistSqrPerUpdate),

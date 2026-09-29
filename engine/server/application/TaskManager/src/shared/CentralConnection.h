@@ -34,7 +34,7 @@ private:
 	std::string                 commandLine;
 	bool                        connected;
 	TaskConnection *            connection;
-	unsigned long lastSpawnTime;
+	uint64_t lastSpawnTime;
 }; //lint !e1712 default constructor not defined for class 'CentralConnection'
 
 //-----------------------------------------------------------------------

@@ -65,7 +65,7 @@ void ImageFormatList::addImageFormat(const ImageFormat *imageFormat)
 #ifdef _DEBUG
 	//-- make sure image format isn't already installed
 	const ImageFormatVector::const_iterator it = std::find(ms_imageFormats->begin(), ms_imageFormats->end(), imageFormat);
-	DEBUG_FATAL(it != ms_imageFormats->end(), ("imageFormat [0x%08x, (%s)] already installed", imageFormat->getName()));
+	DEBUG_FATAL(it != ms_imageFormats->end(), ("imageFormat [%p, (%s)] already installed", static_cast<const void *>(imageFormat), imageFormat->getName()));
 #endif
 
 	//-- add image format to list of image formats

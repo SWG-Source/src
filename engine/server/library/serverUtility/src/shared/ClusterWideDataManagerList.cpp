@@ -160,7 +160,7 @@ bool ClusterWideDataManagerList::handleMessage(const MessageDispatch::Emitter & 
 			else
 			{
 				// some elements were locked, queue the request for later processing
-				LOG("ClusterWideDataManagerList", ("Queuing request from server (%lu), manager name (%s), element name regex (%s), lock elements (%s), request Id (%lu)", server->getProcessId(), msg->getManagerName().c_str(), msg->getElementNameRegex().c_str(), (msg->getLockElements() ? "true" : "false"), msg->getRequestId()));
+				LOG("ClusterWideDataManagerList", ("Queuing request from server (%u), manager name (%s), element name regex (%s), lock elements (%s), request Id (%lu)", server->getProcessId(), msg->getManagerName().c_str(), msg->getElementNameRegex().c_str(), (msg->getLockElements() ? "true" : "false"), msg->getRequestId()));
 
 				ClusterWideDataManagerListNamespace::QueuedRequestInfo info;
 				info.processId = server->getProcessId();
@@ -368,7 +368,7 @@ bool ClusterWideDataManagerListNamespace::handleClusterWideDataGetElementMessage
 	{
 		// cut down on the log spam; don't log "browse" requests
 		if (lockKey > 0)
-			LOG("ClusterWideDataManagerList", ("Returned (%d) elements to server (%lu), manager name (%s), element name regex (%s), lock elements (%s), request Id (%lu), lock key (%lu)", elementNameList.size(), server.getProcessId(), msg.getManagerName().c_str(), msg.getElementNameRegex().c_str(), (msg.getLockElements() ? "true" : "false"), msg.getRequestId(), lockKey));
+			LOG("ClusterWideDataManagerList", ("Returned (%zu) elements to server (%u), manager name (%s), element name regex (%s), lock elements (%s), request Id (%lu), lock key (%lu)", elementNameList.size(), server.getProcessId(), msg.getManagerName().c_str(), msg.getElementNameRegex().c_str(), (msg.getLockElements() ? "true" : "false"), msg.getRequestId(), lockKey));
 
 		// send response
 		ClusterWideDataGetElementResponseMessage resp(msg.getManagerName(), msg.getElementNameRegex(), elementNameList, elementDictionaryList, msg.getRequestId(), lockKey);
@@ -426,7 +426,7 @@ void ClusterWideDataManagerListNamespace::handleClusterWideDataReleaseLockMessag
 
 			int numberElementsUnlocked = manager->releaseLock(msg.getLockKey());
 
-			LOG("ClusterWideDataManagerList", ("Unlocked (%d) elements for server (%lu), manager name (%s), lock key (%lu)", numberElementsUnlocked, server.getProcessId(), msg.getManagerName().c_str(), msg.getLockKey()));
+			LOG("ClusterWideDataManagerList", ("Unlocked (%d) elements for server (%u), manager name (%s), lock key (%lu)", numberElementsUnlocked, server.getProcessId(), msg.getManagerName().c_str(), msg.getLockKey()));
 
 			// if any elements were unlocked, so go through the queued requests and process them
 			if (numberElementsUnlocked > 0)
@@ -448,7 +448,7 @@ void ClusterWideDataManagerListNamespace::handleClusterWideDataRemoveElementMess
 	{
 		int numberElementsRemoved = manager->removeElement(msg.getElementNameRegex(), msg.getLockKey());
 
-		LOG("ClusterWideDataManagerList", ("Removed (%d) elements for server (%lu), manager name (%s), element name regex (%s), lock key (%lu)", numberElementsRemoved, server.getProcessId(), msg.getManagerName().c_str(), msg.getElementNameRegex().c_str(), msg.getLockKey()));
+		LOG("ClusterWideDataManagerList", ("Removed (%d) elements for server (%u), manager name (%s), element name regex (%s), lock key (%lu)", numberElementsRemoved, server.getProcessId(), msg.getManagerName().c_str(), msg.getElementNameRegex().c_str(), msg.getLockKey()));
 
 		// if any elements were removed, so go through the queued requests and process them
 		if (numberElementsRemoved > 0)
@@ -467,13 +467,13 @@ void ClusterWideDataManagerListNamespace::handleClusterWideDataUpdateDictionaryM
 		{
 			int numberElementsReplaced = manager->replaceDictionary(msg.getElementNameRegex(), msg.getDictionary(), (msg.getAutoRemove() ? server.getProcessId() : 0)  , msg.getLockKey());
 
-			LOG("ClusterWideDataManagerList", ("Replaced (%d) elements for server (%lu), manager name (%s), element name regex (%s), auto remove (%s), lock key (%lu)", numberElementsReplaced, server.getProcessId(), msg.getManagerName().c_str(), msg.getElementNameRegex().c_str(), (msg.getAutoRemove() ? "yes" : "no"), msg.getLockKey()));
+			LOG("ClusterWideDataManagerList", ("Replaced (%d) elements for server (%u), manager name (%s), element name regex (%s), auto remove (%s), lock key (%lu)", numberElementsReplaced, server.getProcessId(), msg.getManagerName().c_str(), msg.getElementNameRegex().c_str(), (msg.getAutoRemove() ? "yes" : "no"), msg.getLockKey()));
 		}
 		else
 		{
 			int numberElementsUpdated = manager->updateDictionary(msg.getElementNameRegex(), msg.getDictionary(), msg.getLockKey());
 
-			LOG("ClusterWideDataManagerList", ("Updated (%d) elements for server (%lu), manager name (%s), element name regex (%s), lock key (%lu)", numberElementsUpdated, server.getProcessId(), msg.getManagerName().c_str(), msg.getElementNameRegex().c_str(), msg.getLockKey()));
+			LOG("ClusterWideDataManagerList", ("Updated (%d) elements for server (%u), manager name (%s), element name regex (%s), lock key (%lu)", numberElementsUpdated, server.getProcessId(), msg.getManagerName().c_str(), msg.getElementNameRegex().c_str(), msg.getLockKey()));
 		}
 	}
 }

@@ -121,7 +121,7 @@ void AiMovementPathFollow::getDebugInfo ( std::string & outString ) const
 
 	char buffer[256];
 
-	sprintf(buffer,"Path length : %d\n",m_path->size());
+	sprintf(buffer,"Path length : %zu\n",m_path->size());
 	outString += buffer;
 }
 

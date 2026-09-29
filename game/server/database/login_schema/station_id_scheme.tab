@@ -1,0 +1,13 @@
+create table station_id_scheme -- NO_IMPORT
+(
+	id number(1) default 1 not null,
+	scheme varchar2(16) not null,
+	basis varchar2(16) not null,
+	recorded_at date default sysdate not null,
+	constraint station_id_scheme_pk primary key (id),
+	constraint station_id_scheme_one_row check (id = 1),
+	constraint station_id_scheme_scheme check (scheme in ('gcc32', 'gcc64')),
+	constraint station_id_scheme_basis check (basis in ('new', 'evidence', 'asserted'))
+);
+
+grant select on station_id_scheme to public;

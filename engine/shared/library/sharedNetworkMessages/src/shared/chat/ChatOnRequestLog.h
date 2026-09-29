@@ -7,6 +7,7 @@
 
 //-----------------------------------------------------------------------
 
+#include "sharedNetworkMessages/NetworkMessageTimestamp.h"
 #include "sharedNetworkMessages/GameNetworkMessage.h"
 #include "unicodeArchive/UnicodeArchive.h"
 #include "UnicodeUtils.h"
@@ -30,7 +31,7 @@ struct ChatLogEntry
 	 , m_to(to)
 	 , m_channel(channel)
 	 , m_message(message)
-	 , m_time(time)
+	 , m_time(NetworkMessageTimestamp::fromTime(time))
 	 {
 	 }
 
@@ -38,7 +39,7 @@ struct ChatLogEntry
     Unicode::String m_to;
     Unicode::String m_channel;
     Unicode::String m_message;
-    uint32_t m_time;
+    int32_t m_time;
 };
 
 namespace Archive

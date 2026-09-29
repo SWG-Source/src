@@ -21,6 +21,14 @@ namespace DB {
 		virtual ~Bindable();
 		
 		bool isNull() const;
+
+		/**
+		 * Make the value NULL. The stored value is reset to the type's null
+		 * value (clearValue()), so a NULL never keeps a previous value: OCI
+		 * does not write a column's buffer when it fetches a NULL, and array
+		 * fetches reuse their rows, so without the reset a NULL column would
+		 * read as whatever an earlier row held.
+		 */
 		void setNull();
 
 		int *getIndicator(); //TODO:  enforce that only QueryImpl uses this
@@ -29,6 +37,9 @@ namespace DB {
 		
 	  protected:
 		explicit Bindable(int _indicator);
+
+		/** Reset the stored value to the type's null value; see setNull(). */
+		virtual void clearValue();
 
 		/**
 		 * The size of the data, or -1 for nullptr.

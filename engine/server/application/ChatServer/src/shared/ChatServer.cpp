@@ -49,6 +49,7 @@
 #include "sharedNetworkMessages/ChatOnLeaveRoom.h"
 #include "sharedNetworkMessages/ChatOnRemoveModeratorFromRoom.h"
 #include "sharedNetworkMessages/ChatOnRequestLog.h"
+#include "sharedNetworkMessages/NetworkMessageTimestamp.h"
 #include "sharedNetworkMessages/ChatOnSendInstantMessage.h"
 #include "sharedNetworkMessages/ChatOnSendRoomMessage.h"
 #include "sharedNetworkMessages/ChatOnUnbanAvatarFromRoom.h"
@@ -202,31 +203,31 @@ void ChatServer::update()
 {
 	PROFILER_BLOCK_DEFINE(profileBlockMainLoop, "main loop");
 	PROFILER_BLOCK_ENTER(profileBlockMainLoop);
-	static unsigned int lastTime = 0;
-unsigned int t1 = Clock::timeMs();
+	static uint64_t lastTime = 0;
+uint64_t t1 = Clock::timeMs();
 	NetworkHandler::update();
-unsigned int t2 = Clock::timeMs();
+uint64_t t2 = Clock::timeMs();
 
 	chatInterface->checkQueuedLogins();
 	chatInterface->sendQueuedHeadersToClient();
 
 if ((t2 - t1) > (1000 * 5))
 {
-	DEBUG_WARNING(true, ("\n\n\n\n\nNetworkHandler::update() took %i ms\n\n\n\n\n", (t2 - t1)));
+	DEBUG_WARNING(true, ("\n\n\n\n\nNetworkHandler::update() took %" PRIu64 " ms\n\n\n\n\n", (t2 - t1)));
 }
 
 	NetworkHandler::dispatch();
-unsigned int t3 = Clock::timeMs();
+uint64_t t3 = Clock::timeMs();
 if ((t3 - t2) > (1000 * 5))
 {
-	DEBUG_WARNING(true, ("\n\n\n\n\nNetworkHandler::dispatch() took %i ms\n\n\n\n\n", (t3 - t2)));
+	DEBUG_WARNING(true, ("\n\n\n\n\nNetworkHandler::dispatch() took %" PRIu64 " ms\n\n\n\n\n", (t3 - t2)));
 }
 	if (lastTime != 0)
 	{
-		unsigned int time = Clock::timeMs();
+		uint64_t time = Clock::timeMs();
 		if ((time - lastTime) > (1000))
 		{
-			//DEBUG_WARNING(true, ("\n\n\n\n\n\nLong Chat Frame (%i ms)\n\n\n\n", (time - lastTime)));
+			//DEBUG_WARNING(true, ("\n\n\n\n\n\nLong Chat Frame (%" PRIu64 " ms)\n\n\n\n", (time - lastTime)));
 		}
 	}
 	lastTime = Clock::timeMs();
@@ -384,9 +385,11 @@ bool ChatServer::getChatLog(Unicode::String const &player, std::vector<ChatLogEn
 		{
 			int const messageIndex = iterMessageList->first;
 			ChatLogEntry chatLogEntry;
+			time_t timestamp = 0;
 
-			if (ChatLogManager::getChatMessage(messageIndex, chatLogEntry.m_from, chatLogEntry.m_to, chatLogEntry.m_message, chatLogEntry.m_channel, chatLogEntry.m_time))
+			if (ChatLogManager::getChatMessage(messageIndex, chatLogEntry.m_from, chatLogEntry.m_to, chatLogEntry.m_message, chatLogEntry.m_channel, timestamp))
 			{
+				chatLogEntry.m_time = NetworkMessageTimestamp::fromTime(timestamp);
 				chatLog.push_back(chatLogEntry);
 			}
 			else

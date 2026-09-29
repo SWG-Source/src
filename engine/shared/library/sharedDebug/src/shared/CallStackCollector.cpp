@@ -173,14 +173,14 @@ void CallStackCollectorNamespace::Node::debugReport() const
 		char fileName[256];
 		int line = 0;
 
-		REPORT_LOG(true, ("CallStackCollector(%s:%i) callstack called %d times\n", m_name.getString(), i, callStackEntry->m_calls));
+		REPORT_LOG(true, ("CallStackCollector(%s:%zu) callstack called %d times\n", m_name.getString(), i, callStackEntry->m_calls));
 
 		for (size_t j = 2; j < CALLSTACK_DEPTH; ++j)
 		{
 			if (DebugHelp::lookupAddress(callStackEntry->m_callStack[j], libName, fileName, sizeof(fileName), line))
-				REPORT_LOG(true, ("  %s(%d) : caller %d\n", fileName, line, j - 1));
+				REPORT_LOG(true, ("  %s(%d) : caller %zu\n", fileName, line, j - 1));
 			else
-				REPORT_LOG(true, ("  unknown(0x%016llX) : caller %d\n", static_cast<unsigned long long>(callStackEntry->m_callStack[j]), j - 1));
+				REPORT_LOG(true, ("  unknown(0x%016llX) : caller %zu\n", static_cast<unsigned long long>(callStackEntry->m_callStack[j]), j - 1));
 		}
 	}
 }

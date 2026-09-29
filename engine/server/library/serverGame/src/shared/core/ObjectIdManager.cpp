@@ -87,7 +87,7 @@ void ObjectIdManager::requestMoreObjectIds(int howMany, bool logRequest, uint32 
 	DEBUG_REPORT_LOG(true,("Requesting %i object ID's\n",howMany));
 
 	if (logRequest)
-		LOG("ObjectIdManager", ("Requesting %d more object ids for pid %lu, numAvailableIds=%d, numRequestedIds=%d, m_minReservedIds=%d, m_maxReservedIds=%d, m_gotABlock=%s", howMany, ((processId == 0) ? GameServer::getInstance().getProcessId() : processId), numAvailableIds, numRequestedIds, m_minReservedIds, m_maxReservedIds, (m_gotABlock ? "yes" : "no")));
+		LOG("ObjectIdManager", ("Requesting %d more object ids for pid %u, numAvailableIds=%d, numRequestedIds=%d, m_minReservedIds=%d, m_maxReservedIds=%d, m_gotABlock=%s", howMany, ((processId == 0) ? GameServer::getInstance().getProcessId() : processId), numAvailableIds, numRequestedIds, m_minReservedIds, m_maxReservedIds, (m_gotABlock ? "yes" : "no")));
 
 	RequestOIDsMessage const msg(processId==0?GameServer::getInstance().getProcessId():processId, howMany, logRequest);
 	GameServer::getInstance().sendToCentralServer(msg);
@@ -112,7 +112,7 @@ void ObjectIdManager::receiveMessage(const MessageDispatch::Emitter & source, co
 		AddOIDBlockMessage msg(ri);
 
 		if (msg.getLogRequest())
-			LOG("ObjectIdManager", ("Received object ids (%s - %s) for pid %lu", msg.getStart().getValueString().c_str(), msg.getEnd().getValueString().c_str(), msg.getServerId()));
+			LOG("ObjectIdManager", ("Received object ids (%s - %s) for pid %u", msg.getStart().getValueString().c_str(), msg.getEnd().getValueString().c_str(), msg.getServerId()));
 
 		addBlock(msg.getStart().getValue(), msg.getEnd().getValue());
 	}
@@ -124,12 +124,12 @@ void ObjectIdManager::receiveMessage(const MessageDispatch::Emitter & source, co
 
 		if ((numAvailableIds+numRequestedIds) < m_minReservedIds)
 		{
-			LOG("ObjectIdManager", ("ObjectIdManager received CentralGameServerSetProcessId message for pid %lu, numAvailableIds=%d, numRequestedIds=%d, m_minReservedIds=%d, m_maxReservedIds=%d, m_gotABlock=%s, requesting more object ids", processId, numAvailableIds, numRequestedIds, m_minReservedIds, m_maxReservedIds, (m_gotABlock ? "yes" : "no")));
+			LOG("ObjectIdManager", ("ObjectIdManager received CentralGameServerSetProcessId message for pid %u, numAvailableIds=%d, numRequestedIds=%d, m_minReservedIds=%d, m_maxReservedIds=%d, m_gotABlock=%s, requesting more object ids", processId, numAvailableIds, numRequestedIds, m_minReservedIds, m_maxReservedIds, (m_gotABlock ? "yes" : "no")));
 			requestMoreObjectIds(m_maxReservedIds - numAvailableIds - numRequestedIds, true, processId);
 		}
 		else
 		{
-			LOG("ObjectIdManager", ("ObjectIdManager received CentralGameServerSetProcessId message for pid %lu, numAvailableIds=%d, numRequestedIds=%d, m_minReservedIds=%d, m_maxReservedIds=%d, m_gotABlock=%s, ***NOT*** requesting more object ids?????", processId, numAvailableIds, numRequestedIds, m_minReservedIds, m_maxReservedIds, (m_gotABlock ? "yes" : "no")));
+			LOG("ObjectIdManager", ("ObjectIdManager received CentralGameServerSetProcessId message for pid %u, numAvailableIds=%d, numRequestedIds=%d, m_minReservedIds=%d, m_maxReservedIds=%d, m_gotABlock=%s, ***NOT*** requesting more object ids?????", processId, numAvailableIds, numRequestedIds, m_minReservedIds, m_maxReservedIds, (m_gotABlock ? "yes" : "no")));
 		}
 	}
 }

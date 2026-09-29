@@ -2918,7 +2918,7 @@ jobjectArray JNICALL ScriptMethodsObjectInfoNamespace::getAllCustomVars(JNIEnv *
 	s_customizationVariableIteratorData.m_variableNames.clear();
 
 	customizationData->iterateOverVariables(CustomizationVariableCollector, &s_customizationVariableIteratorData, false);
-	DEBUG_FATAL(s_customizationVariableIteratorData.m_variableNames.size() != s_customizationVariableIteratorData.m_customizationVariables.size(), ("mismatched return data sizes: %u/%u", s_customizationVariableIteratorData.m_variableNames.size(), s_customizationVariableIteratorData.m_customizationVariables.size()));
+	DEBUG_FATAL(s_customizationVariableIteratorData.m_variableNames.size() != s_customizationVariableIteratorData.m_customizationVariables.size(), ("mismatched return data sizes: %zu/%zu", s_customizationVariableIteratorData.m_variableNames.size(), s_customizationVariableIteratorData.m_customizationVariables.size()));
 
 	//-- create a Java custom_var for each CustomizationVariable instance.
 	LocalObjectArrayRefPtr customVarArray;
@@ -6596,7 +6596,7 @@ jboolean JNICALL ScriptMethodsObjectInfoNamespace::openRatingWindow(JNIEnv * env
 	CreatureObject * playerCreature = nullptr;
 	if (!JavaLibrary::getObject(player, playerCreature))
 	{
-		DEBUG_WARNING(true, ("OpenRatingWindow: Failed to get valid creature object with OID %d", player));
+		DEBUG_WARNING(true, ("OpenRatingWindow: Failed to get valid creature object with OID %lld", static_cast<long long>(player)));
 		return JNI_FALSE;
 	}
 

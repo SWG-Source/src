@@ -4,7 +4,7 @@ create table ship_objects
 	slide_dampener float,
 	current_chassis_hit_points float,
 	maximum_chassis_hit_points float,
-	chassis_type int,
+	chassis_type int, -- BIND_AS(DB::BindableUint32)
 	cmp_armor_hp_maximum varchar2(400),
 	cmp_armor_hp_current varchar2(400),
 	cmp_efficiency_general varchar2(400),

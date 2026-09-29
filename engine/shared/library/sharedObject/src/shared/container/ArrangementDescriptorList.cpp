@@ -116,7 +116,7 @@ void ArrangementDescriptorList::remove()
 	//-- handle leaks
 	if (!ms_descriptors->empty())
 	{
-		DEBUG_WARNING(true, ("ArrangementDescriptorList detected %u ArrangementDescriptor leaks:", ms_descriptors->size()));
+		DEBUG_WARNING(true, ("ArrangementDescriptorList detected %zu ArrangementDescriptor leaks:", ms_descriptors->size()));
 
 		const DescriptorMap::iterator endIt = ms_descriptors->end();
 		for (DescriptorMap::iterator it = ms_descriptors->begin(); it != endIt; ++it)

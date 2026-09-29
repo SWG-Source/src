@@ -95,7 +95,7 @@ void UniverseManager::receiveMessage(const MessageDispatch::Emitter & source, co
 			if (!m_databaseAuthoritative && CentralServer::getInstance().getGameServer(processId))
 			{
 				m_universeProcess = processId;
-				DEBUG_REPORT_LOG(true, ("Changing our Universe process to %lu\n",m_universeProcess));
+				DEBUG_REPORT_LOG(true, ("Changing our Universe process to %u\n",m_universeProcess));
 				LOG("Universe", ("Changing our Universe process to %i\n",m_universeProcess));
 
 				SetUniverseAuthoritativeMessage authMsg(m_universeProcess);
@@ -166,7 +166,7 @@ void UniverseManager::onGameServerDisconnect(const GameServerConnection &gameSer
 		{
 			DEBUG_FATAL(replacement==m_universeProcess,("Picked the server we just lost connection to as the universe process.\n"));
 			m_universeProcess=replacement;
-			DEBUG_REPORT_LOG(true, ("Lost our Universe process.  Picking process %lu to be the new one\n",m_universeProcess));
+			DEBUG_REPORT_LOG(true, ("Lost our Universe process.  Picking process %u to be the new one\n",m_universeProcess));
 			LOG("Universe", ("Lost our Universe process.  Picking process %i to be the new one\n",m_universeProcess));
 
 			SetUniverseAuthoritativeMessage msg(m_universeProcess);
@@ -184,8 +184,8 @@ void UniverseManager::onGameServerDisconnect(const GameServerConnection &gameSer
 		{
 			if (CentralServer::getInstance().getGameServer(*resendServer))
 			{
-				DEBUG_REPORT_LOG(true,("Resending universe objects to server %lu because the original universe process crashed.\n",*resendServer));
-				LOG("Universe",("Resending universe objects to server %lu because the original universe process crashed.\n",*resendServer));
+				DEBUG_REPORT_LOG(true,("Resending universe objects to server %u because the original universe process crashed.\n",*resendServer));
+				LOG("Universe",("Resending universe objects to server %u because the original universe process crashed.\n",*resendServer));
 				sendUniverseToServer(*resendServer);
 			}
 		}

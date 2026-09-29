@@ -25,6 +25,7 @@
 #include <map>
 #include <vector>
 #include <unordered_map>
+#include <cinttypes>
 
 //===================================================================
 
@@ -575,7 +576,7 @@ bool WorldSnapshotReaderWriter::load (const char* sceneName)
 
 				std::pair<NetworkIdNodeMap::iterator, bool> result = m_networkIdNodeMap->insert (std::make_pair (node->getNetworkIdInt (), node));
 				UNREF(result);
-				DEBUG_FATAL (!result.second, ("WorldSnapshotReaderWriter::load: could not insert %i into networkIdNodeMap", node->getNetworkIdInt ()));
+				DEBUG_FATAL (!result.second, ("WorldSnapshotReaderWriter::load: could not insert %" PRId64 " into networkIdNodeMap", node->getNetworkIdInt ()));
 
 				int i;
 				for (i = 0; i < node->getNumberOfNodes (); ++i)

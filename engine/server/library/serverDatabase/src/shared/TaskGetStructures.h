@@ -29,7 +29,7 @@ class TaskGetStructures:public DB::TaskRequest
 		real            x;
 		real            y;
 		real            z;
-		uint32		deleted;
+		int32		deleted;
 	};
 	
 	typedef std::vector<StructureRec*> StructuresType;

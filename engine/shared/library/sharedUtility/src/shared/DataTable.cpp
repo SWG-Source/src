@@ -8,6 +8,7 @@
 
 #include "sharedUtility/FirstSharedUtility.h"
 #include "sharedUtility/DataTable.h"
+#include "sharedFoundation/FixedWidthParse.h"
 
 #include "sharedFile/Iff.h"
 #include "sharedUtility/DataTableCell.h"
@@ -119,7 +120,7 @@ DataTable::~DataTable()
 
 bool DataTable::doesColumnExist(const std::string & column) const
 {
-	DEBUG_FATAL(m_columnIndexMap->empty(), ("DataTable(%x) [%s]: Column index map is empty.\n", this, m_name.c_str()));
+	DEBUG_FATAL(m_columnIndexMap->empty(), ("DataTable(%p) [%s]: Column index map is empty.\n", static_cast<const void *>(this), m_name.c_str()));
 
 	return m_columnIndexMap->find(column) != m_columnIndexMap->end();
 }
@@ -128,7 +129,7 @@ bool DataTable::doesColumnExist(const std::string & column) const
 
 int DataTable::findColumnNumber(const std::string & column) const
 {
-	DEBUG_FATAL(m_columnIndexMap->empty(), ("DataTable(%x) [%s]: Column index map is empty.\n", this, m_name.c_str()));
+	DEBUG_FATAL(m_columnIndexMap->empty(), ("DataTable(%p) [%s]: Column index map is empty.\n", static_cast<const void *>(this), m_name.c_str()));
 
 	int count = -1;
 	ColumnIndexMap::const_iterator const it = m_columnIndexMap->find(column);
@@ -225,7 +226,9 @@ int32 DataTable::getIntDefaultForColumn(int column) const
 	DEBUG_FATAL(m_types[static_cast<size_t>(column)]->getBasicType() != DataTableColumnType::DT_Int, ("Wrong data type for column %d.", column));
 	std::string value;
 	IGNORE_RETURN( getDataTypeForColumn(column).mangleValue(value) );
-	return atoi(value.c_str());
+	int32_t result = 0;
+	FATAL(!FixedWidthParse::toInt32(value.c_str(), nullptr, 10, result), ("DataTable [%s] default [%s] for column %d does not fit in 32 bits", m_name.c_str(), value.c_str(), column));
+	return result;
 }
 
 //----------------------------------------------------------------------------

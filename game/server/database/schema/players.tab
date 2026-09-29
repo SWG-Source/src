@@ -1,7 +1,7 @@
 create table players -- NO_IMPORT
 (
-	character_object int,
-	station_id int,
+	character_object int, -- BIND_AS(DB::BindableNetworkId)
+	station_id int, -- BIND_AS(DB::BindableUint32)
 	uc_character_name varchar2(127),
 	character_full_name varchar2(127),
 	create_time date,

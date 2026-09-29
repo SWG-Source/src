@@ -60,7 +60,7 @@ bool ConsoleCommandParserMessageTo::performParsing (const NetworkId & userId, co
 	if (isCommand( argv [0], "viewScheduler"))
 	{
 		char temp[256];
-		snprintf(temp,sizeof(temp),"Current time is %li\n",ServerClock::getInstance().getGameTimeSeconds());
+		snprintf(temp,sizeof(temp),"Current time is %u\n",ServerClock::getInstance().getGameTimeSeconds());
 		result += Unicode::narrowToWide(temp);
 		result += Unicode::narrowToWide(MessageToQueue::getInstance().debugGetSchedulerData());
 		result += getErrorMessage(argv[0], ERR_SUCCESS);
@@ -72,7 +72,7 @@ bool ConsoleCommandParserMessageTo::performParsing (const NetworkId & userId, co
 		if (object)
 		{
 			char temp[256];
-			snprintf(temp,sizeof(temp),"Current time is %li\n",ServerClock::getInstance().getGameTimeSeconds());
+			snprintf(temp,sizeof(temp),"Current time is %u\n",ServerClock::getInstance().getGameTimeSeconds());
 			result += Unicode::narrowToWide(temp);
 			result += Unicode::narrowToWide(object->debugGetMessageToList());
 			result += getErrorMessage(argv[0], ERR_SUCCESS);

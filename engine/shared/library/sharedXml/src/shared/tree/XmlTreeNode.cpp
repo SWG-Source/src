@@ -141,7 +141,7 @@ void XmlTreeNode::assertIsElement(char const *const elementName) const
 	UNREF(elementName);
 	UNREF(nodeName);
 	DEBUG_FATAL(!isElement(), ("expecting element named [%s], found non-element entity named [%s].", elementName ? elementName : "<nullptr element name>", nodeName));
-	DEBUG_FATAL(_stricmp(elementName, nodeName), ("expecting element named [%s], found element named [%s] instead.", nodeName));
+	DEBUG_FATAL(_stricmp(elementName, nodeName), ("expecting element named [%s], found element named [%s] instead.", elementName, nodeName));
 }
 
 // ----------------------------------------------------------------------

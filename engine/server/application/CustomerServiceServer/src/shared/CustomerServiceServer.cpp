@@ -310,7 +310,7 @@ void CustomerServiceServer::createTicket(
 	}
 	else if (ticketCount < 0)
 	{
-		LOG("CSServer", ("createTicket() - Ticket Creation Blocked for networkId(%s) suid(%i) because we have not received how many tickets this player has already.", requester.getValueString().c_str(), suid));
+		LOG("CSServer", ("createTicket() - Ticket Creation Blocked for networkId(%s) suid(%u) because we have not received how many tickets this player has already.", requester.getValueString().c_str(), suid));
 
 		CreateTicketResponseMessage const message(CSASSIST_RESULT_NOCREATE_TICKET, 0);
 		m_csInterface.sendToClient(requester, message);	
@@ -321,7 +321,7 @@ void CustomerServiceServer::createTicket(
 	}
 	else
 	{
-		LOG("CSServer", ("createTicket() - Ticket Creation Blocked for networkId(%s) suid(%i) ticket count(%d) max tickets allowed(%d)", requester.getValueString().c_str(), suid, ticketCount, ConfigCustomerServiceServer::getMaxAllowedNumberOfTickets()));
+		LOG("CSServer", ("createTicket() - Ticket Creation Blocked for networkId(%s) suid(%u) ticket count(%d) max tickets allowed(%d)", requester.getValueString().c_str(), suid, ticketCount, ConfigCustomerServiceServer::getMaxAllowedNumberOfTickets()));
 
 		CreateTicketResponseMessage const message(CSASSIST_RESULT_NOCREATE_TICKET, 0);
 		m_csInterface.sendToClient(requester, message);	
@@ -329,7 +329,7 @@ void CustomerServiceServer::createTicket(
 
 	if (ticketAllowed)
 	{
-		LOG("CSServer", ("createTicket() - networkId(%s) suid(%i) category(%i) subCategory(%i) isBug(%s)", requester.getValueString().c_str(), suid, category, subCategory, isBug ? "yes" : "no"));
+		LOG("CSServer", ("createTicket() - networkId(%s) suid(%u) category(%i) subCategory(%i) isBug(%s)", requester.getValueString().c_str(), suid, category, subCategory, isBug ? "yes" : "no"));
 
 		CSAssistGameAPITicket ticket;
 
@@ -363,7 +363,7 @@ void CustomerServiceServer::appendComment(
 	const Unicode::String &comment
 )
 {
-	LOG("CSServer", ("appendComment() - networkId(%s) suid(%i) characterName(%s) ticketId(%i)", requester.getValueString().c_str(), suid, characterName.c_str(), ticketId));
+	LOG("CSServer", ("appendComment() - networkId(%s) suid(%u) characterName(%s) ticketId(%i)", requester.getValueString().c_str(), suid, characterName.c_str(), ticketId));
 
 	NetworkId *tmpNetworkId = new NetworkId(requester);
 	m_csInterface.requestAppendTicketComment(
@@ -383,7 +383,7 @@ void CustomerServiceServer::cancelTicket(
 {
 	NetworkId *tmpNetworkId = new NetworkId(requester);
 
-	LOG("CSServer", ("cancelTicket() - networkId(%s) suid(%i) ticketId(%i)", requester.getValueString().c_str(), suid, ticketId));
+	LOG("CSServer", ("cancelTicket() - networkId(%s) suid(%u) ticketId(%i)", requester.getValueString().c_str(), suid, ticketId));
 
 	m_csInterface.requestCancelTicket(
 		reinterpret_cast<const void *>(tmpNetworkId), ticketId, suid,
@@ -397,7 +397,7 @@ void CustomerServiceServer::getTickets(
 	unsigned int suid
 )
 {
-	LOG("CSServer", ("getTickets() - networkId(%s) suid(%i)", requester.getValueString().c_str(), suid));
+	LOG("CSServer", ("getTickets() - networkId(%s) suid(%u)", requester.getValueString().c_str(), suid));
 
 	bool const markAsRead = false;
 	unsigned int const start = 0;
@@ -471,7 +471,7 @@ void CustomerServiceServer::getArticle(
 
 void CustomerServiceServer::requestNewTicketActivity(const NetworkId &requester, unsigned int suid)
 {
-	LOG("CSServer", ("requestNewTicketActivity() - networkId(%s) suid(%i)", requester.getValueString().c_str(), suid));
+	LOG("CSServer", ("requestNewTicketActivity() - networkId(%s) suid(%u)", requester.getValueString().c_str(), suid));
 
 	NetworkId *tmpNetworkId = new NetworkId(requester);
 
@@ -482,7 +482,7 @@ void CustomerServiceServer::requestNewTicketActivity(const NetworkId &requester,
 
 void CustomerServiceServer::requestRegisterCharacter(const NetworkId &requester, ConnectionServerConnection *connection, const unsigned int suid)
 {
-	LOG("CSServer", ("requestRegisterCharacter() - networkId(%s) suid(%i)", requester.getValueString().c_str(), suid));
+	LOG("CSServer", ("requestRegisterCharacter() - networkId(%s) suid(%u)", requester.getValueString().c_str(), suid));
 
 	m_csInterface.addPlayer(requester, connection, suid);
 
@@ -490,11 +490,11 @@ void CustomerServiceServer::requestRegisterCharacter(const NetworkId &requester,
 
 	if (suid == 0)
 	{
-		LOG("CSServer", ("CustomerServiceInterface::requestRegisterCharacter() - FAILING due to invalid suid(%i) networkId(%s)", suid, requester.getValueString().c_str()));
+		LOG("CSServer", ("CustomerServiceInterface::requestRegisterCharacter() - FAILING due to invalid suid(%u) networkId(%s)", suid, requester.getValueString().c_str()));
 	}
 	else
 	{
-		LOG("CSServer", ("CustomerServiceInterface::requestRegisterCharacter() - networkId(%s) suid(%i)", requester.getValueString().c_str(), suid));
+		LOG("CSServer", ("CustomerServiceInterface::requestRegisterCharacter() - networkId(%s) suid(%u)", requester.getValueString().c_str(), suid));
 
 		NetworkId *tmpNetworkId = new NetworkId(requester);
 		m_csInterface.requestRegisterCharacter(reinterpret_cast<const void *>(tmpNetworkId), suid, nullptr, 0);

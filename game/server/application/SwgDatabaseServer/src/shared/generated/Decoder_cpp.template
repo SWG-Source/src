@@ -423,14 +423,14 @@ void SwgSnapshot::decodeSharedCreatureObject(NetworkId const & objectId, uint16 
 		{
 			Postures::Enumerator temp;
 			Archive::get(data,temp);
-			row->posture=temp;
+			row->posture=static_cast<int32_t>(temp);
 			break;
 		}
 		case 14:
 		{
 			uint8 temp;
 			Archive::get(data,temp);
-			row->rank=temp;
+			row->rank=static_cast<int32_t>(temp);
 			break;
 		}
 		case 15:

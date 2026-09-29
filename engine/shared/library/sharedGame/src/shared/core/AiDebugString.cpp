@@ -369,7 +369,7 @@ uint32 AiDebugString::toString(std::string & text) const
 	{
 		// Add the text
 
-		text += formattedString.sprintf("%u`", m_textList->size());
+		text += formattedString.sprintf("%zu`", m_textList->size());
 		//DEBUG_REPORT_LOG(true, ("m_textList->size(): %u\n", m_textList->size()));
 
 		TextList::const_iterator iterTextList = m_textList->begin();
@@ -389,7 +389,7 @@ uint32 AiDebugString::toString(std::string & text) const
 
 	// Add the lines
 
-	text += formattedString.sprintf("%u`", m_lineList->size());
+	text += formattedString.sprintf("%zu`", m_lineList->size());
 	//DEBUG_REPORT_LOG(true, ("m_lineList->size(): %u\n", m_lineList->size()));
 
 	LineList::const_iterator iterLineList = m_lineList->begin();
@@ -405,7 +405,7 @@ uint32 AiDebugString::toString(std::string & text) const
 
 	// Add the paths
 
-	text += formattedString.sprintf("%u`", m_pathList->size());
+	text += formattedString.sprintf("%zu`", m_pathList->size());
 	//DEBUG_REPORT_LOG(true, ("m_pathList->size(): %u\n", m_pathList->size()));
 
 	PathList::const_iterator iterPathList = m_pathList->begin();
@@ -417,7 +417,7 @@ uint32 AiDebugString::toString(std::string & text) const
 		TransformList::const_iterator iterPath = path.begin();
 		//DEBUG_REPORT_LOG(true, ("cyclic: %s\n", cyclic ? "yes" : "no"));
 		//DEBUG_REPORT_LOG(true, ("path.size(): %u\n", path.size()));
-		text += formattedString.sprintf("%d`%u`", cyclic ? 1 : 0, path.size());
+		text += formattedString.sprintf("%d`%zu`", cyclic ? 1 : 0, path.size());
 
 		for (; iterPath != path.end(); ++iterPath)
 		{
@@ -428,7 +428,7 @@ uint32 AiDebugString::toString(std::string & text) const
 
 	// Add the circles
 
-	text += formattedString.sprintf("%u`", m_circleList->size());
+	text += formattedString.sprintf("%zu`", m_circleList->size());
 	//DEBUG_REPORT_LOG(true, ("m_circleList->size(): %u\n", m_circleList->size()));
 
 	CircleList::const_iterator iterCircleList = m_circleList->begin();
@@ -444,7 +444,7 @@ uint32 AiDebugString::toString(std::string & text) const
 
 	// Add the axes
 
-	text += formattedString.sprintf("%u`", m_axisList->size());
+	text += formattedString.sprintf("%zu`", m_axisList->size());
 
 	AxisList::const_iterator iterAxisList = m_axisList->begin();
 
@@ -462,7 +462,7 @@ uint32 AiDebugString::toString(std::string & text) const
 
 	// Add the cones
 
-	text += formattedString.sprintf("%u`", m_coneList->size());
+	text += formattedString.sprintf("%zu`", m_coneList->size());
 
 	ConeList::const_iterator iterConeList = m_coneList->begin();
 

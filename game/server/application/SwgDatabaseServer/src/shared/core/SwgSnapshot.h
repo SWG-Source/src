@@ -86,6 +86,7 @@ public:
 	virtual void handleMessageToAck    (const MessageToId &messageId);
 	virtual void handleAddResourceTypeMessage (AddResourceTypeMessage const & message);
 	virtual void handleBountyHunterTargetMessage (const BountyHunterTargetMessage &message);
+	virtual bool prepareSend           () const;
 	virtual bool send                  (GameServerConnection *connection) const;
 
 	// Misc game-specific persistence
@@ -101,7 +102,7 @@ public:
 	virtual void startLoadAfterSaveComplete();
 
 	// Functions for object creation:
-	virtual void newObject(NetworkId const & objectId, int templateId, Tag typeId);
+	virtual void newObject(NetworkId const & objectId, uint32 templateId, Tag typeId);
 	
 	void newBattlefieldMarkerObject       (NetworkId const & objectId);
 	void newBuildingObject                (NetworkId const & objectId);
@@ -208,6 +209,15 @@ protected:
 
 	ImmediateDeleteCustomPersistStep *m_immediateDeleteStep;
 	OfflineMoneyCustomPersistStep *m_offlineMoneyCustomPersistStep;
+
+	// What prepareSend() encoded for send(). An object whose baselines could
+	// not be encoded (no row) is cms_invalid in m_preparedObjects and is not
+	// sent. m_encodeRejected is set by the generated encoders when a stored
+	// value does not fit the member it is sent as; the load is then rejected.
+	mutable bool m_prepared;
+	mutable bool m_encodeRejected;
+	mutable OIDListType m_preparedObjects;
+	mutable std::vector<BatchBaselinesMessageData> m_preparedBaselines;
 	
   private:
 	void registerTags();
@@ -419,7 +429,7 @@ protected:
 	void decodeVector           (Archive::ReadIterator &data, DB::BindableDouble &x,DB::BindableDouble &y, DB::BindableDouble &z) const;
 	void decodeMatchMakingId    (Archive::ReadIterator &data, DB::BufferString &column) const;
 	void decodeComponents       (NetworkId const & objectId, Archive::ReadIterator &data, bool isBaseline);
-	void decodeLocation         (Archive::ReadIterator &data, DB::BindableDouble &x,DB::BindableDouble &y, DB::BindableDouble &z, DB::BindableNetworkId &cell, DB::BindableLong &planet) const;
+	void decodeLocation         (Archive::ReadIterator &data, DB::BindableDouble &x,DB::BindableDouble &y, DB::BindableDouble &z, DB::BindableNetworkId &cell, DB::BindableUint32 &planet) const;
 	void decodeWaypoints        (const NetworkId &objectId, Archive::ReadIterator &data, bool isBaseline);
 	void decodeSingleWaypoint   (const NetworkId &objectId, Archive::ReadIterator &data, bool isBaseline);
 	void decodeQuests           (NetworkId const & networkId, Archive::ReadIterator &data, DB::BufferString &part1, DB::BufferString &part2, DB::BufferString &part3, DB::BufferString &part4) const;
@@ -439,7 +449,7 @@ protected:
 	void encodeVector           (Archive::ByteStream &data, const DB::BindableDouble &x, const DB::BindableDouble &y, const DB::BindableDouble &z) const;
 	void encodeMatchMakingId    (Archive::ByteStream &data, const DB::BufferString &column) const;
 	void encodeComponents       (const NetworkId &objectId, Archive::ByteStream &data) const;
-	void encodeLocation         (Archive::ByteStream &data, const DB::BindableDouble &x,const DB::BindableDouble &y, const DB::BindableDouble &z, const DB::BindableNetworkId &cell, const DB::BindableLong &planet) const;
+	void encodeLocation         (Archive::ByteStream &data, const DB::BindableDouble &x,const DB::BindableDouble &y, const DB::BindableDouble &z, const DB::BindableNetworkId &cell, const DB::BindableUint32 &planet) const;
 	void encodeWaypoints        (const NetworkId & objectId, Archive::ByteStream &data) const;
 	void encodeSingleWaypoint   (const NetworkId & objectId, Archive::ByteStream &data) const;
 	void encodeQuests           (Archive::ByteStream &data, DB::BufferString const &part1, DB::BufferString const &part2, DB::BufferString const &part3, DB::BufferString const &part4) const;

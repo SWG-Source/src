@@ -14,13 +14,14 @@
 #include "sharedDatabaseInterface/BindableNetworkId.h"
 #include "sharedDatabaseInterface/DbQuery.h"
 #include "sharedDatabaseInterface/DbTaskRequest.h"
+#include "sharedFoundation/StationId.h"
 
 // ======================================================================
 
 class TaskUpdateSPCharacterProfileData : public DB::TaskRequest
 {
   public:
-	TaskUpdateSPCharacterProfileData(const std::string & clusterName,const NetworkId & characterId,const std::string & characterName,const std::string & objectName,float x,float y,float z,const std::string & sceneId,float cash_balance,float bank_balance,const std::string & objectTemplateName,int   stationId,const NetworkId & containedBy,int   createTime,int   playedTime,int   numLots);
+	TaskUpdateSPCharacterProfileData(const std::string & clusterName,const NetworkId & characterId,const std::string & characterName,const std::string & objectName,float x,float y,float z,const std::string & sceneId,float cash_balance,float bank_balance,const std::string & objectTemplateName,StationId stationId,const NetworkId & containedBy,int   createTime,int   playedTime,int   numLots);
 	
   public:
 	virtual bool process    (DB::Session *session);
@@ -44,11 +45,11 @@ class TaskUpdateSPCharacterProfileData : public DB::TaskRequest
 		DB::BindableDouble              cash_balance;
 		DB::BindableDouble              bank_balance;
 		DB::BindableString<500>         objectTemplateName;
-		DB::BindableLong                stationId;
+		DB::BindableUint32              stationId;
 		DB::BindableNetworkId           containedBy;
-		DB::BindableLong                createTime;
-		DB::BindableLong                playedTime;
-		DB::BindableLong                numLots;
+		DB::BindableInt32                createTime;
+		DB::BindableInt32                playedTime;
+		DB::BindableInt32                numLots;
 
 		virtual void getSQL                (std::string &sql);
 		virtual bool bindParameters        ();
@@ -72,7 +73,7 @@ class TaskUpdateSPCharacterProfileData : public DB::TaskRequest
 	float            m_cash_balance;
 	float            m_bank_balance;
 	std::string      m_objectTemplateName;
-	int              m_stationId;
+	StationId        m_stationId;
 	NetworkId        m_containedby;
 	int              m_createTime;
 	int              m_playedTime;

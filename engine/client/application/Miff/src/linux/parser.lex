@@ -20,8 +20,11 @@
 #pragma warning (disable: 4505)			/* unreferenced local function has been removed (to be direct: yyunput()) */
 
 /* include files */
+#include <stdint.h>		/* parser.h uses int32_t in YYSTYPE */
 #include "parser.h"		/* NOTE: make sure this matches what Bison/yacc spits out */
 
+#include <errno.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -45,6 +48,7 @@ void	close_brace(void);
 int		count_brace(void);
 
 void printString(char *str);
+int32_t	parseIntegerLiteral(const char *text);
 
 /* global vars that has to be pre-declared because it's referenced by the lexical analyzer */
 int		initialCompile = 0;
@@ -55,6 +59,10 @@ char	inFileName[512];		/* keep track of source file name for error message */
 #define	YY_INPUT(buf,result,max_size) (result = MIFFYYInput(buf,max_size))
 
 #define	SPACE_COUNT_FOR_TAB			(8)
+
+/* stamp every token with its line (before count() advances past a newline) for parser error locations */
+extern int	line_num;
+#define	YY_USER_ACTION	{ yylloc.first_line = yylloc.last_line = line_num; }
 
 %}
 
@@ -245,8 +253,8 @@ EXP			(e|E)(\+|-)?
 									 *	{DIGIT}+{INTSYM}?				means one or more digit and w/or w/o int symbol
 									 */
 									count();
-									/* make sure to store it to ltype (long), and use strtod to convert to unsigned long */
-									yylval.ltype = strtoul((char *) yytext, (char **) 0, 0);
+									/* checked parse into a 32-bit pattern; see parseIntegerLiteral() */
+									yylval.ltype = parseIntegerLiteral((char *) yytext);
 									return(LIT);
 								}
 
@@ -517,4 +525,32 @@ void printString(char *str)
 	char ts[256];
 	sprintf(ts, "%s - %s", str, yytext);
 	MIFFMessage(ts, 0);
+}
+
+/*-----------------------------------------------------------------------------**
+** Parses an integer literal matched by the lexer (decimal, 0 octal or 0x hex, **
+** with optional u/U/l/L suffixes) as the original ILP32 Miff did: strtoul()   **
+** into a 32-bit long, which takes its 32-bit pattern (0xFFFFFFFF is -1).  A   **
+** literal above 4294967295 is rejected: strtoul() saturated it on ILP32 and   **
+** not on LP64.  Like strtoul(), parsing stops at the first invalid digit.     **
+**-----------------------------------------------------------------------------*/
+int32_t parseIntegerLiteral(const char *text)
+{
+	char				errorMessage[128];
+	unsigned long long	value;
+	int					inRange;
+	int const			savedErrno = errno;
+
+	errno = 0;
+	value = strtoull(text, (char **) 0, 0);
+	inRange = (errno != ERANGE) && (value <= UINT32_MAX);
+	errno = savedErrno;
+
+	if (!inRange)
+	{
+		snprintf(errorMessage, sizeof(errorMessage), "integer literal %.40s is outside [0, 4294967295]", text);
+		yyerror(errorMessage);
+		return 0;
+	}
+	return (value <= INT32_MAX) ? (int32_t) value : (int32_t) ((long long) value - 4294967296LL);
 }

@@ -558,7 +558,7 @@ void LfgDataTable::install()
 		{
 			LfgNode const & node = *(iterNode->second);
 
-			FATAL((node.name != iterNode->first), ("%s: node name mismatch (%s, %s)", node.name.c_str(), iterNode->first.c_str()));
+			FATAL((node.name != iterNode->first), ("%s: node name mismatch (%s, %s)", cs_lfgDataTableName, node.name.c_str(), iterNode->first.c_str()));
 
 			if (node.isLeafNode())
 			{

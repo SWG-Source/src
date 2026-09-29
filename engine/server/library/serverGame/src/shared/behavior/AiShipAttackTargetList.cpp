@@ -287,7 +287,7 @@ AiShipAttackTargetList::TargetList const & AiShipAttackTargetList::getUnSortedTa
 // ----------------------------------------------------------------------
 void AiShipAttackTargetList::getSortedTargetList(SortedTargetList & destTargetList) const
 {
-	LOGC(ConfigServerGame::isSpaceAiLoggingEnabled(), "space_debug_ai", ("AiShipAttackTargetList::getSortedTargetList() owner(%s) m_targetList->size(%u)", m_owner->getNetworkId().getValueString().c_str(), m_targetList->size()));
+	LOGC(ConfigServerGame::isSpaceAiLoggingEnabled(), "space_debug_ai", ("AiShipAttackTargetList::getSortedTargetList() owner(%s) m_targetList->size(%zu)", m_owner->getNetworkId().getValueString().c_str(), m_targetList->size()));
 
 	destTargetList.clear();
 
@@ -344,7 +344,7 @@ void AiShipAttackTargetList::purge(time_t const maxAge)
 
 			if (age >= maxAge)
 			{
-				LOGC(ConfigServerGame::isSpaceAiLoggingEnabled(), "space_debug_ai", ("AiShipAttackTargetList::purge() target(%s) age(%u) maxAge(%u) m_targetList->size(%u)", iterTargetList->first.getValueString().c_str(), age, maxAge, m_targetList->size() - 1));
+				LOGC(ConfigServerGame::isSpaceAiLoggingEnabled(), "space_debug_ai", ("AiShipAttackTargetList::purge() target(%s) age(%lld) maxAge(%lld) m_targetList->size(%zu)", iterTargetList->first.getValueString().c_str(), static_cast<long long>(age), static_cast<long long>(maxAge), m_targetList->size() - 1));
 
 				NetworkId const lostUnit(iterTargetList->first);
 
@@ -393,7 +393,7 @@ void AiShipAttackTargetList::findNewPrimaryTarget()
 	}
 	else
 	{
-		LOGC(ConfigServerGame::isSpaceAiLoggingEnabled(), "space_debug_ai", ("AiShipAttackTargetList::findNewPrimaryTarget() m_owner(%s) m_targetList->size(%u) primaryTarget(%s) damage(%f)", m_owner->getNetworkId().getValueString().c_str(), m_targetList->size(), m_primaryTarget.getValueString().c_str(), m_primaryTargetDamage));
+		LOGC(ConfigServerGame::isSpaceAiLoggingEnabled(), "space_debug_ai", ("AiShipAttackTargetList::findNewPrimaryTarget() m_owner(%s) m_targetList->size(%zu) primaryTarget(%s) damage(%f)", m_owner->getNetworkId().getValueString().c_str(), m_targetList->size(), m_primaryTarget.getValueString().c_str(), m_primaryTargetDamage));
 	}
 
 	// We should only have ship objects in our target list
@@ -418,7 +418,7 @@ void AiShipAttackTargetList::clear()
 	{
 		purge(0);
 
-		LOGC(ConfigServerGame::isSpaceAiLoggingEnabled(), "space_debug_ai", ("AiShipAttackTargetList::clear() m_owner(%s) m_targetList->size(%u) primaryTarget(%s)", m_owner->getNetworkId().getValueString().c_str(), m_targetList->size(), m_primaryTarget.getValueString().c_str()));
+		LOGC(ConfigServerGame::isSpaceAiLoggingEnabled(), "space_debug_ai", ("AiShipAttackTargetList::clear() m_owner(%s) m_targetList->size(%zu) primaryTarget(%s)", m_owner->getNetworkId().getValueString().c_str(), m_targetList->size(), m_primaryTarget.getValueString().c_str()));
 	}
 }
 
@@ -429,7 +429,7 @@ void AiShipAttackTargetList::setNewPrimaryTarget(CachedNetworkId const & newPrim
 
 	if (m_primaryTarget != newPrimaryTarget)
 	{
-		LOGC(ConfigServerGame::isSpaceAiLoggingEnabled(), "space_debug_ai", ("AiShipAttackTargetList::setNewPrimaryTarget() m_owner(%s) newPrimaryTarge(%s) damage(%.2f) m_targetList->size(%u)", m_owner->getNetworkId().getValueString().c_str(), newPrimaryTarget.getValueString().c_str(), damage, m_targetList->size()));
+		LOGC(ConfigServerGame::isSpaceAiLoggingEnabled(), "space_debug_ai", ("AiShipAttackTargetList::setNewPrimaryTarget() m_owner(%s) newPrimaryTarge(%s) damage(%.2f) m_targetList->size(%zu)", m_owner->getNetworkId().getValueString().c_str(), newPrimaryTarget.getValueString().c_str(), damage, m_targetList->size()));
 
 		m_primaryTarget = newPrimaryTarget;
 

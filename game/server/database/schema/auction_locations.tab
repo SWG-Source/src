@@ -4,7 +4,7 @@ create table auction_locations -- NO_IMPORT
     owner_id      number(20), -- BIND_AS(DB::BindableNetworkId)
     location_name varchar2(256),
     sales_tax number(20) DEFAULT 0,
-    sales_tax_bank_id number(20) DEFAULT 0,
+    sales_tax_bank_id number(20) DEFAULT 0, -- BIND_AS(DB::BindableNetworkId)
     empty_date number(20) not null,
     last_access_date number(20) not null,
     inactive_date number(20) not null,

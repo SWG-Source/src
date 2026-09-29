@@ -298,7 +298,7 @@ void SpaceDockingManagerNamespace::remove()
 {
 	if (!s_shipsBeingDockedList.empty())
 	{
-		WARNING(true, ("debug_ai: The s_shipsBeingDockedList is not empty(%u), this is a sign of a reference counting problem.", s_shipsBeingDockedList.size()));
+		WARNING(true, ("debug_ai: The s_shipsBeingDockedList is not empty(%zu), this is a sign of a reference counting problem.", s_shipsBeingDockedList.size()));
 	}
 }
 
@@ -463,7 +463,7 @@ void SpaceDockingManager::releaseDockingProcedure(NetworkId const & dockingUnit,
 
 			s_shipsBeingDockedList.erase(iterShipsBeingDockedList);
 
-			LOGC(ConfigServerGame::isSpaceAiLoggingEnabled(), "debug_ai", ("SpaceDockingManager::releaseDockingProcedure() REMOVING dockTarget(%s) s_shipsBeingDockedList.size(%u)", dockTarget.getValueString().c_str(), s_shipsBeingDockedList.size()));
+			LOGC(ConfigServerGame::isSpaceAiLoggingEnabled(), "debug_ai", ("SpaceDockingManager::releaseDockingProcedure() REMOVING dockTarget(%s) s_shipsBeingDockedList.size(%zu)", dockTarget.getValueString().c_str(), s_shipsBeingDockedList.size()));
 		}
 	}
 	else

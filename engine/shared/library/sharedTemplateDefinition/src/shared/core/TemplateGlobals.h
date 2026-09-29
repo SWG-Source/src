@@ -11,6 +11,7 @@
 
 #include <string>
 #include "sharedFoundation/Tag.h"
+#include "sharedFoundation/FixedWidthParse.h"
 
 //========================================================================
 
@@ -110,11 +111,8 @@ static const char SUFFIX[4] = {',', ',', ',', ')'};
 inline bool isinteger(const char *string)
 {
 	char *endptr;
-	errno = 0;
-	strtol(string, &endptr, 10);
-	if (errno == ERANGE || *endptr != '\0')
-		return false;
-	return true;
+	int32_t value;
+	return FixedWidthParse::toInt32(string, &endptr, 10, value) && *endptr == '\0';
 }
 
 inline bool isfloat(const char *string)

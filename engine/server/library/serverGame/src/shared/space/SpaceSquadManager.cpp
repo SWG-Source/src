@@ -86,7 +86,7 @@ void SpaceSquadManagerNamespace::verifySquads()
 				}
 			}
 
-			DEBUG_WARNING((squadCount > 1), ("SpaceSquadManagerNamespace::verifySquads() unit(%s) ERROR: Unit is in more than one squad! attackSquadCount(%d)", unit.getValueString().c_str()));
+			DEBUG_WARNING((squadCount > 1), ("SpaceSquadManagerNamespace::verifySquads() unit(%s) ERROR: Unit is in more than one squad! attackSquadCount(%d)", unit.getValueString().c_str(), squadCount));
 			DEBUG_WARNING((squadCount != 1), ("SpaceSquadManagerNamespace::verifySquads() unit(%s) ERROR: Unit is not in an squad!", unit.getValueString().c_str()));
 		}
 	}
@@ -117,7 +117,7 @@ void SpaceSquadManager::remove()
 		WARNING(!iterSquadList->second->isEmpty(), ("SpaceSquadManager::remove() The squad(%d) is not empty(%u), this is a sign of a reference counting problem.", iterSquadList->first, iterSquadList->second->getUnitCount()));
 	}
 
-	WARNING(!s_squadList.empty(), ("SpaceSquadManager::remove() The squad list is not empty(%u), this is a sign of a reference counting problem.", s_squadList.size()));
+	WARNING(!s_squadList.empty(), ("SpaceSquadManager::remove() The squad list is not empty(%zu), this is a sign of a reference counting problem.", s_squadList.size()));
 }
 
 // ----------------------------------------------------------------------
@@ -131,7 +131,7 @@ void SpaceSquadManager::alter(float const deltaTime)
 
 		if (iterSquadList->second->isEmpty())
 		{
-			LOGC(ConfigServerGame::isSpaceAiLoggingEnabled(), "space_debug_ai", ("SpaceSquadManager::alter() Purging empty squad(%d) totalSquadCount(%u)", iterSquadList->first, s_squadList.size() - 1));
+			LOGC(ConfigServerGame::isSpaceAiLoggingEnabled(), "space_debug_ai", ("SpaceSquadManager::alter() Purging empty squad(%d) totalSquadCount(%zu)", iterSquadList->first, s_squadList.size() - 1));
 
 			delete iterSquadList->second;
 

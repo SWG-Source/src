@@ -14,6 +14,7 @@
 
 class CommandPermissionManager;
 class NetworkId;
+struct tm;
 
 // ======================================================================
 
@@ -167,6 +168,20 @@ public:
 	static void             reconstructString            (const StringVector_t & args, size_t startToken, size_t endToken, bool quote, Unicode::String & result);
 
 	static void             chopInputStrings             (const String_t & str, StringVector_t & sv);
+
+	// Integer arguments. The whole argument, optionally surrounded by
+	// whitespace, must be one decimal integer that fits the destination
+	// type. Anything else returns false and leaves value unchanged, so a
+	// command can reject it before acting. The result does not depend on
+	// the width of long.
+	static bool             parseArg                     (const String_t & arg, int32 & value);
+	static bool             parseArg                     (const String_t & arg, uint32 & value);
+
+	// Six consecutive arguments starting at argv[first]: year, month (1-12),
+	// day, hour, minute and second, stored as the struct tm fields
+	// (tm_year = year - 1900, tm_mon = month - 1). Other fields are left
+	// unchanged. On failure nothing is stored.
+	static bool             parseDateTimeArgs            (const StringVector_t & argv, size_t first, struct tm & value);
 
 	String_t                constructFullPath            () const;
 	String_t                constructFullPath            (const String_t & subCmd) const;

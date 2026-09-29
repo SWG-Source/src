@@ -72,7 +72,7 @@ namespace CachedFileManagerNamespace
 	char * ms_filenames = nullptr;
 	size_t ms_filenamesLength = 0;
 	size_t ms_filenamesCurrentPos = 0;
-	unsigned long ms_totalTime;
+	uint64_t ms_totalTime;
 	size_t ms_numberOfFilesLoaded;
 
 	std::string ms_cacheFileName;
@@ -184,7 +184,7 @@ void CachedFileManager::preloadSomeAssets ()
 {
 	if (!donePreloading ())
 	{
-		unsigned long const startTime = Clock::timeMs ();
+		uint64_t const startTime = Clock::timeMs ();
 
 		//-- preloading occurs in one second slices
 		while (ms_filenamesCurrentPos < ms_filenamesLength && Clock::timeMs () - startTime < 1000)
@@ -223,14 +223,13 @@ void CachedFileManager::preloadSomeAssets ()
 		}
 
 #if PRODUCTION == 0
-		unsigned long const stopTime = Clock::timeMs ();
-		ms_totalTime += stopTime - startTime;
+		ms_totalTime += Clock::durationMs<uint64_t> (startTime, Clock::timeMs ());
 #endif
 
 		if (donePreloading ())
 		{
 #if PRODUCTION == 0
-			REPORT_LOG (true, ("CachedFileManager [%s]: Caching took [%.2f] seconds for [%d] files and increased memory usage by [%.2f] MB.\n", ms_cacheFileName.c_str (), static_cast<float> (ms_totalTime) / 1000.f, ms_numberOfFilesLoaded, static_cast<float> (ms_totalAllocatedBytes) / (1024.0f * 1024.0f)));
+			REPORT_LOG (true, ("CachedFileManager [%s]: Caching took [%.2f] seconds for [%zu] files and increased memory usage by [%.2f] MB.\n", ms_cacheFileName.c_str (), static_cast<float> (ms_totalTime) / 1000.f, ms_numberOfFilesLoaded, static_cast<float> (ms_totalAllocatedBytes) / (1024.0f * 1024.0f)));
 
 			int size = 0;
 			while (!ms_extensionMap.empty ())

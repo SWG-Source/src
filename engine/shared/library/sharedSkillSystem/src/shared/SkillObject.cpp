@@ -47,7 +47,7 @@ namespace
 		std::string token;
 		static const char * const whitespace = ",";
 
-		DEBUG_WARNING (str.find (" \n\r\t") != std::string::npos, ("SkillObject Cell string [%s] row %d column [%s] contains spaces or other invalid characters", row, columnName.c_str ()));
+		DEBUG_WARNING (str.find (" \n\r\t") != std::string::npos, ("SkillObject Cell string [%s] row %d column [%s] contains spaces or other invalid characters", str.c_str (), row, columnName.c_str ()));
 
 		while (Unicode::getFirstToken (str, endpos, endpos, token, whitespace))
 		{

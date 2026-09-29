@@ -110,11 +110,11 @@ void ManagerConnection::onReceive(const Archive::ByteStream & message)
 			{
 				if ((std::max(currentTime, msg.getValue().second) - std::min(currentTime, msg.getValue().second)) > ConfigTaskManager::getMaximumClockDriftToleranceSeconds())
 				{
-					LOG("CustomerService", ("system_clock_mismatch:System clock mismatch (%d seconds) by more than %d seconds: master TaskManager epoch (%ld), remote TaskManager %s (%s) epoch (%ld)", (std::max(currentTime, msg.getValue().second) - std::min(currentTime, msg.getValue().second)), ConfigTaskManager::getMaximumClockDriftToleranceSeconds(), currentTime, msg.getValue().first.c_str(), getRemoteAddress().c_str(), msg.getValue().second));
+					LOG("CustomerService", ("system_clock_mismatch:System clock mismatch (%d seconds) by more than %d seconds: master TaskManager epoch (%d), remote TaskManager %s (%s) epoch (%d)", (std::max(currentTime, msg.getValue().second) - std::min(currentTime, msg.getValue().second)), ConfigTaskManager::getMaximumClockDriftToleranceSeconds(), currentTime, msg.getValue().first.c_str(), getRemoteAddress().c_str(), msg.getValue().second));
 
 					// tell CentralServer about the system clock mismatch so it can report an alert to SOEMon
 					GenericValueTypeMessage<std::string> systemTimeMismatchMessage("SystemTimeMismatchNotification",
-						FormattedString<1024>().sprintf("%s: %s (%s) is off by %ld seconds", CalendarTime::convertEpochToTimeStringLocal(static_cast<time_t>(currentTime)).c_str(), msg.getValue().first.c_str(), getRemoteAddress().c_str(), (std::max(currentTime, msg.getValue().second) - std::min(currentTime, msg.getValue().second))));
+						FormattedString<1024>().sprintf("%s: %s (%s) is off by %d seconds", CalendarTime::convertEpochToTimeStringLocal(static_cast<time_t>(currentTime)).c_str(), msg.getValue().first.c_str(), getRemoteAddress().c_str(), (std::max(currentTime, msg.getValue().second) - std::min(currentTime, msg.getValue().second))));
 					TaskManager::sendToCentralServer(systemTimeMismatchMessage);
 				}
 			}
@@ -144,11 +144,11 @@ void ManagerConnection::onReceive(const Archive::ByteStream & message)
 					// TaskManager, and send it a message to terminate itself
 					if (currentTime <= clockDriftFatalTimePeriod)
 					{
-						FATAL(true, ("System clock mismatch (%d seconds) by more than %d seconds: master TaskManager epoch (%ld), remote TaskManager %s (%s) epoch (%ld)", (std::max(currentTime, t.getCurrentEpochTime()) - std::min(currentTime, t.getCurrentEpochTime())), ConfigTaskManager::getMaximumClockDriftToleranceSeconds(), currentTime, t.getCommandLine().c_str(), getRemoteAddress().c_str(), t.getCurrentEpochTime()));
+						FATAL(true, ("System clock mismatch (%d seconds) by more than %d seconds: master TaskManager epoch (%d), remote TaskManager %s (%s) epoch (%d)", (std::max(currentTime, t.getCurrentEpochTime()) - std::min(currentTime, t.getCurrentEpochTime())), ConfigTaskManager::getMaximumClockDriftToleranceSeconds(), currentTime, t.getCommandLine().c_str(), getRemoteAddress().c_str(), t.getCurrentEpochTime()));
 					}
 					else
 					{
-						LOG("CustomerService", ("system_clock_mismatch:System clock mismatch (%d seconds) by more than %d seconds: master TaskManager epoch (%ld), remote TaskManager %s (%s) epoch (%ld). Telling remote TaskManager to terminate.", (std::max(currentTime, t.getCurrentEpochTime()) - std::min(currentTime, t.getCurrentEpochTime())), ConfigTaskManager::getMaximumClockDriftToleranceSeconds(), currentTime, t.getCommandLine().c_str(), getRemoteAddress().c_str(), t.getCurrentEpochTime()));
+						LOG("CustomerService", ("system_clock_mismatch:System clock mismatch (%d seconds) by more than %d seconds: master TaskManager epoch (%d), remote TaskManager %s (%s) epoch (%d). Telling remote TaskManager to terminate.", (std::max(currentTime, t.getCurrentEpochTime()) - std::min(currentTime, t.getCurrentEpochTime())), ConfigTaskManager::getMaximumClockDriftToleranceSeconds(), currentTime, t.getCommandLine().c_str(), getRemoteAddress().c_str(), t.getCurrentEpochTime()));
 
 						GenericValueTypeMessage<std::pair<std::string, std::pair<int32_t, int32_t> > > systemTimeMismatchMessage("SystemTimeMismatchMessage", std::make_pair(TaskManager::getNodeLabel(), std::make_pair(static_cast<int32_t>(currentTime), static_cast<int32_t> (t.getCurrentEpochTime()))));
 						send(systemTimeMismatchMessage);
@@ -167,7 +167,7 @@ void ManagerConnection::onReceive(const Archive::ByteStream & message)
 		case constcrc("SystemTimeMismatchMessage") :
 		{
 			GenericValueTypeMessage<std::pair<std::string, std::pair<int32_t, int32_t> > > msg(r);
-			FATAL((msg.getValue().first == "node0"), ("System clock mismatch (%d seconds) by more than %d seconds: master TaskManager epoch (%ld), self epoch (%ld)", (std::max(msg.getValue().second.first, msg.getValue().second.second) - std::min(msg.getValue().second.first, msg.getValue().second.second)), ConfigTaskManager::getMaximumClockDriftToleranceSeconds(), msg.getValue().second.first, msg.getValue().second.second));
+			FATAL((msg.getValue().first == "node0"), ("System clock mismatch (%d seconds) by more than %d seconds: master TaskManager epoch (%d), self epoch (%d)", (std::max(msg.getValue().second.first, msg.getValue().second.second) - std::min(msg.getValue().second.first, msg.getValue().second.second)), ConfigTaskManager::getMaximumClockDriftToleranceSeconds(), msg.getValue().second.first, msg.getValue().second.second));
 			break;
 		}
 		case constcrc("TaskSpawnProcess") :

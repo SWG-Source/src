@@ -9,6 +9,8 @@
 #ifndef INCLUDED_IndentedFileWriter_H
 #define INCLUDED_IndentedFileWriter_H
 
+
+#include "sharedFoundation/FormatAttribute.h"
 // ======================================================================
 
 #include <stdio.h>
@@ -29,7 +31,7 @@ public:
 	void  unindent();
 
 	void  writeLine(char const *line) const;
-	void  writeLineFormat(char const *format, ...) const;
+	void  writeLineFormat(char const *format, ...) const SWG_FORMAT_PRINTF(2, 3);
 
 private:
 

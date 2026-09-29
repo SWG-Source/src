@@ -230,7 +230,7 @@ private:
 	bool                            m_gameServerReadyObjectIds;
 	bool                            m_gameServerReadyDatabaseConnected;
 	bool                            m_gameServerReadyPlanetConnected;
-	uint32_t                        m_connectionTimeout;
+	uint64_t                        m_connectionTimeout; // absolute Clock::timeMs(), 0 if unset
 	
 	ChatServerConnection *          m_chatServerConnection;
 };

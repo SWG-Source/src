@@ -86,7 +86,7 @@ void AiMovementFlee::getDebugInfo ( std::string & outString ) const
 	AiMovementWaypoint::getDebugInfo(outString);
 
 	Vector const & flee_w = m_fleeFrom.getPosition_w();
-	outString += FormattedString<1024>().sprintf("AiMovementFlee: fleeingFrom(%d) offset(%.2f, %.2f, %.2f) distance[%.2f...%.2f]", m_fleeFrom.getObjectId().getHashValue(), flee_w.x, flee_w.y, flee_w.z, m_minDistance, m_maxDistance);
+	outString += FormattedString<1024>().sprintf("AiMovementFlee: fleeingFrom(%zu) offset(%.2f, %.2f, %.2f) distance[%.2f...%.2f]", m_fleeFrom.getObjectId().getHashValue(), flee_w.x, flee_w.y, flee_w.z, m_minDistance, m_maxDistance);
 }
 
 // ----------------------------------------------------------------------

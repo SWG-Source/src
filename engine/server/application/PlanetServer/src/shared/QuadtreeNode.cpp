@@ -138,9 +138,9 @@ void Node::subscribeServer(uint32 serverId, int count)
 	if (ConfigPlanetServer::getLogChunkLoading())
 	{
 		if (newSub)
-			LOG("ChunkLoading",("Node %s Server %lu new subscription, count %i",getDebugNodeString().c_str(), serverId, m_subscriptionList[serverId]));
+			LOG("ChunkLoading",("Node %s Server %u new subscription, count %i",getDebugNodeString().c_str(), serverId, m_subscriptionList[serverId]));
 		else
-			LOG("ChunkLoading",("Node %s Server %lu subscription count changed by %i to %i",getDebugNodeString().c_str(), serverId, count, m_subscriptionList[serverId]));
+			LOG("ChunkLoading",("Node %s Server %u subscription count changed by %i to %i",getDebugNodeString().c_str(), serverId, count, m_subscriptionList[serverId]));
 	}
 }
 
@@ -189,9 +189,9 @@ void Node::unsubscribeServer(uint32 serverId, int count, bool clearIfZero)
 	if (ConfigPlanetServer::getLogChunkLoading())
 	{
 		if (cleared)
-			LOG("ChunkLoading",("Node %s Server %lu unsubscribed",getDebugNodeString().c_str(), serverId));
+			LOG("ChunkLoading",("Node %s Server %u unsubscribed",getDebugNodeString().c_str(), serverId));
 		else
-			LOG("ChunkLoading",("Node %s Server %lu subscription count changed by -%i to %i",getDebugNodeString().c_str(), serverId, count, m_subscriptionList[serverId]));
+			LOG("ChunkLoading",("Node %s Server %u subscription count changed by -%i to %i",getDebugNodeString().c_str(), serverId, count, m_subscriptionList[serverId]));
 	}
 }
 
@@ -421,7 +421,7 @@ void Node::migrateToServer(uint32 newServer)
 	}
 
 	if (ConfigPlanetServer::getLogChunkLoading())
-		LOG("ChunkLoading",("Node %s Migrate to server %lu",getDebugNodeString().c_str(), newServer));
+		LOG("ChunkLoading",("Node %s Migrate to server %u",getDebugNodeString().c_str(), newServer));
 }
 
 // ----------------------------------------------------------------------
@@ -502,7 +502,7 @@ void Node::handleCrash(uint32 crashedServer, std::vector<PlanetProxyObject*> &su
 				{
 					if (ConfigPlanetServer::getLogObjectLoading())
 						LOG("ObjectLoading",
-							("Handling crash:  moving object %s from server %lu to server %lu",
+							("Handling crash:  moving object %s from server %u to server %u",
 							 (*i)->getObjectId().getValueString().c_str(),crashedServer,m_preferredServer));
 
 					(*i)->changeAuthority(m_preferredServer, true, false);

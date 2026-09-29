@@ -60,7 +60,7 @@ SpacePath::~SpacePath()
 // ----------------------------------------------------------------------
 void SpacePath::addTransform(Transform const & transform)
 {
-	LOGC(ConfigServerGame::isSpaceAiLoggingEnabled(), "space_debug_ai", ("SpacePath::addTransform() path(0x%p) pathSize(%u) x(%.2f) y(%.2f) z(%.2f)", this, m_transformList.size() + 1, transform.getPosition_p().x, transform.getPosition_p().y, transform.getPosition_p().z));
+	LOGC(ConfigServerGame::isSpaceAiLoggingEnabled(), "space_debug_ai", ("SpacePath::addTransform() path(0x%p) pathSize(%zu) x(%.2f) y(%.2f) z(%.2f)", this, m_transformList.size() + 1, transform.getPosition_p().x, transform.getPosition_p().y, transform.getPosition_p().z));
 
 	DEBUG_FATAL(m_transformList.size() > static_cast<size_t>(s_maximumPathNodes), ("The transform list exceeds %d transforms.", s_maximumPathNodes));
 
@@ -100,7 +100,7 @@ void SpacePath::addReference(void const * const object, float const objectSize)
 
 	++m_referenceCount;
 
-	LOGC(ConfigServerGame::isSpaceAiLoggingEnabled(), "space_debug_ai", ("SpacePath::addReference() path(0x%p) pathSize(%u) referenceCount(%d) objectSize(%3.2f)", this, m_transformList.size(), m_referenceCount, objectSize));
+	LOGC(ConfigServerGame::isSpaceAiLoggingEnabled(), "space_debug_ai", ("SpacePath::addReference() path(0x%p) pathSize(%zu) referenceCount(%d) objectSize(%3.2f)", this, m_transformList.size(), m_referenceCount, objectSize));
 
 	// Add the object to the list here.
 	IGNORE_RETURN(m_collisionRadiusMap->insert(std::make_pair(object, objectSize)));
@@ -125,7 +125,7 @@ void SpacePath::releaseReference(void const * const object)
 	// Resize this path if necessary.
 	requestPathResize();
 
-	LOGC(ConfigServerGame::isSpaceAiLoggingEnabled(), "space_debug_ai", ("SpacePath::releaseReference() path(0x%p) pathSize(%u) referenceCount(%d)", this, m_transformList.size(), m_referenceCount));
+	LOGC(ConfigServerGame::isSpaceAiLoggingEnabled(), "space_debug_ai", ("SpacePath::releaseReference() path(0x%p) pathSize(%zu) referenceCount(%d)", this, m_transformList.size(), m_referenceCount));
 }
 
 // ----------------------------------------------------------------------

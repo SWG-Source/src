@@ -9,11 +9,15 @@
 #include "sharedCommandParser/CommandParser.h"
 #include "sharedCommandParser/CommandPermissionManager.h"
 
+#include "sharedFoundation/FixedWidthParse.h"
 #include "sharedFoundation/NetworkId.h"
 #include "UnicodeUtils.h" 
 
 #include <algorithm>
+#include <climits>
 #include <cstdio>
+#include <ctime>
+#include <string>
 #include <vector>
 #include <set>
 #include <map>
@@ -738,6 +742,79 @@ bool   CommandParser::isAbbrev (const String_t & str, const char * const wholeWo
 bool CommandParser::isCommand (const String_t & str, const char * cmd)
 {
 	return str == Unicode::narrowToWide (cmd);
+}
+
+//----------------------------------------------------------------------
+
+namespace CommandParserNamespace
+{
+	// Integer text is ASCII. Rejecting every other code unit here keeps a
+	// non-ASCII character from narrowing into a digit, and an embedded nul
+	// from hiding the rest of the argument.
+	bool toAsciiText(const CommandParser::String_t & arg, std::string & text)
+	{
+		text.clear();
+		text.reserve(arg.size());
+		for (CommandParser::String_t::const_iterator i = arg.begin(); i != arg.end(); ++i)
+		{
+			if (*i == 0 || *i > 0x7f)
+				return false;
+			text.push_back(static_cast<char>(*i));
+		}
+		return true;
+	}
+}
+
+using namespace CommandParserNamespace;
+
+//----------------------------------------------------------------------
+
+bool CommandParser::parseArg(const String_t & arg, int32 & value)
+{
+	std::string text;
+	return toAsciiText(arg, text) && FixedWidthParse::parseInt32(text.c_str(), 10, value);
+}
+
+//----------------------------------------------------------------------
+
+bool CommandParser::parseArg(const String_t & arg, uint32 & value)
+{
+	std::string text;
+	return toAsciiText(arg, text) && FixedWidthParse::parseUint32(text.c_str(), 10, value);
+}
+
+//----------------------------------------------------------------------
+
+bool CommandParser::parseDateTimeArgs(const StringVector_t & argv, size_t const first, struct tm & value)
+{
+	if (first > argv.size() || argv.size() - first < 6)
+		return false;
+
+	int32 year = 0;
+	int32 month = 0;
+	int32 day = 0;
+	int32 hour = 0;
+	int32 minute = 0;
+	int32 second = 0;
+	if (   !parseArg(argv[first], year)
+		|| !parseArg(argv[first + 1], month)
+		|| !parseArg(argv[first + 2], day)
+		|| !parseArg(argv[first + 3], hour)
+		|| !parseArg(argv[first + 4], minute)
+		|| !parseArg(argv[first + 5], second))
+		return false;
+
+	// tm_year and tm_mon are offsets; the subtraction must not overflow.
+	if (year < INT_MIN + 1900 || month < INT_MIN + 1)
+		return false;
+
+	value.tm_year = year - 1900;
+	value.tm_mon = month - 1;
+	value.tm_mday = day;
+	value.tm_hour = hour;
+	value.tm_min = minute;
+	value.tm_sec = second;
+	return true;
 }
 
 //----------------------------------------------------------------------

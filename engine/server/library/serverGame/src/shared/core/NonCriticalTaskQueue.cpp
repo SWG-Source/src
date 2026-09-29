@@ -51,7 +51,7 @@ void NonCriticalTaskQueue::update()
 		taskLimit = m_tasks->size();
 	
 	if (static_cast<int>(m_tasks->size()) > taskLimit)
-		LOG("NonCritialTaskQueue",("Backlog:  %i tasks in the queue, %i will be done this frame.",m_tasks->size(),taskLimit));
+		LOG("NonCritialTaskQueue",("Backlog:  %zu tasks in the queue, %i will be done this frame.",m_tasks->size(),taskLimit));
 
 	while ((taskLimit-- > 0) && !(m_tasks->empty()))
 	{

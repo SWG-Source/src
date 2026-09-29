@@ -40,6 +40,7 @@
 #include "sharedUtility/DataTable.h"
 #include "UnicodeUtils.h"
 #include <algorithm>
+#include <cinttypes>
 
 // ======================================================================
 
@@ -748,7 +749,7 @@ void ServerBuildoutManagerNamespace::loadArea(AreaInfo &areaInfo)
 					}
 				}
 
-				FATAL(isPob && (cellIndex != 0 || containerId != 0), ("tried to add a pob to a cell or other container. %s (objId=%d cellIndex=%d containerId=%d)",
+				FATAL(isPob && (cellIndex != 0 || containerId != 0), ("tried to add a pob to a cell or other container. %s (objId=%" PRId64 " cellIndex=%d containerId=%" PRId64 ")",
 					serverTemplateBase->getName(), objId, cellIndex, containerId));
 
 				Quaternion const q(
@@ -917,7 +918,7 @@ void ServerBuildoutManagerNamespace::instantiateAreaNode(AreaInfo const &areaInf
 		}
 
 		ServerObject * const containingObject = containerId ? safe_cast<ServerObject *>(NetworkIdManager::getObjectById(NetworkId(static_cast<NetworkId::NetworkIdType>(containerId)))) : 0;
-		FATAL(containerId && !containingObject, ("could not find containing object obj=%d container=%d", (int)objectId.getValue(), containerId));
+		FATAL(containerId && !containingObject, ("could not find containing object obj=%d container=%" PRId64, (int)objectId.getValue(), containerId));
 
 		//-- object has already been created
 		//-- this must be the controller object or one of its contents.
@@ -1244,7 +1245,7 @@ void ServerBuildoutManager::onEventStarted(std::string const & eventName)
 		}
 
 		ServerObject * const containingObject = containerId ? safe_cast<ServerObject *>(NetworkIdManager::getObjectById(NetworkId(static_cast<NetworkId::NetworkIdType>(containerId)))) : 0;
-		FATAL(containerId && !containingObject, ("could not find containing object obj=%d container=%d", (int)objectId.getValue(), containerId));
+		FATAL(containerId && !containingObject, ("could not find containing object obj=%d container=%" PRId64, (int)objectId.getValue(), containerId));
 
 		//-- object has already been created
 		//-- this must be the controller object or one of its contents.
