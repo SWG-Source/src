@@ -68,7 +68,57 @@ backup and matching binaries/configuration, not by adding 2^32 to negative IDs.
 | Linux ELF symbols | `engine/shared/library/sharedDebug/test/linux/debughelp-test.sh` |
 | Linux Miff arithmetic and corpus | [Miff tests](../engine/client/application/Miff/test/README.md) |
 
-## Recorded validation and its limits
+## Current production revision and reproducible checks
+
+The production source at `8e57911e45ce52be88d6b9199bab82aef67ef1fc` was
+freshly built and exercised on both Linux ABIs. The following CI and documentation
+commits do not change production source. [Published logs and source hashes](https://github.com/Akilleez-QA/client-tools/tree/review/client-x64-evidence/review/client-x64/followups/server)
+identify the tested revision, toolchain and limits.
+
+- Fresh full 32/64-bit builds passed using GCC 7.5, CMake 3.17 and Java 11.
+  The validation configuration was RELEASE with C++ `-O0`; this is not proof
+  of an optimized production release.
+- Each ABI passed 62 Oracle binding, 19 snapshot-send and 7 cluster-list checks,
+  Clock and OsFile tests, and 33 Miff fixtures.
+- Three cluster starts (64-bit, 64-bit restart, 32-bit) each reached 84 processes,
+  including 38 GameServers, with running/connected console status and matching
+  executable hashes and ELF classes.
+- Console shutdown stopped Central/GameServers. Residual TaskManager/LoginServer
+  processes were explicitly terminated. Connection-close/broken-pipe notices
+  remain in the logs. No final-save acknowledgement is claimed.
+- No client connected during this run. Both ABIs used the same copied database
+  sequentially; this does not renew historical gameplay evidence or establish
+  deterministic comparison of separately initialized databases.
+
+[CI instructions](../tools/ci/README.md) build the submitted revision rather
+than cloning another source tree. Portable CI covers wire (19/20), timestamp
+and message (16/22), parser (41 expected lines), calendar (5), DebugHelp
+(6 plus addr2line), npos scanning and audit generation on both ABIs. The legacy
+container job freshly builds the submitted source and runs Clock, OsFile,
+DebugHelp and Miff against that build. Both workflows passed at `25816f10`:
+[portable run](https://github.com/Akilleez-QA/src/actions/runs/36549084361),
+[full 32-bit build and regressions](https://github.com/Akilleez-QA/src/actions/runs/36549084466).
+Oracle and cluster runtime remain VM validation, not hosted CI.
+
+### Wire repair history
+
+Review the final tree as well as these additive corrections; history is retained.
+
+| Commit | Correction |
+| --- | --- |
+| `7ace7d51` | Restores unsigned legacy delta-counter arithmetic; four-byte width alone did not preserve wrap behavior. |
+| `4889e6aa` | Restores signed 32-bit wire timestamps, checks narrowing, and keeps internal chat times host-sized. |
+| `30cf4531` | Rejects oversized generic container counts instead of silently narrowing them. |
+| `8e57911e` | Applies checked count conversion to the reviewed per-message writers. |
+
+[Tracked acceptance work](https://github.com/Akilleez-QA/client-tools/blob/review/client-x64-evidence/review/client-x64/followups/ACCEPTANCE.md)
+and the [base dependency assessment](https://github.com/Akilleez-QA/client-tools/blob/review/client-x64-evidence/review/client-x64/followups/server-dependency-plan.md)
+keep deployment gaps and the underlying `64-bit-types` integration separate.
+
+## Historical validation before the wire corrections
+
+The results below describe earlier completion-candidate sessions. They are
+retained as historical evidence and are not attributed to the current head.
 
 The completion candidate was built and exercised on both Linux ABIs in an
 isolated VM. Consolidation preserves its production source, apart from
