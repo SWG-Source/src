@@ -3,6 +3,8 @@
 #include "sharedGame/PlayerQuestData.h"
 #include "Archive/AutoDeltaPackedMap.h"
 #include "Archive/AutoDeltaVector.h"
+#include "Archive/AutoDeltaMap.h"
+#include "Archive/AutoDeltaQueue.h"
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
@@ -34,7 +36,7 @@ int main() {
  std::string questText; auto questRead=quests.begin();
  Archive::AutoDeltaPackedMap<uint32_t,PlayerQuestData>::unpack(questRead,questText);
  check(questText=="2147483648 1 2 42:4294967295 1:","legacy32 quests decode active tasks, completed reward and high-bit keys");
- // Legacy x86 layout: int32 count, uint32 baseline count, ADD=0, uint32 key/value.
+ // Legacy x86 layout: uint32 count, uint32 baseline count, ADD=0, uint32 key/value.
  Archive::ByteStream expected=literal({2,0,0,0, 0,0,0,0, 0, 0,0,0,128, 255,255,255,255, 0, 255,255,255,255, 0,0,0,128});
  Archive::ByteStream actual;
  Archive::AutoDeltaPackedMap<uint32_t,uint32_t>::pack(actual,"2147483648 4294967295:4294967295 2147483648:");
@@ -52,6 +54,53 @@ int main() {
  auto finalExpected=literal({2,0,0,0,1,0,0,0,65,0,0,0,66,0,0,0});
  Archive::ByteStream finalBytes; v.pack(finalBytes);
  check(equal(finalBytes,finalExpected),"counter wrap resulting baseline matches legacy32 bytes");
+ // AutoDeltaMap counters are legacy 32-bit unsigned (size_t on Win32): all delta
+ // arithmetic is modulo 2^32. A client behind by commands that cross 2^31 must apply
+ // the pending ADD and catch up, not treat the target as negative and drop it.
+ {
+  auto mapBaseline=literal({0,0,0,0, 0xf0,0xff,0xff,0x7f});
+  auto mapDelta=literal({1,0,0,0, 5,0,0,0x80, 0, 1,0,0,0, 10,0,0,0});
+  Archive::AutoDeltaMap<uint32_t,uint32_t> m;
+  r=mapBaseline.begin(); m.unpack(r); r=mapDelta.begin(); m.unpackDelta(r);
+  check(m.size()==1 && m.find(1)!=m.end() && m.find(1)->second==10,"map behind across 2^31 applies the pending ADD");
+  Archive::ByteStream mapBytes; m.pack(mapBytes);
+  check(equal(mapBytes,literal({1,0,0,0, 5,0,0,0x80, 0,1,0,0,0,10,0,0,0})),"map catches up to baseline 0x80000005 in legacy32 bytes");
+ }
+ // Wrap through zero: baseline 0xfffffffe, three commands, target 0. The first command
+ // is already reflected (skip one); the last two apply and the counter wraps to 0.
+ {
+  auto mapBaseline=literal({0,0,0,0, 0xfe,0xff,0xff,0xff});
+  auto mapDelta=literal({3,0,0,0, 0,0,0,0, 0,1,0,0,0,1,0,0,0, 0,2,0,0,0,2,0,0,0, 0,3,0,0,0,3,0,0,0});
+  Archive::AutoDeltaMap<uint32_t,uint32_t> m;
+  r=mapBaseline.begin(); m.unpack(r); r=mapDelta.begin(); m.unpackDelta(r);
+  check(m.size()==2 && m.find(1)==m.end() && m.find(2)!=m.end() && m.find(3)!=m.end(),"map wrap through zero skips the one already-applied command");
+  Archive::ByteStream mapBytes; m.pack(mapBytes);
+  check(equal(mapBytes,literal({2,0,0,0, 0,0,0,0, 0,2,0,0,0,2,0,0,0, 0,3,0,0,0,3,0,0,0})),"map wrap resulting baseline 0 matches legacy32 bytes");
+ }
+ // Queue uses unsigned subtraction and clamps the skip count, without map catch-up.
+ // baseline=0, one PUSH, target=2 => difference UINT32_MAX: skip the whole delta.
+ {
+  auto queueBaseline=literal({0,0,0,0, 0,0,0,0});
+  auto queueDelta=literal({1,0,0,0, 2,0,0,0, 0, 65,0,0,0});
+  Archive::AutoDeltaQueue<uint32_t> q;
+  r=queueBaseline.begin(); q.unpack(r); r=queueDelta.begin(); q.unpackDelta(r);
+  check(q.empty() && r.getSize()==0,"queue unsigned skip clamps and consumes an ahead delta");
+  Archive::ByteStream queueBytes; q.pack(queueBytes);
+  check(equal(queueBytes,queueBaseline),"queue skipped delta preserves legacy baseline zero");
+ }
+ // Two PUSHes wrap UINT32_MAX to 1; applying the same delta twice must not duplicate them.
+ {
+  auto queueBaseline=literal({0,0,0,0, 255,255,255,255});
+  auto queueDelta=literal({2,0,0,0, 1,0,0,0, 0,65,0,0,0, 0,66,0,0,0});
+  auto queueExpected=literal({2,0,0,0, 1,0,0,0, 0,65,0,0,0, 0,66,0,0,0});
+  Archive::AutoDeltaQueue<uint32_t> q;
+  r=queueBaseline.begin(); q.unpack(r); r=queueDelta.begin(); q.unpackDelta(r);
+  Archive::ByteStream queueBytes; q.pack(queueBytes);
+  check(equal(queueBytes,queueExpected) && r.getSize()==0,"queue wrap preserves both PUSHes and baseline one");
+  r=queueDelta.begin(); q.unpackDelta(r);
+  Archive::ByteStream repeatedBytes; q.pack(repeatedBytes);
+  check(equal(repeatedBytes,queueExpected) && r.getSize()==0,"queue duplicate delta is consumed without reapplying PUSHes");
+ }
 #ifdef WIRE_TEST_MISSIONS
  MessageQueueMissionListResponse::DataVector missions;
  MessageQueueMissionListResponse empty(missions, 7, true);

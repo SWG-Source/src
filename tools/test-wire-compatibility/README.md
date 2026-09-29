@@ -26,7 +26,18 @@ Covered: packed-map keys and values 0x80000000/0xffffffff in both directions;
 active and completed quests with high-bit keys, task masks and reward flag;
 AutoDeltaVector baseline 0xffffffff followed by two insertions and target 1,
 which must yield [65,66] with baseline 1 using modulo-2^32 state arithmetic.
+AutoDeltaMap catch-up across 2^31 and wrap-through-zero with one skipped command;
+AutoDeltaQueue unsigned skip clamping, wrap-through-zero and duplicate-delta handling.
+There are 14 standalone checks (17 with the optional mission fixtures).
 Each decoder is fed literal input, independently of its encoder.
+
+The map fixtures share the literal layout checked against stock Win32 client
+`94945103` by client-tools `1e62bab4`. Queue fixtures retain its original
+unsigned subtraction and clamp behavior; they do not introduce map-style
+catch-up. At server `34092239`, the new map catch-up check and both queue
+skip checks fail on Linux x86-64; with unsigned counters they pass on Linux
+x86 and x86-64. These checks test state and re-encoded bytes, not merely
+field widths. Genuine signed payload values remain signed.
 
 Boundaries: not a captured historical executable trace; the oracle is a
 manual transcription of the legacy32 format. Passing on both ABIs establishes

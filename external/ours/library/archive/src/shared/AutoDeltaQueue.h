@@ -251,7 +251,7 @@ template<typename ValueType>
 inline void AutoDeltaQueue<ValueType>::pack(ByteStream &target) const
 {
 	const_iterator i;
-	Archive::put(target, static_cast<int32_t> (container.size()));
+	Archive::put(target, static_cast<uint32_t> (container.size()));
 	Archive::put(target, baselineCommandCount);
 	unsigned char cmd;
 	for (i = container.begin(); i != container.end(); ++i)
@@ -267,7 +267,7 @@ inline void AutoDeltaQueue<ValueType>::pack(ByteStream &target) const
 template<typename ValueType>
 inline void AutoDeltaQueue<ValueType>::packDelta(ByteStream &target) const
 {
-	Archive::put(target, static_cast<int32_t> (changes.size()));
+	Archive::put(target, static_cast<uint32_t> (changes.size()));
 	Archive::put(target, baselineCommandCount);
 	for (typename std::vector<ModifyCommand>::iterator i = changes.begin(); i != changes.end(); ++i)
 	{
@@ -324,12 +324,12 @@ inline void AutoDeltaQueue<ValueType>::unpack(ReadIterator &source)
 	clearDelta();
 
 	ModifyCommand c;
-	int32_t commandCount;
+	uint32_t commandCount;
 
 	Archive::get(source, commandCount);
 	Archive::get(source, baselineCommandCount);
 
-	for (int32_t i = 0; i < commandCount; ++i)
+	for (uint32_t i = 0; i < commandCount; ++i)
 	{
 		Archive::get(source, c.cmd);
 		assert(c.cmd == ModifyCommand::PUSH); // only push valid for pack/unpack
@@ -345,7 +345,7 @@ inline void AutoDeltaQueue<ValueType>::unpackDelta(ReadIterator &source)
 {
 	using Archive::get;
 	ModifyCommand c;
-	int32_t skipCount, commandCount, targetBaselineCommandCount;
+	uint32_t skipCount, commandCount, targetBaselineCommandCount;
 
 	Archive::get(source, commandCount);
 	Archive::get(source, targetBaselineCommandCount);
@@ -359,7 +359,7 @@ inline void AutoDeltaQueue<ValueType>::unpackDelta(ReadIterator &source)
 	if (skipCount > commandCount)
 		skipCount = commandCount;
 
-	int32_t i;
+	uint32_t i;
 	for (i = 0; i < skipCount; ++i)
 	{
 		Archive::get(source, c.cmd);
