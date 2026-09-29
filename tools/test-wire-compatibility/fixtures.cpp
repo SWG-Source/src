@@ -5,6 +5,7 @@
 #include "Archive/AutoDeltaVector.h"
 #include "Archive/AutoDeltaMap.h"
 #include "Archive/AutoDeltaQueue.h"
+#include "Archive/ArchiveCount.h"
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
@@ -23,7 +24,32 @@ static Archive::ByteStream literal(std::initializer_list<unsigned char> bytes) {
 static bool equal(Archive::ByteStream const &a, Archive::ByteStream const &b) {
  return a.getSize()==b.getSize() && (!a.getSize() || !std::memcmp(a.getBuffer(),b.getBuffer(),a.getSize()));
 }
+template<typename Count> static bool rejectsCount(size_t value) {
+ try { (void)ArchiveCount::fromSize<Count>(value); }
+ catch (std::out_of_range const &) { return true; }
+ catch (...) { return false; }
+ return false;
+}
 int main() {
+ check(ArchiveCount::fromSize<uint32_t>(UINT32_MAX)==UINT32_MAX,"unsigned count UINT32_MAX fits");
+ check(ArchiveCount::fromSize<int32_t>(INT32_MAX)==INT32_MAX,"signed count INT32_MAX fits");
+ check(rejectsCount<int32_t>(static_cast<size_t>(INT32_MAX)+1),"signed count INT32_MAX + 1 throws out_of_range");
+ if (sizeof(size_t)>4)
+  check(rejectsCount<uint32_t>(static_cast<size_t>(UINT64_C(0x100000000))),"unsigned count UINT32_MAX + 1 throws out_of_range");
+ else
+  std::puts("SKIP: size_t cannot represent UINT32_MAX + 1");
+ // Test both sides of the actual string encoder's short/long marker boundary.
+ for (size_t length : {size_t(65534), size_t(65535)}) {
+  std::string input(length, 'x'), decoded;
+  Archive::ByteStream encoded;
+  Archive::put(encoded, input);
+  auto expectedHeader = length == 65534 ? literal({254,255}) : literal({255,255,255,255,0,0});
+  bool const headerMatches = encoded.getSize() == expectedHeader.getSize() + length &&
+   std::memcmp(encoded.getBuffer(), expectedHeader.getBuffer(), expectedHeader.getSize()) == 0;
+  auto reader = encoded.begin(); Archive::get(reader, decoded);
+  check(headerMatches && decoded == input && reader.getSize() == 0,
+   length == 65534 ? "string 65534 uses legacy short header" : "string 65535 uses legacy long header");
+ }
  // First quest use in this process: pack's Command constructs age 1;
  // active and completed values receive ages 2 and 3. This is a legacy32
  // fixture, including the non-persisted relative-age field (not normalized).

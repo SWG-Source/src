@@ -3,6 +3,7 @@
 
 //---------------------------------------------------------------------
 
+#include "ArchiveCount.h"
 #include "ByteStream.h"
 #include <string>
 #include <map>
@@ -273,9 +274,9 @@ inline void put(ByteStream & target, const std::string & source)
 	}
 	else
 	{
+		unsigned int const size = ArchiveCount::fromSize<unsigned int>(source.size());
 		unsigned short len = static_cast<uint16_t>(65535);
 		put(target, len);
-		unsigned int size = source.size();
 		put(target, size);
 	}
 	target.put(source.data(), source.size());
@@ -317,7 +318,7 @@ template<typename A, typename B> inline void put(ByteStream & target, const std:
 
 template<typename A> inline void put(ByteStream & target, const std::vector<A> & source)
 {
-	int32_t length = source.size();
+	int32_t length = ArchiveCount::fromSize<int32_t>(source.size());
 	target.put(&length, 4);
 	for(int i = 0; i < length; ++i)
 	{
@@ -329,7 +330,7 @@ template<typename A> inline void put(ByteStream & target, const std::vector<A> &
 
 template<typename A> inline void put(ByteStream & target, const std::set<A> & source)
 {
-	int32_t length = source.size();
+	int32_t length = ArchiveCount::fromSize<int32_t>(source.size());
 	target.put(&length, 4);
 	for (typename std::set<A>::const_iterator i = source.begin(); i != source.end(); ++i)
 		put(target, *i);
@@ -339,7 +340,7 @@ template<typename A> inline void put(ByteStream & target, const std::set<A> & so
 
 template<typename A> inline void put(ByteStream & target, const std::deque<A> & source)
 {
-	int32_t length = source.size();
+	int32_t length = ArchiveCount::fromSize<int32_t>(source.size());
 	target.put(&length, 4);
 	for(int i = 0; i < length; ++i)
 	{
@@ -351,7 +352,7 @@ template<typename A> inline void put(ByteStream & target, const std::deque<A> & 
 
 template<typename Key, typename Value> inline void put(ByteStream & target, const std::map<Key, Value> & source)
 {
-	uint32_t numKeys = static_cast<uint32_t>(source.size());
+	uint32_t numKeys = ArchiveCount::fromSize<uint32_t>(source.size());
 	put(target, numKeys);
 	for (typename std::map<Key, Value>::const_iterator i = source.begin(); i != source.end(); ++i)
 	{

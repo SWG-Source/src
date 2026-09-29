@@ -4,6 +4,7 @@
 
 //-----------------------------------------------------------------------
 
+#include "ArchiveCount.h"
 #include "AutoDeltaByteStream.h"
 #include <map>
 
@@ -349,7 +350,7 @@ template<class KeyType, typename ValueType, typename ObjectType>
 inline void AutoDeltaMap<KeyType, ValueType, ObjectType>::pack(ByteStream & target) const
 {
 	typename std::map<KeyType, ValueType>::const_iterator i;
-	Archive::put(target, static_cast<uint32_t>(container.size()));
+	Archive::put(target, ArchiveCount::fromSize<uint32_t>(container.size()));
 	Archive::put(target, baselineCommandCount);
 	unsigned char cmd;
 	for(i = container.begin(); i != container.end(); ++i)
@@ -374,7 +375,7 @@ inline void AutoDeltaMap<KeyType, ValueType, ObjectType>::pack(ByteStream & targ
 template<class KeyType, typename ValueType, typename ObjectType>
 inline void AutoDeltaMap<KeyType, ValueType, ObjectType>::pack(ByteStream & target, const std::vector<Command> &data)
 {
-	Archive::put(target, static_cast<uint32_t>(data.size()));
+	Archive::put(target, ArchiveCount::fromSize<uint32_t>(data.size()));
 	Archive::put(target, static_cast<uint32_t>(0)); // baselineCommandCount
 	for(typename std::vector<Command>::const_iterator c(data.begin()); c != data.end(); ++c)
 	{
@@ -403,7 +404,7 @@ inline void AutoDeltaMap<KeyType, ValueType, ObjectType>::pack(ByteStream & targ
 template<class KeyType, typename ValueType, typename ObjectType>
 inline void AutoDeltaMap<KeyType, ValueType, ObjectType>::packDelta(ByteStream & target) const
 {
-	Archive::put(target, static_cast<uint32_t>(changes.size()));
+	Archive::put(target, ArchiveCount::fromSize<uint32_t>(changes.size()));
 	Archive::put(target, baselineCommandCount);
 	for (typename std::vector<Command>::iterator i = changes.begin(); i != changes.end(); ++i)
 	{

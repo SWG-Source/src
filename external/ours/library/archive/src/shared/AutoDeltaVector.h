@@ -3,6 +3,7 @@
 
 //-----------------------------------------------------------------------
 
+#include "ArchiveCount.h"
 #include "AutoDeltaByteStream.h"
 
 //-----------------------------------------------------------------------
@@ -366,7 +367,7 @@ inline void AutoDeltaVector<ValueType, ObjectType>::onSet(const unsigned int ele
 template<typename ValueType, typename ObjectType>
 inline void AutoDeltaVector<ValueType, ObjectType>::pack(ByteStream & target) const
 {
-	Archive::put(target, static_cast<uint32_t> (v.size()));
+	Archive::put(target, ArchiveCount::fromSize<uint32_t>(v.size()));
 	Archive::put(target, baselineCommandCount);
 	typename std::vector<ValueType>::const_iterator i;
 	for (i = v.begin(); i != v.end(); ++i)
@@ -380,7 +381,7 @@ inline void AutoDeltaVector<ValueType, ObjectType>::pack(ByteStream & target) co
 template<typename ValueType, typename ObjectType>
 inline void AutoDeltaVector<ValueType, ObjectType>::pack(ByteStream & target, const std::vector<ValueType> & data)
 {
-	Archive::put(target, static_cast<uint32_t>(data.size()));
+	Archive::put(target, ArchiveCount::fromSize<uint32_t>(data.size()));
 	Archive::put(target, static_cast<uint32_t>(0)); // baselineCommandCount
 	typename std::vector<ValueType>::const_iterator i;
 	for (i = data.begin(); i != data.end(); ++i)
@@ -394,7 +395,7 @@ inline void AutoDeltaVector<ValueType, ObjectType>::pack(ByteStream & target, co
 template<typename ValueType, typename ObjectType>
 inline void AutoDeltaVector<ValueType, ObjectType>::packDelta(ByteStream & target) const
 {
-	Archive::put(target, static_cast<uint32_t>(commands.size()));
+	Archive::put(target, ArchiveCount::fromSize<uint32_t>(commands.size()));
 	Archive::put(target, baselineCommandCount);
 	typename std::vector<Command>::iterator i;
 

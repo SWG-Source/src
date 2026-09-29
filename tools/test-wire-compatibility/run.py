@@ -4,6 +4,7 @@ import argparse, os, pathlib, subprocess, tempfile
 p=argparse.ArgumentParser(); p.add_argument('--bits',type=int,choices=[32,64],required=True); p.add_argument('--build-dir',type=pathlib.Path); a=p.parse_args()
 root=pathlib.Path(__file__).resolve().parents[2]
 sources=['tools/test-wire-compatibility/fixtures.cpp',
+ 'tools/test-wire-compatibility/count_sites.cpp',
  'tools/test-wire-compatibility/fatal.cpp',
 'external/ours/library/archive/src/shared/ByteStream.cpp',
 'external/ours/library/archive/src/shared/AutoByteStream.cpp',
@@ -31,4 +32,10 @@ with tempfile.TemporaryDirectory(prefix='swg-wire-') as tmp:
   cmd+=['-DWIRE_TEST_MISSIONS=1','-Wl,--start-group',*libraries,'-Wl,--end-group','-ldl','-lz']
  result=subprocess.run(cmd)
  if result.returncode: raise SystemExit(result.returncode)
- raise SystemExit(subprocess.run([out]).returncode)
+ result=subprocess.run([out], stdout=subprocess.PIPE, text=True)
+ print(result.stdout, end='')
+ if result.returncode: raise SystemExit(result.returncode)
+ expected=19 + (a.bits == 64) + (3 if a.build_dir else 0)
+ observed=sum(line.startswith('PASS:') for line in result.stdout.splitlines())
+ if observed != expected:
+  raise SystemExit(f'Expected {expected} passing checks, observed {observed}')

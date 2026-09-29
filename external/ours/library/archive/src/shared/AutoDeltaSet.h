@@ -11,6 +11,7 @@
 
 // ======================================================================
 
+#include "ArchiveCount.h"
 #include "AutoDeltaByteStream.h"
 
 // ======================================================================
@@ -301,7 +302,7 @@ inline void AutoDeltaSet<ValueType, ObjectType>::onInsert(ValueType const &value
 template<typename ValueType, typename ObjectType>
 inline void AutoDeltaSet<ValueType, ObjectType>::pack(ByteStream &target) const
 {
-	Archive::put(target, static_cast<uint32_t> (m_set.size()));
+	Archive::put(target, ArchiveCount::fromSize<uint32_t>(m_set.size()));
 	Archive::put(target, m_baselineCommandCount);
 	for (typename SetType::const_iterator i = m_set.begin(); i != m_set.end(); ++i)
 		put(target, *i);
@@ -312,7 +313,7 @@ inline void AutoDeltaSet<ValueType, ObjectType>::pack(ByteStream &target) const
 template<typename ValueType, typename ObjectType>
 inline void AutoDeltaSet<ValueType, ObjectType>::pack(ByteStream &target, std::set<ValueType> const &data)
 {
-	Archive::put(target, static_cast<uint32_t> (data.size()));
+	Archive::put(target, ArchiveCount::fromSize<uint32_t>(data.size()));
 	Archive::put(target, static_cast<uint32_t> (0)); // baselineCommandCount
 	for (typename std::set<ValueType>::const_iterator i = data.begin(); i != data.end(); ++i)
 		put(target, *i);
@@ -323,7 +324,7 @@ inline void AutoDeltaSet<ValueType, ObjectType>::pack(ByteStream &target, std::s
 template<typename ValueType, typename ObjectType>
 inline void AutoDeltaSet<ValueType, ObjectType>::packDelta(ByteStream &target) const
 {
-	Archive::put(target, static_cast<uint32_t> (m_commands.size()));
+	Archive::put(target, ArchiveCount::fromSize<uint32_t>(m_commands.size()));
 	Archive::put(target, m_baselineCommandCount);
 	for (typename std::vector<Command>::iterator i = m_commands.begin(); i != m_commands.end(); ++i)
 	{

@@ -4,6 +4,7 @@
 
 //-----------------------------------------------------------------------
 
+#include "ArchiveCount.h"
 #include "AutoDeltaByteStream.h"
 #include <list>
 
@@ -251,7 +252,7 @@ template<typename ValueType>
 inline void AutoDeltaQueue<ValueType>::pack(ByteStream &target) const
 {
 	const_iterator i;
-	Archive::put(target, static_cast<uint32_t> (container.size()));
+	Archive::put(target, ArchiveCount::fromSize<uint32_t>(container.size()));
 	Archive::put(target, baselineCommandCount);
 	unsigned char cmd;
 	for (i = container.begin(); i != container.end(); ++i)
@@ -267,7 +268,7 @@ inline void AutoDeltaQueue<ValueType>::pack(ByteStream &target) const
 template<typename ValueType>
 inline void AutoDeltaQueue<ValueType>::packDelta(ByteStream &target) const
 {
-	Archive::put(target, static_cast<uint32_t> (changes.size()));
+	Archive::put(target, ArchiveCount::fromSize<uint32_t>(changes.size()));
 	Archive::put(target, baselineCommandCount);
 	for (typename std::vector<ModifyCommand>::iterator i = changes.begin(); i != changes.end(); ++i)
 	{

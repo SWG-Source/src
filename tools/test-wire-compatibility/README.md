@@ -28,7 +28,8 @@ AutoDeltaVector baseline 0xffffffff followed by two insertions and target 1,
 which must yield [65,66] with baseline 1 using modulo-2^32 state arithmetic.
 AutoDeltaMap catch-up across 2^31 and wrap-through-zero with one skipped command;
 AutoDeltaQueue unsigned skip clamping, wrap-through-zero and duplicate-delta handling.
-There are 14 standalone checks (17 with the optional mission fixtures).
+These are the original 14 standalone wire cases; additional count and string
+checks are described below. Optional mission fixtures add three more cases.
 Each decoder is fed literal input, independently of its encoder.
 
 The map fixtures share the literal layout checked against stock Win32 client
@@ -105,3 +106,40 @@ base constructors abort if reached; their destructors are empty. The existing
 Fatal stand-in aborts. No serializer or timestamp conversion is replaced.
 The test does not validate those services, chat-log purge execution, a full
 server build, MSVC, or live client/server compatibility.
+
+## Container count checks
+
+The standalone wire runner also tests ArchiveCount::fromSize directly, without
+allocating huge containers: UINT32_MAX and INT32_MAX pass through, while
+INT32_MAX + 1 throws for signed counts on both ABIs and UINT32_MAX + 1 throws
+for unsigned counts on 64-bit. The latter is explicitly skipped on 32-bit.
+Two more checks exercise the actual string encoder at 65534 and 65535 bytes,
+including literal short/long headers and complete round-trip decoding.
+The runner requires the expected number of passing cases.
+There are now 19 standalone checks on 32-bit and 20 on 64-bit (plus three
+optional mission checks when server libraries are provided).
+
+The shared helper matches client-tools `f87084a3` byte for byte. Eighteen
+production conversions use it: five in Archive.h, eleven in the AutoDelta
+containers, one Unicode length and one mission-list count. The signed count
+limit also applies on 32-bit: size_t values above INT32_MAX never fit signed
+32-bit fields, even before the migration. Sequence counters still wrap.
+
+Boundary tests establish helper behavior, not overflow rejection at every
+container call site. Existing byte fixtures cover a subset of the rewired
+serializers. The local count checks precede that serializer's writes; they do
+not promise rollback when a nested serializer throws after its parent has
+written data. Legacy 16-bit fields and per-message count conversions outside
+this patch remain separate work.
+
+Count representability is not byte-buffer capacity validation. ByteStream
+still uses unsigned 32-bit byte sizes and unchecked cumulative size arithmetic;
+a large Unicode element count can fit its count field while its byte length
+cannot fit ByteStream. This patch does not establish safe multi-gigabyte
+payload serialization or decoding of untrusted lengths.
+
+`count_sites.cpp` instantiates all 16 generic count-writing overloads during
+each build, including the set and delta overloads not exercised by runtime
+fixtures. It is compile coverage only, not an oversized-container test. Unicode
+and mission-list writers are separate production translation units; syntax
+checks were run for both ABIs, and Unicode is built by the timestamp suite.

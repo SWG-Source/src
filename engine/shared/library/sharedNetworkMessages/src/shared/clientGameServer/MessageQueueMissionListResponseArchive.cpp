@@ -7,6 +7,7 @@
 
 #include "sharedNetworkMessages/FirstSharedNetworkMessages.h"
 #include "sharedNetworkMessages/MessageQueueMissionListResponseArchive.h"
+#include "Archive/ArchiveCount.h"
 
 #include "sharedNetworkMessages/MessageQueueMissionListResponse.h"
 #include "sharedNetworkMessages/MessageQueueMissionListResponseData.h"
@@ -48,9 +49,10 @@ namespace Archive
 
 	void put (ByteStream & target, const MessageQueueMissionListResponse & source)
 	{ 
+		uint32_t const count = ArchiveCount::fromSize<uint32_t>(source.getResponse().size());
 		Archive::put(target, source.getSequenceId());
 		Archive::put(target, source.getBountyTerminal());
-		Archive::put(target, static_cast<uint32_t>(source.getResponse().size()));
+		Archive::put(target, count);
 	
 		typedef MessageQueueMissionListResponse::DataVector DataVector;
 		const DataVector & v = source.getResponse();
