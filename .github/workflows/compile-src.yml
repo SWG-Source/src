@@ -1,20 +1,46 @@
-name: SWG Source - Continuous Integration for src repo
+name: SWG Source legacy server build
 
 on:
   pull_request:
-    branches: [ master ]
-    
+    branches: [master, 64-bit-types]
+  push:
+    branches: [ci/server-regressions]
   workflow_dispatch:
+
+permissions:
+  contents: read
 
 jobs:
   compile-src:
-    runs-on: ubuntu-latest
-    container: cekisswg/swg-vm3.01-i386:latest
+    runs-on: ubuntu-22.04
+    timeout-minutes: 90
     steps:
-      - name: Run ANT Build
+      # Checkout on the host: modern JavaScript actions cannot run in the
+      # legacy i386 container. Build the submitted head, never upstream HEAD.
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - name: Record tested revision
         run: |
-          cd /home/swg/swg-main
-          git clone https://github.com/SWG-Source/src.git
-          cd src
-          ant build_src
-          
+          mkdir -p ci-results
+          git rev-parse HEAD | tee ci-results/revision.txt
+      - name: Build submitted source in legacy environment
+        shell: bash
+        run: |
+          docker pull cekisswg/swg-vm3.01-i386:latest
+          docker image inspect --format '{{json .RepoDigests}}' cekisswg/swg-vm3.01-i386:latest | tee ci-results/image.json
+          { git rev-parse HEAD;
+          docker run --rm --platform linux/386 --entrypoint /bin/bash \
+            --mount "type=bind,source=$GITHUB_WORKSPACE,target=/home/swg/swg-main/src,readonly" \
+            cekisswg/swg-vm3.01-i386:latest -lc \
+            'set -eu; cd /home/swg/swg-main/src; ant -Dbits=32 -Dnproc=2 clean build_src; bash tools/ci/run-built-regressions.sh /home/swg/swg-main/build' \
+          } 2>&1 | tee ci-results/build.log
+      - name: Preserve build evidence
+        if: ${{ always() }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: server-legacy-build-${{ github.run_id }}
+          path: ci-results/
+          if-no-files-found: error
+          retention-days: 14

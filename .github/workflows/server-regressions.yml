@@ -1,0 +1,62 @@
+name: Server portable regressions
+
+on:
+  pull_request:
+    branches: [master, 64-bit-types]
+  push:
+    branches: [ci/server-regressions]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  portable:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        bits: [32, 64]
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - name: Install compiler and both ABIs
+        run: |
+          sudo apt-get update
+          sudo apt-get install --no-install-recommends -y g++-multilib
+      - name: Record tested revision and compiler
+        run: |
+          mkdir -p ci-results
+          git rev-parse HEAD | tee ci-results/revision.txt
+          g++ --version | tee ci-results/compiler.txt
+      - name: Wire regressions
+        run: "{ git rev-parse HEAD; python3 tools/test-wire-compatibility/run.py --bits ${{ matrix.bits }}; } 2>&1 | tee ci-results/wire.log"
+      - name: Timestamp and message regressions
+        if: ${{ !cancelled() }}
+        run: "{ git rev-parse HEAD; python3 tools/test-wire-compatibility/run-timestamps.py --bits ${{ matrix.bits }}; } 2>&1 | tee ci-results/timestamps.log"
+      - name: Integer parsing regressions
+        if: ${{ !cancelled() }}
+        run: "{ git rev-parse HEAD; python3 tools/ci/run-parsing.py --bits ${{ matrix.bits }}; } 2>&1 | tee ci-results/parsing.log"
+      - name: Calendar boundaries
+        if: ${{ !cancelled() }}
+        run: "{ git rev-parse HEAD; sh engine/server/library/serverScript/test/calendar-time-test.sh -m${{ matrix.bits }}; } 2>&1 | tee ci-results/calendar.log"
+      - name: String search narrowing
+        if: ${{ !cancelled() }}
+        run: "{ git rev-parse HEAD; python3 tools/check-npos-narrowing.py; } 2>&1 | tee ci-results/npos.log"
+      - name: Audit generation
+        if: ${{ !cancelled() }}
+        run: "{ git rev-parse HEAD; python3 game/server/database/tools/int32_audit/test/audit_generation_test.py; } 2>&1 | tee ci-results/audit.log"
+      - name: Preserve results including failed checks
+        if: ${{ always() }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: server-regressions-${{ matrix.bits }}-${{ github.run_id }}
+          path: ci-results/
+          if-no-files-found: error
+          retention-days: 14
+    defaults:
+      run:
+        shell: bash
