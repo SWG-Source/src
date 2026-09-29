@@ -143,3 +143,27 @@ each build, including the set and delta overloads not exercised by runtime
 fixtures. It is compile coverage only, not an oversized-container test. Unicode
 and mission-list writers are separate production translation units; syntax
 checks were run for both ABIs, and Unicode is built by the timestamp suite.
+
+## Per-message count checks
+
+Nine additional signed counts use the same ArchiveCount helper: image-design
+morphs/indexes, buff-builder components, droid commands/chips-to-add/chips-to-remove,
+craft experiments, draft-slot options and customer-service subcategories.
+Each writer checks all its local counts before its first output byte. These
+are nine checks in six production writers, separate from the 18 generic sites.
+
+The timestamp runner also packs non-empty image-design and buff-builder maps,
+compares literal bytes from legacy offsets 66 and 29 through the end, then
+checks decoded maps and complete consumption. These four cases mirror client
+`b5bb8792`; its stock Win32 oracle result is reported by the client author,
+not independently reproduced here. Prefix fields are not covered by these
+suffix comparisons. The runner now requires 16 runtime passes on Linux32
+and 22 on Linux64 and syntax-checks the other four changed writers on each run.
+Compilation is not runtime validation of those four message encodings.
+
+Real oversized-container rejection is still not exercised at these call sites.
+A nested draft-slot or customer-service serializer can throw after a caller
+has written bytes; no rollback guarantee is added. Legacy 8-bit counts and
+size_t log-format mismatches in ResourceWeights/CombatAction remain separate
+from this wire-count repair. No claim of exhaustive remaining-message coverage
+or full client/server compatibility is made.

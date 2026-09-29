@@ -27,6 +27,24 @@ for base in (root/'engine/shared/library',root/'external/ours/library'):
 with tempfile.TemporaryDirectory(prefix='swg-wire-') as tmp:
  out=str(pathlib.Path(tmp)/'fixtures')
  cmd=[os.environ.get('CXX','g++'),'-std=c++17',f'-m{a.bits}','-DLINUX=1','-Dlinux=1','-D_USING_STL=1','-DDEBUG_LEVEL=0','-DPRODUCTION=1','-O1','-ffunction-sections','-fdata-sections','-Wl,--gc-sections','-pthread',*includes,*[str(root/s) for s in sources],'-o',out]
+ # Other changed per-message writers receive syntax coverage, not runtime coverage.
+ syntax_sources=[
+  'clientGameServer/DroidCommandProgrammingMessage.cpp',
+  'clientGameServer/MessageQueueCraftExperiment.cpp',
+  'clientGameServer/MessageQueueDraftSlotsDataArchive.cpp',
+  'customerService/CustomerServiceCategoryArchive.cpp',
+ ]
+ syntax_cmd=[os.environ.get('CXX','g++'),'-std=c++17',f'-m{a.bits}',
+  '-DLINUX=1','-Dlinux=1','-D_USING_STL=1','-DDEBUG_LEVEL=0','-DPRODUCTION=1',
+  '-fsyntax-only',*includes,*[str(root/'engine/shared/library/sharedNetworkMessages/src/shared'/s) for s in syntax_sources]]
+ result=subprocess.run(syntax_cmd)
+ if result.returncode: raise SystemExit(result.returncode)
  result=subprocess.run(cmd)
  if result.returncode: raise SystemExit(result.returncode)
- raise SystemExit(subprocess.run([out]).returncode)
+ result=subprocess.run([out], stdout=subprocess.PIPE, text=True)
+ print(result.stdout, end='')
+ if result.returncode: raise SystemExit(result.returncode)
+ expected=16 if a.bits == 32 else 22
+ observed=sum(line.startswith('PASS:') for line in result.stdout.splitlines())
+ if observed != expected:
+  raise SystemExit(f'Expected {expected} passing checks, observed {observed}')

@@ -42,6 +42,13 @@ static bool chatTimeRoundTrip(long long t) {
 }
 
 
+static Archive::ByteStream literal(std::initializer_list<unsigned char> bytes) {
+ Archive::ByteStream out; for (auto b : bytes) out.put(&b,1); return out;
+}
+static bool tailEquals(Archive::ByteStream const &b, unsigned offset, Archive::ByteStream const &want) {
+ return b.getSize()==offset+want.getSize() && !std::memcmp(b.getBuffer()+offset,want.getBuffer(),want.getSize());
+}
+
 int main() {
  ImageDesignChangeMessage::install();
  BuffBuilderChangeMessage::install();
@@ -67,6 +74,29 @@ int main() {
    check(buffRejected && buff.getStartingTime()==-1,"buff-builder rejects out-of-range time without mutation");
    check(chatRejected,"chat-log rejects out-of-range constructor time");
   }
+ }
+ // Per-message counts are checked before the first byte; the bytes themselves are unchanged.
+ {
+  ImageDesignChangeMessage m;
+  std::map<std::string,float> morphs; morphs["a"]=1.5f; m.setMorphParameterChanges(morphs);
+  std::map<std::string,int> indexes; indexes["b"]=7; m.setIndexParameterChanges(indexes);
+  Archive::ByteStream bytes; ImageDesignChangeMessage::pack(&m,bytes);
+  // offset 66: three NetworkIds, bool, two empty strings, nine 4-byte fields, bool
+  check(tailEquals(bytes,66,literal({1,0,0,0, 1,0,'a', 0,0,0xc0,0x3f, 1,0,0,0, 1,0,'b', 7,0,0,0, 0,0})),"ImageDesignChangeMessage morph/index counts encode as legacy signed 32-bit");
+  auto rr=bytes.begin(); MessageQueue::Data *d=ImageDesignChangeMessage::unpack(rr);
+  ImageDesignChangeMessage const *back=static_cast<ImageDesignChangeMessage*>(d);
+  check(back->getMorphParameterChanges()==morphs && back->getIndexParameterChanges()==indexes && rr.getSize()==0,"ImageDesignChangeMessage counts decode with no trailing bytes");
+  delete d;
+ }
+ {
+  BuffBuilderChangeMessage m;
+  std::map<std::string,std::pair<int,int> > components; components["c"]=std::make_pair(3,4); m.setBuffComponents(components);
+  Archive::ByteStream bytes; BuffBuilderChangeMessage::pack(&m,bytes);
+  // offset 29: two NetworkIds, time, credits, bool, origin
+  check(tailEquals(bytes,29,literal({1,0,0,0, 1,0,'c', 3,0,0,0, 4,0,0,0})),"BuffBuilderChangeMessage component count encodes as legacy signed 32-bit");
+  auto rr=bytes.begin(); MessageQueue::Data *d=BuffBuilderChangeMessage::unpack(rr);
+  check(static_cast<BuffBuilderChangeMessage*>(d)->getBuffComponents()==components && rr.getSize()==0,"BuffBuilderChangeMessage count decodes with no trailing bytes");
+  delete d;
  }
  return failures ? 1 : 0;
 }

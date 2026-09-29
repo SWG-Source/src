@@ -5,6 +5,7 @@
 
 #include "sharedNetworkMessages/FirstSharedNetworkMessages.h"
 #include "sharedNetworkMessages/BuffBuilderChangeMessage.h"
+#include "Archive/ArchiveCount.h"
 
 #include "sharedFoundation/ExitChain.h"
 #include "sharedFoundation/GameControllerMessage.h"
@@ -57,6 +58,9 @@ void BuffBuilderChangeMessage::pack(MessageQueue::Data const * const data, Archi
 
 	if (msg)
 	{
+		std::map<std::string, std::pair<int,int> > const & components = msg->getBuffComponents();
+		int const componentCount = ArchiveCount::fromSize<int>(components.size());
+
 		Archive::put(target, msg->getBufferId());
 		Archive::put(target, msg->getRecipientId());
 		Archive::put(target, msg->getStartingTime());
@@ -64,9 +68,7 @@ void BuffBuilderChangeMessage::pack(MessageQueue::Data const * const data, Archi
 		Archive::put(target, msg->getAccepted());
 		Archive::put(target, msg->getOrigin());
 
-		std::map<std::string, std::pair<int,int> > const & components = msg->getBuffComponents();
-		int size = components.size();
-		Archive::put(target, size);
+		Archive::put(target, componentCount);
 		for(std::map<std::string, std::pair<int,int> >::const_iterator j = components.begin(); j != components.end(); ++j)
 		{
 			Archive::put(target, j->first);
