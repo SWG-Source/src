@@ -33,12 +33,12 @@ It exercises parser contracts, not every parsing caller or service integration.
 
 ## Legacy build
 
-The existing i386 image now receives that exact checkout as a read-only source
+The existing legacy image (amd64 despite the `i386` repository name) receives that exact checkout as a read-only source
 mount at the path expected by `build.xml`. `ant clean build_src` discards the
 image's build directory before compiling, preventing stale objects from being
 used. Checkout and artifact actions run on the modern host rather than inside
-an unsupported i386 Node environment. The image digest is recorded on every
-run; the legacy image still uses its existing mutable `latest` tag.
+an legacy Node environment. The image is pinned by digest and its digest/architecture are recorded on every
+run. Ant explicitly requests a 32-bit target build.
 
 A successful legacy build does not establish a full 64-bit server build or live
 cluster compatibility. The portable suites omit the optional mission fixtures
