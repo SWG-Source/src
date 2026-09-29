@@ -26,7 +26,7 @@ jobs:
       - name: Install compiler and both ABIs
         run: |
           sudo apt-get update
-          sudo apt-get install --no-install-recommends -y g++-multilib
+          sudo apt-get install --no-install-recommends -y g++-multilib binutils
       - name: Record tested revision and compiler
         run: |
           mkdir -p ci-results
@@ -40,6 +40,9 @@ jobs:
       - name: Integer parsing regressions
         if: ${{ !cancelled() }}
         run: "{ git rev-parse HEAD; python3 tools/ci/run-parsing.py --bits ${{ matrix.bits }}; } 2>&1 | tee ci-results/parsing.log"
+      - name: DebugHelp symbol and ELF regressions
+        if: ${{ !cancelled() }}
+        run: "{ git rev-parse HEAD; python3 tools/ci/run-debughelp.py --bits ${{ matrix.bits }}; } 2>&1 | tee ci-results/debughelp.log"
       - name: Calendar boundaries
         if: ${{ !cancelled() }}
         run: "{ git rev-parse HEAD; sh engine/server/library/serverScript/test/calendar-time-test.sh -m${{ matrix.bits }}; } 2>&1 | tee ci-results/calendar.log"
