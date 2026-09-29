@@ -34,7 +34,7 @@ jobs:
           docker run --rm --platform linux/386 --entrypoint /bin/bash \
             --mount "type=bind,source=$GITHUB_WORKSPACE,target=/home/swg/swg-main/src,readonly" \
             cekisswg/swg-vm3.01-i386:latest -lc \
-            'set -eu; cd /home/swg/swg-main/src; ant -Dbits=32 -Dnproc=2 clean build_src; bash tools/ci/run-built-regressions.sh /home/swg/swg-main/build' \
+            'set -eu; cd /home/swg/swg-main/src; ant -Dbits=32 -Dnproc=2 clean build_src; bash tools/ci/run-built-regressions.sh /home/swg/swg-main/build'
           } 2>&1 | tee ci-results/build.log
       - name: Preserve build evidence
         if: ${{ always() }}
