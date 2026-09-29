@@ -49,6 +49,7 @@
 #include "sharedNetworkMessages/ChatOnLeaveRoom.h"
 #include "sharedNetworkMessages/ChatOnRemoveModeratorFromRoom.h"
 #include "sharedNetworkMessages/ChatOnRequestLog.h"
+#include "sharedNetworkMessages/NetworkMessageTimestamp.h"
 #include "sharedNetworkMessages/ChatOnSendInstantMessage.h"
 #include "sharedNetworkMessages/ChatOnSendRoomMessage.h"
 #include "sharedNetworkMessages/ChatOnUnbanAvatarFromRoom.h"
@@ -384,9 +385,11 @@ bool ChatServer::getChatLog(Unicode::String const &player, std::vector<ChatLogEn
 		{
 			int const messageIndex = iterMessageList->first;
 			ChatLogEntry chatLogEntry;
+			time_t timestamp = 0;
 
-			if (ChatLogManager::getChatMessage(messageIndex, chatLogEntry.m_from, chatLogEntry.m_to, chatLogEntry.m_message, chatLogEntry.m_channel, chatLogEntry.m_time))
+			if (ChatLogManager::getChatMessage(messageIndex, chatLogEntry.m_from, chatLogEntry.m_to, chatLogEntry.m_message, chatLogEntry.m_channel, timestamp))
 			{
+				chatLogEntry.m_time = NetworkMessageTimestamp::fromTime(timestamp);
 				chatLog.push_back(chatLogEntry);
 			}
 			else

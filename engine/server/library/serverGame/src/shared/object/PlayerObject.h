@@ -60,7 +60,7 @@ public:
 		ChatLogEntry();
 
 		int m_index;
-		uint32_t m_time;
+		time_t m_time;
 	};
 
 	typedef std::list<ChatLogEntry>    ChatLog;

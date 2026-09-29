@@ -73,3 +73,35 @@ five standalone cases but fails packed-map unsigned text decoding because its
 format specifiers do not match the uint32 arguments. The candidate corrects
 that format contract. This case checks intended decimal values and literal
 bytes; it does not assert parity with that upstream undefined formatting.
+
+## Signed timestamp checks
+
+```
+python3 tools/test-wire-compatibility/run-timestamps.py --bits 32
+python3 tools/test-wire-compatibility/run-timestamps.py --bits 64
+```
+
+This separate runner compiles the production ImageDesignChangeMessage,
+BuffBuilderChangeMessage and ChatLogEntry serializers. Twelve cases check
+INT32_MIN, -1, 0 and INT32_MAX through each encoder and decoder, comparing
+signed decoded values and requiring complete input consumption. ChatLogEntry
+uses a literal 20-byte encoding with empty strings. Image-design and buff-builder
+check the four timestamp bytes at legacy offsets 33 and 16, respectively,
+and compare all other bytes with a zero-time encoding. These offsets and
+boundary encodings were also checked against stock Win32 client `94945103`
+using client fixture revision `44652cba`; they are not full-message golden files.
+
+When host time_t is wider than 32 bits, six additional checks exercise values
+one below INT32_MIN and one above INT32_MAX. Conversion throws std::out_of_range;
+the setters retain their previous values. This is exception-based rejection,
+not graceful recovery by the callers. Internal chat-log storage, sorting and
+purge arithmetic use host time_t; only the network timestamp is signed 32-bit.
+The legacy protocol still has its signed timestamp range limit.
+
+Test support replaces MemoryBlockManager allocation with operator new/delete,
+MessageQueue::Data construction/destruction with empty definitions, and
+ExitChain/ControllerMessageFactory registration with no-ops. Unused network
+base constructors abort if reached; their destructors are empty. The existing
+Fatal stand-in aborts. No serializer or timestamp conversion is replaced.
+The test does not validate those services, chat-log purge execution, a full
+server build, MSVC, or live client/server compatibility.

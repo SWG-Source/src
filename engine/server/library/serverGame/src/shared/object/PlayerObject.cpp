@@ -4770,7 +4770,7 @@ void PlayerObject::logChat(int const logIndex)
 {
 	if (m_chatLog != nullptr)
 	{
-		uint32_t const logTime = Os::getRealSystemTime();
+		time_t const logTime = Os::getRealSystemTime();
 
 		ChatLogEntry chatLogEntry;
 
@@ -4834,13 +4834,13 @@ void PlayerObject::cleanChatLog()
 
 		// See if anything needs to be purged from the front of the logs
 
-		uint32_t const chatLogTime = ConfigServerUtility::getChatLogMinutes() * 60;
+		time_t const chatLogTime = static_cast<time_t>(ConfigServerUtility::getChatLogMinutes()) * 60;
 		int chatLogCount = static_cast<int>(m_chatLog->size());
 
 		ChatLog::iterator iterChatLog = m_chatLog->begin();
 		while (!m_chatLog->empty())
 		{
-			const uint32_t messageTime = iterChatLog->m_time;
+			const time_t messageTime = iterChatLog->m_time;
 
 			if (messageTime < (currentTime - chatLogTime) || (chatLogCount > ConfigServerUtility::getPlayerMaxChatLogLines()))
 			{
