@@ -146,7 +146,7 @@ inline char *DuplicateString(const char *source)
 	if (!source)
 		return nullptr;
 
-	const uint length = strlen(source)+1;
+	const size_t length = strlen(source)+1;
 	char *result = NON_NULL (new char[length]);
 	memcpy(result, source, length);
 	return result;
@@ -171,10 +171,10 @@ inline char *DuplicateStringWithToLower(const char *source)
 	if (!source)
 		return nullptr;
 
-	const uint length = strlen(source)+1;
+	const size_t length = strlen(source)+1;
 	char *result = NON_NULL (new char[length]);
 
-	for (uint i = 0; i < length; ++i)
+	for (size_t i = 0; i < length; ++i)
 		result[i] = static_cast<char>(tolower(source[i]));
 
 	return result;
