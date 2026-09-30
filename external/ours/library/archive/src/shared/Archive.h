@@ -267,19 +267,19 @@ inline void put(ByteStream & target, const char & source)
 
 inline void put(ByteStream & target, const std::string & source)
 {
-	if (source.size() < 65535)
+	unsigned int const size = ArchiveCount::fromSize<unsigned int>(source.size());
+	if (size < 65535)
 	{
-		unsigned short len = static_cast<uint16_t>(source.size());
+		unsigned short len = static_cast<uint16_t>(size);
 		put(target, len);
 	}
 	else
 	{
-		unsigned int const size = ArchiveCount::fromSize<unsigned int>(source.size());
 		unsigned short len = static_cast<uint16_t>(65535);
 		put(target, len);
 		put(target, size);
 	}
-	target.put(source.data(), source.size());
+	target.put(source.data(), size);
 }
 
 //---------------------------------------------------------------------
