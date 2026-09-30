@@ -23,6 +23,9 @@ public:
 		P_24,
 		P_53,
 		P_64,
+#if defined(_M_X64)
+		P_fixedByType, // SSE precision is selected by each float/double operation.
+#endif
 
 		P_max
 	};
@@ -59,6 +62,8 @@ private:
 
 public:
 
+	// Win32: raw x87 control word. x64: MXCSR control bits, excluding sticky status flags.
+	// Saved words are platform-specific and must not be transferred between architectures.
 	static WORD getControlWord(void);
 	static void setControlWord(WORD controlWord);
 
@@ -68,7 +73,10 @@ public:
 
 	static void      update(void);
 
+	// x87 precision control has no SSE equivalent; unavailable on x64.
+#if !defined(_M_X64)
 	static void      setPrecision(Precision newPrecision);
+#endif
 	static void      setRounding(Rounding newRounding);
 	static void      setExceptionEnabled(Exception exception, bool enabled);
 
