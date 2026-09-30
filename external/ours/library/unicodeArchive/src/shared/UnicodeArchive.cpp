@@ -11,6 +11,9 @@
 #include "Archive/Archive.h"
 #include "Archive/ArchiveCount.h"
 
+#include <limits>
+#include <stdexcept>
+
 //======================================================================
 
 namespace Archive
@@ -39,8 +42,11 @@ namespace Archive
 	void put(ByteStream & target, const Unicode::String & source)
 	{
 		const unsigned int size = ArchiveCount::fromSize<unsigned int>(source.size ());
+		if (size > (std::numeric_limits<unsigned int>::max)() / sizeof(Unicode::unicode_char_t))
+			throw std::out_of_range("Unicode payload exceeds ByteStream byte count range");
+		unsigned int const byteSize = size * static_cast<unsigned int>(sizeof(Unicode::unicode_char_t));
 		Archive::put (target, size);
-		target.put (source.data(), size * sizeof (Unicode::unicode_char_t));
+		target.put (source.data(), byteSize);
 	}
 }
 	
