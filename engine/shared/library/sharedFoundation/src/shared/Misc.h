@@ -226,7 +226,7 @@ inline void imemcpy(void *destination, const void *source, int length)
  * @param length  Number of bytes to copy
  */
 
-inline void *memmove(void *destination, const void *source, int length)
+inline void *imemmove(void *destination, const void *source, int length)
 {
 	DEBUG_FATAL(!destination, ("nullptr destination arg"));
 	DEBUG_FATAL(!source, ("nullptr source arg"));
