@@ -1440,7 +1440,7 @@ void Os::setThreadName(ThreadId threadID, const char* threadName)
 	__try
 	{
 		// use the magic exception number MS picked for this purpose
-		RaiseException(0x406D1388, 0, sizeof(info) / sizeof(DWORD), reinterpret_cast<DWORD *>(&info));
+		RaiseException(0x406D1388, 0, sizeof(info) / sizeof(ULONG_PTR), reinterpret_cast<ULONG_PTR *>(&info));
 	}
 	__except (EXCEPTION_CONTINUE_EXECUTION)
 	{
