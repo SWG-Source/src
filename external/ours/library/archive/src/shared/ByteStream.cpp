@@ -4,6 +4,8 @@
 #include "ArchiveMutex.h"
 #include <cassert>
 #include <cstring>
+#include <memory>
+#include <stdexcept>
 
 // ======================================================================
 
@@ -108,27 +110,12 @@ ByteStream::ByteStream() :
 	@author Justin Randall
 */
 ByteStream::ByteStream(unsigned char const * const newBuffer, const unsigned int bufferSize) :
-	allocatedSize(bufferSize),
+	allocatedSize(0),
 	allocatedSizeLimit(0),
 	data(0),
-	size(bufferSize)
+	size(0)
 {
-	data = Data::getNewData();
-	if (data->size < size)
-	{
-		delete[] data->buffer;
-		
-		if(size > 0)
-			data->buffer = new unsigned char[size];
-		else
-			data->buffer = 0;
-
-		data->size = size;
-	}
-
-	if (size > 0)
-		memcpy(data->buffer, newBuffer, size);
-
+	put(newBuffer, bufferSize);
 	beginReadIterator = ReadIterator(*this);
 }
 
@@ -158,7 +145,7 @@ ByteStream::ByteStream(ByteStream const &source):
 ByteStream::ByteStream(ReadIterator &source) :
 	allocatedSize(0),
 	allocatedSizeLimit(0),
-	data(Data::getNewData()),
+	data(0),
 	size(0)
 {
 	put(source.getBuffer(), source.getSize());
@@ -226,16 +213,11 @@ ByteStream &ByteStream::operator=(ByteStream const &rhs)
 */
 void ByteStream::get(void *target, ReadIterator &readIterator, const uint32_t targetSize) const
 {
-	if (data && readIterator.getReadPosition() + targetSize <= allocatedSize)
-	{
-		memcpy(target, &data->buffer[readIterator.getReadPosition()], targetSize);
-	}
-	else
-	{
-		static const char * const desc = "Archive::ByteStream - read beyond end of buffer";
-		ReadException ex(desc);
-		throw (ex);
-	}
+	unsigned int const position = readIterator.getReadPosition();
+	if (position > size || targetSize > size - position)
+		throw ReadException("Archive::ByteStream - read beyond end of buffer");
+	if (targetSize)
+		memcpy(target, data->buffer + position, targetSize);
 }
 
 //---------------------------------------------------------------------
@@ -255,53 +237,57 @@ void ByteStream::get(void *target, ReadIterator &readIterator, const uint32_t ta
 */
 void ByteStream::put(void const * const source, const unsigned int sourceSize)
 {
-	if (!data)
-		data = Data::getNewData();
-	
-	if (data->getRef() > 1)
+	if (sourceSize > (std::numeric_limits<unsigned int>::max)() - size)
+		throw std::length_error("Archive::ByteStream - buffer size exceeds unsigned int range");
+	if (!sourceSize)
+		return;
+	unsigned int const newSize = size + sourceSize;
+	unsigned int const newCapacity = getAllocationSize(newSize);
+	if (!data || data->getRef() > 1 || data->size < newCapacity)
 	{
-		unsigned char const * const tmp = data->buffer;
-		data->deref();
-		data = Data::getNewData();
-		if (data->size < sourceSize)
+		std::auto_ptr<Data> replacement(Data::getNewData());
+		if (replacement->size < newCapacity)
 		{
-			delete[] data->buffer;
-
-			if (size > 0)
-				data->buffer = new unsigned char[size];
-			else
-				data->buffer = 0;
-
-			data->size = size;
+			unsigned char * const buffer = new unsigned char[newCapacity];
+			delete[] replacement->buffer;
+			replacement->buffer = buffer;
+			replacement->size = newCapacity;
 		}
-		
-		if (size > 0)
-			memcpy(data->buffer, tmp, size);
-
-		allocatedSize = size;		
+		if (size)
+			memcpy(replacement->buffer, data->buffer, size);
+		// Keep old storage alive until a source inside that storage is copied.
+		memcpy(replacement->buffer + size, source, sourceSize);
+		if (data)
+			data->deref();
+		data = replacement.release();
 	}
-	growToAtLeast(size + sourceSize);
-	memcpy(&data->buffer[size], source, sourceSize);
-	size += sourceSize;
+	else
+		memcpy(data->buffer + size, source, sourceSize);
+	allocatedSize = newCapacity;
+	size = newSize;
 }
 
 //---------------------------------------------------------------------
 
 void ByteStream::reAllocate(const unsigned int newSize)
 {
-	allocatedSize = newSize;
-	if (!data)
-		data = Data::getNewData();
-	
-	if (data->size < allocatedSize)
+	if (!data || data->getRef() > 1 || data->size < newSize)
 	{
-		unsigned char * tmp = new unsigned char[newSize];
-		if (data->buffer)
-			memcpy(tmp, data->buffer, size);
-		delete[] data->buffer;
-		data->buffer = tmp;
-		data->size = newSize;
+		std::auto_ptr<Data> replacement(Data::getNewData());
+		if (replacement->size < newSize)
+		{
+			unsigned char * const buffer = new unsigned char[newSize];
+			delete[] replacement->buffer;
+			replacement->buffer = buffer;
+			replacement->size = newSize;
+		}
+		if (size)
+			memcpy(replacement->buffer, data->buffer, size);
+		if (data)
+			data->deref();
+		data = replacement.release();
 	}
+	allocatedSize = newSize;
 }
 
 //---------------------------------------------------------------------
@@ -345,7 +331,7 @@ ByteStream::Data *ByteStream::Data::getNewData()
 
 void ByteStream::Data::releaseOldData(ByteStream::Data *oldData)
 {
-	assert(reinterpret_cast<uint64_t>(oldData) != 0xefefefefefefefefu);
+	assert(reinterpret_cast<uintptr_t>(oldData) != ~uintptr_t(0) / 255 * 0xef);
 
 	if (oldData->size > 4096)
 		delete oldData;
@@ -358,7 +344,17 @@ void ByteStream::Data::releaseOldData(ByteStream::Data *oldData)
 		else
 		{
 			oldData->refCount = 0;
-			dataFreeList.push_back(oldData);
+			try
+			{
+				dataFreeList.push_back(oldData);
+			}
+			catch (...)
+			{
+				// Pooling is optional; destruction must not fail or retain the lock.
+				unlockDataFreeList();
+				delete oldData;
+				return;
+			}
 		}
 
 		unlockDataFreeList();
