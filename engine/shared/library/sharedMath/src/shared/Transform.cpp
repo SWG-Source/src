@@ -26,6 +26,9 @@
 
 #if TRY_FOR_SSE
 #include "sharedMath/SseMath.h"
+#if defined(_M_X64)
+#include <xmmintrin.h>
+#endif
 #endif
 
 #include <cfloat>
@@ -272,6 +275,29 @@ static void xf_matrix_3x4(float *out, const float *left, const float *right)
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #if TRY_FOR_SSE
+#if defined(_M_X64)
+void sse_xf_matrix_3x4(float *out, const float *left, const float *right)
+{
+	const __m128 right0 = _mm_loadu_ps(right);
+	const __m128 right1 = _mm_loadu_ps(right + 4);
+	const __m128 right2 = _mm_loadu_ps(right + 8);
+	__m128 result[3];
+	for (int row = 0; row != 3; ++row)
+	{
+		const float *const l = left + row * 4;
+		const __m128 p0 = _mm_mul_ps(right0, _mm_set1_ps(l[0]));
+		const __m128 p1 = _mm_mul_ps(right1, _mm_set1_ps(l[1]));
+		const __m128 p2 = _mm_mul_ps(right2, _mm_set1_ps(l[2]));
+		// Keep the assembly's grouping, including its addition of zero lanes.
+		result[row] = _mm_add_ps(_mm_add_ps(_mm_add_ps(p1, p0), p2),
+			_mm_set_ps(l[3], 0.0f, 0.0f, 0.0f));
+	}
+	// All inputs must be read before writing: out may alias either input.
+	_mm_storeu_ps(out + 8, result[2]);
+	_mm_storeu_ps(out, result[0]);
+	_mm_storeu_ps(out + 4, result[1]);
+}
+#else
 __declspec(naked) void sse_xf_matrix_3x4(float *out, const float *left, const float *right)
 {
 	UNREF(left);
@@ -386,6 +412,7 @@ __declspec(naked) void sse_xf_matrix_3x4(float *out, const float *left, const fl
 		ret
 	}
 }
+#endif
 #endif
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
