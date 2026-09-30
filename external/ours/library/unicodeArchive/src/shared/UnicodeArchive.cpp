@@ -21,13 +21,17 @@ namespace Archive
 		unsigned int size = 0;
 		Archive::get (source, size);
 		
-		const unsigned char * const buf            = source.getBuffer();
-		const Unicode::unicode_char_t * const ubuf = reinterpret_cast<const Unicode::unicode_char_t *>(buf);
-		
-		target.assign (ubuf, ubuf + size);
-		
-		const unsigned int readSize                = size * sizeof (Unicode::unicode_char_t);
-		source.advance(readSize);
+		if (size > source.getSize() / sizeof(Unicode::unicode_char_t))
+			throw ReadException("Archive::get(Unicode::String) - payload exceeds remaining buffer");
+
+		// Own aligned, contiguous code units instead of dereferencing an unaligned packet.
+		Unicode::String decoded(size, Unicode::unicode_char_t(0));
+		if (size)
+		{
+			unsigned int const readSize = size * static_cast<unsigned int>(sizeof(Unicode::unicode_char_t));
+			source.get(&decoded[0], readSize);
+		}
+		target.swap(decoded);
 	}
 	
 	//-----------------------------------------------------------------------
