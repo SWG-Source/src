@@ -4,7 +4,7 @@ on:
   pull_request:
     branches: [master, 64-bit-types]
   push:
-    branches: [ci/server-regressions]
+    branches: [ci/server-regressions, integration/windows-shared-compat]
   workflow_dispatch:
 
 permissions:
