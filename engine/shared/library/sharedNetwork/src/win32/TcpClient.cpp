@@ -520,7 +520,7 @@ void TcpClient::update()
 	OVERLAPPED * overlapped = 0;
 	OverlappedTcp * op = 0;
 	unsigned long int bytesTransferred = 0;
-	unsigned long int completionKey = 0;
+	ULONG_PTR completionKey = 0;
 	bool success = false;
 
 	if (m_connected)

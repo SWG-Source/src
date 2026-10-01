@@ -12,11 +12,12 @@
 // ======================================================================
 
 #include "sharedNetwork/Address.h"
+#include <stdint.h>
 
 // ======================================================================
 
 const unsigned int SOCK_ERROR = 0xFFFFFFFF;
-typedef unsigned int SOCKET;
+typedef uintptr_t SOCKET;
 
 /**
 	@brief a BSD socket abstraction
@@ -66,7 +67,7 @@ private:
 protected:
 	void                        setNonBlocking() const;
 protected:
-	int                         handle;
+	SOCKET                      handle;
 
 	/**
 		@brief support for setting/getting last error from derived

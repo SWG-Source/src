@@ -1,0 +1,58 @@
+name: Server Windows network TU compilation
+
+on:
+  push:
+    branches: [review-ready/server-network-widths]
+  pull_request:
+    paths:
+      - .github/workflows/network-widths-windows.yml
+      - tools/test-windows-network-widths/**
+      - CMakeLists.txt
+      - engine/shared/library/sharedNetwork/**
+      - engine/shared/library/sharedFoundation/**
+      - engine/shared/library/sharedFoundationTypes/**
+      - engine/shared/library/sharedCompression/**
+      - engine/shared/library/sharedDebug/**
+      - engine/shared/library/sharedLog/**
+      - engine/shared/library/sharedMessageDispatch/**
+      - engine/shared/library/sharedSynchronization/**
+      - engine/shared/library/sharedThread/**
+      - external/ours/library/archive/**
+      - external/3rd/library/udplibrary/**
+
+permissions:
+  contents: read
+
+jobs:
+  windows-compile:
+    runs-on: windows-2022
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - name: Check runner units
+        shell: pwsh
+        run: |
+          python tools/test-windows-network-widths/test_runner.py
+          exit $LASTEXITCODE
+      - name: Compile twenty genuine server cases
+        shell: pwsh
+        run: |
+          $vswhere = "${env:ProgramFiles(x86)}/Microsoft Visual Studio/Installer/vswhere.exe"
+          $vs = & $vswhere -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath
+          if (-not $vs) { throw 'MSVC installation not found' }
+          $vcvars = Join-Path $vs 'VC/Auxiliary/Build/vcvarsall.bat'
+          python tools/test-windows-network-widths/run.py --checkout . --vcvars "$vcvars" --out "$env:RUNNER_TEMP/server-network"
+          exit $LASTEXITCODE
+      - name: Preserve text diagnostics and identities
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: server-network-windows-compile
+          path: |
+            ${{ runner.temp }}/server-network/*.json
+            ${{ runner.temp }}/server-network/*.log
+            ${{ runner.temp }}/server-network/*/*.log
+            ${{ runner.temp }}/server-network/*/*.cmd
+          if-no-files-found: warn

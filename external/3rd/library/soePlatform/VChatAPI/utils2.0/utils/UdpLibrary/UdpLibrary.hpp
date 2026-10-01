@@ -8,7 +8,8 @@
 
 
 #if defined(WIN32)
-	typedef unsigned int SOCKET;	// avoids us having to include winsock.h just for this
+	#include <stdint.h>
+	typedef uintptr_t SOCKET;	// avoids us having to include winsock.h just for this
 	typedef __int64 udp_int64;
 #else
 	typedef int SOCKET;
