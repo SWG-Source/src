@@ -1,0 +1,55 @@
+name: Memory move real-header regression
+
+on:
+  push:
+    branches: [review-ready/server-imemmove]
+  pull_request:
+    paths:
+      - .github/workflows/imemmove.yml
+      - tools/test-imemmove/**
+      - engine/shared/library/sharedFoundation/**
+      - engine/shared/library/sharedFoundationTypes/**
+      - engine/shared/library/sharedDebug/**
+      - engine/shared/library/sharedFile/**
+      - engine/shared/library/sharedMath/**
+      - external/ours/library/fileInterface/**
+
+permissions:
+  contents: read
+
+jobs:
+  linux:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Install multilib compiler
+        run: sudo apt-get update && sudo apt-get install -y g++-multilib
+      - name: Check submitted headers and actual callers
+        run: |
+          python3 tools/test-imemmove/test_diagnostics.py
+          python3 tools/test-imemmove/run-linux.py --checkout . --bits 32 --consumers --out "$RUNNER_TEMP/imemmove-candidate32"
+          python3 tools/test-imemmove/run-linux.py --checkout . --bits 64 --consumers --out "$RUNNER_TEMP/imemmove-candidate64"
+      - name: Check pinned upstream controls
+        run: |
+          git worktree add --detach "$RUNNER_TEMP/imemmove-baseline" 7d2159a337281184d6a55db30d2bc9a4013c0e80
+          python3 tools/test-imemmove/run-linux.py --checkout "$RUNNER_TEMP/imemmove-baseline" --bits 32 --baseline --out "$RUNNER_TEMP/imemmove-baseline32"
+          python3 tools/test-imemmove/run-linux.py --checkout "$RUNNER_TEMP/imemmove-baseline" --bits 64 --baseline --expect-ambiguity --out "$RUNNER_TEMP/imemmove-baseline64"
+      - name: Preserve commands and results
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: imemmove-linux-results
+          path: |
+            ${{ runner.temp }}/imemmove-candidate32/*.log
+            ${{ runner.temp }}/imemmove-candidate32/results.json
+            ${{ runner.temp }}/imemmove-candidate64/*.log
+            ${{ runner.temp }}/imemmove-candidate64/results.json
+            ${{ runner.temp }}/imemmove-baseline32/*.log
+            ${{ runner.temp }}/imemmove-baseline32/results.json
+            ${{ runner.temp }}/imemmove-baseline64/*.log
+            ${{ runner.temp }}/imemmove-baseline64/results.json
+          if-no-files-found: warn
