@@ -199,7 +199,7 @@ void AiCreatureDataNamespace::loadCreatureData(DataTable const & dataTable)
 		}
 		else if (checkForDuplicate)
 		{
-			LOG("debug_ai", ("AiCreatureData::loadCreatureData() duplicate data at row=%d, crc=%lu, name=\"%s\"", row, name.getCrc(), name.getString()));
+			LOG("debug_ai", ("AiCreatureData::loadCreatureData() duplicate data at row=%d, crc=%u, name=\"%s\"", row, name.getCrc(), name.getString()));
 		}
 
 		if (iterCreatureData != s_creatureDataMap.end())
@@ -246,7 +246,7 @@ void AiCreatureDataNamespace::loadCreatureData(DataTable const & dataTable)
 	float const aggressivePercent = !s_creatureDataMap.empty() ? static_cast<float>(aggressiveCount) / static_cast<float>(s_creatureDataMap.size()) * 100.0f : 0.0f;
 	float const assistPercent = !s_creatureDataMap.empty() ? static_cast<float>(assistCount) / static_cast<float>(s_creatureDataMap.size()) * 100.0f : 0.0f;
 
-	LOG("debug_ai", ("AiCreatureData::loadCreatureData() Loading...%s - creatures(%u) errors(%i) aggressive(%.1f%%) assist(%.1f%%)", dataTable.getName().c_str(), s_creatureDataMap.size(), s_creatureErrorCount, aggressivePercent, assistPercent));
+	LOG("debug_ai", ("AiCreatureData::loadCreatureData() Loading...%s - creatures(%zu) errors(%i) aggressive(%.1f%%) assist(%.1f%%)", dataTable.getName().c_str(), s_creatureDataMap.size(), s_creatureErrorCount, aggressivePercent, assistPercent));
 }
 
 // ----------------------------------------------------------------------
@@ -271,7 +271,7 @@ void AiCreatureDataNamespace::loadWeaponData(DataTable const & dataTable)
 		}
 		else if (checkForDuplicate)
 		{
-			LOG("debug_ai", ("AiCreatureData::loadWeaponData() duplicate data at row=%d, crc=%lu, name=\"%s\"", row, name.getCrc(), name.getString()));
+			LOG("debug_ai", ("AiCreatureData::loadWeaponData() duplicate data at row=%d, crc=%u, name=\"%s\"", row, name.getCrc(), name.getString()));
 		}
 
 		if (iterWeaponData != s_weaponDataMap.end())
@@ -293,7 +293,7 @@ void AiCreatureDataNamespace::loadWeaponData(DataTable const & dataTable)
 		}
 	}
 
-	LOG("debug_ai", ("AiCreatureData::loadWeaponData() Loading...%s - weaponProfiles(%u) errors(%i)", dataTable.getName().c_str(), s_weaponDataMap.size(), s_weaponErrorCount));
+	LOG("debug_ai", ("AiCreatureData::loadWeaponData() Loading...%s - weaponProfiles(%zu) errors(%i)", dataTable.getName().c_str(), s_weaponDataMap.size(), s_weaponErrorCount));
 }
 
 // ----------------------------------------------------------------------

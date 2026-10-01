@@ -120,6 +120,9 @@ void ConfigLoginServer::install(void)
 	KEY_STRING(externalAuthURL, "");
 	KEY_STRING(externalAuthSecretKey, "");
 	KEY_BOOL(useOldSuidGenerator, false);
+	// Optional: asserts the station id scheme recorded in the login
+	// database (gcc32 or gcc64). It never selects the scheme.
+	KEY_STRING(stationIdScheme, "");
 
 	int index = 0;
 	char const * result = 0;

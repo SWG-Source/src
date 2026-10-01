@@ -282,7 +282,9 @@ sub makeEncodeFunction
     print OUTFILE "\t}\n";
     if (($parent{$classname} ne "") && (&packageCount($parent{$classname},$package)!=0))
     {
-	print OUTFILE "\tencode\u${package}".$parent{$classname}."(objectId, data, false);\n";
+	# a parent that cannot be encoded fails the child: see SwgSnapshot::prepareSend
+	print OUTFILE "\tif (!encode\u${package}".$parent{$classname}."(objectId, data, false))\n";
+	print OUTFILE "\t\treturn false;\n";
 	print OUTFILE "\n";
     }
     print OUTFILE "\tPROFILER_AUTO_BLOCK_DEFINE(\"encode\u${package}${classname}\");\n";
@@ -326,6 +328,30 @@ sub makeEncodeFunction
 		print OUTFILE "\t\tArchive::AutoDeltaPackedMap<$1,$2>::pack(data, packedValue);\n";
 		print OUTFILE "\t}\n";
 	    }
+	    elsif (&isNarrowInteger($datatype))
+	    {
+		# The column is a 32-bit integer and the member is narrower: convert
+		# only a value the member can hold, and fail the encode otherwise.
+		# A NULL column is an absent value (for example a row older than the
+		# column): it encodes as the value a new object gets, with a warning.
+		# On the 32-bit server a NULL read left the buffer unchanged (a stale
+		# value or a sentinel); this default is a new, deliberate
+		# compatibility policy.
+		my $nullDefault = &narrowNullDefault($classname, $cName);
+		print OUTFILE "\t{\n";
+		print OUTFILE "\t\t${datatype} temp = ${nullDefault};\n";
+		print OUTFILE "\t\tif (row->".&dbIze($cName).".isNull())\n";
+		print OUTFILE "\t\t\tWARNING(true, (\"DatabaseWarning: SwgSnapshot::encode\u${package}${classname}: object %s has a NULL ${rowtype}.".&dbIze($cName)."; encoding the new-object default ${nullDefault}\", objectId.getValueString().c_str()));\n";
+		print OUTFILE "\t\telse ";
+		print OUTFILE "if (!DB::checkedNarrow(row->".&dbIze($cName).".getValue(), temp, \"${rowtype}.".&dbIze($cName)."\",\n";
+		print OUTFILE "\t\t\t[&objectId]() { return \"SwgSnapshot::encode\u${package}${classname}, object \" + objectId.getValueString(); }))\n";
+		print OUTFILE "\t\t{\n";
+		print OUTFILE "\t\t\tm_encodeRejected = true; // rejects the whole load: see SwgSnapshot::prepareSend\n";
+		print OUTFILE "\t\t\treturn false;\n";
+		print OUTFILE "\t\t}\n";
+		print OUTFILE "\t\tArchive::put(data,temp);\n";
+		print OUTFILE "\t}\n";
+	    }
 	    else
 	    {
 		print OUTFILE "\t{\n";
@@ -344,6 +370,36 @@ sub makeEncodeFunction
     print OUTFILE "\treturn true;\n"; 
     print OUTFILE "}\n";
     print OUTFILE "\n";
+}
+
+# ----------------------------------------------------------------------
+
+# Member types narrower than the 32-bit integer column that persists them.
+# Encoding converts with a check and decoding widens explicitly. A narrow
+# type missing from this list does not compile, because DB::BindableInt32
+# exchanges only int32_t.
+sub isNarrowInteger
+{
+    my($datatype)=@_;
+    my(%narrow)=("int8" => 1, "uint8" => 1, "int16" => 1, "uint16" => 1,
+                 "Postures::Enumerator" => 1); # Postures::Enumerator is an int8
+    return exists $narrow{$datatype};
+}
+
+# ----------------------------------------------------------------------
+
+# The value a newly created object gives each narrow member (its initializer
+# in the object's constructor). A NULL column encodes as this value. A new
+# narrow member must be added here, or generation fails.
+sub narrowNullDefault
+{
+    my($classname,$cName)=@_;
+    my(%default)=("CreatureObject.m_rank" => "0",                       # CreatureObject(): m_rank(0)
+                  "CreatureObject.m_posture" => "Postures::Upright");   # CreatureObject(): m_posture(Postures::Upright)
+    my($key)="${classname}.${cName}";
+    $key =~ s/\s+$//;
+    die "make_packages.pl: no NULL default for narrow member $key" unless exists $default{$key};
+    return $default{$key};
 }
 
 # ----------------------------------------------------------------------
@@ -586,7 +642,15 @@ sub makeDecodeFunction
 	    {
 		print OUTFILE "\t\t\t${datatype} temp;\n";
 		print OUTFILE "\t\t\tArchive::get(data,temp);\n";
-		print OUTFILE "\t\t\trow->".&dbIze($cName)."=temp;\n";
+		if (&isNarrowInteger($datatype))
+		{
+		    # Widening into the 32-bit column: every value is representable.
+		    print OUTFILE "\t\t\trow->".&dbIze($cName)."=static_cast<int32_t>(temp);\n";
+		}
+		else
+		{
+		    print OUTFILE "\t\t\trow->".&dbIze($cName)."=temp;\n";
+		}
 #Hack to catch cell number bug
 		if (&dbIze($cName) eq "cell_number")
 		{
@@ -844,7 +908,7 @@ sub makeNewObjectSwitcher()
 {
     my($classname,$templatename);
 
-    print OUTFILE "void SwgSnapshot::newObject(NetworkId const & objectId, int templateId, Tag typeId)\n";
+    print OUTFILE "void SwgSnapshot::newObject(NetworkId const & objectId, uint32 templateId, Tag typeId)\n";
     print OUTFILE "{\n";
     print OUTFILE "\tm_objectTableBuffer.newObject(objectId, templateId, typeId);\n";
     print OUTFILE "\tswitch(typeId)\n";

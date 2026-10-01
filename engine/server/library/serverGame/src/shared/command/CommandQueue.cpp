@@ -693,7 +693,7 @@ void CommandQueue::switchState()
 			m_commandTimes.set( TimerClass_Cooldown, getCooldownTime(*entry.m_command) );
 			m_commandTimes.set( TimerClass_Cooldown2, entry.m_command->m_coolTime2 );
 
-			DEBUG_REPORT_LOG( cs_debug, ( "CommandQueue::switchState(): cooldown timer setting id=%lu time=%f id2=%lu time2=%f\n", entry.m_command->m_coolGroup, getCooldownTime(*entry.m_command),
+			DEBUG_REPORT_LOG( cs_debug, ( "CommandQueue::switchState(): cooldown timer setting id=%u time=%f id2=%u time2=%f\n", entry.m_command->m_coolGroup, getCooldownTime(*entry.m_command),
 				entry.m_command->m_coolGroup2, entry.m_command->m_coolTime2) );
 			
 			if ( entry.m_command->m_warmTime < FLT_EPSILON )
@@ -988,11 +988,11 @@ void CommandQueue::persistCooldown(uint32 cooldownGroupCrc, int cooldownTimeSeco
 
 	char buffer[256];
 
-	snprintf(buffer, sizeof(buffer)-1, "commandCooldown.beginTime.%lu", cooldownGroupCrc);
+	snprintf(buffer, sizeof(buffer)-1, "commandCooldown.beginTime.%u", cooldownGroupCrc);
 	buffer[sizeof(buffer)-1] = '\0';
 	std::string const coolDownBeginTime = buffer;
 
-	snprintf(buffer, sizeof(buffer)-1, "commandCooldown.endTime.%lu", cooldownGroupCrc);
+	snprintf(buffer, sizeof(buffer)-1, "commandCooldown.endTime.%u", cooldownGroupCrc);
 	buffer[sizeof(buffer)-1] = '\0';
 	std::string const coolDownEndTime = buffer;
 
@@ -1015,7 +1015,7 @@ void CommandQueue::depersistCooldown()
 		if (iterObjVar->first.find("commandCooldown.beginTime.") == 0)
 		{
 			uint32 cooldownGroupCrc = 0;
-			if (1 == sscanf(iterObjVar->first.c_str(), "commandCooldown.beginTime.%lu", &cooldownGroupCrc))
+			if (1 == sscanf(iterObjVar->first.c_str(), "commandCooldown.beginTime.%u", &cooldownGroupCrc))
 			{
 				int beginTime = 0;
 				if (iterObjVar->second.get(beginTime))
@@ -1035,7 +1035,7 @@ void CommandQueue::depersistCooldown()
 		else if (iterObjVar->first.find("commandCooldown.endTime.") == 0)
 		{
 			uint32 cooldownGroupCrc = 0;
-			if (1 == sscanf(iterObjVar->first.c_str(), "commandCooldown.endTime.%lu", &cooldownGroupCrc))
+			if (1 == sscanf(iterObjVar->first.c_str(), "commandCooldown.endTime.%u", &cooldownGroupCrc))
 			{
 				int endTime = 0;
 				if (iterObjVar->second.get(endTime))
@@ -1067,11 +1067,11 @@ void CommandQueue::depersistCooldown()
 		else
 		{
 			// cleanup the objvars for any expired/invalid cooldowns
-			snprintf(buffer, sizeof(buffer)-1, "commandCooldown.beginTime.%lu", iterCooldown->first);
+			snprintf(buffer, sizeof(buffer)-1, "commandCooldown.beginTime.%u", iterCooldown->first);
 			buffer[sizeof(buffer)-1] = '\0';
 			creatureOwner->removeObjVarItem(buffer);
 
-			snprintf(buffer, sizeof(buffer)-1, "commandCooldown.endTime.%lu", iterCooldown->first);
+			snprintf(buffer, sizeof(buffer)-1, "commandCooldown.endTime.%u", iterCooldown->first);
 			buffer[sizeof(buffer)-1] = '\0';
 			creatureOwner->removeObjVarItem(buffer);
 		}
@@ -1535,7 +1535,7 @@ void CommandQueue::spew(std::string * output)
 			
 			const CommandQueueEntry &entry = *j;
 
-			fsSprintfOutput = fsOutput.sprintf("%s commandName [%s] hash[%lu] cd1[%lu] cd2[%lu]",
+			fsSprintfOutput = fsOutput.sprintf("%s commandName [%s] hash[%u] cd1[%u] cd2[%u]",
 				creature->getNetworkId().getValueString().c_str(),
 				entry.m_command->m_commandName.c_str(),
 				entry.m_command->m_commandHash,
@@ -1554,7 +1554,7 @@ void CommandQueue::spew(std::string * output)
 
 		for (CooldownMapType::const_iterator iterCooldown = m_cooldowns.begin(); iterCooldown != m_cooldowns.end(); ++iterCooldown)
 		{
-			fsSprintfOutput = fsOutput.sprintf("%s cooldown key [%lu] value1[%.10f] value2[%.10f] duration[%.10f] remaining[%.10f]",
+			fsSprintfOutput = fsOutput.sprintf("%s cooldown key [%u] value1[%.10f] value2[%.10f] duration[%.10f] remaining[%.10f]",
 				creature->getNetworkId().getValueString().c_str(),
 				iterCooldown->first,
 				iterCooldown->second.first,

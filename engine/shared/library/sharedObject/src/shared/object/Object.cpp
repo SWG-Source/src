@@ -150,7 +150,7 @@ Object::NotificationList::NotificationList(const NotificationList &otherList, co
 		}
 
 		if(!deletedOtherEntry) {
-		    DEBUG_FATAL(true, ("didn't find notification [0x%08x] in source list for deletion", &otherEntry));
+		    DEBUG_FATAL(true, ("didn't find notification [%p] in source list for deletion", static_cast<const void *>(&otherEntry)));
 		}
 		DEBUG_FATAL(m_notificationList.size() != otherList.m_notificationList.size() - 1, ("failed to build new notification list correctly"));
 
@@ -486,7 +486,7 @@ void ObjectNamespace::reportPropertySearchStatistics()
 	ms_propertySearchesPerFrame = 0;
 	PropertySearchStatistics ::const_iterator const iEnd = ms_propertySearchStatistics.end();
 	for (PropertySearchStatistics::const_iterator i = ms_propertySearchStatistics.begin(); i != iEnd; ++i)
-		DEBUG_REPORT_PRINT(true, ("  %08lx %d\n", i->first, i->second));
+		DEBUG_REPORT_PRINT(true, ("  %08x %d\n", i->first, i->second));
 }
 
 // ----------------------------------------------------------------------
@@ -897,7 +897,7 @@ Object::~Object(void)
 			Object *child = m_attachedObjects->back();
 			if (!child->isChildObject())
 			{
-				WARNING_STRICT_FATAL(true, ("deleting object with non-child attached objects, parent id=[%s], objectTemplate=[%s], appearanceTemplate=[%s], child id=[%s], ptr=[0x%08x], objectTemplate=[%s], appearanceTemplate=[%s], name=[%s])", getNetworkId().getValueString().c_str(), getObjectTemplateName(), getAppearance() && getAppearance()->getAppearanceTemplate() ? getAppearance()->getAppearanceTemplate()->getName() : 0, child->getNetworkId().getValueString().c_str(), child, child->getObjectTemplateName(), child->getAppearance() && child->getAppearance()->getAppearanceTemplate() ? child->getAppearance()->getAppearanceTemplate()->getName() : 0, child->getDebugName()));
+				WARNING_STRICT_FATAL(true, ("deleting object with non-child attached objects, parent id=[%s], objectTemplate=[%s], appearanceTemplate=[%s], child id=[%s], ptr=[%p], objectTemplate=[%s], appearanceTemplate=[%s], name=[%s])", getNetworkId().getValueString().c_str(), getObjectTemplateName(), getAppearance() && getAppearance()->getAppearanceTemplate() ? getAppearance()->getAppearanceTemplate()->getName() : 0, child->getNetworkId().getValueString().c_str(), child, child->getObjectTemplateName(), child->getAppearance() && child->getAppearance()->getAppearanceTemplate() ? child->getAppearance()->getAppearanceTemplate()->getName() : 0, child->getDebugName()));
 				child->detachFromObject(DF_parent);
 			}
 			else
@@ -1141,7 +1141,7 @@ void Object::removeFromWorld()
 			{
 				if (attached->isInWorld())
 				{
-					DEBUG_WARNING(true, ("Removing an object [id=%s template=%s] from the world with non-child attached objects [id=%s ptr=0x%08x template=%s name=%s]", getNetworkId ().getValueString ().c_str (), getObjectTemplateName () ? getObjectTemplateName () : "nullptr", attached->getNetworkId ().getValueString ().c_str (), attached, attached->getObjectTemplateName () ? attached->getObjectTemplateName () : "nullptr", attached->getDebugName()));
+					DEBUG_WARNING(true, ("Removing an object [id=%s template=%s] from the world with non-child attached objects [id=%s ptr=%p template=%s name=%s]", getNetworkId ().getValueString ().c_str (), getObjectTemplateName () ? getObjectTemplateName () : "nullptr", attached->getNetworkId ().getValueString ().c_str (), static_cast<void *>(attached), attached->getObjectTemplateName () ? attached->getObjectTemplateName () : "nullptr", attached->getDebugName()));
 					attached->detachFromObject(DF_parent);
 				}
 			}
@@ -1163,7 +1163,7 @@ void Object::addDpvsObject(DPVS::Object *dpvsObject)
 
 	if (i != m_dpvsObjects->end())
 	{
-		DEBUG_FATAL(true, ("Object::addDpvsObject() Adding duplicate DPVS object [0x%08x] to Object %s", dpvsObject, getDebugInformation().c_str()));
+		DEBUG_FATAL(true, ("Object::addDpvsObject() Adding duplicate DPVS object [%p] to Object %s", static_cast<void *>(dpvsObject), getDebugInformation().c_str()));
 		return;
 	}
 
@@ -1184,7 +1184,7 @@ void Object::removeDpvsObject(DPVS::Object *dpvsObject)
 
 	if (i == m_dpvsObjects->end())
 	{
-		DEBUG_FATAL(true, ("Object::removeDpvsObject() Removing unknown DPVS object [0x%08x] from Object %s", dpvsObject, getDebugInformation().c_str()));
+		DEBUG_FATAL(true, ("Object::removeDpvsObject() Removing unknown DPVS object [%p] from Object %s", static_cast<void *>(dpvsObject), getDebugInformation().c_str()));
 		return;
 	}
 

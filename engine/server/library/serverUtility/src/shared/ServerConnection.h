@@ -36,7 +36,7 @@ public:
 	virtual void                onConnectionClosed      ();
 	virtual void                onConnectionOpened      ();
 	virtual void                onConnectionOverflowing (const unsigned int bytesPending);
-	virtual void                onConnectionStalled     (const unsigned long stallTimeMs);
+	virtual void                onConnectionStalled     (const uint32_t stallTimeMs);
 	virtual void	            onReceive               (const Archive::ByteStream & message);
 	virtual void                reportReceive           (const Archive::ByteStream & bs);
 	virtual void                reportSend              (const Archive::ByteStream & bs);

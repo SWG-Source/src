@@ -61,6 +61,17 @@ namespace DebugHelpNamespace
    static MiniDumpWriteDumpFP        miniDumpWriteDump;
    static CRITICAL_SECTION           criticalSection; 
 
+	// DbgHelp and the callback caches are shared by all capturing threads.
+	class ScopedDebugHelpLock
+	{
+	public:
+		ScopedDebugHelpLock() { EnterCriticalSection(&criticalSection); }
+		~ScopedDebugHelpLock() { LeaveCriticalSection(&criticalSection); }
+	private:
+		ScopedDebugHelpLock(ScopedDebugHelpLock const &);
+		ScopedDebugHelpLock &operator=(ScopedDebugHelpLock const &);
+	};
+
    // ----------------------------------------------------------------------
 
 	//BOOL CALLBACK loadSymbolsForDllCallback(PTSTR ModuleName, DWORD64 ModuleBase, ULONG ModuleSize, PVOID UserContext);
@@ -347,7 +358,13 @@ namespace DebugHelpNamespace
 	{
 		UNREF(hProcess);
 		DEBUG_FATAL(hProcess!=process, ("Wrong process handle for module base lookup.\n"));
-		return _functionTableLookup(DWORD(dwAddr));
+#if defined(_M_X64)
+		// Native DbgHelp may reuse its function-table storage between calls.
+		// Retaining those pointers breaks subsequent x64 unwinds.
+		return symFunctionTableAccess64(hProcess, dwAddr);
+#else
+		return _functionTableLookup(dwAddr);
+#endif
 	}
 
    // ----------------------------------------------------------------------
@@ -379,7 +396,18 @@ void DebugHelp::install()
 {
 	DEBUG_FATAL(library, ("DebugHelp already installed"));
 
+#if defined(_M_X64)
+	// The bundled legacy DLL is Win32; use the native Windows implementation.
+	char debugHelpPath[MAX_PATH];
+	UINT const systemPathLength = GetSystemDirectoryA(debugHelpPath, sizeof(debugHelpPath));
+	if (systemPathLength && systemPathLength < sizeof(debugHelpPath) - sizeof("\\dbghelp.dll"))
+	{
+		strcat(debugHelpPath, "\\dbghelp.dll");
+		library = LoadLibraryA(debugHelpPath);
+	}
+#else
 	library = LoadLibrary("dbghelp_6.3.17.0.dll");
+#endif
 	if (library)
 	{
 		process = GetCurrentProcess();
@@ -474,6 +502,7 @@ bool DebugHelp::loadSymbolsForDll(const char *name)
 	if (!library)
 		return false;
 
+	ScopedDebugHelpLock const lock;
 	CallbackData callbackData = { name, false };
 	enumerateLoadedModules64(process, (PENUMLOADED_MODULES_CALLBACK64)loadSymbolsForDllCallback, reinterpret_cast<void *>(&callbackData));
 	return callbackData.loaded;
@@ -499,7 +528,10 @@ void DebugHelp::getCallStack(uint64 *callStack, int sizeOfCallStack)
 	//if (!GetThreadContext(GetCurrentThread(), &context))
 	//	return;
 
-	EnterCriticalSection(&criticalSection);
+	ScopedDebugHelpLock const lock;
+#if defined(_M_X64)
+	RtlCaptureContext(&context);
+#else
 	__asm
 	{
 		call GetEIP
@@ -509,20 +541,29 @@ void DebugHelp::getCallStack(uint64 *callStack, int sizeOfCallStack)
 		mov context.Esp, esp
 		mov context.Ebp, ebp
 	}
-	LeaveCriticalSection(&criticalSection);
+
+#endif
 
 	STACKFRAME64 stackFrame;
 	Zero(stackFrame);
 	stackFrame.AddrPC.Mode      = AddrModeFlat;
+#if defined(_M_X64)
+	stackFrame.AddrPC.Offset    = context.Rip;
+	stackFrame.AddrStack.Offset = context.Rsp;
+	stackFrame.AddrFrame.Offset = context.Rbp;
+	DWORD const machineType = IMAGE_FILE_MACHINE_AMD64;
+#else
 	stackFrame.AddrPC.Offset    = context.Eip;
 	stackFrame.AddrStack.Offset = context.Esp;
-	stackFrame.AddrStack.Mode   = AddrModeFlat;
 	stackFrame.AddrFrame.Offset = context.Ebp;
+	DWORD const machineType = IMAGE_FILE_MACHINE_I386;
+#endif
+	stackFrame.AddrStack.Mode   = AddrModeFlat;
 	stackFrame.AddrFrame.Mode   = AddrModeFlat;
 
 	for (int i = 0; i < sizeOfCallStack; ++i, ++callStack)
 	{
-		if (stackWalk64(IMAGE_FILE_MACHINE_I386, process, process, &stackFrame, &context, NULL, functionTableAccess, getModuleBase, NULL))
+		if (stackWalk64(machineType, process, GetCurrentThread(), &stackFrame, &context, NULL, functionTableAccess, getModuleBase, NULL))
 		{
 			const DWORD64 Offset = stackFrame.AddrPC.Offset;
 			*callStack = static_cast<uint64>(Offset);
@@ -567,6 +608,8 @@ bool DebugHelp::lookupAddress(uint64 address, char *libName, char *fileName, int
 
 	if (!library)
 		return false;
+
+	ScopedDebugHelpLock const lock;
 
 	// make sure the image is loaded
 	IMAGEHLP_MODULE64 imageHelpModule;
@@ -616,6 +659,7 @@ bool DebugHelp::writeMiniDump(char const *miniDumpFileName, PEXCEPTION_POINTERS 
 	if (!miniDumpWriteDump)
 		return false;
 
+	ScopedDebugHelpLock const lock;
 	char buffer[256];
 	if (!miniDumpFileName)
 	{

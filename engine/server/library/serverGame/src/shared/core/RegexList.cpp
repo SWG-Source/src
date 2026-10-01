@@ -138,11 +138,11 @@ bool RegexList::doesStringMatch(const Unicode::String &name, std::string &ruleDe
 	std::string testName = Unicode::toLower(Unicode::wideToNarrow(name));
 	std::vector<std::string> names;
 
-	int pos=0;
+	std::string::size_type pos = 0;
 	for (;;)
 	{
-		int newpos = testName.find(' ', pos);
-		if (newpos != int(Unicode::String::npos))
+		std::string::size_type const newpos = testName.find(' ', pos);
+		if (newpos != std::string::npos)
 		{
 			names.push_back(std::string(testName.c_str()+pos, newpos - pos));
 			pos = newpos + 1;

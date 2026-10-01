@@ -210,7 +210,7 @@ bool CentralCommandParserGame::performParsing (const NetworkId &, const StringVe
 
 
 			result += Unicode::narrowToWide("PID: ");
-			snprintf(numBuf, sizeof(numBuf), "%lu", GameServer::getInstance().getProcessId());
+			snprintf(numBuf, sizeof(numBuf), "%u", GameServer::getInstance().getProcessId());
 			result += Unicode::narrowToWide(std::string(numBuf)) + unl;
 
 			result += Unicode::narrowToWide("Scene: ") + Unicode::narrowToWide(ConfigServerGame::getSceneID()) + unl;

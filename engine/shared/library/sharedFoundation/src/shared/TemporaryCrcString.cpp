@@ -82,7 +82,7 @@ void TemporaryCrcString::clear()
 
 void TemporaryCrcString::internalSet(char const * string, bool applyNormalize)
 {
-	DEBUG_FATAL(strlen(string)+1 > BUFFER_SIZE, ("string too long %d/%d", strlen(string)+1, BUFFER_SIZE));
+	DEBUG_FATAL(strlen(string)+1 > BUFFER_SIZE, ("string too long %zu/%d", strlen(string)+1, BUFFER_SIZE));
 	if (applyNormalize)
 		normalize(m_buffer, string);
 	else

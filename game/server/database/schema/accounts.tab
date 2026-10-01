@@ -1,11 +1,11 @@
 create table accounts  -- NO_IMPORT
 (
-	station_id int,
+	station_id int, -- BIND_AS(DB::BindableUint32)
 	num_lots int,
 	is_outcast char(1),
-	cheater_level int,
+	cheater_level int, -- BIND_AS(DB::BindableDouble)
 	max_lots_adjustment int,
-	house_id number(20),
+	house_id number(20), -- BIND_AS(DB::BindableNetworkId)
 	constraint pk_accounts primary key (station_id) 
 );
 

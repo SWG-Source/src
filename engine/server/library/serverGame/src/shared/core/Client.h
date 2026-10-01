@@ -309,7 +309,7 @@ private:
 
     static std::map <std::string, uint32> sm_outgoingBytesMap_Working;  // working stats that will rotate after 1 minute
     static std::map <std::string, uint32> sm_outgoingBytesMap_Stats;    // computed stats from the last minute
-    static uint32 sm_outgoingBytesMap_Worktime; // time we started filling in the working map
+    static uint64_t sm_outgoingBytesMap_Worktime; // time we started filling in the working map
 };
 
 //-----------------------------------------------------------------------

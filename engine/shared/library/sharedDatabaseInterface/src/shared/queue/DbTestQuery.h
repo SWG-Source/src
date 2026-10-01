@@ -7,7 +7,7 @@
 class DBTestQuery : public DB::Query
 {
 public:
-	DB::BindableLong	value;
+	DB::BindableInt32	value;
 
 	DBTestQuery();
 	virtual void getSQL(std::string &sql);

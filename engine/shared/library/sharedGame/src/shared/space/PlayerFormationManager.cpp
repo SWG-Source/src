@@ -239,7 +239,7 @@ bool PlayerFormationManager::getPositionOffsetFormationLocation(uint32 const for
 		{
 			if(it2->second.size() <= static_cast<unsigned int>(index))
 			{
-				DEBUG_WARNING(true, ("getPositionOffsetFormationLocation, index is [%d], out of range of [0, %d)", index, it2->second.size()));
+				DEBUG_WARNING(true, ("getPositionOffsetFormationLocation, index is [%d], out of range of [0, %zu)", index, it2->second.size()));
 				return false;
 			}
 			formationLocation = it2->second[static_cast<unsigned int>(index)];

@@ -1313,7 +1313,7 @@ bool AICreatureController::flee( NetworkId const & targetId, float minDistance, 
 {
 	if (isRetreating())
 	{
-		DEBUG_WARNING(true, ("AICreatureController::flee() owner(%s) distance[%.2f...%.2f] Trying to flee the target(%s) while retreating, failing request.", getDebugInformation().c_str(), minDistance, maxDistance, targetId.getValueString().c_str(), targetId.getValueString().c_str()));
+		DEBUG_WARNING(true, ("AICreatureController::flee() owner(%s) distance[%.2f...%.2f] Trying to flee the target(%s) while retreating, failing request.", getDebugInformation().c_str(), minDistance, maxDistance, targetId.getValueString().c_str()));
 		return false;
 	}
 
@@ -2574,7 +2574,7 @@ void AICreatureController::equipSecondaryWeapon()
 
 					if (ContainerInterface::transferItemToGeneralContainer(*creatureOwner, *secondaryWeaponServerObject, nullptr, errorCode))
 					{
-						LOGC(AiLogManager::isLogging(getOwner()->getNetworkId()), "debug_ai", ("AICreatureController::equipSecondaryWeapon() owner(%s) secondaryWeapon(%s) errorCode(%d)\n", getDebugInformation().c_str(), secondaryWeaponServerObject->getDebugInformation().c_str()));
+						LOGC(AiLogManager::isLogging(getOwner()->getNetworkId()), "debug_ai", ("AICreatureController::equipSecondaryWeapon() owner(%s) secondaryWeapon(%s) errorCode(%d)\n", getDebugInformation().c_str(), secondaryWeaponServerObject->getDebugInformation().c_str(), static_cast<int>(errorCode)));
 
 						creatureOwner->setCurrentWeapon(*secondaryWeaponObject);
 

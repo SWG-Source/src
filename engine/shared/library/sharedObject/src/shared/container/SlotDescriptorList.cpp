@@ -114,7 +114,7 @@ void SlotDescriptorList::remove()
 	//-- handle leaks
 	if (!ms_descriptors->empty())
 	{
-		DEBUG_WARNING(true, ("SlotDescriptorList: %u named SlotDescriptor leaks", ms_descriptors->size()));
+		DEBUG_WARNING(true, ("SlotDescriptorList: %zu named SlotDescriptor leaks", ms_descriptors->size()));
 
 		const DescriptorMap::iterator endIt = ms_descriptors->end();
 		for (DescriptorMap::iterator it = ms_descriptors->begin(); it != endIt; ++it)

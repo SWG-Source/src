@@ -107,7 +107,7 @@ bool ConsoleCommandParserVeteran::performParsing (const NetworkId & userId, cons
 			uint32 const gameFeatures = client->getGameFeatures();
 			bool const adminLogin = client->isUsingAdminLogin();
 			char buffer[256];
-			snprintf(buffer,sizeof(buffer),"Entitled time:  %u\nGame features:  %lu\nUsing admin login:  %s\n",
+			snprintf(buffer,sizeof(buffer),"Entitled time:  %u\nGame features:  %u\nUsing admin login:  %s\n",
 					 entitledTime, gameFeatures, adminLogin ? "true" : "false");
 			buffer[sizeof(buffer)-1]='\0';
 			output += buffer;
@@ -153,7 +153,12 @@ bool ConsoleCommandParserVeteran::performParsing (const NetworkId & userId, cons
 	{
 		if (ConfigServerGame::getVeteranDebugEnableOverrideAccountAge())
 		{
-			int age(atoi(Unicode::wideToNarrow(argv[1]).c_str()));
+			int32 age = 0;
+			if (!parseArg(argv[1], age))
+			{
+				result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+				return true;
+			}
 			VeteranRewardManager::setOverrideAccountAge(age);
 			ServerMessageForwarding::beginBroadcast();
 			ServerMessageForwarding::send(GenericValueTypeMessage<int>("SetOverrideAccountAgeMessage",age));

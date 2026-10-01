@@ -1,0 +1,38 @@
+# Expected Miff output for each cases/<name>.mif: the SHA-256 of the .iff,
+# or REJECT. Every value is what the original 32-bit Miff produced, except the
+# REJECT lines with a reason: input whose value was undefined on a 32-bit long
+# or that the original silently wrote as a different value. Same on both ABIs.
+# The last column is the result of the original 32-bit Miff, for reference.
+accept           0511233129e0adb7abac149af9efb59f58e92644d73599c07848a3d98ce6d1a8  # same as the original
+accept2          826994abfd8497ff0d030bc131e314dde98df207c2b206cd262ce8eafe4c34a9  # same as the original
+add_wrap         bdf4457158f5d738e3564b678006be3a03984189e4bfaa4b58542fbc8f4e18c0  # same as the original
+div_min_neg1     REJECT  # same as the original, which died with SIGFPE and wrote nothing
+div_unsigned     3d0bdb729a6763e3a5172909dc5f1d8550df9d2afc2ba4b5c9cf123588d053fb  # same as the original
+div_zero         REJECT  # same as the original, which died with SIGFPE and wrote nothing
+enum_int32_ovf   REJECT  # refused: implicit enum value 0x7FFFFFFF + 1 overflows; original wrote 8705449fa477c434
+enum_next_ovf    bdf4457158f5d738e3564b678006be3a03984189e4bfaa4b58542fbc8f4e18c0  # same as the original
+float_negmin     fc3aa67894c67990d12bdf7b0bf02e18988005062c358f5dcb6838c962898d70  # same as the original
+float_u32        96f6de817809a1f2ea79d77df9e4e52b48fdc876794a52578ea71e4f469ceb81  # same as the original
+int16_40000      f881223782cd65ad672de81cd3cbdc3697fab5f1a4e62f272dd12e14890a36de  # same as the original
+int16_70000      REJECT  # refused: 70000 fits neither int16 nor uint16; original wrote 01aadaabcccfef16
+int32_ffffffff   32c92615935222d85f9d5e131a184b93daa2e5f477a025eb3f3a57e5ddcab353  # same as the original
+int8_200         d27f93dc83ddf40d1c5be49cbfd5b376eef2cfe939d6212f235c547744fee56f  # same as the original
+int8_300         REJECT  # refused: 300 fits neither int8 nor uint8; original wrote a32ad3322a9a43a2
+line_report      REJECT  # refused: uint8 256 fits neither int8 nor uint8; error names the line; original wrote 7a814f362ae4aead
+lit_2p32         REJECT  # refused: literal above 4294967295 (ILP32 saturated, LP64 did not); original wrote 32c92615935222d8
+lit_huge         REJECT  # refused: literal above 4294967295; original wrote 32c92615935222d8
+mod_zero         REJECT  # same as the original, which died with SIGFPE and wrote nothing
+mul_ovf          REJECT  # refused: 0x10000 * 0x10000 overflows a 32-bit long; original wrote bdf4457158f5d738
+neg_min          REJECT  # refused: -(2147483648) overflows a 32-bit long; original wrote 8705449fa477c434
+not_80000000     e7e6a194cbb2135957ff2afd5314e56f08167a11bd71737bf57c39e5ae53bd74  # same as the original
+not_ffffffff     bdf4457158f5d738e3564b678006be3a03984189e4bfaa4b58542fbc8f4e18c0  # same as the original
+not_zero_u32     32c92615935222d85f9d5e131a184b93daa2e5f477a025eb3f3a57e5ddcab353  # same as the original
+octal_09         bdf4457158f5d738e3564b678006be3a03984189e4bfaa4b58542fbc8f4e18c0  # same as the original
+ovf_add          REJECT  # refused: 0x7FFFFFFF + 1 overflows a 32-bit long; original wrote 8705449fa477c434
+shl_31           REJECT  # refused: 1 << 31 is past INT32_MAX; original wrote 8705449fa477c434
+shl_32           REJECT  # refused: shift count outside [0, 31]; original wrote 0e61399cc1d4cd2c
+shl_neg          REJECT  # refused: left shift of a negative value; original wrote 66d7ae95c2097fd0
+shr_ffffffff     32c92615935222d85f9d5e131a184b93daa2e5f477a025eb3f3a57e5ddcab353  # same as the original
+uint16_65536     REJECT  # refused: 65536 fits neither int16 nor uint16; original wrote 78f44feaeab70f8f
+uint32_neg1      32c92615935222d85f9d5e131a184b93daa2e5f477a025eb3f3a57e5ddcab353  # same as the original
+uint8_neg1       a1ab57c954ba081495dca55aa39277478c1a15a770449c7ced7495df29adf731  # same as the original

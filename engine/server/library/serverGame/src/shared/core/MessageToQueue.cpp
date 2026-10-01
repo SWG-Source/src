@@ -304,7 +304,7 @@ void MessageToQueue::receiveMessage(MessageDispatch::Emitter const &, MessageDis
  */
 void MessageToQueue::sendMessageToC (const NetworkId &objectId, const std::string &method, const std::string &data, int delay, bool guaranteed, NetworkId const & undeliveredCallbackObject, std::string const & undeliveredCallbackMethod)
 {
-	WARNING_DEBUG_FATAL(delay < 0, ("Sent messageTo with negative delay.  Target %s, method %s, delay %f",objectId.getValueString().c_str(), method.c_str(), delay));
+	WARNING_DEBUG_FATAL(delay < 0, ("Sent messageTo with negative delay.  Target %s, method %s, delay %d",objectId.getValueString().c_str(), method.c_str(), delay));
 	if (delay < 0)
 		delay = 0;
 
@@ -320,7 +320,7 @@ void MessageToQueue::sendMessageToC (const NetworkId &objectId, const std::strin
  */
 void MessageToQueue::sendMessageToJava (const NetworkId &objectId, const std::string &method, const std::vector<int8> &packedData, int delay, bool guaranteed, NetworkId const & undeliveredCallbackObject, std::string const & undeliveredCallbackMethod)
 {
-	WARNING_DEBUG_FATAL(delay < 0, ("Sent messageTo with negative delay.  Target %s, method %s, delay %f",objectId.getValueString().c_str(), method.c_str(), delay));
+	WARNING_DEBUG_FATAL(delay < 0, ("Sent messageTo with negative delay.  Target %s, method %s, delay %d",objectId.getValueString().c_str(), method.c_str(), delay));
 	if (delay < 0)
 		delay = 0;
 
@@ -332,7 +332,7 @@ void MessageToQueue::sendMessageToJava (const NetworkId &objectId, const std::st
 
 void MessageToQueue::sendRecurringMessageToC  (const NetworkId &objectId, const std::string &method, const std::string & data, int delay)
 {
-	WARNING_DEBUG_FATAL(delay < 0, ("Sent messageTo with negative delay.  Target %s, method %s, delay %f",objectId.getValueString().c_str(), method.c_str(), delay));
+	WARNING_DEBUG_FATAL(delay < 0, ("Sent messageTo with negative delay.  Target %s, method %s, delay %d",objectId.getValueString().c_str(), method.c_str(), delay));
 	if (delay < 0)
 		delay = 0;
 
@@ -344,7 +344,7 @@ void MessageToQueue::sendRecurringMessageToC  (const NetworkId &objectId, const 
 
 void MessageToQueue::sendRecurringMessageToJava(const NetworkId &objectId, const std::string &method, const std::vector<int8> &packedData, int delay)
 {
-	WARNING_DEBUG_FATAL(delay < 0, ("Sent messageTo with negative delay.  Target %s, method %s, delay %f",objectId.getValueString().c_str(), method.c_str(), delay));
+	WARNING_DEBUG_FATAL(delay < 0, ("Sent messageTo with negative delay.  Target %s, method %s, delay %d",objectId.getValueString().c_str(), method.c_str(), delay));
 	if (delay < 0)
 		delay = 0;
 
@@ -379,10 +379,10 @@ void MessageToQueueNamespace::internalSendMessageTo (MessageToPayload & data)
 		std::vector<int8> const &packedData = data.getPackedDataVector();
 		if (packedData.size() > 1000)
 		{
-			LOG("messageToFailure", ("Discarding persisted messageTo that exceeds 1000 bytes.  Persisted message %s sent to object %s had %i bytes of data.  Persisted message will not be delivered.", data.getMethod().c_str(), data.getNetworkId().getValueString().c_str(), packedData.size()));
+			LOG("messageToFailure", ("Discarding persisted messageTo that exceeds 1000 bytes.  Persisted message %s sent to object %s had %zu bytes of data.  Persisted message will not be delivered.", data.getMethod().c_str(), data.getNetworkId().getValueString().c_str(), packedData.size()));
 			return;
 		}
-		WARNING(packedData.size() > 900 ,("Delivering persisted messageTo that exceeds 900 bytes (dangerously large, probably indicates a bug).  Persisted message %s sent to object %s had %i bytes of data.\n", data.getMethod().c_str(), data.getNetworkId().getValueString().c_str(), packedData.size()));
+		WARNING(packedData.size() > 900 ,("Delivering persisted messageTo that exceeds 900 bytes (dangerously large, probably indicates a bug).  Persisted message %s sent to object %s had %zu bytes of data.\n", data.getMethod().c_str(), data.getNetworkId().getValueString().c_str(), packedData.size()));
 	}
 
 	ServerObject * const object = safe_cast<ServerObject*>(NetworkIdManager::getObjectById(data.getNetworkId()));
@@ -575,7 +575,7 @@ std::string MessageToQueue::debugGetLastKnownLocations()
 	for (LastKnownLocationsType::const_iterator i=ms_lastKnownLocations.begin(); i!=ms_lastKnownLocations.end(); ++i)
 	{
 		char temp[255];
-		snprintf(temp,sizeof(temp)-1,"%s: %lu\n",i->first.getValueString().c_str(), i->second);
+		snprintf(temp,sizeof(temp)-1,"%s: %u\n",i->first.getValueString().c_str(), i->second);
 		temp[sizeof(temp)-1]='\0';
 		result += temp;
 	}

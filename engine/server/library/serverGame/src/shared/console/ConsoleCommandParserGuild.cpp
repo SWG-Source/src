@@ -124,7 +124,7 @@ bool ConsoleCommandParserGuild::performParsing (const NetworkId & userId, const 
 			result += Unicode::narrowToWide(iter2->second);
 
 		char buffer[1024];
-		snprintf(buffer, sizeof(buffer)-1, "%d guilds listed\n", guildInfo.size());
+		snprintf(buffer, sizeof(buffer)-1, "%zu guilds listed\n", guildInfo.size());
 		buffer[sizeof(buffer)-1] = '\0';
 		result += Unicode::narrowToWide(buffer);
 
@@ -168,7 +168,7 @@ bool ConsoleCommandParserGuild::performParsing (const NetworkId & userId, const 
 			result += Unicode::narrowToWide(iter2->second);
 
 		char buffer[1024];
-		snprintf(buffer, sizeof(buffer)-1, "%d guilds listed\n", guildInfo.size());
+		snprintf(buffer, sizeof(buffer)-1, "%zu guilds listed\n", guildInfo.size());
 		buffer[sizeof(buffer)-1] = '\0';
 		result += Unicode::narrowToWide(buffer);
 
@@ -212,7 +212,7 @@ bool ConsoleCommandParserGuild::performParsing (const NetworkId & userId, const 
 			result += Unicode::narrowToWide(iter2->second);
 
 		char buffer[1024];
-		snprintf(buffer, sizeof(buffer)-1, "%d guilds listed\n", guildInfo.size());
+		snprintf(buffer, sizeof(buffer)-1, "%zu guilds listed\n", guildInfo.size());
 		buffer[sizeof(buffer)-1] = '\0';
 		result += Unicode::narrowToWide(buffer);
 
@@ -256,7 +256,7 @@ bool ConsoleCommandParserGuild::performParsing (const NetworkId & userId, const 
 			result += Unicode::narrowToWide(iter2->second);
 
 		char buffer[1024];
-		snprintf(buffer, sizeof(buffer)-1, "%d guilds listed\n", guildInfo.size());
+		snprintf(buffer, sizeof(buffer)-1, "%zu guilds listed\n", guildInfo.size());
 		buffer[sizeof(buffer)-1] = '\0';
 		result += Unicode::narrowToWide(buffer);
 
@@ -307,7 +307,7 @@ bool ConsoleCommandParserGuild::performParsing (const NetworkId & userId, const 
 			result += Unicode::narrowToWide(iter2->second);
 
 		char buffer[1024];
-		snprintf(buffer, sizeof(buffer)-1, "%d guilds listed\n", guildInfo.size());
+		snprintf(buffer, sizeof(buffer)-1, "%zu guilds listed\n", guildInfo.size());
 		buffer[sizeof(buffer)-1] = '\0';
 		result += Unicode::narrowToWide(buffer);
 
@@ -351,7 +351,7 @@ bool ConsoleCommandParserGuild::performParsing (const NetworkId & userId, const 
 			result += Unicode::narrowToWide(iter2->second);
 
 		char buffer[1024];
-		snprintf(buffer, sizeof(buffer)-1, "%d guilds listed\n", guildInfo.size());
+		snprintf(buffer, sizeof(buffer)-1, "%zu guilds listed\n", guildInfo.size());
 		buffer[sizeof(buffer)-1] = '\0';
 		result += Unicode::narrowToWide(buffer);
 
@@ -395,7 +395,7 @@ bool ConsoleCommandParserGuild::performParsing (const NetworkId & userId, const 
 			result += Unicode::narrowToWide(iter2->second);
 
 		char buffer[1024];
-		snprintf(buffer, sizeof(buffer)-1, "%d guilds listed\n", guildInfo.size());
+		snprintf(buffer, sizeof(buffer)-1, "%zu guilds listed\n", guildInfo.size());
 		buffer[sizeof(buffer)-1] = '\0';
 		result += Unicode::narrowToWide(buffer);
 
@@ -439,7 +439,7 @@ bool ConsoleCommandParserGuild::performParsing (const NetworkId & userId, const 
 			result += Unicode::narrowToWide(iter2->second);
 
 		char buffer[1024];
-		snprintf(buffer, sizeof(buffer)-1, "%d guilds listed\n", guildInfo.size());
+		snprintf(buffer, sizeof(buffer)-1, "%zu guilds listed\n", guildInfo.size());
 		buffer[sizeof(buffer)-1] = '\0';
 		result += Unicode::narrowToWide(buffer);
 
@@ -483,7 +483,7 @@ bool ConsoleCommandParserGuild::performParsing (const NetworkId & userId, const 
 			result += Unicode::narrowToWide(iter2->second);
 
 		char buffer[1024];
-		snprintf(buffer, sizeof(buffer)-1, "%d guilds listed\n", guildInfo.size());
+		snprintf(buffer, sizeof(buffer)-1, "%zu guilds listed\n", guildInfo.size());
 		buffer[sizeof(buffer)-1] = '\0';
 		result += Unicode::narrowToWide(buffer);
 
@@ -527,7 +527,7 @@ bool ConsoleCommandParserGuild::performParsing (const NetworkId & userId, const 
 			result += Unicode::narrowToWide(iter2->second);
 
 		char buffer[1024];
-		snprintf(buffer, sizeof(buffer)-1, "%d guilds listed\n", guildInfo.size());
+		snprintf(buffer, sizeof(buffer)-1, "%zu guilds listed\n", guildInfo.size());
 		buffer[sizeof(buffer)-1] = '\0';
 		result += Unicode::narrowToWide(buffer);
 
@@ -571,7 +571,7 @@ bool ConsoleCommandParserGuild::performParsing (const NetworkId & userId, const 
 			result += Unicode::narrowToWide(iter2->second);
 
 		char buffer[1024];
-		snprintf(buffer, sizeof(buffer)-1, "%d guilds listed\n", guildInfo.size());
+		snprintf(buffer, sizeof(buffer)-1, "%zu guilds listed\n", guildInfo.size());
 		buffer[sizeof(buffer)-1] = '\0';
 		result += Unicode::narrowToWide(buffer);
 
@@ -615,7 +615,7 @@ bool ConsoleCommandParserGuild::performParsing (const NetworkId & userId, const 
 			result += Unicode::narrowToWide(iter2->second);
 
 		char buffer[1024];
-		snprintf(buffer, sizeof(buffer)-1, "%d guilds listed\n", guildInfo.size());
+		snprintf(buffer, sizeof(buffer)-1, "%zu guilds listed\n", guildInfo.size());
 		buffer[sizeof(buffer)-1] = '\0';
 		result += Unicode::narrowToWide(buffer);
 
@@ -659,7 +659,7 @@ bool ConsoleCommandParserGuild::performParsing (const NetworkId & userId, const 
 			result += Unicode::narrowToWide(iter2->second);
 
 		char buffer[1024];
-		snprintf(buffer, sizeof(buffer)-1, "%d guilds listed\n", guildInfo.size());
+		snprintf(buffer, sizeof(buffer)-1, "%zu guilds listed\n", guildInfo.size());
 		buffer[sizeof(buffer)-1] = '\0';
 		result += Unicode::narrowToWide(buffer);
 
@@ -703,7 +703,7 @@ bool ConsoleCommandParserGuild::performParsing (const NetworkId & userId, const 
 			result += Unicode::narrowToWide(iter2->second);
 
 		char buffer[1024];
-		snprintf(buffer, sizeof(buffer)-1, "%d guilds listed\n", guildInfo.size());
+		snprintf(buffer, sizeof(buffer)-1, "%zu guilds listed\n", guildInfo.size());
 		buffer[sizeof(buffer)-1] = '\0';
 		result += Unicode::narrowToWide(buffer);
 
@@ -723,7 +723,7 @@ bool ConsoleCommandParserGuild::performParsing (const NetworkId & userId, const 
 		std::map<std::pair<std::string, int>, uint32> const & gcwRegionDefenderGuilds = GuildInterface::getGcwRegionDefenderGuilds();
 		for (std::map<std::pair<std::string, int>, uint32>::const_iterator iterGuild = gcwRegionDefenderGuilds.begin(); iterGuild != gcwRegionDefenderGuilds.end(); ++iterGuild)
 		{
-			snprintf(buffer, sizeof(buffer)-1, "(%s) (%d, %s) (%lu) (%s)\n", iterGuild->first.first.c_str(), iterGuild->first.second, GuildInterface::getGuildName(iterGuild->first.second).c_str(), iterGuild->second, getFactionString(iterGuild->second).c_str());
+			snprintf(buffer, sizeof(buffer)-1, "(%s) (%d, %s) (%u) (%s)\n", iterGuild->first.first.c_str(), iterGuild->first.second, GuildInterface::getGuildName(iterGuild->first.second).c_str(), iterGuild->second, getFactionString(iterGuild->second).c_str());
 			buffer[sizeof(buffer)-1] = '\0';
 			result += Unicode::narrowToWide(buffer);
 		}
@@ -742,7 +742,12 @@ bool ConsoleCommandParserGuild::performParsing (const NetworkId & userId, const 
 	}
 	else if (isCommand(argv [0], "showGuildDetails"))
 	{
-		int const guildId = atoi(Unicode::wideToNarrow(argv[1]).c_str());
+		int32 guildId = 0;
+		if (!parseArg(argv[1], guildId))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
 		GuildInfo const * const gi = GuildInterface::getGuildInfo(guildId);
 
 		if (!gi || gi->m_name.empty())
@@ -805,7 +810,7 @@ bool ConsoleCommandParserGuild::performParsing (const NetworkId & userId, const 
 
 			// guild faction
 			uint32 const currentFaction = GuildInterface::getGuildCurrentFaction(guildId);			
-			snprintf(buffer, sizeof(buffer)-1, "current faction: %lu (%s)\n", currentFaction, getFactionString(currentFaction).c_str());
+			snprintf(buffer, sizeof(buffer)-1, "current faction: %u (%s)\n", currentFaction, getFactionString(currentFaction).c_str());
 			buffer[sizeof(buffer)-1] = '\0';
 			result += Unicode::narrowToWide(buffer);
 
@@ -813,7 +818,7 @@ bool ConsoleCommandParserGuild::performParsing (const NetworkId & userId, const 
 			if (!PvpData::isNeutralFactionId(previousFaction))
 			{
 				int const timeLeftPreviousFaction = GuildInterface::getTimeLeftGuildPreviousFaction(guildId);
-				snprintf(buffer, sizeof(buffer)-1, "previous faction: %lu (%s) [left at %d (%s)]\n", previousFaction, getFactionString(previousFaction).c_str(), timeLeftPreviousFaction, CalendarTime::convertEpochToTimeStringLocal(static_cast<time_t>(timeLeftPreviousFaction)).c_str());
+				snprintf(buffer, sizeof(buffer)-1, "previous faction: %u (%s) [left at %d (%s)]\n", previousFaction, getFactionString(previousFaction).c_str(), timeLeftPreviousFaction, CalendarTime::convertEpochToTimeStringLocal(static_cast<time_t>(timeLeftPreviousFaction)).c_str());
 				buffer[sizeof(buffer)-1] = '\0';
 				result += Unicode::narrowToWide(buffer);
 			}
@@ -1058,7 +1063,12 @@ bool ConsoleCommandParserGuild::performParsing (const NetworkId & userId, const 
 	}
 	else if (isCommand(argv [0], "setGuildName"))
 	{
-		int const guildId = atoi(Unicode::wideToNarrow(argv[1]).c_str());
+		int32 guildId = 0;
+		if (!parseArg(argv[1], guildId))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
 		std::string const guildName = Unicode::getTrim(Unicode::wideToNarrow(argv[2]), " \t");
 		bool const overrideReservedNameCheck = argv.size() == 4 && argv[3] == Unicode::narrowToWide("override");
 
@@ -1114,7 +1124,12 @@ bool ConsoleCommandParserGuild::performParsing (const NetworkId & userId, const 
 	}
 	else if (isCommand(argv [0], "setGuildAbbrev"))
 	{
-		int const guildId = atoi(Unicode::wideToNarrow(argv[1]).c_str());
+		int32 guildId = 0;
+		if (!parseArg(argv[1], guildId))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
 		std::string const guildAbbrev = Unicode::getTrim(Unicode::wideToNarrow(argv[2]), " \t");
 		std::string reasonReserved;
 		int existingGuildId;
@@ -1168,7 +1183,12 @@ bool ConsoleCommandParserGuild::performParsing (const NetworkId & userId, const 
 	}
 	else if (isCommand(argv [0], "setGuildLeader"))
 	{
-		int const guildId = atoi(Unicode::wideToNarrow(argv[1]).c_str());
+		int32 guildId = 0;
+		if (!parseArg(argv[1], guildId))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
 		NetworkId const leaderOid(Unicode::wideToNarrow(argv[2]));
 
 		char buffer[1024];

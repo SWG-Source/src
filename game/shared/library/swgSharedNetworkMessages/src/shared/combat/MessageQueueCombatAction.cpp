@@ -332,7 +332,7 @@ void MessageQueueCombatAction::debugDump() const
 
 	// Print per-defender info.
 	const DefenderDataVector::size_type defenderCount = m_defenders.size();
-	DEBUG_REPORT_LOG(true, ("MQCA: defender count [%u].\n", defenderCount));
+	DEBUG_REPORT_LOG(true, ("MQCA: defender count [%zu].\n", defenderCount));
 
 	for (DefenderDataVector::size_type i = 0; i < defenderCount; ++i)
 	{
@@ -340,11 +340,11 @@ void MessageQueueCombatAction::debugDump() const
 		const Object *const defenderObject = NetworkIdManager::getObjectById(data.id);
 		UNREF(defenderObject);
 
-		DEBUG_REPORT_LOG(true, ("MQCA: defender #%d: id              =[%s].\n", i + 1, data.id.getValueString().c_str()));
-		DEBUG_REPORT_LOG(true, ("MQCA: defender #%d: template        =[%s].\n", i + 1, defenderObject ? defenderObject->getObjectTemplateName() : "<nullptr object>"));
-		DEBUG_REPORT_LOG(true, ("MQCA: defender #%d: end posture     =[%s].\n", i + 1, Postures::getPostureName(data.endPosture)));
-		DEBUG_REPORT_LOG(true, ("MQCA: defender #%d: defense         =[%s].\n", i + 1, CombatEngineData::getCombatDefenseName(data.defense)));
-		DEBUG_REPORT_LOG(true, ("MQCA: defender #%d: client effect id=[%d].\n", i + 1, data.clientEffectId));
+		DEBUG_REPORT_LOG(true, ("MQCA: defender #%zu: id              =[%s].\n", i + 1, data.id.getValueString().c_str()));
+		DEBUG_REPORT_LOG(true, ("MQCA: defender #%zu: template        =[%s].\n", i + 1, defenderObject ? defenderObject->getObjectTemplateName() : "<nullptr object>"));
+		DEBUG_REPORT_LOG(true, ("MQCA: defender #%zu: end posture     =[%s].\n", i + 1, Postures::getPostureName(data.endPosture)));
+		DEBUG_REPORT_LOG(true, ("MQCA: defender #%zu: defense         =[%s].\n", i + 1, CombatEngineData::getCombatDefenseName(data.defense)));
+		DEBUG_REPORT_LOG(true, ("MQCA: defender #%zu: client effect id=[%d].\n", i + 1, data.clientEffectId));
 	}
 
 	DEBUG_REPORT_LOG(true, ("MQCA: END.\n"));

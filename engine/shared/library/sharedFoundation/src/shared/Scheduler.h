@@ -19,7 +19,8 @@
 	contain pointers to member functions which are executed when the 
 	callback is ready for processing. 
 
-	The scheduler is updated with an arbitrary, unsigned long value. This
+	The scheduler is updated with an arbitrary, uint64_t value (usually
+	Clock::timeMs(), which exceeds 32 bits after about 49.7 days). This
 	value is used to examine a priority queue of callback entries. If
 	the top element in the priority queue has an expireCount member that
 	is less than the current count (passed to the scheduler update()),
@@ -78,8 +79,8 @@ public:
 	~Scheduler  ();
 
 	void                 setCallback     (Callback cb, const void *context, unsigned long delay);
-	const unsigned long  getCurrentCount () const;
-	void                 update          (const unsigned long currentCount);
+	const uint64_t       getCurrentCount () const;
+	void                 update          (const uint64_t currentCount);
 
 private:
 
@@ -96,7 +97,7 @@ private:
 
 private:
 
-	unsigned long  currentCount;
+	uint64_t       currentCount;
 	bool           updating;
 
 };
@@ -111,7 +112,7 @@ private:
 
 	@author Justin Randall
 */
-inline const unsigned long Scheduler::getCurrentCount() const
+inline const uint64_t Scheduler::getCurrentCount() const
 {
 	return currentCount;
 }

@@ -10,7 +10,7 @@
 
 // ======================================================================
 
-LoginCreateCharacterMessage::LoginCreateCharacterMessage (const StationId &stationId, const Unicode::String &characterName, const NetworkId &characterObjectId, int templateId, bool jedi) :
+LoginCreateCharacterMessage::LoginCreateCharacterMessage (const StationId &stationId, const Unicode::String &characterName, const NetworkId &characterObjectId, uint32 templateId, bool jedi) :
 		GameNetworkMessage("LoginCreateCharacterMessage"),
 		m_stationId(stationId),
 		m_characterName(characterName),

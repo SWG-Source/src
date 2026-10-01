@@ -28,13 +28,13 @@ namespace DBQuery
 		virtual void getSQL(std::string &sql);
 		virtual QueryMode getExecutionMode() const;
 
-		void setData(const NetworkId &objectId, size_t listId, int action, int index, const LocationData &location);
+		bool setData(const NetworkId &objectId, size_t listId, int action, size_t index, const LocationData &location);
 		
 	  public:
 		DB::BindableNetworkId object_id;
-		DB::BindableLong list_id;
-		DB::BindableLong index;
-		DB::BindableLong action;
+		DB::BindableUint32 list_id;
+		DB::BindableUint32 index;
+		DB::BindableInt32 action;
 		DB::BindableUnicode<255> name;
 		DB::BindableString<50> scene;
 		DB::BindableDouble x;
@@ -55,8 +55,8 @@ namespace DBQuery
 		struct LocationRow
 		{
 			DB::BindableNetworkId object_id;
-			DB::BindableLong list_id;
-			DB::BindableLong index;
+			DB::BindableUint32 list_id;
+			DB::BindableUint32 index;
 			DB::BindableUnicode<255> name;
 			DB::BindableString<50> scene;
 			DB::BindableDouble x;

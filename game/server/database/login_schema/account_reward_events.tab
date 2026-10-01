@@ -1,10 +1,10 @@
 create table account_reward_events --NO_IMPORT
 (
-	station_id number,
+	station_id number, -- BIND_AS(DB::BindableUint32)
 	event_id varchar2(255),
 	date_consumed date,
-	cluster_id number,
-	character_id number,
+	cluster_id number, -- BIND_AS(DB::BindableUint32)
+	character_id number, -- BIND_AS(DB::BindableNetworkId)
 	constraint pk_account_reward_events PRIMARY KEY (station_id, event_id)
 );
 

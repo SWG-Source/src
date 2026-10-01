@@ -265,7 +265,7 @@ int Service::flushAndConfirmAllData()
 	if(m_udpManager)
 	{
 		int totalBytesPending = 0;
-		unsigned long startTime = Clock::timeMs();
+		uint64_t const startTime = Clock::timeMs();
 		bool needReport = false;
 		unsigned long stallReportDelay = ConfigSharedNetwork::getStallReportDelay();
 
@@ -273,7 +273,7 @@ int Service::flushAndConfirmAllData()
 		{
 			if(stallReportDelay > 0)
 			{
-				if(Clock::timeMs() - stallReportDelay > startTime)
+				if(Clock::timeMs() > startTime + stallReportDelay)
 				{
 					needReport = true;
 				}
@@ -287,7 +287,7 @@ int Service::flushAndConfirmAllData()
 				{
 					if((*i)->udpConnection->TotalPendingBytes() > 0)
 					{
-						(*i)->onConnectionStalled(Clock::timeMs() - startTime);
+						(*i)->onConnectionStalled(Clock::durationMs<uint32_t>(startTime, Clock::timeMs()));
 					}
 				}
 				totalBytesPending += (*i)->udpConnection->TotalPendingBytes();

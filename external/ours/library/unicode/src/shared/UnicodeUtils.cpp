@@ -10,6 +10,9 @@
 
 #include <ctype.h>
 #include <algorithm>
+#include <cerrno>
+#include <climits>
+#include <cstdlib>
 #include <vector>
 
 
@@ -510,13 +513,41 @@ namespace Unicode
 
 	//-----------------------------------------------------------------
 
+	namespace
+	{
+		// atoi() is (int)strtol(), and strtol() clamps to the range of long:
+		// out-of-range text clamped to the range of int where long is 32 bits
+		// but was truncated where long is 64 bits. Clamp to the range of int
+		// on every platform instead, which is what the 32-bit build always
+		// did. In-range text gives exactly what atoi() gives.
+		int leadingIntClampedToInt (const Unicode::String &str)
+		{
+			int const savedErrno = errno;
+			long long const value = strtoll(Unicode::wideToNarrow(str).c_str(), nullptr, 10);
+			errno = savedErrno;
+			if (value < INT_MIN)
+				return INT_MIN;
+			if (value > INT_MAX)
+				return INT_MAX;
+			return static_cast<int>(value);
+		}
+	}
+
+	//-----------------------------------------------------------------
+
+	/**
+	* The leading integer of str, as atoi() reads it (0 if there is none),
+	* clamped to the range of int. This does not validate: text that must
+	* be exactly one integer should be parsed with a checked parser instead.
+	*/
+
 	int toInt (const Unicode::String &str)
 	{
 		int result = 0;
 
 		if (!str.empty())
 		{
-			result = atoi(Unicode::wideToNarrow(str).c_str());
+			result = leadingIntClampedToInt(str);
 		}
 
 		return result;
@@ -524,13 +555,17 @@ namespace Unicode
 
 	//-----------------------------------------------------------------
 
+	/**
+	* True if toInt(str) is not 0.
+	*/
+
 	bool toBool (const Unicode::String &str)
 	{
 		bool result = 0;
 
 		if (!str.empty())
 		{
-			result = (atoi(Unicode::wideToNarrow(str).c_str()) != 0);
+			result = (leadingIntClampedToInt(str) != 0);
 		}
 
 		return result;

@@ -1,0 +1,12 @@
+form "TEST"
+{
+	chunk "0000"
+	{
+		int32 1,
+			2,
+			0xFFFFFFFF,
+			4
+		int8 5
+		uint8 256
+	}
+}

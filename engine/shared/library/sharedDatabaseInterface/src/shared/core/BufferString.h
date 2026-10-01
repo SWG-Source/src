@@ -34,19 +34,30 @@ namespace DB
 	class BufferString : public Bindable
 	{
 	  public:
+		// maxSize must fit the int indicator; the constructor checks it.
 		BufferString(size_t maxSize);
+
+		// A copy of a column holds at most that column's S bytes. setValue()
+		// enforces the bound, because re-encoding a Unicode value can change
+		// its length.
 		template<int S>
-			BufferString(const BindableString<S> & rhs)
+			BufferString(const BindableString<S> & rhs) :
+				Bindable(),
+				m_value(),
+				m_maxSize(static_cast<size_t>(S))
 			{
-				rhs.getValue(m_value);
-				indicator=m_value.size();
+				std::string value;
+				rhs.getValue(value);
+				setValue(value);
 			}
 			
 		template<int S>
-			BufferString(const BindableUnicode<S> & rhs)
+			BufferString(const BindableUnicode<S> & rhs) :
+				Bindable(),
+				m_value(),
+				m_maxSize(static_cast<size_t>(S))
 			{
-				m_value = Unicode::wideToUTF8(rhs.getValue());
-				indicator=m_value.size();
+				setValue(Unicode::wideToUTF8(rhs.getValue()));
 			}
 
 	  public:
@@ -64,6 +75,9 @@ namespace DB
 		void setValue(const Unicode::String & value);
 
 		virtual std::string outputValue() const;
+
+	  protected:
+		virtual void clearValue() { m_value.clear(); }
 					
 	  private:
 		std::string m_value;

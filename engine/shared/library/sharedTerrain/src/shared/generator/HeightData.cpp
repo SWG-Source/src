@@ -82,7 +82,7 @@ int HeightData::Segment::getNumberOfPoints () const
 
 const Vector& HeightData::Segment::getPoint (int index) const
 {
-	DEBUG_FATAL (index < 0 || index >= static_cast<int> (m_pointList.size ()), ("index out of range %i <= %i < %i", 0, index, m_pointList.size ()));
+	DEBUG_FATAL (index < 0 || index >= static_cast<int> (m_pointList.size ()), ("index out of range %i <= %i < %zu", 0, index, m_pointList.size ()));
 	return m_pointList [static_cast<uint> (index)];
 }
 
@@ -90,7 +90,7 @@ const Vector& HeightData::Segment::getPoint (int index) const
 
 void HeightData::Segment::setPoint (int index, const Vector& point)
 {
-	DEBUG_FATAL (index < 0 || index >= static_cast<int> (m_pointList.size ()), ("index out of range %i <= %i < %i", 0, index, m_pointList.size ()));
+	DEBUG_FATAL (index < 0 || index >= static_cast<int> (m_pointList.size ()), ("index out of range %i <= %i < %zu", 0, index, m_pointList.size ()));
 	m_pointList [static_cast<uint> (index)] = point;
 }
 
@@ -383,7 +383,7 @@ int HeightData::getNumberOfPoints (int segmentIndex) const
 {
 	if (m_segmentList->size ())
 	{
-		DEBUG_FATAL (segmentIndex < 0 || segmentIndex >= static_cast<int> (m_segmentList->size ()), ("index out of range %i <= %i < %i", 0, segmentIndex, m_segmentList->size ()));
+		DEBUG_FATAL (segmentIndex < 0 || segmentIndex >= static_cast<int> (m_segmentList->size ()), ("index out of range %i <= %i < %zu", 0, segmentIndex, m_segmentList->size ()));
 		return (*m_segmentList) [static_cast<uint> (segmentIndex)]->getNumberOfPoints ();
 	}
 
@@ -396,7 +396,7 @@ const Vector& HeightData::getPoint (int segmentIndex, int pointIndex) const
 {
 	if (m_segmentList->size ())
 	{
-		DEBUG_FATAL (segmentIndex < 0 || segmentIndex >= static_cast<int> (m_segmentList->size ()), ("index out of range %i <= %i < %i", 0, segmentIndex, m_segmentList->size ()));
+		DEBUG_FATAL (segmentIndex < 0 || segmentIndex >= static_cast<int> (m_segmentList->size ()), ("index out of range %i <= %i < %zu", 0, segmentIndex, m_segmentList->size ()));
 		return (*m_segmentList) [static_cast<uint> (segmentIndex)]->getPoint (pointIndex);
 	}
 
@@ -409,7 +409,7 @@ bool HeightData::find (int segmentIndex, const Vector2d& position, float& result
 {
 	if (m_segmentList->size ())
 	{
-		DEBUG_FATAL (segmentIndex < 0 || segmentIndex >= static_cast<int> (m_segmentList->size ()), ("index out of range %i <= %i < %i", 0, segmentIndex, m_segmentList->size ()));
+		DEBUG_FATAL (segmentIndex < 0 || segmentIndex >= static_cast<int> (m_segmentList->size ()), ("index out of range %i <= %i < %zu", 0, segmentIndex, m_segmentList->size ()));
 		return (*m_segmentList) [static_cast<uint> (segmentIndex)]->find (position, result);
 	}
 

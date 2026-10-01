@@ -127,8 +127,8 @@ namespace Archive
 		char temp[200];
 		
 		typename AutoDeltaMap<KeyType, ValueType, ObjectType>::Command c;
-		int32_t commandCount;
-		int32_t baselineCommandCount;
+		uint32_t commandCount;
+		uint32_t baselineCommandCount;
 
 		Archive::get(source, commandCount);
 		Archive::get(source, baselineCommandCount);
@@ -139,7 +139,7 @@ namespace Archive
 		}
 		else
 		{
-			for (int32_t i = 0; i < commandCount; ++i)
+			for (uint32_t i = 0; i < commandCount; ++i)
 			{
 				Archive::get(source, c.cmd);
 				Archive::get(source, c.key);
@@ -244,13 +244,13 @@ namespace Archive
 	template<>
 	inline void AutoDeltaPackedMap<uint32_t, uint32_t>::pack(ByteStream & target, const std::string & buffer)
 	{
-		internal_pack(target, buffer, "%lu %llu");
+		internal_pack(target, buffer, "%u %u");
 	}
 
 	template<>
 	inline void AutoDeltaPackedMap<uint32_t, uint32_t>::unpack(ReadIterator & source, std::string & buffer)
 	{
-		internal_unpack(source, buffer, "%lu %llu:");
+		internal_unpack(source, buffer, "%u %u:");
 	}
 #endif
 

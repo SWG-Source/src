@@ -6,6 +6,7 @@
 
 //-----------------------------------------------------------------------
 
+#include "sharedNetworkMessages/NetworkMessageTimestamp.h"
 #include "sharedFoundation/MessageQueue.h"
 #include "sharedNetworkMessages/ControllerMessageMacros.h"
 class MemoryBlockManager;
@@ -33,7 +34,7 @@ public:
 	//accessors
 	NetworkId const & getBufferId() const;
 	NetworkId const & getRecipientId() const;
-	uint32_t getStartingTime() const;
+	int32_t getStartingTime() const;
 	int getBufferRequiredCredits() const;
 	bool getAccepted() const;
 	Origin getOrigin() const;
@@ -56,7 +57,7 @@ private:
 private:
 	NetworkId m_bufferId;
 	NetworkId m_recipientId;
-	uint32_t m_startingTime;
+	int32_t m_startingTime;
 	int m_bufferRequiredCredits;
 	bool m_accepted;
 	Origin m_origin;
@@ -79,7 +80,7 @@ inline NetworkId const & BuffBuilderChangeMessage::getRecipientId() const
 
 //-----------------------------------------------------------------------
 
-inline uint32_t BuffBuilderChangeMessage::getStartingTime() const
+inline int32_t BuffBuilderChangeMessage::getStartingTime() const
 {
 	return m_startingTime;
 }
@@ -123,7 +124,7 @@ inline void BuffBuilderChangeMessage::setRecipientId(NetworkId const & recipient
 
 inline void BuffBuilderChangeMessage::setStartingTime(time_t const startingTime)
 {
-	m_startingTime = startingTime;
+	m_startingTime = NetworkMessageTimestamp::fromTime(startingTime);
 }
 
 //-----------------------------------------------------------------------

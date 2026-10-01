@@ -26,10 +26,10 @@ namespace TaskGetValidationDataNamespace
 	public:
 		GetValidationDataQuery();
 
-		DB::BindableLong station_id; //lint !e1925 // public data member
-		DB::BindableLong cluster_id; //lint !e1925 // public data member
-		DB::BindableLong character_type_id; //lint !e1925 // public data member
-		DB::BindableLong num_open_slots; //lint !e1925 // public data member
+		DB::BindableUint32 station_id; //lint !e1925 // public data member
+		DB::BindableUint32 cluster_id; //lint !e1925 // public data member
+		DB::BindableInt32 character_type_id; //lint !e1925 // public data member
+		DB::BindableInt32 num_open_slots; //lint !e1925 // public data member
 
 		virtual void getSQL(std::string &sql);
 		virtual bool bindParameters();
@@ -46,7 +46,7 @@ namespace TaskGetValidationDataNamespace
 	public:
 		GetCompletedTutorialQuery(StationId stationId);
 
-		DB::BindableLong station_id;
+		DB::BindableUint32 station_id;
 		DB::BindableBool completed_tutorial;
 
 		virtual void getSQL(std::string &sql);
@@ -74,9 +74,9 @@ namespace TaskGetValidationDataNamespace
 		NetworkId const getCharacterId() const;
 
 	private:
-		DB::BindableLong station_id;
+		DB::BindableUint32 station_id;
 		DB::BindableString<100> event_id;
-		DB::BindableLong cluster_id;
+		DB::BindableUint32 cluster_id;
 		DB::BindableNetworkId character_id;
 
 	private: //disable
@@ -100,9 +100,9 @@ namespace TaskGetValidationDataNamespace
 		NetworkId const getCharacterId() const;
 
 	private:
-		DB::BindableLong station_id;
+		DB::BindableUint32 station_id;
 		DB::BindableString<100> item_id;
-		DB::BindableLong cluster_id;
+		DB::BindableUint32 cluster_id;
 		DB::BindableNetworkId character_id;
 
 	private: //disable
@@ -116,8 +116,8 @@ namespace TaskGetValidationDataNamespace
 	public:
 		IsClusterAtLimitQuery();
 
-		DB::BindableLong         cluster_id; //lint !e1925 // public data member
-		DB::BindableLong         result; //lint !e1925 // public data member
+		DB::BindableUint32       cluster_id; //lint !e1925 // public data member
+		DB::BindableInt32         result; //lint !e1925 // public data member
 
 		virtual void getSQL(std::string &sql);
 		virtual bool bindParameters();
@@ -191,7 +191,7 @@ bool TaskGetValidationData::process(DB::Session *session)
 	if (m_transferRequest && (m_transferRequest->getSourceStationId() == m_transferRequest->getDestinationStationId()))
 	{
 		IsClusterAtLimitQuery clusterLimitQry;
-		clusterLimitQry.cluster_id = static_cast<long>(m_clusterId);
+		clusterLimitQry.cluster_id = m_clusterId;
 
 		if (!(session->exec(&clusterLimitQry)))
 			return false;
@@ -202,14 +202,20 @@ bool TaskGetValidationData::process(DB::Session *session)
 		{
 			// cluster is not at limit, check per account per cluster limit
 			TaskVacateUnlockedSlot::GetOnlyOpenCharacterSlotsQuery qry;
-			qry.station_id = static_cast<long>(m_stationId);
-			qry.cluster_id = static_cast<long>(m_clusterId);
+			qry.station_id = m_stationId;
+			qry.cluster_id = m_clusterId;
 
 			int rowsFetched;
 			if (!(session->exec(&qry)))
 				return false;
 			while ((rowsFetched = qry.fetch()) > 0)
-				m_openCharacterSlots[static_cast<unsigned long>(qry.character_type_id.getValue())] = qry.num_open_slots.getValue();
+			{
+				if (!TaskVacateUnlockedSlot::storeOpenCharacterSlots(m_openCharacterSlots, qry.character_type_id.getValue(), qry.num_open_slots.getValue(), "TaskGetValidationData (cluster at limit)"))
+				{
+					qry.done();
+					return false;
+				}
+			}
 			qry.done();
 			if (rowsFetched < 0)
 				return false;
@@ -218,14 +224,20 @@ bool TaskGetValidationData::process(DB::Session *session)
 	else
 	{
 		GetValidationDataQuery qry;
-		qry.station_id = static_cast<long>(m_stationId);
-		qry.cluster_id = static_cast<long>(m_clusterId);
+		qry.station_id = m_stationId;
+		qry.cluster_id = m_clusterId;
 
 		int rowsFetched;
 		if (!(session->exec(&qry)))
 			return false;
 		while ((rowsFetched = qry.fetch()) > 0)
-			m_openCharacterSlots[static_cast<unsigned long>(qry.character_type_id.getValue())] = qry.num_open_slots.getValue();
+		{
+			if (!TaskVacateUnlockedSlot::storeOpenCharacterSlots(m_openCharacterSlots, qry.character_type_id.getValue(), qry.num_open_slots.getValue(), "TaskGetValidationData"))
+			{
+				qry.done();
+				return false;
+			}
+		}
 		qry.done();
 		if (rowsFetched < 0)
 			return false;
@@ -426,7 +438,7 @@ GetCompletedTutorialQuery::GetCompletedTutorialQuery(StationId stationId) :
 
 GetConsumedRewardEventsQuery::GetConsumedRewardEventsQuery(StationId stationId) :
 	DB::Query(),
-	station_id(static_cast<long>(stationId)),
+	station_id(stationId),
 	event_id(),
 	cluster_id(),
 	character_id()
@@ -490,7 +502,7 @@ NetworkId const GetConsumedRewardEventsQuery::getCharacterId() const
 
 GetClaimedRewardItemsQuery::GetClaimedRewardItemsQuery(StationId stationId) :
 	DB::Query(),
-	station_id(static_cast<long>(stationId)),
+	station_id(stationId),
 	item_id(),
 	cluster_id(),
 	character_id()

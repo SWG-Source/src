@@ -180,13 +180,13 @@ LocalizedString * LocalizedString::load_0000 (AbstractFile & fl)
 	LocalizedString * loc_str = 0;
 
 	id_type   id;
-	unsigned long dummy_time = nullCrc;
+	crc_type  dummy_time = nullCrc; // a 32-bit field in the file format
 	id_type   buflen;
 
 	if (!fl.read (&id, sizeof (id_type)))
 		return 0;
 
-	if (!fl.read(&dummy_time, sizeof(unsigned long)))
+	if (!fl.read(&dummy_time, sizeof(dummy_time)))
 		return 0;
 
 

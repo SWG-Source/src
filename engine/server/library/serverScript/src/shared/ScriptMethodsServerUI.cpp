@@ -361,7 +361,7 @@ jboolean   JNICALL ScriptMethodsServerUINamespace::forceCloseSuiPage(JNIEnv *env
 		return JNI_TRUE;
 	else
 	{
-		DEBUG_WARNING(true, ("SUI: Couldn't force close the page", pageId));
+		DEBUG_WARNING(true, ("SUI: Couldn't force close the page %d", pageId));
 		return JNI_FALSE;
 	}
 }
@@ -379,14 +379,14 @@ jboolean     JNICALL ScriptMethodsServerUINamespace::setSuiAssociatedObject(JNIE
 
 	if (!j_associatedObjectId)
 	{
-		DEBUG_WARNING(true, ("bad associatedObjectId sent to setAssociatedObject", pageId));
+		DEBUG_WARNING(true, ("bad associatedObjectId sent to setAssociatedObject %d", pageId));
 		return JNI_FALSE;
 	}
 
 	NetworkId id(j_associatedObjectId);
 	if (id == NetworkId::cms_invalid)
 	{
-		DEBUG_WARNING(true, ("could not convert associatedObjectid", pageId));
+		DEBUG_WARNING(true, ("could not convert associatedObjectid %d", pageId));
 		return JNI_FALSE;
 	}
 

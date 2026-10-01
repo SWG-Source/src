@@ -125,7 +125,7 @@ bool ConsoleCommandParserSpaceAi::performParsing(const NetworkId & userId, const
 					int index = 1;
 					std::string message;
 
-					message += formattedString.sprintf("Path of size(%u) for unit(%s)\n", transformList.size(), networkId.getValueString().c_str());
+					message += formattedString.sprintf("Path of size(%zu) for unit(%s)\n", transformList.size(), networkId.getValueString().c_str());
 
 					for (; iterTransformList != transformList.end(); ++iterTransformList)
 					{

@@ -1762,7 +1762,7 @@ bool AiShipController::hasFunctionalEngines() const
 
 void AiShipController::addExclusiveAggro(NetworkId const & unit)
 {
-	LOGC(ConfigServerGame::isSpaceAiLoggingEnabled(), "debug_ai", ("AiShipController::addExclusiveAggro() owner(%s) unit(%s) m_exclusiveAggroSet->size(%u+1)", getOwner()->getNetworkId().getValueString().c_str(), unit.getValueString().c_str(), m_exclusiveAggroSet->size()));
+	LOGC(ConfigServerGame::isSpaceAiLoggingEnabled(), "debug_ai", ("AiShipController::addExclusiveAggro() owner(%s) unit(%s) m_exclusiveAggroSet->size(%zu+1)", getOwner()->getNetworkId().getValueString().c_str(), unit.getValueString().c_str(), m_exclusiveAggroSet->size()));
 #ifdef _DEBUG
 	{
 		// Make sure this is a player
@@ -1801,7 +1801,7 @@ void AiShipController::addExclusiveAggro(NetworkId const & unit)
 
 void AiShipController::removeExclusiveAggro(NetworkId const & unit)
 {
-	LOGC(ConfigServerGame::isSpaceAiLoggingEnabled(), "debug_ai", ("AiShipController::removeExclusiveAggro() owner(%s) unit(%s) m_exclusiveAggroSet->size(%u-1)", getOwner()->getNetworkId().getValueString().c_str(), unit.getValueString().c_str(), m_exclusiveAggroSet->size()));
+	LOGC(ConfigServerGame::isSpaceAiLoggingEnabled(), "debug_ai", ("AiShipController::removeExclusiveAggro() owner(%s) unit(%s) m_exclusiveAggroSet->size(%zu-1)", getOwner()->getNetworkId().getValueString().c_str(), unit.getValueString().c_str(), m_exclusiveAggroSet->size()));
 
 	IGNORE_RETURN(m_exclusiveAggroSet->erase(CachedNetworkId(unit)));
 }

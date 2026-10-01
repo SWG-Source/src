@@ -31,7 +31,7 @@ bool TaskVendorObjectCleanup::process(DB::Session *session)
 		if( qry.result.getValue() == 0 )   // cleanup done
 			break;
 	}
-	LOG("TaskVendorObjectCleanup",("TIME = %d", time(0)-t_start ));
+	LOG("TaskVendorObjectCleanup",("TIME = %lld", static_cast<long long>(time(0)-t_start) ));
 	return true;
 }
 

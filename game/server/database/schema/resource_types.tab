@@ -5,7 +5,7 @@ create table resource_types
 	resource_class varchar2(100),
 	attributes varchar2(1024),
 	fractal_seeds varchar2(1024),
-	depleted_timestamp int,
+	depleted_timestamp int, -- BIND_AS(DB::BindableUint32)
 	constraint pk_resource_types primary key (resource_id) 
 );
 

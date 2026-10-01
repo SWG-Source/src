@@ -141,8 +141,8 @@ void AuctionLocationsBuffer::addRowToIndex (const NetworkId &locationId, DBSchem
 
 bool AuctionLocationsBuffer::save(DB::Session *session)
 {
-	LOG("SaveCounts",("AuctionLocations:  %i saved to db",m_rows.size()));
-	DEBUG_REPORT_LOG(true, ("Saving Auctions Locations Buffer. mode:%d rowcount:%d\n", m_mode, m_rows.size()));
+	LOG("SaveCounts",("AuctionLocations:  %zu saved to db",m_rows.size()));
+	DEBUG_REPORT_LOG(true, ("Saving Auctions Locations Buffer. mode:%d rowcount:%zu\n", m_mode, m_rows.size()));
 	
 	DBQuery::AuctionLocationsQuery qry;
 	

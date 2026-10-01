@@ -69,7 +69,7 @@ private:
 	int          m_refCount;
 	bool         m_connected;
 	bool         m_ownHandle;
-	unsigned long m_lastSendTime;
+	uint64_t      m_lastSendTime; // absolute Clock::getFrameStartTimeMs()
 	unsigned short  m_bindPort;
 
 	bool		m_rawTCP;

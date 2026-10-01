@@ -44,7 +44,7 @@ void DatabaseProcessConnection::onConnectionOpened()
 {
 	ServerConnection::onConnectionOpened();
 
-	LOG("GameGameConnect", ("DatabaseProcessConnection::onConnectionOpened() of %lu,%lu (preload %d)", m_pid, ServerConnection::getProcessId(), ConfigServerGame::getPreloadNumber()));
+	LOG("GameGameConnect", ("DatabaseProcessConnection::onConnectionOpened() of %u,%u (preload %d)", m_pid, ServerConnection::getProcessId(), ConfigServerGame::getPreloadNumber()));
 	GameGameServerConnect const connectMessage(GameServer::getInstance().getProcessId(), false, ConfigServerUtility::getSpawnCookie(), ConfigServerGame::getPreloadNumber());
 	send(connectMessage, true);
 }
@@ -66,7 +66,7 @@ void DatabaseProcessConnection::onReceive(Archive::ByteStream const &message)
 
 		uint32 const pid = connectMessage.getProcessId();
 
-		LOG("GameGameConnect", ("Received GameGameServerConnect message.  Old pid %lu new pid %lu. My pid %lu for Database Process", m_pid, pid, GameServer::getInstance().getProcessId()));
+		LOG("GameGameConnect", ("Received GameGameServerConnect message.  Old pid %u new pid %u. My pid %u for Database Process", m_pid, pid, GameServer::getInstance().getProcessId()));
 		m_pid = pid;
 		GameServer::getInstance().setDatabaseProcessConnection(this);
 	}

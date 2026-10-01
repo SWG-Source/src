@@ -108,7 +108,7 @@ bool ConsoleCommandParserSpawner::performParsing (const NetworkId & userId, cons
 				snprintf(locBuffer, sizeof(locBuffer), "%.0f, %.0f: ", loc.x, loc.z);
 				creatureEntry += locBuffer;
 
-				snprintf(locBuffer, sizeof(locBuffer), "%lu: ", creature->getAuthServerProcessId());
+				snprintf(locBuffer, sizeof(locBuffer), "%u: ", creature->getAuthServerProcessId());
 				creatureEntry += locBuffer;
 				creatureEntry += creature->getObjectTemplateName();
 

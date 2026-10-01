@@ -51,7 +51,7 @@ void CentralConnection::closed(const Closed &)
 		MessageDispatch::Transceiver<const ProcessAborted &> b;
 		b.emitMessage(a);
 
-		unsigned long t = Clock::timeMs();
+		uint64_t const t = Clock::timeMs();
 		if(t - lastSpawnTime > 5000) // stop spawning if it bombs immediately
 		{
 			lastSpawnTime = t;

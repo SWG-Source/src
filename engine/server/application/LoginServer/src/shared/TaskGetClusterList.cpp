@@ -12,6 +12,7 @@
 #include "ConfigLoginServer.h"
 #include "DatabaseConnection.h"
 #include "sharedDatabaseInterface/DbSession.h"
+#include "sharedDatabaseInterface/DbCheckedConversion.h"
 
 // ======================================================================
 
@@ -43,8 +44,9 @@ bool TaskGetClusterList::process(DB::Session *session)
 		qry.address.getValue(temp.m_address);
 		if (qry.port.isNull())
 			temp.m_port = ConfigLoginServer::getCentralServicePort();
-		else
-			temp.m_port = static_cast<uint16>(qry.port.getValue());
+		else if (!DB::checkedNarrow(qry.port.getValue(), temp.m_port, "cluster_list.port",
+			[&temp]() { return "TaskGetClusterList, cluster " + std::to_string(temp.m_clusterId) + " (" + temp.m_clusterName + "): the cluster is skipped"; }))
+			continue; // this cluster cannot be served; the others still are
 		qry.secret.getValue(temp.m_secret);
 		qry.locked.getValue(temp.m_locked);
 		qry.not_recommended.getValue(temp.m_notRecommended);

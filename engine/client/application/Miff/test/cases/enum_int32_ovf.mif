@@ -1,0 +1,8 @@
+enum E { A = 0x7FFFFFFF, B };
+form "TEST"
+{
+	chunk "0000"
+	{
+		int32 B
+	}
+}

@@ -168,7 +168,7 @@ void CMLoader::update()
 		std::list<AuctionRecord>::iterator auctionIterator = m_auctionList.begin();
 		while (auctionIterator != m_auctionList.end())
 		{
-			msg.addAuction(auctionIterator->m_itemId, auctionIterator->m_ownerId, auctionIterator->m_creatorId, auctionIterator->m_locationId, auctionIterator->m_minBid, auctionIterator->m_buyNowPrice, auctionIterator->m_auctionTimer, auctionIterator->m_oob.length(), auctionIterator->m_oob, auctionIterator->m_userDescription.length(), auctionIterator->m_userDescription, auctionIterator->m_category, auctionIterator->m_itemTemplateId, auctionIterator->m_itemName.length(), auctionIterator->m_itemName, auctionIterator->m_itemTimer, auctionIterator->m_active, auctionIterator->m_itemSize);
+			msg.addAuction(auctionIterator->m_itemId, auctionIterator->m_ownerId, auctionIterator->m_creatorId, auctionIterator->m_locationId, auctionIterator->m_minBid, auctionIterator->m_buyNowPrice, auctionIterator->m_auctionTimer, auctionIterator->m_oob.length(), auctionIterator->m_oob, auctionIterator->m_userDescription.length(), auctionIterator->m_userDescription, auctionIterator->m_category, static_cast<int>(auctionIterator->m_itemTemplateId) /* the message carries the template CRC as a signed int; same bits */, auctionIterator->m_itemName.length(), auctionIterator->m_itemName, auctionIterator->m_itemTimer, auctionIterator->m_active, auctionIterator->m_itemSize);
 			if (++numAuctions >= ConfigServerDatabase::getAuctionLoadBatchSize())
 			{
 				DatabaseProcess::getInstance().sendToCommoditiesServer(msg, true);

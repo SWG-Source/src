@@ -42,7 +42,7 @@ class TaskRestoreHouse:public DB::TaskRequest
 		DB::BindableNetworkId   house_id;
 		
 		//output:
-		DB::BindableLong        result;
+		DB::BindableInt32        result;
 		
 	  private:
 		RestoreHouseQuery(const RestoreHouseQuery&);

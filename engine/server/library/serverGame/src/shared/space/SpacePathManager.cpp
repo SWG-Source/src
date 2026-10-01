@@ -52,7 +52,7 @@ void SpacePathManager::remove()
 {
 	if (!s_pathList.empty())
 	{
-		WARNING(true, ("SpacePathManager::remove() The path list is not empty(%u), this is a sign of a reference counting problem.", s_pathList.size()));
+		WARNING(true, ("SpacePathManager::remove() The path list is not empty(%zu), this is a sign of a reference counting problem.", s_pathList.size()));
 	}
 }
 
@@ -67,7 +67,7 @@ SpacePath * SpacePathManager::fetch(SpacePath * const path, void const * const o
 	
 		result = new SpacePath;
 		IGNORE_RETURN(s_pathList.insert(result));
-		LOGC(ConfigServerGame::isSpaceAiLoggingEnabled(), "space_debug_ai", ("SpacePathManager::fetch() NEW PATH path(0x%p) referenceCount(%d) totalPathCount(%u)", result, result->getReferenceCount(), s_pathList.size()));
+		LOGC(ConfigServerGame::isSpaceAiLoggingEnabled(), "space_debug_ai", ("SpacePathManager::fetch() NEW PATH path(0x%p) referenceCount(%d) totalPathCount(%zu)", result, result->getReferenceCount(), s_pathList.size()));
 	}
 	else
 	{
@@ -79,11 +79,11 @@ SpacePath * SpacePathManager::fetch(SpacePath * const path, void const * const o
 	
 			result = *iterPathList;
 	
-			LOGC(ConfigServerGame::isSpaceAiLoggingEnabled(), "space_debug_ai", ("SpacePathManager::fetch() path(0x%p) referenceCount(%d) totalPathCount(%u)", path, (*iterPathList)->getReferenceCount(), s_pathList.size()));
+			LOGC(ConfigServerGame::isSpaceAiLoggingEnabled(), "space_debug_ai", ("SpacePathManager::fetch() path(0x%p) referenceCount(%d) totalPathCount(%zu)", path, (*iterPathList)->getReferenceCount(), s_pathList.size()));
 		}
 		else
 		{
-			FATAL(true, ("SpacePathManager::fetch() ERROR: Unable to fetch the path(0x%p) totalPathCount(%u)", path, s_pathList.size()));
+			FATAL(true, ("SpacePathManager::fetch() ERROR: Unable to fetch the path(0x%p) totalPathCount(%zu)", path, s_pathList.size()));
 		}
 	}
 
@@ -122,18 +122,18 @@ void SpacePathManager::release(SpacePath * const path, void const * const object
 
 			s_pathList.erase(iterPathList);
 
-			LOGC(ConfigServerGame::isSpaceAiLoggingEnabled(), "space_debug_ai", ("SpacePathManager::release() Removing 0 ref count path(0x%p) totalPathCount(%u)", path, s_pathList.size()));
+			LOGC(ConfigServerGame::isSpaceAiLoggingEnabled(), "space_debug_ai", ("SpacePathManager::release() Removing 0 ref count path(0x%p) totalPathCount(%zu)", path, s_pathList.size()));
 
 			delete path;
 		}
 		else
 		{
-			LOGC(ConfigServerGame::isSpaceAiLoggingEnabled(), "space_debug_ai", ("SpacePathManager::release() path(0x%p) referenceCount(%d) totalPathCount(%u)", path, (*iterPathList)->getReferenceCount(), s_pathList.size()));
+			LOGC(ConfigServerGame::isSpaceAiLoggingEnabled(), "space_debug_ai", ("SpacePathManager::release() path(0x%p) referenceCount(%d) totalPathCount(%zu)", path, (*iterPathList)->getReferenceCount(), s_pathList.size()));
 		}
 	}
 	else
 	{
-		LOGC(ConfigServerGame::isSpaceAiLoggingEnabled(), "space_debug_ai", ("SpacePathManager::release() Unable to find the specified path(0x%p) totalPathCount(%u)", path, s_pathList.size()));
+		LOGC(ConfigServerGame::isSpaceAiLoggingEnabled(), "space_debug_ai", ("SpacePathManager::release() Unable to find the specified path(0x%p) totalPathCount(%zu)", path, s_pathList.size()));
 	}
 }
 

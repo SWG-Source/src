@@ -457,7 +457,7 @@ void TcpClient::checkKeepalive()
 {
 	if (m_connected)
 	{
-		unsigned long const timeNow = Clock::getFrameStartTimeMs();
+		uint64_t const timeNow = Clock::getFrameStartTimeMs();
 		if (timeNow-m_lastSendTime > KEEPALIVE_MS)
 		{
 			m_lastSendTime = timeNow;

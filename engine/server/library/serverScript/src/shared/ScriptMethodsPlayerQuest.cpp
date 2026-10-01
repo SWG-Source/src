@@ -18,6 +18,7 @@
 #include "sharedNetworkMessages/MessageQueueGenericValueType.h"
 
 #include "UnicodeUtils.h"
+#include <cinttypes>
 
 using namespace JNIWrappersNamespace;
 
@@ -151,7 +152,7 @@ jboolean ScriptMethodsPlayerQuestNamespace::addPlayerQuestTask(JNIEnv * env, job
 	PlayerQuestObject * questObject;
 	if(!JavaLibrary::getObject(quest, questObject))
 	{
-		WARNING(true, ("AddPlayerQuestTask: Could not get valid Player Quest Object from OID: %d", quest));
+		WARNING(true, ("AddPlayerQuestTask: Could not get valid Player Quest Object from OID: %" PRId64, quest));
 		return JNI_FALSE;
 	}
 
@@ -219,7 +220,7 @@ jobjectArray ScriptMethodsPlayerQuestNamespace::getPlayerQuestTasks(JNIEnv * env
 	PlayerQuestObject * questObject;
 	if(!JavaLibrary::getObject(quest, questObject))
 	{
-		WARNING(true, ("getPlayerQuestTasks: Could not get valid Player Quest Object from OID: %d", quest));
+		WARNING(true, ("getPlayerQuestTasks: Could not get valid Player Quest Object from OID: %" PRId64, quest));
 		return 0;
 	}
 	std::vector<Unicode::String> taskVector;
@@ -244,7 +245,7 @@ jintArray ScriptMethodsPlayerQuestNamespace::getAllPlayerQuestTaskStatus(JNIEnv 
 	PlayerQuestObject * questObject;
 	if(!JavaLibrary::getObject(quest, questObject))
 	{
-		WARNING(true, ("getAllPlayerQuestTaskStatus: Could not get valid Player Quest Object from OID: %d", quest));
+		WARNING(true, ("getAllPlayerQuestTaskStatus: Could not get valid Player Quest Object from OID: %" PRId64, quest));
 		return 0;
 	}
 
@@ -279,7 +280,7 @@ jint ScriptMethodsPlayerQuestNamespace::getPlayerQuestTaskStatus(JNIEnv * env, j
 	PlayerQuestObject * questObject;
 	if(!JavaLibrary::getObject(quest, questObject))
 	{
-		WARNING(true, ("getPlayerQuestTaskStatus: Could not get valid Player Quest Object from OID: %d", quest));
+		WARNING(true, ("getPlayerQuestTaskStatus: Could not get valid Player Quest Object from OID: %" PRId64, quest));
 		return 0;
 	}
 
@@ -294,7 +295,7 @@ void ScriptMethodsPlayerQuestNamespace::setPlayerQuestTaskStatus(JNIEnv * env, j
 	PlayerQuestObject * questObject;
 	if(!JavaLibrary::getObject(quest, questObject))
 	{
-		WARNING(true, ("setPlayerQuestTaskStatus: Could not get valid Player Quest Object from OID: %d", quest));
+		WARNING(true, ("setPlayerQuestTaskStatus: Could not get valid Player Quest Object from OID: %" PRId64, quest));
 		return;
 	}
 
@@ -309,7 +310,7 @@ jboolean ScriptMethodsPlayerQuestNamespace::setPlayerQuestTitle(JNIEnv * env, jo
 	PlayerQuestObject * questObject;
 	if(!JavaLibrary::getObject(quest, questObject))
 	{
-		WARNING(true, ("setPlayerQuestTitle: Could not get valid Player Quest Object from OID: %d", quest));
+		WARNING(true, ("setPlayerQuestTitle: Could not get valid Player Quest Object from OID: %" PRId64, quest));
 		return JNI_FALSE;
 	}
 
@@ -337,7 +338,7 @@ jboolean ScriptMethodsPlayerQuestNamespace::setPlayerQuestDescription(JNIEnv * e
 	PlayerQuestObject * questObject;
 	if(!JavaLibrary::getObject(quest, questObject))
 	{
-		WARNING(true, ("setPlayerQuestDescription: Could not get valid Player Quest Object from OID: %d", quest));
+		WARNING(true, ("setPlayerQuestDescription: Could not get valid Player Quest Object from OID: %" PRId64, quest));
 		return JNI_FALSE;
 	}
 
@@ -365,7 +366,7 @@ void ScriptMethodsPlayerQuestNamespace::setPlayerQuestDifficulty(JNIEnv * env, j
 	PlayerQuestObject * questObject;
 	if(!JavaLibrary::getObject(quest, questObject))
 	{
-		WARNING(true, ("setPlayerQuestDifficulty: Could not get valid Player Quest Object from OID: %d", quest));
+		WARNING(true, ("setPlayerQuestDifficulty: Could not get valid Player Quest Object from OID: %" PRId64, quest));
 		return;
 	}
 
@@ -385,7 +386,7 @@ jint ScriptMethodsPlayerQuestNamespace::getPlayerQuestDifficulty(JNIEnv * env, j
 	PlayerQuestObject * questObject;
 	if(!JavaLibrary::getObject(quest, questObject))
 	{
-		WARNING(true, ("setPlayerQuestDifficulty: Could not get valid Player Quest Object from OID: %d", quest));
+		WARNING(true, ("setPlayerQuestDifficulty: Could not get valid Player Quest Object from OID: %" PRId64, quest));
 		return -1;
 	}
 
@@ -403,7 +404,7 @@ jint ScriptMethodsPlayerQuestNamespace::getPlayerQuestTaskCounter(JNIEnv * env, 
 	PlayerQuestObject * questObject;
 	if(!JavaLibrary::getObject(quest, questObject))
 	{
-		WARNING(true, ("getPlayerQuestTaskCounter: Could not get valid Player Quest Object from OID: %d", quest));
+		WARNING(true, ("getPlayerQuestTaskCounter: Could not get valid Player Quest Object from OID: %" PRId64, quest));
 		return -1;
 	}
 
@@ -429,7 +430,7 @@ void ScriptMethodsPlayerQuestNamespace::setPlayerQuestTaskCounter(JNIEnv * env, 
 	PlayerQuestObject * questObject;
 	if(!JavaLibrary::getObject(quest, questObject))
 	{
-		WARNING(true, ("setPlayerQuestTaskCounter: Could not get valid Player Quest Object from OID: %d", quest));
+		WARNING(true, ("setPlayerQuestTaskCounter: Could not get valid Player Quest Object from OID: %" PRId64, quest));
 		return;
 	}
 
@@ -455,7 +456,7 @@ jobject ScriptMethodsPlayerQuestNamespace::getPlayerQuestWaypoint(JNIEnv * env, 
 	PlayerQuestObject * questObject;
 	if(!JavaLibrary::getObject(quest, questObject))
 	{
-		WARNING(true, ("getPlayerQuestWaypoint: Could not get valid Player Quest Object from OID: %d", quest));
+		WARNING(true, ("getPlayerQuestWaypoint: Could not get valid Player Quest Object from OID: %" PRId64, quest));
 		return nullptr;
 	}
 
@@ -477,7 +478,7 @@ jboolean ScriptMethodsPlayerQuestNamespace::isPlayerQuestTaskComplete(JNIEnv * e
 	PlayerQuestObject * questObject;
 	if(!JavaLibrary::getObject(quest, questObject))
 	{
-		WARNING(true, ("isPlayerQuestTaskComplete: Could not get valid Player Quest Object from OID: %d", quest));
+		WARNING(true, ("isPlayerQuestTaskComplete: Could not get valid Player Quest Object from OID: %" PRId64, quest));
 		return JNI_FALSE;
 	}
 
@@ -498,7 +499,7 @@ jboolean ScriptMethodsPlayerQuestNamespace::isPlayerQuestComplete(JNIEnv * env, 
 	PlayerQuestObject * questObject;
 	if(!JavaLibrary::getObject(quest, questObject))
 	{
-		WARNING(true, ("isPlayerQuestComplete: Could not get valid Player Quest Object from OID: %d", quest));
+		WARNING(true, ("isPlayerQuestComplete: Could not get valid Player Quest Object from OID: %" PRId64, quest));
 		return JNI_FALSE;
 	}
 
@@ -519,7 +520,7 @@ jobject ScriptMethodsPlayerQuestNamespace::getPlayerQuestTitle(JNIEnv * env, job
 	PlayerQuestObject * questObject;
 	if(!JavaLibrary::getObject(quest, questObject))
 	{
-		WARNING(true, ("getPlayerQuestTitle: Could not get valid Player Quest Object from OID: %d", quest));
+		WARNING(true, ("getPlayerQuestTitle: Could not get valid Player Quest Object from OID: %" PRId64, quest));
 		return nullptr;
 	}
 
@@ -540,7 +541,7 @@ jobject ScriptMethodsPlayerQuestNamespace::getPlayerQuestDescription(JNIEnv * en
 	PlayerQuestObject * questObject;
 	if(!JavaLibrary::getObject(quest, questObject))
 	{
-		WARNING(true, ("getPlayerQuestDescription: Could not get valid Player Quest Object from OID: %d", quest));
+		WARNING(true, ("getPlayerQuestDescription: Could not get valid Player Quest Object from OID: %" PRId64, quest));
 		return nullptr;
 	}
 
@@ -561,7 +562,7 @@ jobject ScriptMethodsPlayerQuestNamespace::getPlayerQuestTaskTitle(JNIEnv * env,
 	PlayerQuestObject * questObject;
 	if(!JavaLibrary::getObject(quest, questObject))
 	{
-		WARNING(true, ("getPlayerQuestTaskTitle: Could not get valid Player Quest Object from OID: %d", quest));
+		WARNING(true, ("getPlayerQuestTaskTitle: Could not get valid Player Quest Object from OID: %" PRId64, quest));
 		return nullptr;
 	}
 
@@ -582,7 +583,7 @@ jobject ScriptMethodsPlayerQuestNamespace::getPlayerQuestTaskDescription(JNIEnv 
 	PlayerQuestObject * questObject;
 	if(!JavaLibrary::getObject(quest, questObject))
 	{
-		WARNING(true, ("getPlayerQuestTaskDescription: Could not get valid Player Quest Object from OID: %d", quest));
+		WARNING(true, ("getPlayerQuestTaskDescription: Could not get valid Player Quest Object from OID: %" PRId64, quest));
 		return nullptr;
 	}
 
@@ -603,7 +604,7 @@ void ScriptMethodsPlayerQuestNamespace::setPlayerQuestRecipe(JNIEnv * env, jobje
 	PlayerQuestObject * questObject;
 	if(!JavaLibrary::getObject(quest, questObject))
 	{
-		WARNING(true, ("setPlayerQuestRecipe: Could not get valid Player Quest Object from OID: %d", quest));
+		WARNING(true, ("setPlayerQuestRecipe: Could not get valid Player Quest Object from OID: %" PRId64, quest));
 		return;
 	}
 
@@ -622,7 +623,7 @@ jboolean ScriptMethodsPlayerQuestNamespace::isPlayerQuestRecipe(JNIEnv * env, jo
 	PlayerQuestObject * questObject;
 	if(!JavaLibrary::getObject(quest, questObject))
 	{
-		WARNING(true, ("isPlayerQuestRecipe: Could not get valid Player Quest Object from OID: %d", quest));
+		WARNING(true, ("isPlayerQuestRecipe: Could not get valid Player Quest Object from OID: %" PRId64, quest));
 		return JNI_FALSE;
 	}
 
@@ -642,7 +643,7 @@ void ScriptMethodsPlayerQuestNamespace::addPlayerQuestTaskRecipeData(JNIEnv * en
 	PlayerQuestObject * questObject;
 	if(!JavaLibrary::getObject(quest, questObject))
 	{
-		WARNING(true, ("addPlayerQuestTaskRecipeData: Could not get valid Player Quest Object from OID: %d", quest));
+		WARNING(true, ("addPlayerQuestTaskRecipeData: Could not get valid Player Quest Object from OID: %" PRId64, quest));
 		return;
 	}
 
@@ -669,7 +670,7 @@ void ScriptMethodsPlayerQuestNamespace::addPlayerQuestTaskRecipeDataWithIndex(JN
 	PlayerQuestObject * questObject;
 	if(!JavaLibrary::getObject(quest, questObject))
 	{
-		WARNING(true, ("addPlayerQuestTaskRecipeDataWithIndex: Could not get valid Player Quest Object from OID: %d", quest));
+		WARNING(true, ("addPlayerQuestTaskRecipeDataWithIndex: Could not get valid Player Quest Object from OID: %" PRId64, quest));
 		return;
 	}
 
@@ -696,7 +697,7 @@ void ScriptMethodsPlayerQuestNamespace::setPlayerQuestRewardData(JNIEnv * env, j
 	PlayerQuestObject * questObject;
 	if(!JavaLibrary::getObject(quest, questObject))
 	{
-		WARNING(true, ("setPlayerQuestRewardData: Could not get valid Player Quest Object from OID: %d", quest));
+		WARNING(true, ("setPlayerQuestRewardData: Could not get valid Player Quest Object from OID: %" PRId64, quest));
 		return;
 	}
 
@@ -723,14 +724,14 @@ void ScriptMethodsPlayerQuestNamespace::setPlayerQuestCreator(JNIEnv * env, jobj
 	PlayerQuestObject * questObject;
 	if(!JavaLibrary::getObject(quest, questObject))
 	{
-		WARNING(true, ("setPlayerQuestCreator: Could not get valid Player Quest Object from OID: %d", quest));
+		WARNING(true, ("setPlayerQuestCreator: Could not get valid Player Quest Object from OID: %" PRId64, quest));
 		return;
 	}
 
 	ServerObject * creatorObject;
 	if(!JavaLibrary::getObject(creator, creatorObject))
 	{
-		WARNING(true, ("setPlayerQuestCreator: Could not get valid Player Object from OID: %d", creator));
+		WARNING(true, ("setPlayerQuestCreator: Could not get valid Player Object from OID: %" PRId64, creator));
 		return;
 	}
 
@@ -771,14 +772,14 @@ void ScriptMethodsPlayerQuestNamespace::openPlayerQuestRecipe(JNIEnv * env, jobj
 	CreatureObject * playerCreature = nullptr;
 	if (!JavaLibrary::getObject(player, playerCreature))
 	{
-		DEBUG_WARNING(true, ("openPlayerQuestRecipe: Failed to get valid creature object with OID %d", player));
+		DEBUG_WARNING(true, ("openPlayerQuestRecipe: Failed to get valid creature object with OID %" PRId64, player));
 		return;
 	}
 
 	ServerObject * recipeObj = nullptr;
 	if (!JavaLibrary::getObject(recipe, recipeObj))
 	{
-		DEBUG_WARNING(true, ("openPlayerQuestRecipe: Failed to get valid recipe object with OID %d", player));
+		DEBUG_WARNING(true, ("openPlayerQuestRecipe: Failed to get valid recipe object with OID %" PRId64, player));
 		return;
 	}
 
@@ -804,7 +805,7 @@ void ScriptMethodsPlayerQuestNamespace::resetAllPlayerQuestData(JNIEnv * env, jo
 	PlayerQuestObject * playerQuest = nullptr;
 	if (!JavaLibrary::getObject(quest, playerQuest))
 	{
-		DEBUG_WARNING(true, ("resetAllPlayerQuestData: Failed to get valid recipe object with OID %d", quest));
+		DEBUG_WARNING(true, ("resetAllPlayerQuestData: Failed to get valid recipe object with OID %" PRId64, quest));
 		return;
 	}
 

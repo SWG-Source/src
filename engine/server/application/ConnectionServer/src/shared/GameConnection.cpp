@@ -127,7 +127,7 @@ void GameConnection::onReceive(const Archive::ByteStream & message)
 			ControlAssumed ca(ri);
 
 			static const std::string loginTrace("TRACE_LOGIN");
-			LOG(loginTrace, ("Received Control Assumed Message from game server %lu for %s skipLoadScreen=%s", getGameServerId(), ca.getNetworkId().getValueString().c_str(), (ca.getSkipLoadScreen() ? "yes" : "no")));
+			LOG(loginTrace, ("Received Control Assumed Message from game server %u for %s skipLoadScreen=%s", getGameServerId(), ca.getNetworkId().getValueString().c_str(), (ca.getSkipLoadScreen() ? "yes" : "no")));
 			
 			Client *client = ConnectionServer::getClient(ca.getNetworkId());
 			if (!client)
@@ -250,7 +250,7 @@ void GameConnection::onReceive(const Archive::ByteStream & message)
 					}
 					else
 					{
-						WARNING_STRICT_FATAL(true, ("A TransferControl message was received to transfer client %s to GameServer %lu, but that game server is no longer available. The client will be dropped.", transferControl.getNetworkId().getValueString().c_str(), transferControl.getGameServerId()));
+						WARNING_STRICT_FATAL(true, ("A TransferControl message was received to transfer client %s to GameServer %u, but that game server is no longer available. The client will be dropped.", transferControl.getNetworkId().getValueString().c_str(), transferControl.getGameServerId()));
 						DropClient const drop(transferControl.getNetworkId());
 						send(drop, true);
 					}

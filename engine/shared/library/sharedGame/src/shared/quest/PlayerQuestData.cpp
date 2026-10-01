@@ -259,8 +259,8 @@ namespace Archive
 		char temp[200];
 		
 		Command c;
-		int32_t commandCount;
-		int32_t baselineCommandCount; //lint !e578 hides a symbol elsewhere
+		uint32_t commandCount;
+		uint32_t baselineCommandCount; //lint !e578 hides a symbol elsewhere
 
 		Archive::get(source, commandCount);
 		Archive::get(source, baselineCommandCount);
@@ -274,7 +274,7 @@ namespace Archive
 			// We need to sort the quests by age
 			SortableQuestList sortedQuests;
 
-			for (int32_t i = 0; i < commandCount; ++i)
+			for (uint32_t i = 0; i < commandCount; ++i)
 			{
 				Archive::get(source, c.cmd);
 				Archive::get(source, c.key);
@@ -295,11 +295,11 @@ namespace Archive
 
 				if (playerQuestData.isCompleted())
 				{
-					IGNORE_RETURN(snprintf(temp, sizeof(temp)-1, "%lu %hi:", playerQuestDataKey, playerQuestData.hasReceivedReward() ? static_cast<uint16>(1) : static_cast<uint16>(0)));
+					IGNORE_RETURN(snprintf(temp, sizeof(temp)-1, "%u %hi:", playerQuestDataKey, playerQuestData.hasReceivedReward() ? static_cast<uint16>(1) : static_cast<uint16>(0)));
 				}
 				else
 				{
-					IGNORE_RETURN(snprintf(temp, sizeof(temp)-1, "%lu %hi %hi %s:", playerQuestDataKey, playerQuestData.getActiveTasks(), playerQuestData.getCompletedTasks(), playerQuestData.getQuestGiver().getValueString().c_str()));
+					IGNORE_RETURN(snprintf(temp, sizeof(temp)-1, "%u %hi %hi %s:", playerQuestDataKey, playerQuestData.getActiveTasks(), playerQuestData.getCompletedTasks(), playerQuestData.getQuestGiver().getValueString().c_str()));
 				}
 			
 				temp[sizeof(temp)-1]='\0';
@@ -314,8 +314,8 @@ namespace Archive
 		char temp[200];
 		AutoDeltaMap<uint32, PlayerQuestData>::Command c;
 
-		Archive::put(target, static_cast<int32_t> (countCharacter(buffer,':')));
-		Archive::put(target, static_cast<int32_t> (0)); // baselineCommandCount
+		Archive::put(target, static_cast<uint32_t> (countCharacter(buffer,':')));
+		Archive::put(target, static_cast<uint32_t> (0)); // baselineCommandCount
 		
 		int tempPos = 0;
 		for (std::string::const_iterator i=buffer.begin(); i!=buffer.end(); ++i)
@@ -326,7 +326,7 @@ namespace Archive
 				uint16 completedTasks = 0;
 				char giver[100];
 				temp[tempPos]='\0';
-				int const numScanned = sscanf(temp,"%lu %hi %hi %s", &c.key, &activeTasks, &completedTasks, giver);
+				int const numScanned = sscanf(temp,"%u %hi %hi %s", &c.key, &activeTasks, &completedTasks, giver);
 				
 				//active quests
 				switch (numScanned) {

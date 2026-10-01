@@ -55,14 +55,19 @@ void ServerConsole::run()
 
 	if(stdin)
 	{
+		// Read stdin to end of file as bytes. Each fread returns the number
+		// of bytes it read, so input shorter than the buffer is kept.
 		std::string input;
-		char inBuf[1024] = {"\0"};
-		while(! feof(stdin))
+		char inBuf[1024];
+		size_t bytesRead;
+		while ((bytesRead = fread(inBuf, 1, sizeof(inBuf), stdin)) > 0)
+			input.append(inBuf, bytesRead);
+
+		// fread also returns 0 on a read error; never send a partial command.
+		if(ferror(stdin))
 		{
-			if (fread(inBuf, 1024, 1, stdin)) {
-				input += inBuf;
-				memset(inBuf, 0, sizeof(inBuf));
-			}
+			fprintf(stderr, "Error reading the command from stdin. Aborting");
+			return;
 		}
 
 		if(input.length() > 0)

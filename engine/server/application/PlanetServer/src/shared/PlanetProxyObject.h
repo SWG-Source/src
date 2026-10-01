@@ -97,7 +97,7 @@ class PlanetProxyObject
 	int             m_interestRadius;
 	int             m_objectTypeTag;
 	Node *  m_quadtreeNode;
-	unsigned long   m_authTransferTimeMs;
+	uint64_t        m_authTransferTimeMs;
 	std::vector<NetworkId> * m_contents;
 	int             m_level;
 	bool            m_hibernating;

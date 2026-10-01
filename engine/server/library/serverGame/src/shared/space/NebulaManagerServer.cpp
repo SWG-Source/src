@@ -44,11 +44,22 @@
 namespace NebulaManagerServerNamespace
 {
 
-	typedef std::vector<NebulaLightningData> LightningDataVector;
+	// A lightning event scheduled on this server's clock.  NebulaLightningData
+	// is the client wire format, whose 32-bit syncStamp fields are relative to
+	// each connection server's sync stamp; they are only computed when sending.
+	struct ScheduledLightning
+	{
+		NebulaLightningData data;
+		uint64_t startTimeMs; // absolute Clock::timeMs()
+		uint64_t endTimeMs;   // absolute Clock::timeMs()
+	};
+
+	typedef std::vector<ScheduledLightning> LightningDataVector;
 
 	LightningDataVector s_lightningDataVector;
 
-	typedef std::map<CachedNetworkId, uint32> NetworkIdTimeMap;
+	// absolute Clock::timeMs() before which the object cannot be hit again
+	typedef std::map<CachedNetworkId, uint64_t> NetworkIdTimeMap;
 	NetworkIdTimeMap s_objectsRecentlyHitByLightning;
 
 	static uint16 s_lastLightningId = 0;
@@ -86,7 +97,7 @@ void NebulaManagerServer::update(float elapsedTime)
 
 //----------------------------------------------------------------------
 
-void NebulaManagerServer::enqueueLightning(NebulaLightningData const & nebulaLightningData)
+void NebulaManagerServer::enqueueLightning(NebulaLightningData const & nebulaLightningData, uint64_t const startTimeMs, uint64_t const endTimeMs)
 {
 	Nebula const * const nebula = NebulaManager::getNebulaById(nebulaLightningData.nebulaId);
 	if (nebula == nullptr)
@@ -103,7 +114,8 @@ void NebulaManagerServer::enqueueLightning(NebulaLightningData const & nebulaLig
 		return;
 	}
 	
-	s_lightningDataVector.push_back(nebulaLightningData);
+	ScheduledLightning const scheduledLightning = { nebulaLightningData, startTimeMs, endTimeMs };
+	s_lightningDataVector.push_back(scheduledLightning);
 
 	//-- send enqueue messages to nearby clients
 	// time is in the context of the connection server's sync stamp, so we need a unique message per connection server
@@ -127,9 +139,12 @@ void NebulaManagerServer::enqueueLightning(NebulaLightningData const & nebulaLig
 
 	observingClients.clear();
 
-	uint32 const clockTimeMs = Clock::timeMs();
-	uint32 const deltaTimeStart = nebulaLightningData.syncStampStart - clockTimeMs;
-	uint32 const deltaTimeEnd = nebulaLightningData.syncStampEnd - clockTimeMs;
+	// Wire boundary: the client receives 32-bit sync stamps, so only the
+	// offsets from now are carried over, modulo 2^32 exactly as the sync
+	// stamp arithmetic below (and on the client) expects.
+	uint64_t const clockTimeMs = Clock::timeMs();
+	uint32 const deltaTimeStart = static_cast<uint32>(startTimeMs - clockTimeMs);
+	uint32 const deltaTimeEnd = static_cast<uint32>(endTimeMs - clockTimeMs);
 
 	//-- Send CreateNebulaLightningMessage to distribution list
 	{
@@ -157,11 +172,11 @@ void NebulaManagerServer::enqueueLightning(NebulaLightningData const & nebulaLig
 
 void NebulaManagerServer::handleEnqueuedLightningEvents()
 {
-	uint32 const clockTimeMs = Clock::timeMs();
+	uint64_t const clockTimeMs = Clock::timeMs();
 	
 	for (LightningDataVector::iterator it = s_lightningDataVector.begin(); it != s_lightningDataVector.end();)
 	{
-		NebulaLightningData const & nebulaLightningData = (*it);
+		NebulaLightningData const & nebulaLightningData = it->data;
 		
 		Nebula const * const nebula = NebulaManager::getNebulaById(nebulaLightningData.nebulaId);
 		if (nebula == nullptr)
@@ -171,10 +186,10 @@ void NebulaManagerServer::handleEnqueuedLightningEvents()
 		}
 				
 		//-- lightning occurs now or in the past
-		if (nebulaLightningData.syncStampStart <= clockTimeMs)
+		if (it->startTimeMs <= clockTimeMs)
 		{
 			//-- lightning is finished
-			if (nebulaLightningData.syncStampEnd < clockTimeMs)
+			if (it->endTimeMs < clockTimeMs)
 			{
 				it = s_lightningDataVector.erase(it);
 				continue;
@@ -243,7 +258,7 @@ void NebulaManagerServer::handleEnqueuedLightningEvents()
 
 void NebulaManagerServer::generateLightningEvents(float elapsedTime)
 {
-	uint32 const clockTimeMs = Clock::timeMs();
+	uint64_t const clockTimeMs = Clock::timeMs();
 
 	NebulaManager::NebulaVector const & nebulaVector = NebulaManager::getNebulaVector();
 	for (NebulaManager::NebulaVector::const_iterator it = nebulaVector.begin(); it != nebulaVector.end(); ++it)
@@ -281,8 +296,9 @@ void NebulaManagerServer::generateLightningEvents(float elapsedTime)
 			int const lightningDurationMaxMs = static_cast<int>(lightningDurationMax * 1000.0f);
 
 			nebulaLightningData.lightningId = s_lastLightningId;
-			nebulaLightningData.syncStampStart = clockTimeMs + 1000;
-			nebulaLightningData.syncStampEnd = nebulaLightningData.syncStampStart + static_cast<uint32>(Random::random(lightningDurationMaxMs / 2, lightningDurationMaxMs));
+			uint64_t const startTimeMs = clockTimeMs + 1000;
+			uint64_t const endTimeMs = startTimeMs + static_cast<uint32>(Random::random(lightningDurationMaxMs / 2, lightningDurationMaxMs));
+			// syncStampStart/End are set per connection server when sent
 
 			nebulaLightningData.nebulaId = nebula->getId();
 			
@@ -294,7 +310,7 @@ void NebulaManagerServer::generateLightningEvents(float elapsedTime)
 			nebulaLightningData.endpoint1.y = Random::randomReal(center.y - radius, center.y + radius);
 			nebulaLightningData.endpoint1.z = Random::randomReal(center.z - radius, center.z + radius);
 
-			NebulaManagerServer::enqueueLightning(nebulaLightningData);
+			NebulaManagerServer::enqueueLightning(nebulaLightningData, startTimeMs, endTimeMs);
 		}
 	}
 }

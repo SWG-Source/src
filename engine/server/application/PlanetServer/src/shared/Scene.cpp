@@ -103,7 +103,7 @@ void Scene::receiveMessage(const MessageDispatch::Emitter & source, const Messag
 	switch(messageType) {
 		case constcrc("GameConnectionClosed") :
 		{
-			DEBUG_REPORT_LOG(true, ("Handling a game server crash for server %lu\n", gameServer->getProcessId()));
+			DEBUG_REPORT_LOG(true, ("Handling a game server crash for server %u\n", gameServer->getProcessId()));
 			handleCrash(gameServer->getProcessId());
 			break;
 		}
@@ -469,7 +469,7 @@ void Scene::loadAllNodesForServer(uint32 server, PreloadServerId preloadServerId
 			if (node->getPreloadServerId()==preloadServerId)
 			{
 				if (ConfigPlanetServer::getLogChunkLoading())
-					LOG("ChunkLoading",("Node %s preload to server %lu",node->getDebugNodeString().c_str(), server));
+					LOG("ChunkLoading",("Node %s preload to server %u",node->getDebugNodeString().c_str(), server));
 
 				if (!node->isLoaded())
 					node->load(server);
@@ -557,14 +557,14 @@ bool Scene::requestSameServer(const NetworkId &id1, const NetworkId &id2)
 		if (server1 == preferredServer)
 		{
 			if (ConfigPlanetServer::getLogObjectLoading())
-				LOG("ObjectLoading",("Moving object %s to server %lu, so that it is on the same server as %s",id2.getValueString().c_str(),server1,id1.getValueString().c_str()));
+				LOG("ObjectLoading",("Moving object %s to server %u, so that it is on the same server as %s",id2.getValueString().c_str(),server1,id1.getValueString().c_str()));
 			obj2->changeAuthorityAndSubscriptions(server1);
 			return true;
 		}
 		else if (server2 == preferredServer)
 		{
 			if (ConfigPlanetServer::getLogObjectLoading())
-				LOG("ObjectLoading",("Moving object %s to server %lu, so that it is on the same server as %s",id1.getValueString().c_str(),server2,id2.getValueString().c_str()));
+				LOG("ObjectLoading",("Moving object %s to server %u, so that it is on the same server as %s",id1.getValueString().c_str(),server2,id2.getValueString().c_str()));
 			obj1->changeAuthorityAndSubscriptions(server2);
 			return true;
 		}
@@ -573,7 +573,7 @@ bool Scene::requestSameServer(const NetworkId &id1, const NetworkId &id2)
 	if (obj2->wouldAuthorityBeOk(server1))
 	{
 		if (ConfigPlanetServer::getLogObjectLoading())
-			LOG("ObjectLoading",("Moving object %s to server %lu, so that it is on the same server as %s",id2.getValueString().c_str(),server1,id1.getValueString().c_str()));
+			LOG("ObjectLoading",("Moving object %s to server %u, so that it is on the same server as %s",id2.getValueString().c_str(),server1,id1.getValueString().c_str()));
 		obj2->changeAuthorityAndSubscriptions(server1);
 		return true;
 	}
@@ -581,7 +581,7 @@ bool Scene::requestSameServer(const NetworkId &id1, const NetworkId &id2)
 	if (obj1->wouldAuthorityBeOk(server2))
 	{
 		if (ConfigPlanetServer::getLogObjectLoading())
-			LOG("ObjectLoading",("Moving object %s to server %lu, so that it is on the same server as %s",id1.getValueString().c_str(),server2,id2.getValueString().c_str()));
+			LOG("ObjectLoading",("Moving object %s to server %u, so that it is on the same server as %s",id1.getValueString().c_str(),server2,id2.getValueString().c_str()));
 		obj1->changeAuthorityAndSubscriptions(server2);
 		return true;
 	}

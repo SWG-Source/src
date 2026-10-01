@@ -220,7 +220,7 @@ bool PropertyListBuffer::save(DB::Session *session)
 		qry_ot_DELETE.freeData();
 	}
 	
-	LOG("SaveCounts",("PropertyList updates:  %i (out of %i) saved to db",actualSaves, m_rows.size()));
+	LOG("SaveCounts",("PropertyList updates:  %i (out of %zu) saved to db",actualSaves, m_rows.size()));
 	return true;
 }
 

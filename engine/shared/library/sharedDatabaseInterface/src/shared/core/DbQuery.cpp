@@ -44,7 +44,7 @@ Query::~Query()
 
 int Query::fetch()
 {
-	int startTime = 0;
+	uint64_t startTime = 0;
 	if (Server::isProfilingEnabled())
 		startTime = Clock::timeMs();
 
@@ -53,7 +53,7 @@ int Query::fetch()
 
 	if (Server::isProfilingEnabled())
 	{
-		m_fetchTime += Clock::timeMs() - startTime;
+		m_fetchTime += Clock::durationMs<int>(startTime, Clock::timeMs());
 	}
 	if (m_rowsFetched >= 0)
 	{
@@ -144,7 +144,7 @@ bool Query::prepare()
 
 bool Query::exec()
 {
-	int startTime = 0;
+	uint64_t startTime = 0;
 	if (Server::isProfilingEnabled())
 		startTime = Clock::timeMs();
 
@@ -161,7 +161,7 @@ bool Query::exec()
 
 	if (Server::isProfilingEnabled())
 	{
-		m_execTime += Clock::timeMs() - startTime;
+		m_execTime += Clock::durationMs<int>(startTime, Clock::timeMs());
 	}
 	++m_execCount;
 
@@ -181,13 +181,25 @@ void Query::setColArrayMode(size_t skipSize, size_t numElements)
 	impl->setColArrayMode(skipSize, numElements);
 }
 
-bool Query::bindCol(BindableLong &buffer)
+bool Query::bindCol(BindableInt32 &buffer)
 {
 	NOT_NULL(impl);
 	return impl->bindCol(buffer);
 }
 
-bool Query::bindParameter(BindableLong &buffer)
+bool Query::bindParameter(BindableInt32 &buffer)
+{
+	NOT_NULL(impl);
+	return impl->bindParameter(buffer);
+}
+
+bool Query::bindCol(BindableUint32 &buffer)
+{
+	NOT_NULL(impl);
+	return impl->bindCol(buffer);
+}
+
+bool Query::bindParameter(BindableUint32 &buffer)
 {
 	NOT_NULL(impl);
 	return impl->bindParameter(buffer);

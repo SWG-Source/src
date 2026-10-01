@@ -1,7 +1,7 @@
 create table player_objects  -- NO_IMPORT
 (
 	object_id number(20),  -- BIND_AS(DB::BindableNetworkId)
-	station_id int,
+	station_id int, -- BIND_AS(DB::BindableUint32)
 	personal_profile_id varchar2(200),
 	character_profile_id varchar2(200),
 	skill_title varchar2(200),
@@ -13,7 +13,7 @@ create table player_objects  -- NO_IMPORT
 	num_lots int,
 	active_quests varchar2(512),  -- BIND_AS(DB::BindableBitArray<2047>)
 	completed_quests varchar2(512),  -- BIND_AS(DB::BindableBitArray<2047>)
-	current_quest int,
+	current_quest int, -- BIND_AS(DB::BindableUint32)
 	quests varchar2(4000),
 	role_icon_choice int,
 	quests2 varchar2(4000),

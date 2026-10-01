@@ -471,7 +471,7 @@ void AppearanceTemplateListNamespace::remove()
 	{
 		//-- report if we leaked anonymous appearance templates
 		const size_t entryCount = ms_anonymousTemplates.size();
-		DEBUG_WARNING(entryCount, ("leaked %u anonymous appearance templates", entryCount));
+		DEBUG_WARNING(entryCount, ("leaked %zu anonymous appearance templates", entryCount));
 		UNREF(entryCount);
 		// shouldn't delete because item may depend on items that are memory block managed and already deleted, which could cause a crash
 	}
@@ -480,7 +480,7 @@ void AppearanceTemplateListNamespace::remove()
 		//-- report if we leaked named appearance templates
 #ifdef _DEBUG
 		const size_t entryCount = ms_namedTemplates.size();
-		DEBUG_WARNING(entryCount, ("leaked %u named appearance templates", entryCount));
+		DEBUG_WARNING(entryCount, ("leaked %zu named appearance templates", entryCount));
 
 		NamedTemplates::iterator end = ms_namedTemplates.end();
 		for (NamedTemplates::iterator it = ms_namedTemplates.begin(); it != end; ++it)
@@ -496,7 +496,7 @@ void AppearanceTemplateListNamespace::remove()
 		const size_t entryCount = ms_namedTimedTemplates.size();
 		if (entryCount)
 		{
-			DEBUG_REPORT_LOG(true, ("%u timed appearance templates remain\n", entryCount));
+			DEBUG_REPORT_LOG(true, ("%zu timed appearance templates remain\n", entryCount));
 		}
 #endif
 	}
@@ -507,7 +507,7 @@ void AppearanceTemplateListNamespace::remove()
 		//-- delete the redirector map
 		for (RedirectorMap::iterator iter = ms_redirectorMap.begin(); iter != ms_redirectorMap.end(); ++iter)
 		{
-			DEBUG_REPORT_LOG(ms_debugReport, ("  %4i  %s -> %s\n", std::distance(ms_redirectorMap.begin(), iter), iter->first->getString(), iter->second->getString()));
+			DEBUG_REPORT_LOG(ms_debugReport, ("  %4td  %s -> %s\n", std::distance(ms_redirectorMap.begin(), iter), iter->first->getString(), iter->second->getString()));
 			delete const_cast<CrcString *>(iter->first);
 			delete const_cast<CrcString *>(iter->second);
 		}
@@ -708,10 +708,10 @@ void AppearanceTemplateListNamespace::removeAppearanceTemplate(AppearanceTemplat
 void AppearanceTemplateListNamespace::debugReport()
 {
 #ifdef _DEBUG
-	DEBUG_REPORT_PRINT(true, ("Tags installed        = %i\n", ms_tagBindingMap.size()));
-	DEBUG_REPORT_PRINT(true, ("Named templates       = %i\n", ms_namedTemplates.size()));
-	DEBUG_REPORT_PRINT(true, ("Named timed templates = %i\n", ms_namedTimedTemplates.size()));
-	DEBUG_REPORT_PRINT(true, ("Anonymous templates   = %i\n", ms_anonymousTemplates.size()));
+	DEBUG_REPORT_PRINT(true, ("Tags installed        = %zu\n", ms_tagBindingMap.size()));
+	DEBUG_REPORT_PRINT(true, ("Named templates       = %zu\n", ms_namedTemplates.size()));
+	DEBUG_REPORT_PRINT(true, ("Named timed templates = %zu\n", ms_namedTimedTemplates.size()));
+	DEBUG_REPORT_PRINT(true, ("Anonymous templates   = %zu\n", ms_anonymousTemplates.size()));
 #endif
 }
 

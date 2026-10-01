@@ -118,7 +118,7 @@ void ServerProceduralTerrainAppearance::Cache::remove ()
 
 	//-- delete non-array lists
 #define DELETE_SPECIFIC_LIST(a) { \
-		DEBUG_REPORT_LOG_PRINT (ConfigSharedTerrain::getDebugReportLogPrint (), ("Terrain Cache %sList = %i\n", #a, ms_ ## a ## List->size ())); \
+		DEBUG_REPORT_LOG_PRINT (ConfigSharedTerrain::getDebugReportLogPrint (), ("Terrain Cache %sList = %zu\n", #a, ms_ ## a ## List->size ())); \
 		std::for_each (ms_ ## a ## List->begin (), ms_ ## a ## List->end (), PointerDeleter ()); \
 		delete ms_ ## a ## List; \
 		ms_ ## a ## List = 0; \
@@ -323,10 +323,10 @@ void ServerProceduralTerrainAppearanceCacheNamespace::debugDump ()
 	NOT_NULL (ms_shaderMapList);
 	NOT_NULL (ms_floraMapList);
 
-	DEBUG_REPORT_PRINT (ms_debugReport, ("vertexListList size  = %i\n", ms_vertexListList->size ()));
-	DEBUG_REPORT_PRINT (ms_debugReport, ("planeListList size  = %i\n",  ms_planeListList->size ()));
-	DEBUG_REPORT_PRINT (ms_debugReport, ("shaderMapList size = %i\n",   ms_shaderMapList->size ()));
-	DEBUG_REPORT_PRINT (ms_debugReport, ("floraMapList size = %i\n",    ms_floraMapList->size ()));
+	DEBUG_REPORT_PRINT (ms_debugReport, ("vertexListList size  = %zu\n", ms_vertexListList->size ()));
+	DEBUG_REPORT_PRINT (ms_debugReport, ("planeListList size  = %zu\n",  ms_planeListList->size ()));
+	DEBUG_REPORT_PRINT (ms_debugReport, ("shaderMapList size = %zu\n",   ms_shaderMapList->size ()));
+	DEBUG_REPORT_PRINT (ms_debugReport, ("floraMapList size = %zu\n",    ms_floraMapList->size ()));
 
 #endif
 }

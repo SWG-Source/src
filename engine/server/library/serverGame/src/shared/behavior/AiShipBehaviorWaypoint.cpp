@@ -251,7 +251,7 @@ void AiShipBehaviorWaypoint::addDebug(AiDebugString & aiDebugString)
 			aiDebugString.addCircle(m_aiShipController.getMoveToGoalPosition_w(), m_aiShipController.getLargestTurnRadius(), PackedRgb::solidGreen);
 			aiDebugString.addPath(path->getTransformList(), m_cyclic);
 
-			char const * const text = FormattedString<256>().sprintf("%s [PATH SIZE %u]\n", getBehaviorString(getBehaviorType()), path->getTransformList().size());
+			char const * const text = FormattedString<256>().sprintf("%s [PATH SIZE %zu]\n", getBehaviorString(getBehaviorType()), path->getTransformList().size());
 			aiDebugString.addText(text, PackedRgb::solidCyan);
 		}
 		else

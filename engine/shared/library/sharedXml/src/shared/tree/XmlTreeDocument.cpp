@@ -29,7 +29,7 @@ XmlTreeNode XmlTreeDocument::getRootTreeNode() const
 
 void XmlTreeDocument::fetch() const
 {
-	DEBUG_FATAL(m_referenceCount < 0, ("XmlTreeDocument::fetch(): invalid reference count handling, reference count=[%s].", m_referenceCount));
+	DEBUG_FATAL(m_referenceCount < 0, ("XmlTreeDocument::fetch(): invalid reference count handling, reference count=[%d].", m_referenceCount));
 	++m_referenceCount;
 }
 
@@ -37,7 +37,7 @@ void XmlTreeDocument::fetch() const
 
 void XmlTreeDocument::release() const
 {
-	DEBUG_FATAL(m_referenceCount <= 0, ("XmlTreeDocument::release(): invalid reference count handling, reference count=[%s].", m_referenceCount));
+	DEBUG_FATAL(m_referenceCount <= 0, ("XmlTreeDocument::release(): invalid reference count handling, reference count=[%d].", m_referenceCount));
 	--m_referenceCount;
 	if (m_referenceCount == 0)
 	{

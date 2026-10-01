@@ -31,7 +31,7 @@ MessageToPayloadImpl::MessageToPayloadImpl(const NetworkId &networkId, const Mes
 		m_refCount(1),
 		m_counterMessageToPayload(++ms_counterMessageToPayload)
 {
-	DEBUG_FATAL(m_guaranteed && m_recurringTime!=0,("Attempted to create MessageToPayloadImpl for message %s, which was guaranteed and had a recurringTime.  Recurring MessageTos may not be guaranteed."));
+	DEBUG_FATAL(m_guaranteed && m_recurringTime!=0,("Attempted to create MessageToPayloadImpl for message %s, which was guaranteed and had a recurringTime.  Recurring MessageTos may not be guaranteed.", m_method.c_str()));
 	++ms_instanceCount;
 }
 
@@ -55,7 +55,7 @@ MessageToPayloadImpl::MessageToPayloadImpl(const NetworkId &networkId, const Mes
 		m_refCount(1),
 		m_counterMessageToPayload(++ms_counterMessageToPayload)
 {
-	DEBUG_FATAL(m_guaranteed && m_recurringTime!=0,("Attempted to create MessageToPayloadImpl for message %s, which was guaranteed and had a recurringTime.  Recurring MessageTos may not be guaranteed."));
+	DEBUG_FATAL(m_guaranteed && m_recurringTime!=0,("Attempted to create MessageToPayloadImpl for message %s, which was guaranteed and had a recurringTime.  Recurring MessageTos may not be guaranteed.", m_method.c_str()));
 	++ms_instanceCount;
 }
 

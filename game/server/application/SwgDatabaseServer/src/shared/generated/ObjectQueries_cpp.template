@@ -258,10 +258,10 @@ bool BuildingObjectQuery::addData(const DB::Row *_data)
 		case mode_UPDATE:
 		case mode_INSERT:
 			if (!m_object_ids.push_back(myData->object_id.getValueASCII())) return false;
-			if (!m_maintenance_costs.push_back(myData->maintenance_cost.isNull(), myData->maintenance_cost.getValue())) return false;
-			if (!m_time_last_checkeds.push_back(myData->time_last_checked.isNull(), myData->time_last_checked.getValue())) return false;
+			if (!m_maintenance_costs.push_back(myData->maintenance_cost.isNull(), myData->maintenance_cost)) return false;
+			if (!m_time_last_checkeds.push_back(myData->time_last_checked.isNull(), myData->time_last_checked)) return false;
 			if (!m_is_publics.push_back(myData->is_public.getValueASCII())) return false;
-			if (!m_city_ids.push_back(myData->city_id.isNull(), myData->city_id.getValue())) return false;
+			if (!m_city_ids.push_back(myData->city_id.isNull(), myData->city_id)) return false;
 			break;
 
 		case mode_SELECT:
@@ -474,7 +474,7 @@ bool CellObjectQuery::addData(const DB::Row *_data)
 		case mode_UPDATE:
 		case mode_INSERT:
 			if (!m_object_ids.push_back(myData->object_id.getValueASCII())) return false;
-			if (!m_cell_numbers.push_back(myData->cell_number.isNull(), myData->cell_number.getValue())) return false;
+			if (!m_cell_numbers.push_back(myData->cell_number.isNull(), myData->cell_number)) return false;
 			if (!m_is_publics.push_back(myData->is_public.getValueASCII())) return false;
 			break;
 
@@ -911,45 +911,45 @@ bool CreatureObjectQuery::addData(const DB::Row *_data)
 		case mode_UPDATE:
 		case mode_INSERT:
 			if (!m_object_ids.push_back(myData->object_id.getValueASCII())) return false;
-			if (!m_scale_factors.push_back(myData->scale_factor.isNull(), myData->scale_factor.getValue())) return false;
-			if (!m_statess.push_back(myData->states.isNull(), myData->states.getValue())) return false;
-			if (!m_postures.push_back(myData->posture.isNull(), myData->posture.getValue())) return false;
-			if (!m_shock_woundss.push_back(myData->shock_wounds.isNull(), myData->shock_wounds.getValue())) return false;
+			if (!m_scale_factors.push_back(myData->scale_factor.isNull(), myData->scale_factor)) return false;
+			if (!m_statess.push_back(myData->states.isNull(), myData->states)) return false;
+			if (!m_postures.push_back(myData->posture.isNull(), myData->posture)) return false;
+			if (!m_shock_woundss.push_back(myData->shock_wounds.isNull(), myData->shock_wounds)) return false;
 			if (!m_master_ids.push_back(myData->master_id.getValueASCII())) return false;
-			if (!m_ranks.push_back(myData->rank.isNull(), myData->rank.getValue())) return false;
-			if (!m_base_walk_speeds.push_back(myData->base_walk_speed.isNull(), myData->base_walk_speed.getValue())) return false;
-			if (!m_base_run_speeds.push_back(myData->base_run_speed.isNull(), myData->base_run_speed.getValue())) return false;
-			if (!m_attribute_0s.push_back(myData->attribute_0.isNull(), myData->attribute_0.getValue())) return false;
-			if (!m_attribute_1s.push_back(myData->attribute_1.isNull(), myData->attribute_1.getValue())) return false;
-			if (!m_attribute_2s.push_back(myData->attribute_2.isNull(), myData->attribute_2.getValue())) return false;
-			if (!m_attribute_3s.push_back(myData->attribute_3.isNull(), myData->attribute_3.getValue())) return false;
-			if (!m_attribute_4s.push_back(myData->attribute_4.isNull(), myData->attribute_4.getValue())) return false;
-			if (!m_attribute_5s.push_back(myData->attribute_5.isNull(), myData->attribute_5.getValue())) return false;
-			if (!m_attribute_6s.push_back(myData->attribute_6.isNull(), myData->attribute_6.getValue())) return false;
-			if (!m_attribute_7s.push_back(myData->attribute_7.isNull(), myData->attribute_7.getValue())) return false;
-			if (!m_attribute_8s.push_back(myData->attribute_8.isNull(), myData->attribute_8.getValue())) return false;
-			if (!m_attribute_9s.push_back(myData->attribute_9.isNull(), myData->attribute_9.getValue())) return false;
-			if (!m_attribute_10s.push_back(myData->attribute_10.isNull(), myData->attribute_10.getValue())) return false;
-			if (!m_attribute_11s.push_back(myData->attribute_11.isNull(), myData->attribute_11.getValue())) return false;
-			if (!m_attribute_12s.push_back(myData->attribute_12.isNull(), myData->attribute_12.getValue())) return false;
-			if (!m_attribute_13s.push_back(myData->attribute_13.isNull(), myData->attribute_13.getValue())) return false;
-			if (!m_attribute_14s.push_back(myData->attribute_14.isNull(), myData->attribute_14.getValue())) return false;
-			if (!m_attribute_15s.push_back(myData->attribute_15.isNull(), myData->attribute_15.getValue())) return false;
-			if (!m_attribute_16s.push_back(myData->attribute_16.isNull(), myData->attribute_16.getValue())) return false;
-			if (!m_attribute_17s.push_back(myData->attribute_17.isNull(), myData->attribute_17.getValue())) return false;
-			if (!m_attribute_18s.push_back(myData->attribute_18.isNull(), myData->attribute_18.getValue())) return false;
-			if (!m_attribute_19s.push_back(myData->attribute_19.isNull(), myData->attribute_19.getValue())) return false;
-			if (!m_attribute_20s.push_back(myData->attribute_20.isNull(), myData->attribute_20.getValue())) return false;
-			if (!m_attribute_21s.push_back(myData->attribute_21.isNull(), myData->attribute_21.getValue())) return false;
-			if (!m_attribute_22s.push_back(myData->attribute_22.isNull(), myData->attribute_22.getValue())) return false;
-			if (!m_attribute_23s.push_back(myData->attribute_23.isNull(), myData->attribute_23.getValue())) return false;
-			if (!m_attribute_24s.push_back(myData->attribute_24.isNull(), myData->attribute_24.getValue())) return false;
-			if (!m_attribute_25s.push_back(myData->attribute_25.isNull(), myData->attribute_25.getValue())) return false;
-			if (!m_attribute_26s.push_back(myData->attribute_26.isNull(), myData->attribute_26.getValue())) return false;
+			if (!m_ranks.push_back(myData->rank.isNull(), myData->rank)) return false;
+			if (!m_base_walk_speeds.push_back(myData->base_walk_speed.isNull(), myData->base_walk_speed)) return false;
+			if (!m_base_run_speeds.push_back(myData->base_run_speed.isNull(), myData->base_run_speed)) return false;
+			if (!m_attribute_0s.push_back(myData->attribute_0.isNull(), myData->attribute_0)) return false;
+			if (!m_attribute_1s.push_back(myData->attribute_1.isNull(), myData->attribute_1)) return false;
+			if (!m_attribute_2s.push_back(myData->attribute_2.isNull(), myData->attribute_2)) return false;
+			if (!m_attribute_3s.push_back(myData->attribute_3.isNull(), myData->attribute_3)) return false;
+			if (!m_attribute_4s.push_back(myData->attribute_4.isNull(), myData->attribute_4)) return false;
+			if (!m_attribute_5s.push_back(myData->attribute_5.isNull(), myData->attribute_5)) return false;
+			if (!m_attribute_6s.push_back(myData->attribute_6.isNull(), myData->attribute_6)) return false;
+			if (!m_attribute_7s.push_back(myData->attribute_7.isNull(), myData->attribute_7)) return false;
+			if (!m_attribute_8s.push_back(myData->attribute_8.isNull(), myData->attribute_8)) return false;
+			if (!m_attribute_9s.push_back(myData->attribute_9.isNull(), myData->attribute_9)) return false;
+			if (!m_attribute_10s.push_back(myData->attribute_10.isNull(), myData->attribute_10)) return false;
+			if (!m_attribute_11s.push_back(myData->attribute_11.isNull(), myData->attribute_11)) return false;
+			if (!m_attribute_12s.push_back(myData->attribute_12.isNull(), myData->attribute_12)) return false;
+			if (!m_attribute_13s.push_back(myData->attribute_13.isNull(), myData->attribute_13)) return false;
+			if (!m_attribute_14s.push_back(myData->attribute_14.isNull(), myData->attribute_14)) return false;
+			if (!m_attribute_15s.push_back(myData->attribute_15.isNull(), myData->attribute_15)) return false;
+			if (!m_attribute_16s.push_back(myData->attribute_16.isNull(), myData->attribute_16)) return false;
+			if (!m_attribute_17s.push_back(myData->attribute_17.isNull(), myData->attribute_17)) return false;
+			if (!m_attribute_18s.push_back(myData->attribute_18.isNull(), myData->attribute_18)) return false;
+			if (!m_attribute_19s.push_back(myData->attribute_19.isNull(), myData->attribute_19)) return false;
+			if (!m_attribute_20s.push_back(myData->attribute_20.isNull(), myData->attribute_20)) return false;
+			if (!m_attribute_21s.push_back(myData->attribute_21.isNull(), myData->attribute_21)) return false;
+			if (!m_attribute_22s.push_back(myData->attribute_22.isNull(), myData->attribute_22)) return false;
+			if (!m_attribute_23s.push_back(myData->attribute_23.isNull(), myData->attribute_23)) return false;
+			if (!m_attribute_24s.push_back(myData->attribute_24.isNull(), myData->attribute_24)) return false;
+			if (!m_attribute_25s.push_back(myData->attribute_25.isNull(), myData->attribute_25)) return false;
+			if (!m_attribute_26s.push_back(myData->attribute_26.isNull(), myData->attribute_26)) return false;
 			if (!m_persisted_buffss.push_back(myData->persisted_buffs.getValueASCII())) return false;
-			if (!m_ws_xs.push_back(myData->ws_x.isNull(), myData->ws_x.getValue())) return false;
-			if (!m_ws_ys.push_back(myData->ws_y.isNull(), myData->ws_y.getValue())) return false;
-			if (!m_ws_zs.push_back(myData->ws_z.isNull(), myData->ws_z.getValue())) return false;
+			if (!m_ws_xs.push_back(myData->ws_x.isNull(), myData->ws_x)) return false;
+			if (!m_ws_ys.push_back(myData->ws_y.isNull(), myData->ws_y)) return false;
+			if (!m_ws_zs.push_back(myData->ws_z.isNull(), myData->ws_z)) return false;
 			break;
 
 		case mode_SELECT:
@@ -1695,12 +1695,12 @@ bool HarvesterInstallationObjectQuery::addData(const DB::Row *_data)
 		case mode_UPDATE:
 		case mode_INSERT:
 			if (!m_object_ids.push_back(myData->object_id.getValueASCII())) return false;
-			if (!m_installed_efficiencys.push_back(myData->installed_efficiency.isNull(), myData->installed_efficiency.getValue())) return false;
-			if (!m_max_extraction_rates.push_back(myData->max_extraction_rate.isNull(), myData->max_extraction_rate.getValue())) return false;
-			if (!m_current_extraction_rates.push_back(myData->current_extraction_rate.isNull(), myData->current_extraction_rate.getValue())) return false;
-			if (!m_max_hopper_amounts.push_back(myData->max_hopper_amount.isNull(), myData->max_hopper_amount.getValue())) return false;
+			if (!m_installed_efficiencys.push_back(myData->installed_efficiency.isNull(), myData->installed_efficiency)) return false;
+			if (!m_max_extraction_rates.push_back(myData->max_extraction_rate.isNull(), myData->max_extraction_rate)) return false;
+			if (!m_current_extraction_rates.push_back(myData->current_extraction_rate.isNull(), myData->current_extraction_rate)) return false;
+			if (!m_max_hopper_amounts.push_back(myData->max_hopper_amount.isNull(), myData->max_hopper_amount)) return false;
 			if (!m_hopper_resources.push_back(myData->hopper_resource.getValueASCII())) return false;
-			if (!m_hopper_amounts.push_back(myData->hopper_amount.isNull(), myData->hopper_amount.getValue())) return false;
+			if (!m_hopper_amounts.push_back(myData->hopper_amount.isNull(), myData->hopper_amount)) return false;
 			if (!m_resource_types.push_back(myData->resource_type.getValueASCII())) return false;
 			break;
 
@@ -1930,12 +1930,12 @@ bool InstallationObjectQuery::addData(const DB::Row *_data)
 		case mode_UPDATE:
 		case mode_INSERT:
 			if (!m_object_ids.push_back(myData->object_id.getValueASCII())) return false;
-			if (!m_installation_types.push_back(myData->installation_type.isNull(), myData->installation_type.getValue())) return false;
+			if (!m_installation_types.push_back(myData->installation_type.isNull(), myData->installation_type)) return false;
 			if (!m_activateds.push_back(myData->activated.getValueASCII())) return false;
-			if (!m_tick_counts.push_back(myData->tick_count.isNull(), myData->tick_count.getValue())) return false;
-			if (!m_activate_start_times.push_back(myData->activate_start_time.isNull(), myData->activate_start_time.getValue())) return false;
-			if (!m_powers.push_back(myData->power.isNull(), myData->power.getValue())) return false;
-			if (!m_power_rates.push_back(myData->power_rate.isNull(), myData->power_rate.getValue())) return false;
+			if (!m_tick_counts.push_back(myData->tick_count.isNull(), myData->tick_count)) return false;
+			if (!m_activate_start_times.push_back(myData->activate_start_time.isNull(), myData->activate_start_time)) return false;
+			if (!m_powers.push_back(myData->power.isNull(), myData->power)) return false;
+			if (!m_power_rates.push_back(myData->power_rate.isNull(), myData->power_rate)) return false;
 			break;
 
 		case mode_SELECT:
@@ -2155,7 +2155,7 @@ bool IntangibleObjectQuery::addData(const DB::Row *_data)
 		case mode_UPDATE:
 		case mode_INSERT:
 			if (!m_object_ids.push_back(myData->object_id.getValueASCII())) return false;
-			if (!m_counts.push_back(myData->count.isNull(), myData->count.getValue())) return false;
+			if (!m_counts.push_back(myData->count.isNull(), myData->count)) return false;
 			break;
 
 		case mode_SELECT:
@@ -2361,9 +2361,9 @@ bool ManufactureSchematicObjectQuery::addData(const DB::Row *_data)
 			if (!m_object_ids.push_back(myData->object_id.getValueASCII())) return false;
 			if (!m_creator_ids.push_back(myData->creator_id.getValueASCII())) return false;
 			if (!m_creator_names.push_back(myData->creator_name.getValueASCII())) return false;
-			if (!m_items_per_containers.push_back(myData->items_per_container.isNull(), myData->items_per_container.getValue())) return false;
-			if (!m_manufacture_times.push_back(myData->manufacture_time.isNull(), myData->manufacture_time.getValue())) return false;
-			if (!m_draft_schematics.push_back(myData->draft_schematic.isNull(), myData->draft_schematic.getValue())) return false;
+			if (!m_items_per_containers.push_back(myData->items_per_container.isNull(), myData->items_per_container)) return false;
+			if (!m_manufacture_times.push_back(myData->manufacture_time.isNull(), myData->manufacture_time)) return false;
+			if (!m_draft_schematics.push_back(myData->draft_schematic.isNull(), myData->draft_schematic)) return false;
 			break;
 
 		case mode_SELECT:
@@ -2795,28 +2795,28 @@ bool MissionObjectQuery::addData(const DB::Row *_data)
 		case mode_UPDATE:
 		case mode_INSERT:
 			if (!m_object_ids.push_back(myData->object_id.getValueASCII())) return false;
-			if (!m_difficultys.push_back(myData->difficulty.isNull(), myData->difficulty.getValue())) return false;
-			if (!m_end_xs.push_back(myData->end_x.isNull(), myData->end_x.getValue())) return false;
-			if (!m_end_ys.push_back(myData->end_y.isNull(), myData->end_y.getValue())) return false;
-			if (!m_end_zs.push_back(myData->end_z.isNull(), myData->end_z.getValue())) return false;
+			if (!m_difficultys.push_back(myData->difficulty.isNull(), myData->difficulty)) return false;
+			if (!m_end_xs.push_back(myData->end_x.isNull(), myData->end_x)) return false;
+			if (!m_end_ys.push_back(myData->end_y.isNull(), myData->end_y)) return false;
+			if (!m_end_zs.push_back(myData->end_z.isNull(), myData->end_z)) return false;
 			if (!m_end_cells.push_back(myData->end_cell.getValueASCII())) return false;
-			if (!m_end_scenes.push_back(myData->end_scene.isNull(), myData->end_scene.getValue())) return false;
+			if (!m_end_scenes.push_back(myData->end_scene.isNull(), myData->end_scene)) return false;
 			if (!m_mission_creators.push_back(myData->mission_creator.getValueASCII())) return false;
-			if (!m_rewards.push_back(myData->reward.isNull(), myData->reward.getValue())) return false;
+			if (!m_rewards.push_back(myData->reward.isNull(), myData->reward)) return false;
 			if (!m_root_script_names.push_back(myData->root_script_name.getValueASCII())) return false;
-			if (!m_start_xs.push_back(myData->start_x.isNull(), myData->start_x.getValue())) return false;
-			if (!m_start_ys.push_back(myData->start_y.isNull(), myData->start_y.getValue())) return false;
-			if (!m_start_zs.push_back(myData->start_z.isNull(), myData->start_z.getValue())) return false;
+			if (!m_start_xs.push_back(myData->start_x.isNull(), myData->start_x)) return false;
+			if (!m_start_ys.push_back(myData->start_y.isNull(), myData->start_y)) return false;
+			if (!m_start_zs.push_back(myData->start_z.isNull(), myData->start_z)) return false;
 			if (!m_start_cells.push_back(myData->start_cell.getValueASCII())) return false;
-			if (!m_start_scenes.push_back(myData->start_scene.isNull(), myData->start_scene.getValue())) return false;
+			if (!m_start_scenes.push_back(myData->start_scene.isNull(), myData->start_scene)) return false;
 			if (!m_description_tables.push_back(myData->description_table.getValueASCII())) return false;
 			if (!m_description_texts.push_back(myData->description_text.getValueASCII())) return false;
 			if (!m_title_tables.push_back(myData->title_table.getValueASCII())) return false;
 			if (!m_title_texts.push_back(myData->title_text.getValueASCII())) return false;
 			if (!m_mission_holder_ids.push_back(myData->mission_holder_id.getValueASCII())) return false;
-			if (!m_statuss.push_back(myData->status.isNull(), myData->status.getValue())) return false;
-			if (!m_mission_types.push_back(myData->mission_type.isNull(), myData->mission_type.getValue())) return false;
-			if (!m_target_appearances.push_back(myData->target_appearance.isNull(), myData->target_appearance.getValue())) return false;
+			if (!m_statuss.push_back(myData->status.isNull(), myData->status)) return false;
+			if (!m_mission_types.push_back(myData->mission_type.isNull(), myData->mission_type)) return false;
+			if (!m_target_appearances.push_back(myData->target_appearance.isNull(), myData->target_appearance)) return false;
 			if (!m_target_names.push_back(myData->target_name.getValueASCII())) return false;
 			break;
 
@@ -3340,38 +3340,38 @@ bool PlayerObjectQuery::addData(const DB::Row *_data)
 		case mode_UPDATE:
 		case mode_INSERT:
 			if (!m_object_ids.push_back(myData->object_id.getValueASCII())) return false;
-			if (!m_station_ids.push_back(myData->station_id.isNull(), myData->station_id.getValue())) return false;
+			if (!m_station_ids.push_back(myData->station_id.isNull(), myData->station_id)) return false;
 			if (!m_house_ids.push_back(myData->house_id.getValueASCII())) return false;
-			if (!m_account_num_lotss.push_back(myData->account_num_lots.isNull(), myData->account_num_lots.getValue())) return false;
+			if (!m_account_num_lotss.push_back(myData->account_num_lots.isNull(), myData->account_num_lots)) return false;
 			if (!m_account_is_outcasts.push_back(myData->account_is_outcast.getValueASCII())) return false;
-			if (!m_account_cheater_levels.push_back(myData->account_cheater_level.isNull(), myData->account_cheater_level.getValue())) return false;
-			if (!m_account_max_lots_adjustments.push_back(myData->account_max_lots_adjustment.isNull(), myData->account_max_lots_adjustment.getValue())) return false;
+			if (!m_account_cheater_levels.push_back(myData->account_cheater_level.isNull(), myData->account_cheater_level)) return false;
+			if (!m_account_max_lots_adjustments.push_back(myData->account_max_lots_adjustment.isNull(), myData->account_max_lots_adjustment)) return false;
 			if (!m_personal_profile_ids.push_back(myData->personal_profile_id.getValueASCII())) return false;
 			if (!m_character_profile_ids.push_back(myData->character_profile_id.getValueASCII())) return false;
 			if (!m_skill_titles.push_back(myData->skill_title.getValueASCII())) return false;
-			if (!m_born_dates.push_back(myData->born_date.isNull(), myData->born_date.getValue())) return false;
-			if (!m_played_times.push_back(myData->played_time.isNull(), myData->played_time.getValue())) return false;
-			if (!m_force_regen_rates.push_back(myData->force_regen_rate.isNull(), myData->force_regen_rate.getValue())) return false;
-			if (!m_force_powers.push_back(myData->force_power.isNull(), myData->force_power.getValue())) return false;
-			if (!m_max_force_powers.push_back(myData->max_force_power.isNull(), myData->max_force_power.getValue())) return false;
+			if (!m_born_dates.push_back(myData->born_date.isNull(), myData->born_date)) return false;
+			if (!m_played_times.push_back(myData->played_time.isNull(), myData->played_time)) return false;
+			if (!m_force_regen_rates.push_back(myData->force_regen_rate.isNull(), myData->force_regen_rate)) return false;
+			if (!m_force_powers.push_back(myData->force_power.isNull(), myData->force_power)) return false;
+			if (!m_max_force_powers.push_back(myData->max_force_power.isNull(), myData->max_force_power)) return false;
 			if (!m_active_questss.push_back(myData->active_quests.getValueASCII())) return false;
 			if (!m_completed_questss.push_back(myData->completed_quests.getValueASCII())) return false;
-			if (!m_current_quests.push_back(myData->current_quest.isNull(), myData->current_quest.getValue())) return false;
+			if (!m_current_quests.push_back(myData->current_quest.isNull(), myData->current_quest)) return false;
 			if (!m_questss.push_back(myData->quests.getValueASCII())) return false;
-			if (!m_role_icon_choices.push_back(myData->role_icon_choice.isNull(), myData->role_icon_choice.getValue())) return false;
+			if (!m_role_icon_choices.push_back(myData->role_icon_choice.isNull(), myData->role_icon_choice)) return false;
 			if (!m_quests2s.push_back(myData->quests2.getValueASCII())) return false;
 			if (!m_quests3s.push_back(myData->quests3.getValueASCII())) return false;
 			if (!m_quests4s.push_back(myData->quests4.getValueASCII())) return false;
 			if (!m_skill_templates.push_back(myData->skill_template.getValueASCII())) return false;
 			if (!m_working_skills.push_back(myData->working_skill.getValueASCII())) return false;
-			if (!m_current_gcw_pointss.push_back(myData->current_gcw_points.isNull(), myData->current_gcw_points.getValue())) return false;
-			if (!m_current_gcw_ratings.push_back(myData->current_gcw_rating.isNull(), myData->current_gcw_rating.getValue())) return false;
-			if (!m_current_pvp_killss.push_back(myData->current_pvp_kills.isNull(), myData->current_pvp_kills.getValue())) return false;
-			if (!m_lifetime_gcw_pointss.push_back(myData->lifetime_gcw_points.isNull(), myData->lifetime_gcw_points.getValue())) return false;
-			if (!m_max_gcw_imperial_ratings.push_back(myData->max_gcw_imperial_rating.isNull(), myData->max_gcw_imperial_rating.getValue())) return false;
-			if (!m_max_gcw_rebel_ratings.push_back(myData->max_gcw_rebel_rating.isNull(), myData->max_gcw_rebel_rating.getValue())) return false;
-			if (!m_lifetime_pvp_killss.push_back(myData->lifetime_pvp_kills.isNull(), myData->lifetime_pvp_kills.getValue())) return false;
-			if (!m_next_gcw_rating_calc_times.push_back(myData->next_gcw_rating_calc_time.isNull(), myData->next_gcw_rating_calc_time.getValue())) return false;
+			if (!m_current_gcw_pointss.push_back(myData->current_gcw_points.isNull(), myData->current_gcw_points)) return false;
+			if (!m_current_gcw_ratings.push_back(myData->current_gcw_rating.isNull(), myData->current_gcw_rating)) return false;
+			if (!m_current_pvp_killss.push_back(myData->current_pvp_kills.isNull(), myData->current_pvp_kills)) return false;
+			if (!m_lifetime_gcw_pointss.push_back(myData->lifetime_gcw_points.isNull(), myData->lifetime_gcw_points)) return false;
+			if (!m_max_gcw_imperial_ratings.push_back(myData->max_gcw_imperial_rating.isNull(), myData->max_gcw_imperial_rating)) return false;
+			if (!m_max_gcw_rebel_ratings.push_back(myData->max_gcw_rebel_rating.isNull(), myData->max_gcw_rebel_rating)) return false;
+			if (!m_lifetime_pvp_killss.push_back(myData->lifetime_pvp_kills.isNull(), myData->lifetime_pvp_kills)) return false;
+			if (!m_next_gcw_rating_calc_times.push_back(myData->next_gcw_rating_calc_time.isNull(), myData->next_gcw_rating_calc_time)) return false;
 			if (!m_collectionss.push_back(myData->collections.getValueASCII())) return false;
 			if (!m_show_backpacks.push_back(myData->show_backpack.getValueASCII())) return false;
 			if (!m_show_helmets.push_back(myData->show_helmet.getValueASCII())) return false;
@@ -3746,8 +3746,8 @@ bool PlayerQuestObjectQuery::addData(const DB::Row *_data)
 			if (!m_titles.push_back(myData->title.getValueASCII())) return false;
 			if (!m_descriptions.push_back(myData->description.getValueASCII())) return false;
 			if (!m_creators.push_back(myData->creator.getValueASCII())) return false;
-			if (!m_total_taskss.push_back(myData->total_tasks.isNull(), myData->total_tasks.getValue())) return false;
-			if (!m_difficultys.push_back(myData->difficulty.isNull(), myData->difficulty.getValue())) return false;
+			if (!m_total_taskss.push_back(myData->total_tasks.isNull(), myData->total_tasks)) return false;
+			if (!m_difficultys.push_back(myData->difficulty.isNull(), myData->difficulty)) return false;
 			if (!m_task_title1s.push_back(myData->task_title1.getValueASCII())) return false;
 			if (!m_task_description1s.push_back(myData->task_description1.getValueASCII())) return false;
 			if (!m_task_title2s.push_back(myData->task_title2.getValueASCII())) return false;
@@ -4086,7 +4086,7 @@ bool ResourceContainerObjectQuery::addData(const DB::Row *_data)
 		case mode_INSERT:
 			if (!m_object_ids.push_back(myData->object_id.getValueASCII())) return false;
 			if (!m_resource_types.push_back(myData->resource_type.getValueASCII())) return false;
-			if (!m_quantitys.push_back(myData->quantity.isNull(), myData->quantity.getValue())) return false;
+			if (!m_quantitys.push_back(myData->quantity.isNull(), myData->quantity)) return false;
 			if (!m_sources.push_back(myData->source.getValueASCII())) return false;
 			break;
 
@@ -4345,10 +4345,10 @@ bool ShipObjectQuery::addData(const DB::Row *_data)
 		case mode_UPDATE:
 		case mode_INSERT:
 			if (!m_object_ids.push_back(myData->object_id.getValueASCII())) return false;
-			if (!m_slide_dampeners.push_back(myData->slide_dampener.isNull(), myData->slide_dampener.getValue())) return false;
-			if (!m_current_chassis_hit_pointss.push_back(myData->current_chassis_hit_points.isNull(), myData->current_chassis_hit_points.getValue())) return false;
-			if (!m_maximum_chassis_hit_pointss.push_back(myData->maximum_chassis_hit_points.isNull(), myData->maximum_chassis_hit_points.getValue())) return false;
-			if (!m_chassis_types.push_back(myData->chassis_type.isNull(), myData->chassis_type.getValue())) return false;
+			if (!m_slide_dampeners.push_back(myData->slide_dampener.isNull(), myData->slide_dampener)) return false;
+			if (!m_current_chassis_hit_pointss.push_back(myData->current_chassis_hit_points.isNull(), myData->current_chassis_hit_points)) return false;
+			if (!m_maximum_chassis_hit_pointss.push_back(myData->maximum_chassis_hit_points.isNull(), myData->maximum_chassis_hit_points)) return false;
+			if (!m_chassis_types.push_back(myData->chassis_type.isNull(), myData->chassis_type)) return false;
 			if (!m_cmp_armor_hp_maximums.push_back(myData->cmp_armor_hp_maximum.getValueASCII())) return false;
 			if (!m_cmp_armor_hp_currents.push_back(myData->cmp_armor_hp_current.getValueASCII())) return false;
 			if (!m_cmp_efficiency_generals.push_back(myData->cmp_efficiency_general.getValueASCII())) return false;
@@ -4369,32 +4369,32 @@ bool ShipObjectQuery::addData(const DB::Row *_data)
 			if (!m_weapon_ammo_currents.push_back(myData->weapon_ammo_current.getValueASCII())) return false;
 			if (!m_weapon_ammo_maximums.push_back(myData->weapon_ammo_maximum.getValueASCII())) return false;
 			if (!m_weapon_ammo_types.push_back(myData->weapon_ammo_type.getValueASCII())) return false;
-			if (!m_shield_hp_front_maximums.push_back(myData->shield_hp_front_maximum.isNull(), myData->shield_hp_front_maximum.getValue())) return false;
-			if (!m_shield_hp_back_maximums.push_back(myData->shield_hp_back_maximum.isNull(), myData->shield_hp_back_maximum.getValue())) return false;
-			if (!m_shield_recharge_rates.push_back(myData->shield_recharge_rate.isNull(), myData->shield_recharge_rate.getValue())) return false;
-			if (!m_capacitor_eng_maximums.push_back(myData->capacitor_eng_maximum.isNull(), myData->capacitor_eng_maximum.getValue())) return false;
-			if (!m_capacitor_eng_recharge_rates.push_back(myData->capacitor_eng_recharge_rate.isNull(), myData->capacitor_eng_recharge_rate.getValue())) return false;
-			if (!m_engine_acc_rates.push_back(myData->engine_acc_rate.isNull(), myData->engine_acc_rate.getValue())) return false;
-			if (!m_engine_deceleration_rates.push_back(myData->engine_deceleration_rate.isNull(), myData->engine_deceleration_rate.getValue())) return false;
-			if (!m_engine_pitch_acc_rates.push_back(myData->engine_pitch_acc_rate.isNull(), myData->engine_pitch_acc_rate.getValue())) return false;
-			if (!m_engine_yaw_acc_rates.push_back(myData->engine_yaw_acc_rate.isNull(), myData->engine_yaw_acc_rate.getValue())) return false;
-			if (!m_engine_roll_acc_rates.push_back(myData->engine_roll_acc_rate.isNull(), myData->engine_roll_acc_rate.getValue())) return false;
-			if (!m_engine_pitch_rate_maximums.push_back(myData->engine_pitch_rate_maximum.isNull(), myData->engine_pitch_rate_maximum.getValue())) return false;
-			if (!m_engine_yaw_rate_maximums.push_back(myData->engine_yaw_rate_maximum.isNull(), myData->engine_yaw_rate_maximum.getValue())) return false;
-			if (!m_engine_roll_rate_maximums.push_back(myData->engine_roll_rate_maximum.isNull(), myData->engine_roll_rate_maximum.getValue())) return false;
-			if (!m_engine_speed_maximums.push_back(myData->engine_speed_maximum.isNull(), myData->engine_speed_maximum.getValue())) return false;
-			if (!m_reactor_eng_generation_rates.push_back(myData->reactor_eng_generation_rate.isNull(), myData->reactor_eng_generation_rate.getValue())) return false;
-			if (!m_booster_eng_maximums.push_back(myData->booster_eng_maximum.isNull(), myData->booster_eng_maximum.getValue())) return false;
-			if (!m_booster_eng_recharge_rates.push_back(myData->booster_eng_recharge_rate.isNull(), myData->booster_eng_recharge_rate.getValue())) return false;
-			if (!m_booster_eng_consumption_rates.push_back(myData->booster_eng_consumption_rate.isNull(), myData->booster_eng_consumption_rate.getValue())) return false;
-			if (!m_booster_accs.push_back(myData->booster_acc.isNull(), myData->booster_acc.getValue())) return false;
-			if (!m_booster_speed_maximums.push_back(myData->booster_speed_maximum.isNull(), myData->booster_speed_maximum.getValue())) return false;
-			if (!m_droid_if_cmd_speeds.push_back(myData->droid_if_cmd_speed.isNull(), myData->droid_if_cmd_speed.getValue())) return false;
+			if (!m_shield_hp_front_maximums.push_back(myData->shield_hp_front_maximum.isNull(), myData->shield_hp_front_maximum)) return false;
+			if (!m_shield_hp_back_maximums.push_back(myData->shield_hp_back_maximum.isNull(), myData->shield_hp_back_maximum)) return false;
+			if (!m_shield_recharge_rates.push_back(myData->shield_recharge_rate.isNull(), myData->shield_recharge_rate)) return false;
+			if (!m_capacitor_eng_maximums.push_back(myData->capacitor_eng_maximum.isNull(), myData->capacitor_eng_maximum)) return false;
+			if (!m_capacitor_eng_recharge_rates.push_back(myData->capacitor_eng_recharge_rate.isNull(), myData->capacitor_eng_recharge_rate)) return false;
+			if (!m_engine_acc_rates.push_back(myData->engine_acc_rate.isNull(), myData->engine_acc_rate)) return false;
+			if (!m_engine_deceleration_rates.push_back(myData->engine_deceleration_rate.isNull(), myData->engine_deceleration_rate)) return false;
+			if (!m_engine_pitch_acc_rates.push_back(myData->engine_pitch_acc_rate.isNull(), myData->engine_pitch_acc_rate)) return false;
+			if (!m_engine_yaw_acc_rates.push_back(myData->engine_yaw_acc_rate.isNull(), myData->engine_yaw_acc_rate)) return false;
+			if (!m_engine_roll_acc_rates.push_back(myData->engine_roll_acc_rate.isNull(), myData->engine_roll_acc_rate)) return false;
+			if (!m_engine_pitch_rate_maximums.push_back(myData->engine_pitch_rate_maximum.isNull(), myData->engine_pitch_rate_maximum)) return false;
+			if (!m_engine_yaw_rate_maximums.push_back(myData->engine_yaw_rate_maximum.isNull(), myData->engine_yaw_rate_maximum)) return false;
+			if (!m_engine_roll_rate_maximums.push_back(myData->engine_roll_rate_maximum.isNull(), myData->engine_roll_rate_maximum)) return false;
+			if (!m_engine_speed_maximums.push_back(myData->engine_speed_maximum.isNull(), myData->engine_speed_maximum)) return false;
+			if (!m_reactor_eng_generation_rates.push_back(myData->reactor_eng_generation_rate.isNull(), myData->reactor_eng_generation_rate)) return false;
+			if (!m_booster_eng_maximums.push_back(myData->booster_eng_maximum.isNull(), myData->booster_eng_maximum)) return false;
+			if (!m_booster_eng_recharge_rates.push_back(myData->booster_eng_recharge_rate.isNull(), myData->booster_eng_recharge_rate)) return false;
+			if (!m_booster_eng_consumption_rates.push_back(myData->booster_eng_consumption_rate.isNull(), myData->booster_eng_consumption_rate)) return false;
+			if (!m_booster_accs.push_back(myData->booster_acc.isNull(), myData->booster_acc)) return false;
+			if (!m_booster_speed_maximums.push_back(myData->booster_speed_maximum.isNull(), myData->booster_speed_maximum)) return false;
+			if (!m_droid_if_cmd_speeds.push_back(myData->droid_if_cmd_speed.isNull(), myData->droid_if_cmd_speed)) return false;
 			if (!m_installed_dcds.push_back(myData->installed_dcd.getValueASCII())) return false;
-			if (!m_chassis_cmp_mass_maximums.push_back(myData->chassis_cmp_mass_maximum.isNull(), myData->chassis_cmp_mass_maximum.getValue())) return false;
+			if (!m_chassis_cmp_mass_maximums.push_back(myData->chassis_cmp_mass_maximum.isNull(), myData->chassis_cmp_mass_maximum)) return false;
 			if (!m_cmp_creatorss.push_back(myData->cmp_creators.getValueASCII())) return false;
-			if (!m_cargo_hold_contents_maximums.push_back(myData->cargo_hold_contents_maximum.isNull(), myData->cargo_hold_contents_maximum.getValue())) return false;
-			if (!m_cargo_hold_contents_currents.push_back(myData->cargo_hold_contents_current.isNull(), myData->cargo_hold_contents_current.getValue())) return false;
+			if (!m_cargo_hold_contents_maximums.push_back(myData->cargo_hold_contents_maximum.isNull(), myData->cargo_hold_contents_maximum)) return false;
+			if (!m_cargo_hold_contents_currents.push_back(myData->cargo_hold_contents_current.isNull(), myData->cargo_hold_contents_current)) return false;
 			if (!m_cargo_hold_contentss.push_back(myData->cargo_hold_contents.getValueASCII())) return false;
 			break;
 
@@ -5001,19 +5001,19 @@ bool TangibleObjectQuery::addData(const DB::Row *_data)
 		case mode_UPDATE:
 		case mode_INSERT:
 			if (!m_object_ids.push_back(myData->object_id.getValueASCII())) return false;
-			if (!m_max_hit_pointss.push_back(myData->max_hit_points.isNull(), myData->max_hit_points.getValue())) return false;
+			if (!m_max_hit_pointss.push_back(myData->max_hit_points.isNull(), myData->max_hit_points)) return false;
 			if (!m_owner_ids.push_back(myData->owner_id.getValueASCII())) return false;
 			if (!m_visibles.push_back(myData->visible.getValueASCII())) return false;
 			if (!m_appearance_datas.push_back(myData->appearance_data.getValueASCII())) return false;
-			if (!m_interest_radiuss.push_back(myData->interest_radius.isNull(), myData->interest_radius.getValue())) return false;
-			if (!m_pvp_types.push_back(myData->pvp_type.isNull(), myData->pvp_type.getValue())) return false;
-			if (!m_pvp_factions.push_back(myData->pvp_faction.isNull(), myData->pvp_faction.getValue())) return false;
-			if (!m_damage_takens.push_back(myData->damage_taken.isNull(), myData->damage_taken.getValue())) return false;
+			if (!m_interest_radiuss.push_back(myData->interest_radius.isNull(), myData->interest_radius)) return false;
+			if (!m_pvp_types.push_back(myData->pvp_type.isNull(), myData->pvp_type)) return false;
+			if (!m_pvp_factions.push_back(myData->pvp_faction.isNull(), myData->pvp_faction)) return false;
+			if (!m_damage_takens.push_back(myData->damage_taken.isNull(), myData->damage_taken)) return false;
 			if (!m_custom_appearances.push_back(myData->custom_appearance.getValueASCII())) return false;
-			if (!m_counts.push_back(myData->count.isNull(), myData->count.getValue())) return false;
-			if (!m_conditions.push_back(myData->condition.isNull(), myData->condition.getValue())) return false;
+			if (!m_counts.push_back(myData->count.isNull(), myData->count)) return false;
+			if (!m_conditions.push_back(myData->condition.isNull(), myData->condition)) return false;
 			if (!m_creator_ids.push_back(myData->creator_id.getValueASCII())) return false;
-			if (!m_source_draft_schematics.push_back(myData->source_draft_schematic.isNull(), myData->source_draft_schematic.getValue())) return false;
+			if (!m_source_draft_schematics.push_back(myData->source_draft_schematic.isNull(), myData->source_draft_schematic)) return false;
 			break;
 
 		case mode_SELECT:
@@ -5673,7 +5673,7 @@ bool VehicleObjectQuery::addData(const DB::Row *_data)
 		case mode_UPDATE:
 		case mode_INSERT:
 			if (!m_object_ids.push_back(myData->object_id.getValueASCII())) return false;
-			if (!m_boguss.push_back(myData->bogus.isNull(), myData->bogus.getValue())) return false;
+			if (!m_boguss.push_back(myData->bogus.isNull(), myData->bogus)) return false;
 			break;
 
 		case mode_SELECT:
@@ -5884,18 +5884,18 @@ bool WeaponObjectQuery::addData(const DB::Row *_data)
 		case mode_UPDATE:
 		case mode_INSERT:
 			if (!m_object_ids.push_back(myData->object_id.getValueASCII())) return false;
-			if (!m_min_damages.push_back(myData->min_damage.isNull(), myData->min_damage.getValue())) return false;
-			if (!m_max_damages.push_back(myData->max_damage.isNull(), myData->max_damage.getValue())) return false;
-			if (!m_damage_types.push_back(myData->damage_type.isNull(), myData->damage_type.getValue())) return false;
-			if (!m_elemental_types.push_back(myData->elemental_type.isNull(), myData->elemental_type.getValue())) return false;
-			if (!m_elemental_values.push_back(myData->elemental_value.isNull(), myData->elemental_value.getValue())) return false;
-			if (!m_attack_speeds.push_back(myData->attack_speed.isNull(), myData->attack_speed.getValue())) return false;
-			if (!m_wound_chances.push_back(myData->wound_chance.isNull(), myData->wound_chance.getValue())) return false;
-			if (!m_accuracys.push_back(myData->accuracy.isNull(), myData->accuracy.getValue())) return false;
-			if (!m_attack_costs.push_back(myData->attack_cost.isNull(), myData->attack_cost.getValue())) return false;
-			if (!m_damage_radiuss.push_back(myData->damage_radius.isNull(), myData->damage_radius.getValue())) return false;
-			if (!m_min_ranges.push_back(myData->min_range.isNull(), myData->min_range.getValue())) return false;
-			if (!m_max_ranges.push_back(myData->max_range.isNull(), myData->max_range.getValue())) return false;
+			if (!m_min_damages.push_back(myData->min_damage.isNull(), myData->min_damage)) return false;
+			if (!m_max_damages.push_back(myData->max_damage.isNull(), myData->max_damage)) return false;
+			if (!m_damage_types.push_back(myData->damage_type.isNull(), myData->damage_type)) return false;
+			if (!m_elemental_types.push_back(myData->elemental_type.isNull(), myData->elemental_type)) return false;
+			if (!m_elemental_values.push_back(myData->elemental_value.isNull(), myData->elemental_value)) return false;
+			if (!m_attack_speeds.push_back(myData->attack_speed.isNull(), myData->attack_speed)) return false;
+			if (!m_wound_chances.push_back(myData->wound_chance.isNull(), myData->wound_chance)) return false;
+			if (!m_accuracys.push_back(myData->accuracy.isNull(), myData->accuracy)) return false;
+			if (!m_attack_costs.push_back(myData->attack_cost.isNull(), myData->attack_cost)) return false;
+			if (!m_damage_radiuss.push_back(myData->damage_radius.isNull(), myData->damage_radius)) return false;
+			if (!m_min_ranges.push_back(myData->min_range.isNull(), myData->min_range)) return false;
+			if (!m_max_ranges.push_back(myData->max_range.isNull(), myData->max_range)) return false;
 			break;
 
 		case mode_SELECT:

@@ -45,7 +45,7 @@ namespace DBQuery
 		DB::BindableVarrayString    m_attributes;
 		DB::BindableVarrayString    m_fractal_seeds;
 		DB::BindableVarrayNumber    m_depleted_timestamps;
-		DB::BindableLong            m_numItems;
+		DB::BindableInt32            m_numItems;
 	};
 
 	

@@ -1,8 +1,8 @@
 create table feature_id_transactions --NO_IMPORT
 (
-	station_id number,
-	cluster_id number,
-	character_id number,
+	station_id number, -- BIND_AS(DB::BindableUint32)
+	cluster_id number, -- BIND_AS(DB::BindableUint32)
+	character_id number, -- BIND_AS(DB::BindableNetworkId)
 	item_id varchar2(255),
 	date_updated date,
 	count number,

@@ -633,7 +633,7 @@ void CreatureController::handleMessage(const int message, const float value, con
 	break;
 	case CM_setSayMode:
 	{
-		const MessageQueueGenericValueType<unsigned long> * const msg = safe_cast<const MessageQueueGenericValueType<unsigned long> *>(data);
+		const MessageQueueGenericValueType<uint32_t> * const msg = safe_cast<const MessageQueueGenericValueType<uint32_t> *>(data);
 		if (msg)
 		{
 			owner->setSayMode(msg->getValue());
@@ -1155,7 +1155,7 @@ void CreatureController::handleMessage(const int message, const float value, con
 
 	case CM_addSessionActivity:
 	{
-		const MessageQueueGenericValueType<unsigned long> * const msg = safe_cast<const MessageQueueGenericValueType<unsigned long> *>(data);
+		const MessageQueueGenericValueType<uint32_t> * const msg = safe_cast<const MessageQueueGenericValueType<uint32_t> *>(data);
 		if (msg)
 		{
 			PlayerObject * player = PlayerCreatureController::getPlayerObject(owner);
@@ -1654,7 +1654,7 @@ void CreatureController::handleSecureTradeMessage(const MessageQueueSecureTrade 
 			{
 				DEBUG_REPORT_LOG(true, ("Player %s tried to trade with player "
 					"%s, but both were in interiors that are on different "
-					"servers. Cell/server= (%s/%lu), (%s/%lu)",
+					"servers. Cell/server= (%s/%u), (%s/%u)",
 					owner->getNetworkId().getValueString().c_str(),
 					recipient->getNetworkId().getValueString().c_str(),
 					ContainerInterface::getTopmostContainer(*owner)->getNetworkId().getValueString().c_str(),

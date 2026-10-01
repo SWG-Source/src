@@ -87,7 +87,7 @@ const std::string DatabaseConnection::getSchemaQualifier()
 
 // ----------------------------------------------------------------------
 
-void DatabaseConnection::updateSPCharacterProfileData(const std::string & clusterName,const NetworkId & characterId,const std::string & characterName,const std::string & objectName,float x,float y,float z,const std::string & sceneId,float cash_balance,float bank_balance,const std::string & objectTemplateName,int   stationId,const NetworkId & containedBy,int   createTime,int   playedTime,int   numLots)
+void DatabaseConnection::updateSPCharacterProfileData(const std::string & clusterName,const NetworkId & characterId,const std::string & characterName,const std::string & objectName,float x,float y,float z,const std::string & sceneId,float cash_balance,float bank_balance,const std::string & objectTemplateName,StationId stationId,const NetworkId & containedBy,int   createTime,int   playedTime,int   numLots)
 {
 	NOT_NULL(s_taskQueue);
 	s_taskQueue->asyncRequest(new TaskUpdateSPCharacterProfileData(clusterName,characterId,characterName,objectName,x,y,z,sceneId,cash_balance,bank_balance,objectTemplateName,stationId,containedBy,createTime,playedTime,numLots));

@@ -62,7 +62,7 @@ void ServerClock::setSubtractInterval(const uint32_t newSubtractInterval)
 void ServerClock::setGameTimeSeconds(const uint32_t newGameTime)
 {
 	subtractInterval = static_cast<uint32_t>(time(0) - newGameTime);
-	LOG("ServerClock", ("Game time set to %lu (subtract interval %lu)", newGameTime, subtractInterval));
+	LOG("ServerClock", ("Game time set to %u (subtract interval %u)", newGameTime, subtractInterval));
 }
 
 //-----------------------------------------------------------------------
@@ -89,19 +89,19 @@ std::string ServerClock::getDebugPrintableTimeframe(uint32_t const timeInSeconds
 	
 	if (timeInSeconds > dayInSeconds)
 	{
-		snprintf(buffer, 256, "~ %lu days", timeInSeconds / dayInSeconds);
+		snprintf(buffer, 256, "~ %u days", timeInSeconds / dayInSeconds);
 	}
 	else if (timeInSeconds > hourInSeconds)
 	{
-		snprintf(buffer, 256, "~ %lu hours", timeInSeconds / hourInSeconds);
+		snprintf(buffer, 256, "~ %u hours", timeInSeconds / hourInSeconds);
 	}
 	else if (timeInSeconds > minuteInSeconds)
 	{
-		snprintf(buffer, 256, "~ %lu minutes", timeInSeconds / minuteInSeconds);
+		snprintf(buffer, 256, "~ %u minutes", timeInSeconds / minuteInSeconds);
 	}
 	else
 	{
-		snprintf(buffer, 256, "%lu seconds", timeInSeconds);
+		snprintf(buffer, 256, "%u seconds", timeInSeconds);
 	}
 
 	buffer[255]='\0';

@@ -9,6 +9,7 @@
 #include "sharedDatabaseInterface/BufferString.h"
 
 #include "UnicodeUtils.h"
+#include "sharedDatabaseInterface/DbCheckedConversion.h"
 #include "sharedDatabaseInterface/DbServer.h"
 #include "sharedDatabaseInterface/NullEncodedStandardString.h"
 #include "sharedDatabaseInterface/NullEncodedUnicodeString.h"
@@ -25,6 +26,11 @@ BufferString::BufferString(size_t maxSize) :
 		m_value(),
 		m_maxSize(maxSize)
 {
+	// setValue() keeps every value within m_maxSize bytes, and the indicator
+	// that records its length is an int.
+	int maxIndicator = 0;
+	FATAL(!DB::checkedNarrow(maxSize, maxIndicator, "BufferString maximum size", "BufferString::BufferString"),
+		("DatabaseError:  BufferString maximum size %zu does not fit its int length indicator", maxSize));
 }
 
 // ----------------------------------------------------------------------
@@ -95,7 +101,7 @@ void BufferString::setValue(const std::string & value)
 	else
 		m_value=value;
 	
-	indicator=m_value.size();
+	indicator=static_cast<int>(m_value.size()); // m_value.size() <= m_maxSize, which the constructor proved fits an int
 }
 
 // ----------------------------------------------------------------------

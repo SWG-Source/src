@@ -47,6 +47,8 @@
 #include "sharedUtility/Location.h"
 #include "swgSharedUtility/Attributes.def"
 
+#include <cinttypes>
+
 // ======================================================================
 
 /**
@@ -71,7 +73,8 @@ SwgSnapshot::SwgSnapshot(DB::ModeQuery::Mode mode, bool useGoldDatabase)
           m_resourceContainerObjectBuffer(mode), m_resourceTypeBuffer(), m_scriptBuffer(), m_shipObjectBuffer(mode),
           m_staticObjectBuffer(mode), m_tangibleObjectBuffer(mode), m_universeObjectBuffer(mode),
           m_vehicleObjectBuffer(mode), m_waypointBuffer(mode), m_weaponObjectBuffer(mode),
-          m_immediateDeleteStep(nullptr), m_offlineMoneyCustomPersistStep(nullptr) {}
+          m_immediateDeleteStep(nullptr), m_offlineMoneyCustomPersistStep(nullptr),
+          m_prepared(false), m_encodeRejected(false), m_preparedObjects(), m_preparedBaselines() {}
 
 // ----------------------------------------------------------------------
 
@@ -535,8 +538,60 @@ bool SwgSnapshot::load(DB::Session *session) {
  *
  * @return true if the objects were sent, false if they were not.
  */
+bool SwgSnapshot::prepareSend() const {
+    PROFILER_AUTO_BLOCK_DEFINE("SwgSnapshot::prepareSend");
+
+    if (m_prepared) {
+        return !m_encodeRejected;
+    }
+
+    m_encodeRejected = false;
+    m_preparedObjects.clear();
+    m_preparedBaselines.clear();
+    m_objectTableBuffer.getObjectList(m_preparedObjects);
+
+    for (OIDListType::iterator i = m_preparedObjects.begin(); i != m_preparedObjects.end(); ++i) {
+        const DBSchema::ObjectBufferRow *baseData = m_objectTableBuffer.findConstRowByIndex((*i));
+        NOT_NULL(baseData);
+
+        bool okToSend = encodeParentClientData(*i, baseData->type_id.getValue(), m_preparedBaselines);
+        okToSend = okToSend && encodeClientData(*i, baseData->type_id.getValue(), m_preparedBaselines);
+        okToSend = okToSend && encodeServerData(*i, baseData->type_id.getValue(), m_preparedBaselines);
+        okToSend = okToSend && encodeSharedData(*i, baseData->type_id.getValue(), m_preparedBaselines);
+
+        if (m_encodeRejected) {
+            // A stored value does not fit the member it is sent as. Nothing
+            // of this snapshot may reach the game server: drop what was
+            // encoded, and reject the whole load.
+            LOG("DatabaseError", ("SwgSnapshot::prepareSend: object %s holds a value that cannot be sent; the load of %zu object(s) is rejected", (*i).getValueString().c_str(), m_preparedObjects.size()));
+            WARNING(true, ("DatabaseError: SwgSnapshot::prepareSend: object %s holds a value that cannot be sent; the load of %zu object(s) is rejected", (*i).getValueString().c_str(), m_preparedObjects.size()));
+            m_preparedObjects.clear();
+            m_preparedBaselines.clear();
+            m_prepared = true;
+            return false;
+        }
+
+        if (!okToSend) {
+            (*i) = NetworkId::cms_invalid; // no row for this object: it is not sent (as before)
+        }
+    }
+
+    m_prepared = true;
+    return true;
+}
+
+// ----------------------------------------------------------------------
+
+/**
+ * Transmit the snapshot that prepareSend() encoded. Nothing is sent unless
+ * prepareSend() succeeded.
+ */
 bool SwgSnapshot::send(GameServerConnection *connection) const {
     PROFILER_AUTO_BLOCK_DEFINE("SwgSnapshot::send");
+
+    if (!prepareSend()) {
+        return false;
+    }
 
     if (connection == 0) {
         return false;
@@ -551,28 +606,26 @@ bool SwgSnapshot::send(GameServerConnection *connection) const {
     }
     PROFILER_BLOCK_LEAVE(prebaselinesBlock);
 
-    OIDListType oidList;
-    m_objectTableBuffer.getObjectList(oidList);
+    OIDListType const &oidList = m_preparedObjects;
 
     PROFILER_BLOCK_DEFINE(sendObjectData, "send object data");
     PROFILER_BLOCK_ENTER(sendObjectData);
 
-    static std::vector <BatchBaselinesMessageData> baselines;
-    baselines.clear();
+    for (OIDListType::const_iterator i = oidList.begin(); i != oidList.end(); ++i) {
+        if (*i == NetworkId::cms_invalid) {
+            continue;
+        }
 
-    for (OIDListType::iterator i = oidList.begin(); i != oidList.end(); ++i) {
-        PROFILER_BLOCK_DEFINE(createBlock, "object create and position");
-        PROFILER_BLOCK_ENTER(createBlock);
+        PROFILER_AUTO_BLOCK_DEFINE("object create and position");
 
         const DBSchema::ObjectBufferRow *baseData = m_objectTableBuffer.findConstRowByIndex((*i));
         NOT_NULL(baseData);
 
-        NetworkId networkId = (*i);
+        NetworkId const &networkId = (*i);
         DEBUG_FATAL(networkId != baseData->object_id.getValue(), ("Object ID and row value didn't match"));
 
         uint32 crc = baseData->object_template_id.getValue();
-        CreateObjectByCrcMessage com(networkId, crc, static_cast<unsigned short>(baseData->type_id.getValue()), true, NetworkId(baseData->contained_by.getValue()));
-//		connection->send(com,true);
+        CreateObjectByCrcMessage com(networkId, crc, baseData->type_id.getValue(), true, NetworkId(baseData->contained_by.getValue()));
         DEBUG_REPORT_LOG(ConfigServerDatabase::getLogObjectLoading(), ("\tSent CreateObjectMessage for object %s\n", networkId.getValueString().c_str()));
 
         Transform t;
@@ -585,31 +638,11 @@ bool SwgSnapshot::send(GameServerConnection *connection) const {
 
         UpdateObjectPositionMessage uopm(NetworkId(baseData->object_id.getValue()), t, t, NetworkId(baseData->contained_by.getValue()), baseData->slot_arrangement.getValue(), NetworkId(baseData->load_with.getValue()), baseData->player_controlled.getValue(), false);
 
-//		connection->send(uopm,true);
-
-        PROFILER_BLOCK_LEAVE(createBlock);
-
-        PROFILER_BLOCK_DEFINE(encodeData, "encode data");
-        PROFILER_BLOCK_ENTER(encodeData);
-
-        bool okToSend = encodeParentClientData(networkId, baseData->type_id.getValue(), baselines);
-        okToSend = okToSend && encodeClientData(networkId, baseData->type_id.getValue(), baselines);
-        okToSend = okToSend && encodeServerData(networkId, baseData->type_id.getValue(), baselines);
-        okToSend = okToSend && encodeSharedData(networkId, baseData->type_id.getValue(), baselines);
-
-        PROFILER_BLOCK_LEAVE(encodeData);
-
-        if (okToSend) {
-            PROFILER_AUTO_BLOCK_DEFINE("connection->send (baselines)");
-
-            connection->send(com, true);
-            connection->send(uopm, true);
-        } else {
-            (*i) = NetworkId::cms_invalid;
-        }
+        connection->send(com, true);
+        connection->send(uopm, true);
     }
 
-    BatchBaselinesMessage bbm(baselines);
+    BatchBaselinesMessage bbm(m_preparedBaselines);
     connection->send(bbm, true);
 
     PROFILER_BLOCK_LEAVE(sendObjectData);
@@ -618,12 +651,11 @@ bool SwgSnapshot::send(GameServerConnection *connection) const {
     PROFILER_BLOCK_ENTER(sendEndBaselines);
 
     // Send EndBaselines in reverse order (container & portal system requires this)
-    for (OIDListType::reverse_iterator r = oidList.rbegin(); r != oidList.rend(); ++r) {
+    for (OIDListType::const_reverse_iterator r = oidList.rbegin(); r != oidList.rend(); ++r) {
         if (*r != NetworkId::cms_invalid) {
             EndBaselinesMessage const ebm(*r);
             connection->send(ebm, true);
         }
-//		DEBUG_REPORT_LOG(true, ("\tSent EndBaselinesMessage for object %i\n",(*r).getValue()));
     }
     PROFILER_BLOCK_LEAVE(sendEndBaselines);
 
@@ -1033,7 +1065,7 @@ void SwgSnapshot::encodeComponents(const NetworkId &objectId, Archive::ByteStrea
 // ----------------------------------------------------------------------
 
 void
-SwgSnapshot::decodeLocation(Archive::ReadIterator &data, DB::BindableDouble &x, DB::BindableDouble &y, DB::BindableDouble &z, DB::BindableNetworkId &cell, DB::BindableLong &planet) const {
+SwgSnapshot::decodeLocation(Archive::ReadIterator &data, DB::BindableDouble &x, DB::BindableDouble &y, DB::BindableDouble &z, DB::BindableNetworkId &cell, DB::BindableUint32 &planet) const {
     Location temp;
     Archive::get(data, temp);
     Vector vec = temp.getCoordinates();
@@ -1047,7 +1079,7 @@ SwgSnapshot::decodeLocation(Archive::ReadIterator &data, DB::BindableDouble &x, 
 // ----------------------------------------------------------------------
 
 void
-SwgSnapshot::encodeLocation(Archive::ByteStream &data, const DB::BindableDouble &x, const DB::BindableDouble &y, const DB::BindableDouble &z, const DB::BindableNetworkId &cell, const DB::BindableLong &planet) const {
+SwgSnapshot::encodeLocation(Archive::ByteStream &data, const DB::BindableDouble &x, const DB::BindableDouble &y, const DB::BindableDouble &z, const DB::BindableNetworkId &cell, const DB::BindableUint32 &planet) const {
     Location temp(Vector(static_cast<float>(x.getValue()), static_cast<float>(y.getValue()), static_cast<float>(z.getValue())), cell.getValue(), planet.getValue());
     Archive::put(data, temp);
 }
@@ -1116,7 +1148,7 @@ void SwgSnapshot::encodeSingleWaypoint(const NetworkId &objectId, Archive::ByteS
     m_waypointBuffer.getWaypointsForObject(objectId, values);
 
     DEBUG_FATAL(values.size() !=
-                1, ("Object %s should have exactly 1 waypoint, but it has %i", objectId.getValueString().c_str(), values.size()));
+                1, ("Object %s should have exactly 1 waypoint, but it has %zu", objectId.getValueString().c_str(), values.size()));
 
     ValuesType::const_iterator i = values.begin();
     if (i != values.end()) {
@@ -1290,8 +1322,8 @@ SwgSnapshot::encodeQuests(Archive::ByteStream &data, DB::BufferString const &par
 static const char* oldschoolBuffFormat = "%lu %I64u";
 static const char* versionTwoFormat = "%u %u %f %u %I64i %u:";
 #else
-static const char *oldschoolBuffFormat = "%lu %llu";
-static const char *versionTwoFormat = "%u %u %f %u %lli %u:";
+static const char *oldschoolBuffFormat = "%u %" SCNu64;
+static const char *versionTwoFormat = "%u %u %f %u %" SCNi64 " %u:";
 #endif
 
 static const char *versionOneFormat = "%u %u %f %u:";
