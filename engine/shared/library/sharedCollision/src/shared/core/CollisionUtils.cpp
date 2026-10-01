@@ -43,6 +43,9 @@
 
 #include <vector>
 #include <algorithm>
+#if defined(_M_X64)
+#include <xmmintrin.h>
+#endif
 
 using namespace Intersect3d;
 using namespace Overlap3d;
@@ -424,9 +427,13 @@ inline void faster_normalize( Vector & V )
 {
 	float t = (V.x * V.x) + (V.y * V.y) + (V.z * V.z);
 
+#if defined(_M_X64)
+	t = _mm_cvtss_f32(_mm_sqrt_ss(_mm_set_ss(t)));
+#else
 	__asm fld t;
 	__asm fsqrt;
 	__asm fstp t;
+#endif
 
 	t = 1.0f / t;
 

@@ -11,6 +11,10 @@
 
 // ======================================================================
 
+#if defined(_M_X64)
+#include <xmmintrin.h>
+#endif
+
 class Transform;
 class Vector;
 
@@ -40,7 +44,9 @@ public:
 
 inline void SseMath::prefetch(void const * const sourceData, size_t const objectSize)
 {
-#if defined(_MSC_VER)
+#if defined(_M_X64)
+	_mm_prefetch(static_cast<const char *>(sourceData) + objectSize, _MM_HINT_NTA);
+#elif defined(_MSC_VER)
 	_asm
 	{ 
 		mov esi, sourceData
