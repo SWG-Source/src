@@ -1440,7 +1440,7 @@ void Os::setThreadName(ThreadId threadID, const char* threadName)
 	__try
 	{
 		// use the magic exception number MS picked for this purpose
-		RaiseException(0x406D1388, 0, sizeof(info) / sizeof(DWORD), reinterpret_cast<DWORD *>(&info));
+		RaiseException(0x406D1388, 0, sizeof(info) / sizeof(ULONG_PTR), reinterpret_cast<ULONG_PTR *>(&info));
 	}
 	__except (EXCEPTION_CONTINUE_EXECUTION)
 	{
@@ -1625,7 +1625,7 @@ bool Os::launchBrowser(std::string const & website)
 		URL+=website;
 	else
 		URL=website;
-	int result = reinterpret_cast<int>(ShellExecute(NULL, "open", URL.c_str(), NULL, NULL, SW_SHOWNORMAL));
+	INT_PTR result = reinterpret_cast<INT_PTR>(ShellExecute(NULL, "open", URL.c_str(), NULL, NULL, SW_SHOWNORMAL));
 	return (result > 32);
 }
 
