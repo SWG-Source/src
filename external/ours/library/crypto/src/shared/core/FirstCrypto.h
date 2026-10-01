@@ -14,8 +14,19 @@
 
 #pragma warning(disable: 4018 4100 4244 4511 4512 4514 4663 4290 4505 4702)
 
+#if defined(_MSC_VER) && defined(_WIN64)
+// STLport intentionally switches to pack(8) inside these balanced vendor includes.
+#pragma warning(push)
+#pragma warning(disable: 4103)
+#endif
+
 #include "config.h"
 #include "cryptlib.h"
 #include "misc.h"
+#if defined(_MSC_VER) && defined(_WIN64)
+#include <deque>
+#include <memory>
+#pragma warning(pop)
+#endif
 
 #endif
