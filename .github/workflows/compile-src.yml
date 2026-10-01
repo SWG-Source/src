@@ -1,27 +1,53 @@
-name: SWG Source - Continuous Integration for src repo
+name: SWG Source legacy server build
 
 on:
   pull_request:
-    types:
-      - opened
-      - sychronize
-      
+    branches: [master, 64-bit-types]
+  push:
+    branches: [review-ready/server-build-workflow]
+
+permissions:
+  contents: read
+
 jobs:
   compile-src:
-    runs-on: ubuntu-latest
-    container: cekisswg/swg-vm3.01-i386:latest
+    runs-on: ubuntu-22.04
+    timeout-minutes: 90
     steps:
-      - name: Clone repository
+      # Checkout on the host: modern JavaScript actions cannot run in the
+      # legacy container. Build the submitted head, never upstream HEAD.
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - name: Record tested revision
         run: |
-          cd /home/swg/swg-main
-          git clone --depth 1 --branch ${{ github.event.pull_request.base.ref }} ${{ github.repository }} pull-request
-
-      - name: Checkout pull request branch
-        run: git -C pull-request checkout ${{ github.event.pull_request.head.ref }}
-        
-      - name: Run ANT Build
+          mkdir -p ci-results
+          git rev-parse HEAD | tee ci-results/revision.txt
+          git ls-files -z | xargs -0 sha256sum > ci-results/tracked-before.txt
+      - name: Build submitted source in legacy environment
+        shell: bash
         run: |
-          cd /home/swg/swg-main/src
-          ant build_src
-
-          
+          # Master generates database headers inside this disposable checkout.
+          docker pull cekisswg/swg-vm3.01-i386@sha256:115f4900a398b2cd585c02020d2667b252e51b9932e3dd3eabc77912723ed674
+          docker image inspect --format '{{json .RepoDigests}} {{.Os}}/{{.Architecture}}' cekisswg/swg-vm3.01-i386@sha256:115f4900a398b2cd585c02020d2667b252e51b9932e3dd3eabc77912723ed674 | tee ci-results/image.json
+          { git rev-parse HEAD;
+          docker run --rm --entrypoint /bin/bash \
+            --env CMAKE_INCLUDE_PATH=/usr/include/oracle/18.3/client \
+            --mount "type=bind,source=$GITHUB_WORKSPACE,target=/home/swg/swg-main/src" \
+            cekisswg/swg-vm3.01-i386@sha256:115f4900a398b2cd585c02020d2667b252e51b9932e3dd3eabc77912723ed674 -lc \
+            'set -eu; cd /home/swg/swg-main/src; ant -Dbits=32 -Dnproc=2 clean build_src'
+          } 2>&1 | tee ci-results/build.log
+      - name: Verify tracked inputs and record generated paths
+        if: ${{ always() }}
+        run: |
+          sha256sum --check ci-results/tracked-before.txt > ci-results/tracked-after.txt
+          git ls-files --others -- game/server/application/SwgDatabaseServer/src/shared/generated > ci-results/generated-paths.txt
+      - name: Preserve build evidence
+        if: ${{ always() }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: server-legacy-build-${{ github.run_id }}
+          path: ci-results/
+          if-no-files-found: error
+          retention-days: 14
