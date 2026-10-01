@@ -26,7 +26,7 @@ TaskToggleCompletedTutorial::TaskToggleCompletedTutorial(StationId stationId, bo
 bool TaskToggleCompletedTutorial::process(DB::Session *session)
 {
 	ToggleCompletedTutorialQuery qry;
-	qry.station_id=static_cast<long>(m_stationId);
+	qry.station_id=m_stationId;
 	qry.completed_flag=m_completed;
 
 	bool rval = session->exec(&qry);

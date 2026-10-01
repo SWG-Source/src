@@ -281,7 +281,7 @@ void ShipController::addDockedBy(Object const & unit)
 {
 	IGNORE_RETURN(m_dockedByList->insert(CachedNetworkId(unit)));
 
-	LOGC(ConfigServerGame::isSpaceAiLoggingEnabled(), "space_debug_ai", ("ShipController::addDockedBy() owner(%s) dockedBy(%s) dockedByListSize(%u)", (getOwner() != nullptr) ? getOwner()->getNetworkId().getValueString().c_str() : "nullptr", unit.getNetworkId().getValueString().c_str(), m_dockedByList->size()));
+	LOGC(ConfigServerGame::isSpaceAiLoggingEnabled(), "space_debug_ai", ("ShipController::addDockedBy() owner(%s) dockedBy(%s) dockedByListSize(%zu)", (getOwner() != nullptr) ? getOwner()->getNetworkId().getValueString().c_str() : "nullptr", unit.getNetworkId().getValueString().c_str(), m_dockedByList->size()));
 }
 
 // ----------------------------------------------------------------------
@@ -294,7 +294,7 @@ void ShipController::removeDockedBy(Object const & unit)
 	{
 		m_dockedByList->erase(iterDockedByList);
 
-		LOGC(ConfigServerGame::isSpaceAiLoggingEnabled(), "space_debug_ai", ("ShipController::removeDockedBy() owner(%s) dockedBy(%s) dockedByListSize(%u)", (getOwner() != nullptr) ? getOwner()->getNetworkId().getValueString().c_str() : "nullptr", unit.getNetworkId().getValueString().c_str(), m_dockedByList->size()));
+		LOGC(ConfigServerGame::isSpaceAiLoggingEnabled(), "space_debug_ai", ("ShipController::removeDockedBy() owner(%s) dockedBy(%s) dockedByListSize(%zu)", (getOwner() != nullptr) ? getOwner()->getNetworkId().getValueString().c_str() : "nullptr", unit.getNetworkId().getValueString().c_str(), m_dockedByList->size()));
 	}
 	else
 	{

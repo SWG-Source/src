@@ -1,0 +1,41 @@
+"0"                      int32 ok  0 | uint32 ok  0 | bits32 ok  0 | leading ok  0 | parseArg int32 ok  0 uint32 ok  0 | Unicode::toInt 0
+"-1"                     int32 ok  -1 | uint32 rej 222 | bits32 ok  4294967295 | leading ok  -1 | parseArg int32 ok  -1 uint32 rej 666 | Unicode::toInt -1
+"+5"                     int32 ok  5 | uint32 ok  5 | bits32 ok  5 | leading ok  5 | parseArg int32 ok  5 uint32 ok  5 | Unicode::toInt 5
+"-0"                     int32 ok  0 | uint32 rej 222 | bits32 ok  0 | leading ok  0 | parseArg int32 ok  0 uint32 rej 666 | Unicode::toInt 0
+"2147483647"             int32 ok  2147483647 | uint32 ok  2147483647 | bits32 ok  2147483647 | leading ok  2147483647 | parseArg int32 ok  2147483647 uint32 ok  2147483647 | Unicode::toInt 2147483647
+"2147483648"             int32 rej 111 | uint32 ok  2147483648 | bits32 ok  2147483648 | leading rej 555 | parseArg int32 rej 444 uint32 ok  2147483648 | Unicode::toInt 2147483647
+"-2147483648"            int32 ok  -2147483648 | uint32 rej 222 | bits32 ok  2147483648 | leading ok  -2147483648 | parseArg int32 ok  -2147483648 uint32 rej 666 | Unicode::toInt -2147483648
+"-2147483649"            int32 rej 111 | uint32 rej 222 | bits32 rej 333 | leading rej 555 | parseArg int32 rej 444 uint32 rej 666 | Unicode::toInt -2147483648
+"4294967295"             int32 rej 111 | uint32 ok  4294967295 | bits32 ok  4294967295 | leading rej 555 | parseArg int32 rej 444 uint32 ok  4294967295 | Unicode::toInt 2147483647
+"4294967296"             int32 rej 111 | uint32 rej 222 | bits32 rej 333 | leading rej 555 | parseArg int32 rej 444 uint32 rej 666 | Unicode::toInt 2147483647
+"4294967297"             int32 rej 111 | uint32 rej 222 | bits32 rej 333 | leading rej 555 | parseArg int32 rej 444 uint32 rej 666 | Unicode::toInt 2147483647
+"18446744073709551616"   int32 rej 111 | uint32 rej 222 | bits32 rej 333 | leading rej 555 | parseArg int32 rej 444 uint32 rej 666 | Unicode::toInt 2147483647
+" 12 "                   int32 ok  12 | uint32 ok  12 | bits32 ok  12 | leading ok  12 | parseArg int32 ok  12 uint32 ok  12 | Unicode::toInt 12
+"\t7\n"                  int32 ok  7 | uint32 ok  7 | bits32 ok  7 | leading ok  7 | parseArg int32 ok  7 uint32 ok  7 | Unicode::toInt 7
+"12abc"                  int32 rej 111 | uint32 rej 222 | bits32 rej 333 | leading ok  12 | parseArg int32 rej 444 uint32 rej 666 | Unicode::toInt 12
+"49m"                    int32 rej 111 | uint32 rej 222 | bits32 rej 333 | leading ok  49 | parseArg int32 rej 444 uint32 rej 666 | Unicode::toInt 49
+"0x10"                   int32 rej 111 | uint32 rej 222 | bits32 rej 333 | leading ok  0 | parseArg int32 rej 444 uint32 rej 666 | Unicode::toInt 0
+"1 2"                    int32 rej 111 | uint32 rej 222 | bits32 rej 333 | leading ok  1 | parseArg int32 rej 444 uint32 rej 666 | Unicode::toInt 1
+""                       int32 rej 111 | uint32 rej 222 | bits32 rej 333 | leading rej 555 | parseArg int32 rej 444 uint32 rej 666 | Unicode::toInt 0
+" "                      int32 rej 111 | uint32 rej 222 | bits32 rej 333 | leading rej 555 | parseArg int32 rej 444 uint32 rej 666 | Unicode::toInt 0
+"abc"                    int32 rej 111 | uint32 rej 222 | bits32 rej 333 | leading rej 555 | parseArg int32 rej 444 uint32 rej 666 | Unicode::toInt 0
+"+"                      int32 rej 111 | uint32 rej 222 | bits32 rej 333 | leading rej 555 | parseArg int32 rej 444 uint32 rej 666 | Unicode::toInt 0
+"-"                      int32 rej 111 | uint32 rej 222 | bits32 rej 333 | leading rej 555 | parseArg int32 rej 444 uint32 rej 666 | Unicode::toInt 0
+parseArg U+0131             rej 5
+parseArg "12\09"             rej 5
+parseDateTimeArgs 2026-9-27 13:05:00  ok  year=126 mon=8 mday=27 13:5:0
+parseDateTimeArgs year INT_MIN        rej
+parseDateTimeArgs year 2^32 + 2026    rej
+parseDateTimeArgs too few arguments   rej
+DynamicVariable INT       "42"                     ok  42
+DynamicVariable INT       "-2147483648"            ok  -2147483648
+DynamicVariable INT       "2147483648"             rej 0
+DynamicVariable INT       "4294967297"             rej 0
+DynamicVariable INT       "12abc"                  rej 0
+DynamicVariable INT_ARRAY ""                       ok  []
+DynamicVariable INT_ARRAY "1:2:-3:"                ok  [1,2,-3,]
+DynamicVariable INT_ARRAY "1:2147483648:"          rej []
+DynamicVariable INT_ARRAY "1:2" (no final :)       rej []
+DynamicVariable INT_ARRAY "1\0garbage:"            rej []
+DynamicVariable INT_ARRAY "\u0131:"                rej []
+DynamicVariable INT_ARRAY pack/unpack round trip   ok  [7,-8,2147483647,]

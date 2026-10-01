@@ -458,7 +458,7 @@ inline void AutoArray<ValueType>::set(const std::vector<ValueType> & source)
 template<class ValueType>
 inline void AutoArray<ValueType>::pack(Archive::ByteStream & target) const
 {
-	unsigned int arraySize = array.size();
+	unsigned int const arraySize = ArchiveCount::fromSize<unsigned int>(array.size());
 	Archive::put(target, arraySize);
 
 	typename std::vector<ValueType>::const_iterator i;
@@ -633,7 +633,7 @@ inline void AutoList<ValueType>::set(const std::list<ValueType> & source)
 template<class ValueType>
 inline void AutoList<ValueType>::pack(Archive::ByteStream & target) const
 {
-	unsigned int arraySize = theList.size();
+	unsigned int const arraySize = ArchiveCount::fromSize<unsigned int>(theList.size());
 	Archive::put(target, arraySize);
 
 	typename std::list<ValueType>::const_iterator i;

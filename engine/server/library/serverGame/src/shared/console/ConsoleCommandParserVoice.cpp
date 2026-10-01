@@ -189,7 +189,12 @@ bool ConsoleCommandParserVoice::performParsing (const NetworkId & userId, const 
 		std::string destUser = Unicode::wideToNarrow(argv[1]);
 		std::string destChan = Unicode::wideToNarrow(argv[2]);
 		std::string strCommandType = Unicode::wideToNarrow(argv[3]);
-		uint32 banTimeout = argv.size() > 4 ? static_cast<uint32>(atoi(Unicode::wideToNarrow(argv[4]).c_str())) : 0;
+		uint32 banTimeout = 0;
+		if (argv.size() > 4 && !parseArg(argv[4], banTimeout))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
 
 		std::map<std::string,uint32>::const_iterator i = commandTypeLookupMap.find(strCommandType);
 		if(i != commandTypeLookupMap.end())
@@ -210,7 +215,13 @@ bool ConsoleCommandParserVoice::performParsing (const NetworkId & userId, const 
 	{
 		std::string name = Unicode::getTrim(Unicode::wideToNarrow(argv[1]));
 		std::string message = Unicode::wideToNarrow(argv[2]);
-		bool isRemove = argv.size() > 3 ? (atoi(Unicode::wideToNarrow(argv[3]).c_str()) != 0) : 0;
+		int32 removeValue = 0;
+		if (argv.size() > 3 && !parseArg(argv[3], removeValue))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
+		bool const isRemove = removeValue != 0;
 
 		LOG("CustomerService", ("BroadcastVoiceChannel: GameServer::globalchannelmessage issued by id(%s) chan(%s) text(%s) remove(%d)", 
 			userId.getValueString().c_str(), name.c_str(), message.c_str(), (isRemove ? 1 : 0)));
@@ -225,7 +236,13 @@ bool ConsoleCommandParserVoice::performParsing (const NetworkId & userId, const 
 	{
 		std::string name = Unicode::getTrim(Unicode::wideToNarrow(argv[1]));
 		std::string message = Unicode::wideToNarrow(argv[2]);
-		bool isRemove = argv.size() > 3 ? (atoi(Unicode::wideToNarrow(argv[3]).c_str()) != 0) : 0;
+		int32 removeValue = 0;
+		if (argv.size() > 3 && !parseArg(argv[3], removeValue))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
+		bool const isRemove = removeValue != 0;
 
 		LOG("CustomerService", ("BroadcastVoiceChannel: GameServer::allclusterglobalchannelmessage issued by id(%s) chan(%s) text(%s) remove(%d)", 
 			userId.getValueString().c_str(), name.c_str(), message.c_str(), (isRemove ? 1 : 0)));

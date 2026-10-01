@@ -22,7 +22,7 @@ class NetworkId;
 class CreateCharacterCustomPersistStep : public CustomPersistStep
 {
   public:
-	CreateCharacterCustomPersistStep(uint32 stationId, const NetworkId &characterObject, const Unicode::String &characterName, const std::string &normalizedName, const int templateId, bool special);
+	CreateCharacterCustomPersistStep(uint32 stationId, const NetworkId &characterObject, const Unicode::String &characterName, const std::string &normalizedName, uint32 templateId, bool special);
 	~CreateCharacterCustomPersistStep();
 	
 	virtual bool beforePersist (DB::Session *session);
@@ -34,7 +34,7 @@ class CreateCharacterCustomPersistStep : public CustomPersistStep
 	NetworkId m_characterObject;
 	Unicode::String m_characterName;
 	std::string m_normalizedName;
-	int m_templateId;
+	uint32 m_templateId;
 	std::string m_clusterName;
 	bool m_special;
 

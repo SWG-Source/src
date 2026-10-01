@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------
 
 #include "FirstCentralServer.h"
+#include <cinttypes>
 #include "CentralServer.h"
 
 #include "CentralCSHandler.h"
@@ -458,7 +459,7 @@ void CentralServer::addGameServer(GameServerConnection * newGameServer)
 {
 	uint32	pid = newGameServer->getProcessId();
 
-	LOG("ServerStartup", ("Adding server %lu for scene %s", pid, newGameServer->getSceneId().c_str()));
+	LOG("ServerStartup", ("Adding server %u for scene %s", pid, newGameServer->getSceneId().c_str()));
 
 	IGNORE_RETURN(m_gameServers.insert(SceneGameMap::value_type(
 		newGameServer->getSceneId(), newGameServer)));
@@ -963,7 +964,7 @@ void CentralServer::receiveMessage(const MessageDispatch::Emitter & source, cons
 
 			if (m_clusterId == 0) {
 				FATAL(((msg.getValue() < 1) ||
-				       (msg.getValue() > 255)), ("Cluster Id (%lu) must be between 1 and 255 inclusive", msg
+				       (msg.getValue() > 255)), ("Cluster Id (%u) must be between 1 and 255 inclusive", msg
 						.getValue()));
 
 				m_clusterId = static_cast<uint8>(msg.getValue());
@@ -1088,7 +1089,7 @@ void CentralServer::receiveMessage(const MessageDispatch::Emitter & source, cons
 			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
 			ConnectionCreateCharacter c(ri);
 
-			LOG("TraceCharacterCreation", ("%d received ConnectionCreateCharacter", c.getStationId()));
+			LOG("TraceCharacterCreation", ("%u received ConnectionCreateCharacter", c.getStationId()));
 			CharacterCreationTracker::getInstance().handleCreateNewCharacter(c);
 			break;
 		}
@@ -1203,7 +1204,7 @@ void CentralServer::receiveMessage(const MessageDispatch::Emitter & source, cons
 			RequestOIDsMessage m(ri);
 
 			if (m.getLogRequest()) {
-				LOG("ObjectIdManager", ("Requesting %lu more object ids for pid %lu", m.getHowMany(), m.getServerId()));
+				LOG("ObjectIdManager", ("Requesting %u more object ids for pid %u", m.getHowMany(), m.getServerId()));
 			}
 
 			sendToGameServer(m_dbProcessServerProcessId, m, true);
@@ -1215,7 +1216,7 @@ void CentralServer::receiveMessage(const MessageDispatch::Emitter & source, cons
 			AddOIDBlockMessage m(ri);
 
 			if (m.getLogRequest()) {
-				LOG("ObjectIdManager", ("Returning object ids (%s - %s) for pid %lu", m.getStart().getValueString()
+				LOG("ObjectIdManager", ("Returning object ids (%s - %s) for pid %u", m.getStart().getValueString()
 				                                                                       .c_str(), m.getEnd()
 				                                                                                  .getValueString()
 				                                                                                  .c_str(), m
@@ -1228,7 +1229,7 @@ void CentralServer::receiveMessage(const MessageDispatch::Emitter & source, cons
 		case constcrc("LoggedInMessage") : {
 			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
 			LoggedInMessage m(ri);
-			DEBUG_REPORT_LOG(true, ("Pending character %lu is logging in or dropping\n", m.getAccountNumber()));
+			DEBUG_REPORT_LOG(true, ("Pending character %u is logging in or dropping\n", m.getAccountNumber()));
 
 			// Once they're logged in, Central doesn't need to know about them anymore:
 			removeFromAccountConnectionMap(m.getAccountNumber());
@@ -1239,7 +1240,7 @@ void CentralServer::receiveMessage(const MessageDispatch::Emitter & source, cons
 			CharacterListMessage m(ri);
 
 			// Find the client connection and send the character to it.
-			DEBUG_REPORT_LOG(true, ("Got CharacterListMessage for %lu.\n", m.getAccountNumber()));
+			DEBUG_REPORT_LOG(true, ("Got CharacterListMessage for %u.\n", m.getAccountNumber()));
 			ConnectionServerConnection *conn = getConnectionServerForAccount(m.getAccountNumber());
 
 			if (conn) {
@@ -1270,7 +1271,7 @@ void CentralServer::receiveMessage(const MessageDispatch::Emitter & source, cons
 				conn->send(msg, true);
 			}
 			else {
-				DEBUG_REPORT_LOG(true, ("Trying to handle ValidateCharacterForLoginReplyMessage for account %lu, but could not determine which connection server to use.\n", msg
+				DEBUG_REPORT_LOG(true, ("Trying to handle ValidateCharacterForLoginReplyMessage for account %u, but could not determine which connection server to use.\n", msg
 						.getSuid()));
 			}
 			break;
@@ -1972,7 +1973,7 @@ void CentralServer::receiveMessage(const MessageDispatch::Emitter & source, cons
 		case constcrc("CentralPingMessage") : {
 			GameServerConnection const *g = safe_cast < GameServerConnection const * > (&source);
 			NOT_NULL(g);
-			LOG("CentralServerPings", ("Got reply from %lu", g->getProcessId()));
+			LOG("CentralServerPings", ("Got reply from %u", g->getProcessId()));
 			IGNORE_RETURN(m_serverPings.erase(g->getProcessId()));
 			break;
 		}
@@ -2588,7 +2589,7 @@ void CentralServer::removeGameServer(GameServerConnection const *gameServer)
 	{
 		uint32 const pid = gameServer->getProcessId();
 
-		LOG("ServerStartup", ("Game Server %lu went down", pid));
+		LOG("ServerStartup", ("Game Server %u went down", pid));
 
 		//@todo this whole function needs a re-write.
 		NOT_NULL(gameServer);
@@ -2616,7 +2617,7 @@ void CentralServer::removeGameServer(GameServerConnection const *gameServer)
 			return; //lint !e527 Unreachable
 		}
 
-		DEBUG_WARNING(true, ("Game server %lu crashed", pid));
+		DEBUG_WARNING(true, ("Game server %u crashed", pid));
 
 		for (SceneGameMap::iterator j = m_gameServers.begin(); j != m_gameServers.end();)
 		{
@@ -2710,10 +2711,10 @@ void CentralServer::run(void)
 	// connect to the task manager
 	cserver.m_taskManager = new TaskConnection("127.0.0.1", ConfigCentralServer::getTaskManagerPort());
 
-	unsigned long startTime = Clock::timeMs();
-	unsigned long nextLoadingLogTime=0;
-	unsigned long nextPingTime=0;
-	unsigned long nextPopulationLogTime = 0;
+	uint64_t startTime = Clock::timeMs();
+	uint64_t nextLoadingLogTime=0;
+	uint64_t nextPingTime=0;
+	uint64_t nextPopulationLogTime = 0;
 
 	LOG("ServerStartup",("CentralServer starting"));
 #ifndef WIN32
@@ -2741,8 +2742,8 @@ void CentralServer::run(void)
 
 	while (!cserver.m_done)
 	{
-		unsigned long lastFrameTime = 0;
-		unsigned long frameStartTime = Clock::timeMs();
+		uint64_t lastFrameTime = 0;
+		uint64_t frameStartTime = Clock::timeMs();
 
 		PROFILER_AUTO_BLOCK_DEFINE("main loop");
 
@@ -2762,7 +2763,7 @@ void CentralServer::run(void)
 
 			{
 				PROFILER_AUTO_BLOCK_DEFINE("MetricsManager::update");
-				unsigned long curTime = Clock::timeMs();
+				uint64_t curTime = Clock::timeMs();
 				MetricsManager::update(static_cast<float>(curTime - startTime));
 				startTime = curTime;
 			}
@@ -2790,7 +2791,7 @@ void CentralServer::run(void)
 
 		{
 			//Peridically log loading status
-			unsigned long curTime = Clock::timeMs();
+			uint64_t curTime = Clock::timeMs();
 			if (curTime > nextLoadingLogTime)
 			{
 				nextLoadingLogTime = curTime + 10000;
@@ -2799,9 +2800,9 @@ void CentralServer::run(void)
 			}
 
 			//Perodically ping all the servers
-			if (ConfigCentralServer::getServerPingTimeout() != 0 && static_cast<int>(curTime-nextPingTime) > 0)
+			if (ConfigCentralServer::getServerPingTimeout() > 0 && curTime > nextPingTime)
 			{
-				nextPingTime = curTime + static_cast<uint32>(ConfigCentralServer::getServerPingTimeout() * 1000);
+				nextPingTime = curTime + static_cast<uint64_t>(ConfigCentralServer::getServerPingTimeout()) * 1000;
 				getInstance().doServerPings();
 			}
 
@@ -2822,11 +2823,11 @@ void CentralServer::run(void)
 			cserver.done();
 		}
 
-		unsigned long currentTime = Clock::timeMs();
+		uint64_t currentTime = Clock::timeMs();
 		lastFrameTime = currentTime - frameStartTime;
 		if(lastFrameTime > 1000)
 		{
-			LOG("profile", ("Long loop (%u ms):\n%s", lastFrameTime, PROFILER_GET_LAST_FRAME_DATA()));
+			LOG("profile", ("Long loop (%" PRIu64 " ms):\n%s", lastFrameTime, PROFILER_GET_LAST_FRAME_DATA()));
 		}
 	}
 
@@ -3273,7 +3274,7 @@ void CentralServer::handleRequestGameServerForLoginMessage(const RequestGameServ
 		if (s_tenOriginalGroundPlanets.count(effectiveScene) <= 0)
 		{
 			// fail CTS because source character is not on one of the 10 original ground planets
-			LOG("CustomerService", ("CharacterTransfer: RequestGameServerForLoginMessage failed for source character (%s) stationId (%lu) because effective scene for the character (%s) is not one of the 10 original ground planets", msg.getCharacterId().getValueString().c_str(), msg.getStationId(), effectiveScene.c_str()));
+			LOG("CustomerService", ("CharacterTransfer: RequestGameServerForLoginMessage failed for source character (%s) stationId (%u) because effective scene for the character (%s) is not one of the 10 original ground planets", msg.getCharacterId().getValueString().c_str(), msg.getStationId(), effectiveScene.c_str()));
 
 			GenericValueTypeMessage<std::pair<NetworkId, unsigned int> > const failureMsg("CtsSrcCharWrongPlanet", std::make_pair(msg.getCharacterId(), msg.getStationId()));
 			IGNORE_RETURN(ConnectionServerConnection::sendToPseudoClientConnection(msg.getStationId(), failureMsg));
@@ -3325,7 +3326,7 @@ void CentralServer::handleRequestSceneTransfer(const RequestSceneTransfer &msg)
 	}
 	else
 	{
-		DEBUG_REPORT_LOG(true, ("Starting planet server for login.  Host '%s', Scene: '%s'", getHostForScene(msg.getSceneName()), msg.getSceneName()));
+		DEBUG_REPORT_LOG(true, ("Starting planet server for login.  Host '%s', Scene: '%s'", getHostForScene(msg.getSceneName()).c_str(), msg.getSceneName().c_str()));
 		startPlanetServer(getHostForScene(msg.getSceneName()), msg.getSceneName(), 0);
 		m_messagesWaitingForPlanetServer.push_back(Archive::ByteStream());
 		msg.pack(m_messagesWaitingForPlanetServer.back());
@@ -3348,7 +3349,7 @@ void CentralServer::handleGameServerForLoginMessage(const GameServerForLoginMess
 	{
 		if(! ConnectionServerConnection::sendToPseudoClientConnection(msg.getStationId(), msg))
 		{
-			LOG("TRACE_LOGIN", ("Trying to log account %i in, but could not determine which connection server to use.",msg.getStationId()));
+			LOG("TRACE_LOGIN", ("Trying to log account %u in, but could not determine which connection server to use.",msg.getStationId()));
 		}
 	}
 }
@@ -3672,7 +3673,7 @@ void CentralServer::doServerPings()
 {
 	for (std::set<uint32>::iterator i=m_serverPings.begin(); i!=m_serverPings.end(); ++i)
 	{
-		LOG("CentralServerPings",("Dropping server %lu because it hasn't responded to CentralPingMessage",*i));
+		LOG("CentralServerPings",("Dropping server %u because it hasn't responded to CentralPingMessage",*i));
 		GameServerConnection *conn=getGameServer(*i);
 		if (conn)
 		{
@@ -3686,7 +3687,7 @@ void CentralServer::doServerPings()
 		}
 		else
 		{
-			LOG("CentralServerPings",("Didn't have connection to %lu to drop",*i));
+			LOG("CentralServerPings",("Didn't have connection to %u to drop",*i));
 			ExcommunicateGameServerMessage const excommunicateMessage(*i, 0, "");
 			excommunicateServer(excommunicateMessage); // haven't received a reply (see CentralPingMessage, above)
 		}
@@ -3698,7 +3699,7 @@ void CentralServer::doServerPings()
 	{
 		if (j->first != getDbProcessServerProcessId())
 		{
-			LOG("CentralServerPings",("Pinging  %lu",j->first));
+			LOG("CentralServerPings",("Pinging  %u",j->first));
 			IGNORE_RETURN(m_serverPings.insert(j->first));
 			j->second->send(ping,true);
 		}
@@ -3869,11 +3870,11 @@ void CentralServer::checkShutdownProcess()
 		}
 		else if( timeLeft < 60 )
 		{
-			sprintf(strTimeLeft, " ( %lusec left )", timeLeft);
+			sprintf(strTimeLeft, " ( %usec left )", timeLeft);
 		}
 		else
 		{
-			sprintf(strTimeLeft, " ( %lumin left )", timeLeft/60);
+			sprintf(strTimeLeft, " ( %umin left )", timeLeft/60);
 		}
 
 		LOG("CentralServerShutdown",("Shutdown Phase %d: Broadcasting first shutdown message to players: \"%s %s\"", m_shutdownPhase, Unicode::wideToNarrow(m_shutdownSystemMessage).c_str(), strTimeLeft));
@@ -3906,11 +3907,11 @@ void CentralServer::checkShutdownProcess()
 			}
 			else if( timeLeft < 60 )
 			{
-				sprintf(strTimeLeft, " ( %lusec left)", timeLeft);
+				sprintf(strTimeLeft, " ( %usec left)", timeLeft);
 			}
 			else
 			{
-				sprintf(strTimeLeft, " ( %lumin left)", timeLeft/60);
+				sprintf(strTimeLeft, " ( %umin left)", timeLeft/60);
 			}
 
 			LOG("CentralServerShutdown",("Shutdown Phase %d: Broadcasting shutdown message to players: \"%s %s\"", m_shutdownPhase, Unicode::wideToNarrow(m_shutdownSystemMessage).c_str(), strTimeLeft));

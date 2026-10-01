@@ -11,6 +11,7 @@
 #include "serverUtility/LocationData.h"
 #include "serverDatabase/ConfigServerDatabase.h"
 #include "serverDatabase/DatabaseProcess.h"
+#include "sharedDatabaseInterface/DbCheckedConversion.h"
 
 using namespace DBQuery;
 
@@ -60,11 +61,20 @@ DB::Query::QueryMode SaveLocationQuery::getExecutionMode() const
 
 // ----------------------------------------------------------------------
 
-void SaveLocationQuery::setData(const NetworkId &newObjectId, size_t newListId, int newAction, int newIndex, const LocationData &newLocation)
+bool SaveLocationQuery::setData(const NetworkId &newObjectId, size_t newListId, int newAction, size_t newIndex, const LocationData &newLocation)
 {
+	// The list id and index are unsigned 32-bit columns (a 32-bit server's
+	// size_t, stored in signed form); a larger value cannot be saved.
+	uint32_t listId = 0;
+	uint32_t listIndex = 0;
+	auto const where = [&newObjectId]() { return "SaveLocationQuery::setData, object " + newObjectId.getValueString(); };
+	if (!DB::checkedNarrow(newListId, listId, "location_lists.list_id (save)", where)
+		|| !DB::checkedNarrow(newIndex, listIndex, "location_lists.sequence_number (save)", where))
+		return false;
+
 	object_id = newObjectId;
-	list_id = static_cast<int>(newListId);
-	index = newIndex;
+	list_id = listId;
+	index = listIndex;
 	action = newAction;
 	name = newLocation.name;
 	scene = newLocation.scene;
@@ -73,6 +83,7 @@ void SaveLocationQuery::setData(const NetworkId &newObjectId, size_t newListId, 
 	y = vect.y;
 	z = vect.z;
 	radius = newLocation.location.getRadius();
+	return true;
 }
 
 // ======================================================================

@@ -69,7 +69,14 @@ bool ConsoleCommandParserCraft::performParsing (const NetworkId & userId, const 
 
     if (isAbbrev( argv [0], "draft"))
     {
-		int index = atoi(Unicode::wideToNarrow(argv[1]).c_str()) - 1;
+		// 1-based on the console.
+		int32 index = 0;
+		if (!parseArg(argv[1], index) || index == INT32_MIN)
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
+		--index;
 
 		playerObject->selectDraftSchematic(index);
         result += getErrorMessage (argv[0], ERR_SUCCESS);
@@ -79,8 +86,13 @@ bool ConsoleCommandParserCraft::performParsing (const NetworkId & userId, const 
 
     else if (isAbbrev( argv [0], "fillslot"))
     {
-		int slot(atoi(Unicode::wideToNarrow(argv[1]).c_str()));
-		int option(atoi(Unicode::wideToNarrow(argv[2]).c_str())); 
+		int32 slot = 0;
+		int32 option = 0;
+		if (!parseArg(argv[1], slot) || slot == INT32_MIN || !parseArg(argv[2], option) || option == INT32_MIN)
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
 		NetworkId ingredient(Unicode::wideToNarrow(argv[3]));
 
 		if (playerObject->fillSlot(slot - 1, option - 1, ingredient))
@@ -103,9 +115,14 @@ bool ConsoleCommandParserCraft::performParsing (const NetworkId & userId, const 
 
     else if (isAbbrev( argv [0], "experiment"))
     {
-		int attribute(atoi(Unicode::wideToNarrow(argv[1]).c_str()));
-		int points(atoi(Unicode::wideToNarrow(argv[2]).c_str()));
-		int core(atoi(Unicode::wideToNarrow(argv[3]).c_str()));
+		int32 attribute = 0;
+		int32 points = 0;
+		int32 core = 0;
+		if (!parseArg(argv[1], attribute) || attribute == INT32_MIN || !parseArg(argv[2], points) || !parseArg(argv[3], core))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
 
 		std::vector<MessageQueueCraftExperiment::ExperimentInfo> experiment;
 		experiment.push_back(MessageQueueCraftExperiment::ExperimentInfo(attribute - 1, points));
@@ -119,8 +136,13 @@ bool ConsoleCommandParserCraft::performParsing (const NetworkId & userId, const 
 
 	else if (isAbbrev( argv [0], "customize"))
 	{
-		int property(atoi(Unicode::wideToNarrow(argv[1]).c_str()));
-		int value(atoi(Unicode::wideToNarrow(argv[2]).c_str()));
+		int32 property = 0;
+		int32 value = 0;
+		if (!parseArg(argv[1], property) || property == INT32_MIN || !parseArg(argv[2], value))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
 
 		if (playerObject->customize(property - 1, value))
 			result += getErrorMessage (argv[0], ERR_SUCCESS);

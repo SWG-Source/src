@@ -221,7 +221,7 @@ void PseudoClientConnection::requestGameServerForLogin() const
 	if(ConnectionServer::getCentralConnection())
 	{
 		ConnectionServer::getCentralConnection()->send(requestmsg, true);
-		LOG("CustomerService", ("CharacterTransfer: ***ConnectionServer: sending RequestGameServerForLoginMessage(%d, %s, %s, %s)\n", m_transferCharacterData.getSourceStationId(), m_transferCharacterData.getCharacterId().getValueString().c_str(), m_transferCharacterData.getContainerId().getValueString().c_str(), m_transferCharacterData.getScene().c_str()));
+		LOG("CustomerService", ("CharacterTransfer: ***ConnectionServer: sending RequestGameServerForLoginMessage(%u, %s, %s, %s)\n", m_transferCharacterData.getSourceStationId(), m_transferCharacterData.getCharacterId().getValueString().c_str(), m_transferCharacterData.getContainerId().getValueString().c_str(), m_transferCharacterData.getScene().c_str()));
 	}
 }
 
@@ -239,7 +239,7 @@ void PseudoClientConnection::receiveMessage(const Archive::ByteStream & message)
 		case constcrc("GameServerForLoginMessage") :
 		{
 			const GameServerForLoginMessage gameServerForLogin(ri);
-			LOG("CustomerService", ("CharacterTransfer: *** ConnectionServer: Received GameServerForLoginMessage for %d, server=%d\n", gameServerForLogin.getStationId(), gameServerForLogin.getServer()));
+			LOG("CustomerService", ("CharacterTransfer: *** ConnectionServer: Received GameServerForLoginMessage for %u, server=%d\n", gameServerForLogin.getStationId(), gameServerForLogin.getServer()));
 			m_gameConnection = ConnectionServer::getGameConnection(gameServerForLogin.getServer());
 			if(m_gameConnection)
 			{
@@ -253,7 +253,7 @@ void PseudoClientConnection::receiveMessage(const Archive::ByteStream & message)
 				std::vector<std::pair<NetworkId, std::string> > static const emptyStringVector;
 				NewClient m(characterId, "TransferServer", NetworkHandler::getHostName(), true, false, stationId, nullptr, 0, 0, 0, 0, 0, 0, 0, emptyStringVector, emptyStringVector, m_transferCharacterData.getCSToolId() != 0, true);
 				m_gameConnection->send(m, true);
-				LOG("CustomerService", ("CharacterTransfer: Sent NewClient(%s, \"TransferServer\", \"%s\", true, false, %d, nullptr, 0, 0)\n", characterId.getValueString().c_str(), NetworkHandler::getHostName().c_str(), stationId));
+				LOG("CustomerService", ("CharacterTransfer: Sent NewClient(%s, \"TransferServer\", \"%s\", true, false, %u, nullptr, 0, 0)\n", characterId.getValueString().c_str(), NetworkHandler::getHostName().c_str(), stationId));
 			}
 			break;
 		}
@@ -485,7 +485,7 @@ bool PseudoClientConnection::tryToDeliverMessageTo(unsigned int stationId, const
 		}
 		else
 		{
-			LOG("CustomerService", ("CharacterTransfer: *** FAILED TO DELIVER MESSAGE TO PseudoClientConnection(%d)!! ***", stationId));
+			LOG("CustomerService", ("CharacterTransfer: *** FAILED TO DELIVER MESSAGE TO PseudoClientConnection(%u)!! ***", stationId));
 		}
 	}
 

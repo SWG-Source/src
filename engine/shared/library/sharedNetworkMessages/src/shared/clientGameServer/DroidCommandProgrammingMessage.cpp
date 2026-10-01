@@ -5,6 +5,7 @@
 
 #include "sharedNetworkMessages/FirstSharedNetworkMessages.h"
 #include "sharedNetworkMessages/DroidCommandProgrammingMessage.h"
+#include "Archive/ArchiveCount.h"
 
 #include "sharedFoundation/ExitChain.h"
 #include "sharedFoundation/GameControllerMessage.h"
@@ -52,24 +53,25 @@ void DroidCommandProgrammingMessage::pack(MessageQueue::Data const * const data,
 	if (msg)
 	{
 		std::vector<std::string> const & commands = msg->getCommands();
-		int size = commands.size(); //lint !e713 signed / unsigned
-		Archive::put(target, size);
+		std::vector<NetworkId> const & chipsToAdd = msg->getChipsToAdd();
+		std::vector<NetworkId> const & chipsToRemove = msg->getChipsToRemove();
+		int const commandCount = ArchiveCount::fromSize<int>(commands.size());
+		int const addCount = ArchiveCount::fromSize<int>(chipsToAdd.size());
+		int const removeCount = ArchiveCount::fromSize<int>(chipsToRemove.size());
+
+		Archive::put(target, commandCount);
 		for(std::vector<std::string>::const_iterator i = commands.begin(); i != commands.end(); ++i)
 		{
 			Archive::put(target, *i);
 		}
 
-		std::vector<NetworkId> const & chipsToAdd = msg->getChipsToAdd();
-		size = chipsToAdd.size(); //lint !e713 signed / unsigned
-		Archive::put(target, size);
+		Archive::put(target, addCount);
 		for(std::vector<NetworkId>::const_iterator j = chipsToAdd.begin(); j != chipsToAdd.end(); ++j)
 		{
 			Archive::put(target, *j);
 		}
 
-		std::vector<NetworkId> const & chipsToRemove = msg->getChipsToRemove();
-		size = chipsToRemove.size(); //lint !e713 signed / unsigned
-		Archive::put(target, size);
+		Archive::put(target, removeCount);
 		for(std::vector<NetworkId>::const_iterator k = chipsToRemove.begin(); k != chipsToRemove.end(); ++k)
 		{
 			Archive::put(target, *k);

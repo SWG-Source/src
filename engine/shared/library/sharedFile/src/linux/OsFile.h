@@ -32,7 +32,7 @@ public:
 
 private:
 
-	OsFile(int handle, char *fileName);
+	OsFile(int handle, char *fileName, int length);
 
 	OsFile();
 	OsFile(const OsFile &);

@@ -128,7 +128,7 @@ bool ExperienceBuffer::load(DB::Session *session, const DB::TagSet &tags, const 
 
 bool ExperienceBuffer::save(DB::Session *session)
 {
-	LOG("SaveCounts",("Experience:  %i saved to db",m_rows.size()));
+	LOG("SaveCounts",("Experience:  %zu saved to db",m_rows.size()));
 	
 	DBQuery::ExperienceQuery qry;
 	

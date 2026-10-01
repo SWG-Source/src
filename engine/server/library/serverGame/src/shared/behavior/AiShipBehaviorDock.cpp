@@ -146,7 +146,7 @@ AiShipBehaviorDock::AiShipBehaviorDock(ShipController & shipController, ShipObje
 
 	m_initialApproachHardPointCount = static_cast<int>(m_approachHardPointList->size());
 
-	LOGC(ConfigServerGame::isSpaceAiLoggingEnabled(), "debug_ai", ("AiShipBehaviorDock() unit(%s) dockTarget(%s) approachHardPointCount(%u) exitHardPointCount(%u)", (shipController.getOwner() != nullptr) ? shipController.getOwner()->getNetworkId().getValueString().c_str() : "nullptr owner", dockTarget.getNetworkId().getValueString().c_str(), m_approachHardPointList->size(), m_exitHardPointList->size()));
+	LOGC(ConfigServerGame::isSpaceAiLoggingEnabled(), "debug_ai", ("AiShipBehaviorDock() unit(%s) dockTarget(%s) approachHardPointCount(%zu) exitHardPointCount(%zu)", (shipController.getOwner() != nullptr) ? shipController.getOwner()->getNetworkId().getValueString().c_str() : "nullptr owner", dockTarget.getNetworkId().getValueString().c_str(), m_approachHardPointList->size(), m_exitHardPointList->size()));
 }
 
 // ----------------------------------------------------------------------

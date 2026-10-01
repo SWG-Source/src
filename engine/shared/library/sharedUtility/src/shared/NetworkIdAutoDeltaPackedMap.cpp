@@ -21,8 +21,8 @@ namespace Archive
 		char value[200];
 		Command c;
 
-		Archive::put(target, static_cast<int32_t>(countCharacter(buffer,':')));
-		Archive::put(target, static_cast<int32_t>(0)); // baselineCommandCount
+		Archive::put(target, static_cast<uint32_t>(countCharacter(buffer,':')));
+		Archive::put(target, static_cast<uint32_t>(0)); // baselineCommandCount
 		
 		int tempPos = 0;
 		for (std::string::const_iterator i=buffer.begin(); i!=buffer.end(); ++i)
@@ -52,8 +52,8 @@ namespace Archive
 		char temp[200];
 		
 		Command c;
-		int32_t commandCount;
-		int32_t baselineCommandCount;
+		uint32_t commandCount;
+		uint32_t baselineCommandCount;
 
 		Archive::get(source, commandCount);
 		Archive::get(source, baselineCommandCount);
@@ -64,7 +64,7 @@ namespace Archive
 		}
 		else
 		{
-			for (int32_t i = 0; i < commandCount; ++i)
+			for (uint32_t i = 0; i < commandCount; ++i)
 			{
 				Archive::get(source, c.cmd);
 				Archive::get(source, c.key);

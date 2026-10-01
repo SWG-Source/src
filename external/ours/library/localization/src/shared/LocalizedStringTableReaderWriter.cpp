@@ -334,7 +334,7 @@ LocalizedString *  LocalizedStringTableRW::addString(const Unicode::String & str
 	assert(locstr != nullptr);   //lint !e1924 // c-style cast.  MSVC bug
 
 	char buf[64];
-	sprintf(buf, "%03ld_default", m_nextUniqueId);
+	sprintf(buf, "%03u_default", m_nextUniqueId);
 
 	Unicode::NarrowString name(buf);
 
@@ -367,7 +367,7 @@ LocalizedString *             LocalizedStringTableRW::addString(LocalizedString 
 			const std::string       old_str = old_locstr ? Unicode::wideToNarrow(old_locstr->getString()) : std::string();
 
 			sprintf(buf,
-				"LocalizedStringTableRW::addString failed inserting duplicate id [%d]\n"
+				"LocalizedStringTableRW::addString failed inserting duplicate id [%zu]\n"
 				"Existing string name=[%s], str=[%s]\n",
 				id,
 				old_name ? old_name->c_str() : "",
@@ -388,7 +388,7 @@ LocalizedString *             LocalizedStringTableRW::addString(LocalizedString 
 
 			sprintf(buf,
 				"LocalizedStringTableRW::addString failed inserting duplicate name [%s]\n"
-				"Existing string id=[%d] name=[%s], str=[%s]\n",
+				"Existing string id=[%zu] name=[%s], str=[%s]\n",
 				name.c_str(),
 				id,
 				old_name ? old_name->c_str() : "",

@@ -9,6 +9,8 @@
 #ifndef INCLUDED_Report_H
 #define INCLUDED_Report_H
 
+
+#include "sharedFoundation/FormatAttribute.h"
 // ======================================================================
 
 class Report
@@ -40,7 +42,7 @@ public:
 	static DLLEXPORT void setFlags(int flags);
 	static void           puts(const char *string);
 	static void           vprintf(const char *format, va_list va);
-	static DLLEXPORT void printf(const char *format, ...);
+	static DLLEXPORT void printf(const char *format, ...) SWG_FORMAT_PRINTF(1, 2);
 };
 
 // ======================================================================

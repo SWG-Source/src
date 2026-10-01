@@ -34,6 +34,7 @@
 #include "sharedFoundation/CalendarTime.h"
 #include "sharedFoundation/DynamicVariableList.h"
 #include "sharedFoundation/DynamicVariableListNestedList.h"
+#include "sharedFoundation/FixedWidthParse.h"
 #include "sharedFoundation/FormattedString.h"
 #include "sharedFoundation/GameControllerMessage.h"
 #include "sharedGame/PlanetMapManager.h"
@@ -159,6 +160,15 @@ namespace PlanetObjectNamespace
 #ifdef _DEBUG
 	bool ms_printEventDebug = false;
 #endif
+
+	// A "server first" claim time is persisted as decimal text and keyed
+	// as an int32 in m_collectionServerFirst, so text that is not exactly
+	// one int32 is not a claim time. Checking before converting keeps the
+	// persisted value and the key the same time on every platform.
+	bool parseServerFirstClaimTime(Unicode::String const & text, int32 & claimTime)
+	{
+		return FixedWidthParse::parseInt32(text, 10, claimTime);
+	}
 }
 
 using namespace PlanetObjectNamespace;
@@ -938,7 +948,14 @@ void PlanetObject::onLoadedFromDatabase()
 		if (value.size() != 3)
 			continue;
 
-		claimTime = static_cast<time_t>(::atol(Unicode::wideToNarrow(value[0]).c_str()));
+		int32 claimTime32 = 0;
+		if (!parseServerFirstClaimTime(value[0], claimTime32))
+		{
+			WARNING(true, ("PlanetObject: \"server first\" objvar %s has an invalid claim time", objvar.c_str()));
+			continue;
+		}
+
+		claimTime = static_cast<time_t>(claimTime32);
 		claimantId = NetworkId(Unicode::wideToNarrow(value[1]));
 		claimantName = value[2];
 
@@ -1079,7 +1096,10 @@ void PlanetObject::removeCollectionServerFirst(const CollectionsDataTable::Colle
 		if (value.size() != 3)
 			return;
 
-		const time_t claimTime = static_cast<time_t>(::atol(Unicode::wideToNarrow(value[0]).c_str()));
+		// an invalid claim time was never loaded into m_collectionServerFirst
+		int32 claimTime32 = 0;
+		const bool claimTimeValid = parseServerFirstClaimTime(value[0], claimTime32);
+		const time_t claimTime = static_cast<time_t>(claimTime32);
 		const NetworkId claimantId = NetworkId(Unicode::wideToNarrow(value[1]));
 		const Unicode::String claimantName = value[2];
 
@@ -1093,7 +1113,8 @@ void PlanetObject::removeCollectionServerFirst(const CollectionsDataTable::Colle
 
 		IGNORE_RETURN(setObjVarItem(OBJVAR_COLLECTION_SERVER_FIRST_UPDATE_NUMBER, collectionServerFirstUpdateNumber));
 		m_collectionServerFirstUpdateNumber = collectionServerFirstUpdateNumber;
-		IGNORE_RETURN(m_collectionServerFirst.erase(std::make_pair(std::make_pair(static_cast<int32>(claimTime), collectionInfo.name), std::make_pair(claimantId, claimantName))));
+		if (claimTimeValid)
+			IGNORE_RETURN(m_collectionServerFirst.erase(std::make_pair(std::make_pair(claimTime32, collectionInfo.name), std::make_pair(claimantId, claimantName))));
 
 		// CS log
 		LOG("CustomerService", ("CollectionServerFirst:revoked (%s/%s/%s) which was granted to (%s, %s) at %ld (%s) (update #%d)",
@@ -1143,10 +1164,23 @@ void PlanetObject::handleCMessageTo(MessageToPayload const &message)
 						std::vector<Unicode::String> value;
 						if (objvars.getItem(objvar, value) && (value.size() == 3))
 						{
-							const time_t serverFirstOldTime = static_cast<time_t>(::atol(Unicode::wideToNarrow(value[0]).c_str()));
-							const time_t serverFirstNewTime = static_cast<time_t>(::atol(Unicode::wideToNarrow(tokens[1]).c_str()));
+							// The new time must be a claim time (positive, as the sender
+							// requires) before either representation is changed. An
+							// invalid old time was never loaded into
+							// m_collectionServerFirst, so there is nothing to erase.
+							int32 oldTime32 = 0;
+							int32 newTime32 = 0;
+							const bool oldTimeValid = parseServerFirstClaimTime(value[0], oldTime32);
+							if (!parseServerFirstClaimTime(tokens[1], newTime32) || (newTime32 <= 0))
+							{
+								WARNING(true, ("C++SetCollectionServerFirstTime for %s: invalid time", collectionInfo->name.c_str()));
+								return;
+							}
 
-							if (serverFirstOldTime != serverFirstNewTime)
+							const time_t serverFirstOldTime = static_cast<time_t>(oldTime32);
+							const time_t serverFirstNewTime = static_cast<time_t>(newTime32);
+
+							if (!oldTimeValid || (oldTime32 != newTime32))
 							{
 								const NetworkId claimantId = NetworkId(Unicode::wideToNarrow(value[1]));
 								const Unicode::String claimantName = value[2];
@@ -1169,8 +1203,9 @@ void PlanetObject::handleCMessageTo(MessageToPayload const &message)
 									IGNORE_RETURN(setObjVarItem(OBJVAR_COLLECTION_SERVER_FIRST_UPDATE_NUMBER, collectionServerFirstUpdateNumber));
 									m_collectionServerFirstUpdateNumber = collectionServerFirstUpdateNumber;
 
-									IGNORE_RETURN(m_collectionServerFirst.erase(std::make_pair(std::make_pair(static_cast<int32>(serverFirstOldTime), collectionInfo->name), std::make_pair(claimantId, claimantName))));
-									m_collectionServerFirst.insert(std::make_pair(std::make_pair(static_cast<int32>(serverFirstNewTime), collectionInfo->name), std::make_pair(claimantId, claimantName)));
+									if (oldTimeValid)
+										IGNORE_RETURN(m_collectionServerFirst.erase(std::make_pair(std::make_pair(oldTime32, collectionInfo->name), std::make_pair(claimantId, claimantName))));
+									m_collectionServerFirst.insert(std::make_pair(std::make_pair(newTime32, collectionInfo->name), std::make_pair(claimantId, claimantName)));
 
 									// CS log
 									LOG("CustomerService", ("CollectionServerFirst:(%s/%s/%s) \"server first\" completion time changed from %ld (%s) to %ld (%s) (update #%d)",

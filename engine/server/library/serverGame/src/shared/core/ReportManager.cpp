@@ -223,7 +223,7 @@ void ReportManager::handleMessage(ChatOnRequestLog const &chatOnRequestLog)
 
 		report.append(header);
 
-		typedef std::multimap<uint32_t, Unicode::String> SortedChatLog;
+		typedef std::multimap<time_t, Unicode::String> SortedChatLog;
 		typedef std::set<Unicode::String> SortedFromPlayers;
 		SortedChatLog sortedChatLog;
 		SortedFromPlayers sortedFromPlayers;
@@ -266,7 +266,7 @@ void ReportManager::handleMessage(ChatOnRequestLog const &chatOnRequestLog)
 			Unicode::String toPlayer;
 			Unicode::String text;
 			Unicode::String channel;
-			uint32_t time;
+			time_t time;
 
 			for (; iterChatLog != chatLog.end(); ++iterChatLog)
 			{

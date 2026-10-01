@@ -597,7 +597,7 @@ jlongArray JNICALL ScriptMethodsResourceNamespace::getResourceTypes(JNIEnv * env
 	LocalLongArrayRefPtr jtypes = createNewLongArray(count);
 	if (jtypes == LocalLongArrayRef::cms_nullPtr)
 	{
-		WARNING(true, ("JavaLibrary::getResourceTypes cannot create obj_id array of size %d", count));
+		WARNING(true, ("JavaLibrary::getResourceTypes cannot create obj_id array of size %zu", count));
 		return 0;
 	}
 
@@ -967,7 +967,7 @@ jobjectArray JNICALL ScriptMethodsResourceNamespace::requestResourceList(JNIEnv 
 	LocalObjectArrayRefPtr densityArray = createNewObjectArray(count, JavaLibrary::getClsResourceDensity());
 	if (densityArray == LocalObjectArrayRef::cms_nullPtr)
 	{
-		WARNING(true, ("JavaLibrary::requestResourceList cannot create resource density array of size %d", count));
+		WARNING(true, ("JavaLibrary::requestResourceList cannot create resource density array of size %zu", count));
 		return 0;
 	}
 
@@ -1004,7 +1004,7 @@ jobjectArray JNICALL ScriptMethodsResourceNamespace::getResourceAttributes(JNIEn
 	LocalObjectArrayRefPtr attribArray = createNewObjectArray(attribs.size(), JavaLibrary::getClsResourceAttribute());
 	if (attribArray == LocalObjectArrayRef::cms_nullPtr)
 	{
-		WARNING(true, ("JavaLibrary::getResourceAttributes could not create Java resource array of size %u", attribs.size()));
+		WARNING(true, ("JavaLibrary::getResourceAttributes could not create Java resource array of size %zu", attribs.size()));
 		return 0;
 	}
 
@@ -1111,7 +1111,7 @@ jobjectArray JNICALL ScriptMethodsResourceNamespace::getScaledResourceAttributes
 	LocalObjectArrayRefPtr attribArray = createNewObjectArray(attribs.size(), JavaLibrary::getClsResourceAttribute());
 	if (attribArray == LocalObjectArrayRef::cms_nullPtr)
 	{
-		WARNING(true, ("JavaLibrary::getScaledResourceAttributes could not create Java resource array of size %u", attribs.size()));
+		WARNING(true, ("JavaLibrary::getScaledResourceAttributes could not create Java resource array of size %zu", attribs.size()));
 		return 0;
 	}
 

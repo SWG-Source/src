@@ -81,7 +81,7 @@ void PlanetServerMetricsData::updateData()
 			if (iter2 == m_gameServerLoadTime.end())
 			{
 				// create a node to report load time for this game server
-				snprintf(buffer, sizeof(buffer)-1, "loadTime_%s_%lu", ConfigPlanetServer::getSceneID(), iter->first);
+				snprintf(buffer, sizeof(buffer)-1, "loadTime_%s_%u", ConfigPlanetServer::getSceneID(), iter->first);
 				buffer[sizeof(buffer)-1] = '\0';
 
 				p.m_label = buffer;

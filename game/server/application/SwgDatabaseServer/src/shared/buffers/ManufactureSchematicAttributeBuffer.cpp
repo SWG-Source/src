@@ -144,7 +144,7 @@ bool ManufactureSchematicAttributeBuffer::load(DB::Session *session, const DB::T
 
 bool ManufactureSchematicAttributeBuffer::save(DB::Session *session)
 {
-	LOG("SaveCounts",("ManufactureSchematicAttributeBuffer:  %i saved to db",m_rows.size()));
+	LOG("SaveCounts",("ManufactureSchematicAttributeBuffer:  %zu saved to db",m_rows.size()));
 	
 	DBQuery::ManufactureSchematicAttributeQuery qry;
 	

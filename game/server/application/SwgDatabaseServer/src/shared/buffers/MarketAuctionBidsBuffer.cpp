@@ -100,8 +100,8 @@ void MarketAuctionBidsBuffer::addRowToIndex (const NetworkId &itemId, DBSchema::
 
 bool MarketAuctionBidsBuffer::save(DB::Session *session)
 {
-	LOG("SaveCounts",("MarketAuctionBids:  %i saved to db",m_rows.size()));
-	DEBUG_REPORT_LOG(true, ("Saving Market Auction Bids Buffer. mode:%d rowcount:%d\n", m_mode, m_rows.size()));
+	LOG("SaveCounts",("MarketAuctionBids:  %zu saved to db",m_rows.size()));
+	DEBUG_REPORT_LOG(true, ("Saving Market Auction Bids Buffer. mode:%d rowcount:%zu\n", m_mode, m_rows.size()));
 	
 	DBQuery::MarketAuctionBidsQuery qry;
 	

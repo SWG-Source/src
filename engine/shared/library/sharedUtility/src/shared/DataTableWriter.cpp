@@ -19,6 +19,7 @@
 #include "sharedXml/XmlTreeNode.h"
 
 #include <map>
+#include "sharedFoundation/FixedWidthParse.h"
 
 // ======================================================================
 
@@ -265,7 +266,7 @@ void DataTableWriter::_loadWorksheet(NamedDataTable * ndt, XmlTreeNode nodeWorks
 	while(!nodeCell.isNull())
 	{
 		XmlTreeNode nodeText = nodeCell.getTextChildNodeNamed("Data");
-		FATAL(nodeText.isNull(), ("Worksheet %s: Column #%d missing a name", ndt->getName().c_str(), ndt->m_columns.size()+1));
+		FATAL(nodeText.isNull(), ("Worksheet %s: Column #%zu missing a name", ndt->getName().c_str(), ndt->m_columns.size()+1));
 
 		std::string s = nodeText.getTextValue();
 		ndt->m_columns.push_back(s);
@@ -279,14 +280,14 @@ void DataTableWriter::_loadWorksheet(NamedDataTable * ndt, XmlTreeNode nodeWorks
 	while(!nodeCell.isNull())
 	{
 		XmlTreeNode nodeText = nodeCell.getTextChildNodeNamed("Data");
-		FATAL(nodeText.isNull(), ("Worksheet %s: Column #%d missing a type", ndt->getName().c_str(), ndt->m_types.size()+1));
+		FATAL(nodeText.isNull(), ("Worksheet %s: Column #%zu missing a type", ndt->getName().c_str(), ndt->m_types.size()+1));
 
 		std::string s = nodeText.getTextValue();
 		ndt->m_types.push_back(new DataTableColumnType(unquotify(s)));
 		nodeCell = nodeCell.getNextSiblingElementNode();
 	}
 
-	FATAL(ndt->m_columns.size() != ndt->m_types.size(), ("Worksheet %s: Number of columns %d does not match number of types %d",
+	FATAL(ndt->m_columns.size() != ndt->m_types.size(), ("Worksheet %s: Number of columns %zu does not match number of types %zu",
 		ndt->getName().c_str(), ndt->m_columns.size(), ndt->m_types.size()));
 
 	nodeRow = nodeRow.getNextSiblingElementNode();
@@ -316,11 +317,11 @@ void DataTableWriter::_loadWorksheet(NamedDataTable * ndt, XmlTreeNode nodeWorks
 			// Get the cell's index attribute if provide
 			nodeCell.getElementAttributeAsInt("Index", nIndex, true);
 
-			FATAL(nIndex && nIndex <= count, ("Worksheet %s: Row %d has an out of order index number. Expected %d, got %d",
+			FATAL(nIndex && nIndex <= count, ("Worksheet %s: Row %zu has an out of order index number. Expected %d, got %d",
 				ndt->getName().c_str(), ndt->m_rows.size()+1, count+1, nIndex));
 
 			int colSize = ndt->m_columns.size();
-			FATAL(nIndex > colSize || count >= colSize, ("Worksheet %s: Too many columns in row %d. Expected %d, got %d",
+			FATAL(nIndex > colSize || count >= colSize, ("Worksheet %s: Too many columns in row %zu. Expected %d, got %d",
 				ndt->getName().c_str(), ndt->m_rows.size()+1, colSize, nIndex > colSize ? nIndex : count+1));
 
 			// Skip cells up to index attribute value
@@ -728,7 +729,11 @@ DataTableCell *DataTableWriter::_getNewCell(DataTableColumnType const &columnTyp
 	switch (columnType.getBasicType())
 	{
 	case DataTableColumnType::DT_Int:
-		return new DataTableCell(static_cast<int32>(strtol(value.c_str(), nullptr, 0)));
+		{
+			int32_t intValue = 0;
+			FATAL(!FixedWidthParse::toInt32(value.c_str(), nullptr, 0, intValue), ("integer cell value [%s] does not fit in 32 bits", value.c_str()));
+			return new DataTableCell(intValue);
+		}
 		break;
 	case DataTableColumnType::DT_Float:
 		return new DataTableCell(static_cast<float>(atof(value.c_str())));
@@ -774,7 +779,7 @@ void DataTableWriter::_loadRow(NamedDataTable * ndt, const char* row, int index)
 		}
 		else
 		{
-			FATAL(tab - currentPos > isizeof(buf) - 1, ("Cells can only be less than %d bytes", sizeof(buf) - 1));
+			FATAL(tab - currentPos > isizeof(buf) - 1, ("Cells can only be less than %zu bytes", sizeof(buf) - 1));
 			strncpy(buf, currentPos, tab - currentPos);
 			buf[tab - currentPos] = '\0';
 		}
@@ -795,7 +800,7 @@ void DataTableWriter::_loadRow(NamedDataTable * ndt, const char* row, int index)
 		}
 		else
 		{
-			FATAL(endLine - currentPos > isizeof(buf) - 1, ("Cells can only be less than %d bytes", sizeof(buf) - 1));
+			FATAL(endLine - currentPos > isizeof(buf) - 1, ("Cells can only be less than %zu bytes", sizeof(buf) - 1));
 			strncpy(buf, currentPos, endLine - currentPos);
 			buf[endLine - currentPos] = '\0';
 		}
@@ -915,7 +920,7 @@ bool DataTableWriter::_checkIntegrity(const NamedDataTable * ndt) const
 	FATAL(ndt->m_columns.empty(), ("empty columns"));
 	FATAL(ndt->m_columns.size() != ndt->m_types.size(), ("size mismatch"));
 	FATAL(ndt->m_rows.empty(), ("empty rows"));
-	FATAL(ndt->m_columns.size() != ndt->m_rows[0]->size(), ("size mismatch %d %d", ndt->m_columns.size(), ndt->m_rows[0]->size()));
+	FATAL(ndt->m_columns.size() != ndt->m_rows[0]->size(), ("size mismatch %zu %zu", ndt->m_columns.size(), ndt->m_rows[0]->size()));
 
 	// Check unique constraints
 	int column = 0;

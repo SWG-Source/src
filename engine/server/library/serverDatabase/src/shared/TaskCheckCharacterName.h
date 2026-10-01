@@ -44,7 +44,7 @@ class TaskCheckCharacterName : public DB::TaskRequest
 
 	  public:
 		DB::BindableString<127> character_name;
-		DB::BindableLong result;
+		DB::BindableInt32 result;
 				
 	  private:   
 		CheckCharacterNameQuery(const CheckCharacterNameQuery&);

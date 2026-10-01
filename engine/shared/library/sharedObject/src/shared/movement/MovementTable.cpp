@@ -320,7 +320,7 @@ float MovementTable::getSlowMoveRate(Postures::Enumerator i_posture, uint64 i_st
 	PostureMap::iterator findIt = m_postures->find(i_posture);
 	if (findIt == m_postures->end())
 	{
-		DEBUG_WARNING(true, ("MovementTable::getSlowMoveRate(): failed to find rate table entry for posture id=[%s],name=[%s], will return 0 rate.", i_posture, Postures::getPostureName(i_posture)));
+		DEBUG_WARNING(true, ("MovementTable::getSlowMoveRate(): failed to find rate table entry for posture id=[%d],name=[%s], will return 0 rate.", i_posture, Postures::getPostureName(i_posture)));
 		return 0.0f;
 	}
 
@@ -352,7 +352,7 @@ float MovementTable::getFastMoveRate(Postures::Enumerator i_posture, uint64 i_st
 	PostureMap::iterator findIt = m_postures->find(i_posture);
 	if (findIt == m_postures->end())
 	{
-		DEBUG_WARNING(true, ("MovementTable::getFastMoveRate(): failed to find rate table entry for posture id=[%s],name=[%s], will return 0 rate.", i_posture, Postures::getPostureName(i_posture)));
+		DEBUG_WARNING(true, ("MovementTable::getFastMoveRate(): failed to find rate table entry for posture id=[%d],name=[%s], will return 0 rate.", i_posture, Postures::getPostureName(i_posture)));
 		return 0.0f;
 	}
 

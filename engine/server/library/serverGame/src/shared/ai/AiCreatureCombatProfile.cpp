@@ -204,7 +204,7 @@ void AiCreatureCombatProfileNamespace::loadCombatProfileTable(DataTable const & 
 		combatProfile.m_knockDownRecoveryTime = static_cast<time_t>(clamp(0, dataTable.getIntValue("knockdown_recovery_time", row), 32));
 	}
 
-	LOG("debug_ai", ("AiCreatureCombatProfile::loadCombatProfileTable() Loading...%s - profiles(%u)", dataTable.getName().c_str(), s_combatProfileMap.size()));
+	LOG("debug_ai", ("AiCreatureCombatProfile::loadCombatProfileTable() Loading...%s - profiles(%zu)", dataTable.getName().c_str(), s_combatProfileMap.size()));
 }
 
 // ----------------------------------------------------------------------

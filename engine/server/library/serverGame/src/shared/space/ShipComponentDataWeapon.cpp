@@ -171,7 +171,7 @@ void ShipComponentDataWeapon::printDebugString      (Unicode::String & result, U
 		"%sEffectivenessArmor:    %f\n"
 		"%sEnergyPerShot:         %f\n"
 		"%sRefireRate:            %f @ %f\n"
-		"%sAmmo:                  (%lu) %d/%d\n",
+		"%sAmmo:                  (%u) %d/%d\n",
 		nPad.c_str (), m_weaponDamageMaximum, m_weaponDamageMinimum,
 		nPad.c_str (), m_weaponEffectivenessShields,
 		nPad.c_str (), m_weaponEffectivenessArmor,

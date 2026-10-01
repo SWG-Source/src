@@ -179,6 +179,13 @@ bool CommoditiesSnapshot::load(DB::Session *session)
  *
  * @return true if the objects were sent, false if they were not.
  */
+bool CommoditiesSnapshot::prepareSend() const
+{
+	return true;
+}
+
+// ----------------------------------------------------------------------
+
 bool CommoditiesSnapshot::send(GameServerConnection *connection) const
 {
 	return true;
@@ -195,7 +202,7 @@ void CommoditiesSnapshot::saveCompleted()
 
 // ----------------------------------------------------------------------
 
-void CommoditiesSnapshot::newObject(NetworkId const & objectId, int templateId, Tag typeId)
+void CommoditiesSnapshot::newObject(NetworkId const & objectId, uint32 templateId, Tag typeId)
 {
 	WARNING(true,("Attempt to create object %s.  It has unknown type %i.",objectId.getValueString().c_str(),typeId));
 }
@@ -283,7 +290,7 @@ void CommoditiesSnapshot::handleCreateAuctionMessage(CMCreateAuctionMessage &msg
 		msg.GetAttributes(), 
 		msg.GetUserDescription(), 
 		msg.GetItemType(), 
-		msg.GetItemTemplateId(), 
+		static_cast<uint32>(msg.GetItemTemplateId()), // the message carries the template CRC as a signed int; same bits
 		msg.GetItemName(), 
 		msg.GetExpireTimer(),
 		msg.GetFlags(),

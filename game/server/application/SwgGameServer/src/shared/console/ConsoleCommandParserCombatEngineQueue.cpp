@@ -95,12 +95,15 @@ bool ConsoleCommandParserCombatEngineQueue::performParsing (const NetworkId & us
 		}
 
 		NetworkId weapon;
-		unsigned int mode = 0;
+		int32 mode = 0;
+		if (argv.size() >= 3 && !parseArg(argv[2], mode))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
 		if (argv.size() >= 2)
 			weapon = NetworkId(Unicode::wideToNarrow(argv[1]));
-		if (argv.size() >= 3)
-			mode = strtoul(Unicode::wideToNarrow(argv[2]).c_str (), 0, 10);
-		if (CombatEngine::addAttackAction(*attacker, weapon, static_cast<int>(mode)))
+		if (CombatEngine::addAttackAction(*attacker, weapon, mode))
 			result += getErrorMessage(argv[0], ERR_SUCCESS);
 		else
 			result += getErrorMessage(argv[0], ERR_QUEUE_COMMAND_FAIL);

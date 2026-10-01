@@ -142,14 +142,14 @@ void GameConnection::update()
 				if ((currentTime - g->m_lastKeepalive) > (2 * gameServerTimeout))
 				{
 					g->m_timeLastKilled = currentTime;
-					LOG("ServerHang", ("killing (kill) GameServer %s,%d (%s) because it has not provided a keepalive message in %d seconds", NetworkHandler::getHumanReadableHostName().c_str(), g->m_pid, g->m_commandLine.c_str(), currentTime - g->m_lastKeepalive));
-					WARNING(true, ("killing (kill) GameServer %s,%d (%s) because it has not provided a keepalive message in %d seconds", NetworkHandler::getHumanReadableHostName().c_str(), g->m_pid, g->m_commandLine.c_str(), currentTime - g->m_lastKeepalive));
+					LOG("ServerHang", ("killing (kill) GameServer %s,%lu (%s) because it has not provided a keepalive message in %lu seconds", NetworkHandler::getHumanReadableHostName().c_str(), g->m_pid, g->m_commandLine.c_str(), currentTime - g->m_lastKeepalive));
+					WARNING(true, ("killing (kill) GameServer %s,%lu (%s) because it has not provided a keepalive message in %lu seconds", NetworkHandler::getHumanReadableHostName().c_str(), g->m_pid, g->m_commandLine.c_str(), currentTime - g->m_lastKeepalive));
 
 					// one time logging to customer service channel
 					if (!g->m_loggedKill)
 					{
 						g->m_loggedKill = true;
-						LOG("TaskManager", ("ServerHang: killing (kill) GameServer %s,%d (%s) because it has not provided a keepalive message in %d seconds", NetworkHandler::getHumanReadableHostName().c_str(), g->m_pid, g->m_commandLine.c_str(), currentTime - g->m_lastKeepalive));
+						LOG("TaskManager", ("ServerHang: killing (kill) GameServer %s,%lu (%s) because it has not provided a keepalive message in %lu seconds", NetworkHandler::getHumanReadableHostName().c_str(), g->m_pid, g->m_commandLine.c_str(), currentTime - g->m_lastKeepalive));
 					}
 
 					ProcessSpawner::kill(g->m_pid);
@@ -157,14 +157,14 @@ void GameConnection::update()
 				else if ((g->m_timeLastKilled == 0) || ((currentTime - g->m_timeLastKilled) >= 60))
 				{
 					g->m_timeLastKilled = currentTime;
-					LOG("ServerHang", ("killing (forceCore) GameServer %s,%d (%s) because it has not provided a keepalive message in %d seconds", NetworkHandler::getHumanReadableHostName().c_str(), g->m_pid, g->m_commandLine.c_str(), currentTime - g->m_lastKeepalive));
-					WARNING(true, ("killing (forceCore) GameServer %s,%d (%s) because it has not provided a keepalive message in %d seconds", NetworkHandler::getHumanReadableHostName().c_str(), g->m_pid, g->m_commandLine.c_str(), currentTime - g->m_lastKeepalive));
+					LOG("ServerHang", ("killing (forceCore) GameServer %s,%lu (%s) because it has not provided a keepalive message in %lu seconds", NetworkHandler::getHumanReadableHostName().c_str(), g->m_pid, g->m_commandLine.c_str(), currentTime - g->m_lastKeepalive));
+					WARNING(true, ("killing (forceCore) GameServer %s,%lu (%s) because it has not provided a keepalive message in %lu seconds", NetworkHandler::getHumanReadableHostName().c_str(), g->m_pid, g->m_commandLine.c_str(), currentTime - g->m_lastKeepalive));
 
 					// one time logging to customer service channel
 					if (!g->m_loggedKillForceCore)
 					{
 						g->m_loggedKillForceCore = true;
-						LOG("TaskManager", ("ServerHang: killing (forceCore) GameServer %s,%d (%s) because it has not provided a keepalive message in %d seconds", NetworkHandler::getHumanReadableHostName().c_str(), g->m_pid, g->m_commandLine.c_str(), currentTime - g->m_lastKeepalive));
+						LOG("TaskManager", ("ServerHang: killing (forceCore) GameServer %s,%lu (%s) because it has not provided a keepalive message in %lu seconds", NetworkHandler::getHumanReadableHostName().c_str(), g->m_pid, g->m_commandLine.c_str(), currentTime - g->m_lastKeepalive));
 					}
 
 					ProcessSpawner::forceCore(g->m_pid);

@@ -275,7 +275,7 @@ bool ConsoleCommandParserAi::performParsing(const NetworkId & userId, const Stri
 					std::map<NetworkId, std::pair<float, std::pair<uint32_t, uint32_t> > > const & hateOverTime = aiCreatureController->getCreature()->getHateOverTime();
 					if (!hateOverTime.empty())
 					{
-						result += Unicode::narrowToWide(fs.sprintf("* HATE OVER TIME LIST currentGameTime=(%lu)*\n", ServerClock::getInstance().getGameTimeSeconds()));
+						result += Unicode::narrowToWide(fs.sprintf("* HATE OVER TIME LIST currentGameTime=(%u)*\n", ServerClock::getInstance().getGameTimeSeconds()));
 
 						for (std::map<NetworkId, std::pair<float, std::pair<uint32_t, uint32_t> > >::const_iterator iter = hateOverTime.begin(); iter != hateOverTime.end(); ++iter)
 						{
@@ -291,7 +291,7 @@ bool ConsoleCommandParserAi::performParsing(const NetworkId & userId, const Stri
 								hateTargetName = "nullptr";
 							}
 
-							result += Unicode::narrowToWide(fs.sprintf("%s:%s (%.2f, %lu, %lu)\n", hateTargetName.c_str(), hateTarget.getValueString().c_str(), iter->second.first, iter->second.second.first, iter->second.second.second));
+							result += Unicode::narrowToWide(fs.sprintf("%s:%s (%.2f, %u, %u)\n", hateTargetName.c_str(), hateTarget.getValueString().c_str(), iter->second.first, iter->second.second.first, iter->second.second.second));
 						}
 					}
 				}
@@ -372,7 +372,7 @@ bool ConsoleCommandParserAi::performParsing(const NetworkId & userId, const Stri
 					std::map<NetworkId, std::pair<float, std::pair<uint32_t, uint32_t> > > const & hateOverTime = to->getHateOverTime();
 					if (!hateOverTime.empty())
 					{
-						result += Unicode::narrowToWide(fs.sprintf("* HATE OVER TIME LIST currentGameTime=(%lu)*\n", ServerClock::getInstance().getGameTimeSeconds()));
+						result += Unicode::narrowToWide(fs.sprintf("* HATE OVER TIME LIST currentGameTime=(%u)*\n", ServerClock::getInstance().getGameTimeSeconds()));
 
 						for (std::map<NetworkId, std::pair<float, std::pair<uint32_t, uint32_t> > >::const_iterator iter = hateOverTime.begin(); iter != hateOverTime.end(); ++iter)
 						{
@@ -388,7 +388,7 @@ bool ConsoleCommandParserAi::performParsing(const NetworkId & userId, const Stri
 								hateTargetName = "nullptr";
 							}
 
-							result += Unicode::narrowToWide(fs.sprintf("%s:%s (%.2f, %lu, %lu)\n", hateTargetName.c_str(), hateTarget.getValueString().c_str(), iter->second.first, iter->second.second.first, iter->second.second.second));
+							result += Unicode::narrowToWide(fs.sprintf("%s:%s (%.2f, %u, %u)\n", hateTargetName.c_str(), hateTarget.getValueString().c_str(), iter->second.first, iter->second.second.first, iter->second.second.second));
 						}
 					}
 				}

@@ -25,7 +25,7 @@
 class LoginCreateCharacterMessage : public GameNetworkMessage
 {
   public:
-    LoginCreateCharacterMessage (const StationId &stationId, const Unicode::String &characterName, const NetworkId &characterObjectId, int templateId, bool jedi);
+    LoginCreateCharacterMessage (const StationId &stationId, const Unicode::String &characterName, const NetworkId &characterObjectId, uint32 templateId, bool jedi);
     LoginCreateCharacterMessage (Archive::ReadIterator & source);
     virtual ~LoginCreateCharacterMessage ();
 
@@ -33,14 +33,14 @@ class LoginCreateCharacterMessage : public GameNetworkMessage
 	StationId           getStationId() const;
 	const Unicode::String & getCharacterName() const;
 	const NetworkId &   getCharacterObjectId() const;
-	int                 getTemplateId() const;
+	uint32                 getTemplateId() const;
 	bool                getJedi() const;
 	
   private:
     Archive::AutoVariable<StationId> m_stationId;
 	Archive::AutoVariable<Unicode::String> m_characterName;
 	Archive::AutoVariable<NetworkId> m_characterObjectId;
-	Archive::AutoVariable<int> m_templateId;
+	Archive::AutoVariable<uint32> m_templateId;
 	Archive::AutoVariable<bool> m_jedi;
   
   private: // disable:
@@ -73,7 +73,7 @@ inline const NetworkId & LoginCreateCharacterMessage::getCharacterObjectId() con
 
 // ----------------------------------------------------------------------
 
-inline int LoginCreateCharacterMessage::getTemplateId() const
+inline uint32 LoginCreateCharacterMessage::getTemplateId() const
 {
 	return m_templateId.get();
 }

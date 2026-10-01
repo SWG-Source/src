@@ -7,13 +7,13 @@ create table tangible_objects
 	appearance_data varchar(2000),
 	interest_radius int,
 	pvp_type int,
-	pvp_faction int,
+	pvp_faction int, -- BIND_AS(DB::BindableUint32)
 	damage_taken int,
 	custom_appearance varchar2(2000),
 	count int,
 	condition int,
 	creator_id number(20), -- BIND_AS(DB::BindableNetworkId)
-	source_draft_schematic int,
+	source_draft_schematic int, -- BIND_AS(DB::BindableUint32)
 	constraint pk_tangible_objects primary key (object_id) 
 );
 create index owner_id_idx on tangible_objects(owner_id) ;

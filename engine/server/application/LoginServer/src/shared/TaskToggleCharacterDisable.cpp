@@ -29,9 +29,9 @@ TaskToggleCharacterDisable::TaskToggleCharacterDisable(uint32 clusterId, const N
 bool TaskToggleCharacterDisable::process(DB::Session *session)
 {
 	ToggleCharacterDisableQuery qry;
-	qry.cluster_id=static_cast<long>(m_clusterId);
+	qry.cluster_id=m_clusterId;
 	qry.character_id=m_characterId;
-	qry.station_id=static_cast<long>(m_stationId);
+	qry.station_id=m_stationId;
 	qry.enabled_flag=m_enabled;
 	
 	bool rval = session->exec(&qry);

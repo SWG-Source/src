@@ -1,7 +1,7 @@
 create table free_object_ids
 (
-	start_id int,
-	end_id int,
+	start_id int, -- BIND_AS(DB::BindableNetworkId)
+	end_id int, -- BIND_AS(DB::BindableNetworkId)
 	constraint pk_free_object_ids primary key (start_id) 
 );
 

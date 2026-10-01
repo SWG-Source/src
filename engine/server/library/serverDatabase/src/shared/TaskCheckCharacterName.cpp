@@ -40,7 +40,7 @@ bool TaskCheckCharacterName::process(DB::Session *session)
 void TaskCheckCharacterName::onComplete()
 {
 	DataLookup::getInstance().onCharacterNameChecked(m_stationId, m_name, m_resultCode);
-	LOG("TraceCharacterCreation", ("%d TaskCheckCharacterName(%s) complete with result code %d", m_stationId, Unicode::wideToNarrow(m_name).c_str(), m_resultCode));
+	LOG("TraceCharacterCreation", ("%u TaskCheckCharacterName(%s) complete with result code %d", m_stationId, Unicode::wideToNarrow(m_name).c_str(), m_resultCode));
 }
 
 // ======================================================================

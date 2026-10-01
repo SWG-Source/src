@@ -445,7 +445,7 @@ bool ShipComponentAttachmentManager::saveChassisInfo(std::string const & chassis
 	dtw.loadFromSpreadsheet(filenameTab.c_str());
 	if (!dtw.save(filenameIff.c_str(), true))
 	{
-		WARNING(true, ("ShipComponentAttachmentManager failed to compile file [%s] to [%s]", filenameIff.c_str()));
+		WARNING(true, ("ShipComponentAttachmentManager failed to compile file [%s] to [%s]", filenameTab.c_str(), filenameIff.c_str()));
 		return false;
 	}
 

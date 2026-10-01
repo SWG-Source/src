@@ -77,7 +77,7 @@ Client::~Client()
 	
 	if (m_oid != NetworkId::cms_invalid && ConnectionServer::getClient(m_oid))
 	{
-		WARNING_STRICT_FATAL(true, ("Attempting to delete client %d without removing him from map\n", m_oid.getValueString().c_str()));
+		WARNING_STRICT_FATAL(true, ("Attempting to delete client %s without removing him from map\n", m_oid.getValueString().c_str()));
 	}
 	m_clientConnection = 0;
 

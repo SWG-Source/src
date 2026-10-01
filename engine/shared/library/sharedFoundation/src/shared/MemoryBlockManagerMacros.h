@@ -42,7 +42,7 @@ class MemoryBlockManager;
 	void * className::operator new(size_t size) \
 	{ \
 		UNREF(size); \
-		DEBUG_FATAL(size != sizeof(className),("Incorrect allocation size for class " #className ": %d/%d", size, sizeof(className))); \
+		DEBUG_FATAL(size != sizeof(className),("Incorrect allocation size for class " #className ": %zu/%zu", size, sizeof(className))); \
 		DEBUG_FATAL(!ms_memoryBlockManager, (#className " is not installed")); \
 		return ms_memoryBlockManager->allocate(); \
 	} \
@@ -86,7 +86,7 @@ class MemoryBlockManager;
 	void * className::operator new(size_t size) \
 	{ \
 		UNREF(size); \
-		DEBUG_FATAL(size != sizeof(className),("Incorrect allocation size for class " #className ": %d/%d", size, sizeof(className))); \
+		DEBUG_FATAL(size != sizeof(className),("Incorrect allocation size for class " #className ": %zu/%zu", size, sizeof(className))); \
 		DEBUG_FATAL(!ms_memoryBlockManager, (#className " is not installed")); \
 		return ms_memoryBlockManager->allocate(); \
 	} \

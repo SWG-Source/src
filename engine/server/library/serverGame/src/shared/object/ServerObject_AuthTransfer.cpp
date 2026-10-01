@@ -378,7 +378,7 @@ void ServerObject::transferAuthority(uint32 pid, bool skipLoadScreen, bool handl
 
 void ServerObject::releaseAuthority(uint32 newProcessId)
 {
-	DEBUG_REPORT_LOG(ConfigServerGame::getLogObservers(), ("Called releaseAuthority on %s to process %lu\n", getNetworkId().getValueString().c_str(), newProcessId));
+	DEBUG_REPORT_LOG(ConfigServerGame::getLogObservers(), ("Called releaseAuthority on %s to process %u\n", getNetworkId().getValueString().c_str(), newProcessId));
 
 	PositionUpdateTracker::flushPositionUpdate(*this);
 

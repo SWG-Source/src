@@ -220,7 +220,12 @@ bool ConsoleCommandParserResource::performParsing (const NetworkId & userId, con
 		ResourceContainerObject * const container = dynamic_cast<ResourceContainerObject*>(NetworkIdManager::getObjectById(contId));
 		std::string const & resourcePath = Unicode::wideToNarrow(argv[2]);
 		ResourceTypeObject * const resType = ServerUniverse::getInstance().getResourceTypeByName(resourcePath);
-		int const amount = strtol(Unicode::wideToNarrow (argv[3]).c_str (), nullptr, 10);
+		int32 amount = 0;
+		if (!parseArg(argv[3], amount))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
 		NetworkId const source(Unicode::wideToNarrow (argv[4]));
 		
 		if (container && resType)
@@ -279,7 +284,12 @@ bool ConsoleCommandParserResource::performParsing (const NetworkId & userId, con
 		CachedNetworkId contId (Unicode::wideToNarrow (argv[1]));
 		ResourceContainerObject* container=dynamic_cast<ResourceContainerObject*>(contId.getObject());
 		ResourceTypeObject *resType=ServerUniverse::getInstance().getResourceTypeByName(Unicode::wideToNarrow(argv[2]));
-		int amount=strtol(Unicode::wideToNarrow (argv[3]).c_str (), nullptr, 10);
+		int32 amount = 0;
+		if (!parseArg(argv[3], amount))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
 		
 		if (container && resType)
 		{
@@ -319,8 +329,13 @@ bool ConsoleCommandParserResource::performParsing (const NetworkId & userId, con
 	{
 		const std::string       parentResourceClassName   (Unicode::wideToNarrow(argv[1]));
 		const std::string       resourceTypeName          (Unicode::wideToNarrow(argv[2]));
-		const int               surveyRange             = strtol(Unicode::wideToNarrow(argv[3]).c_str(),nullptr,10);
-		const int               numPoints               = strtol(Unicode::wideToNarrow(argv[4]).c_str(),nullptr,10);
+		int32                   surveyRange             = 0;
+		int32                   numPoints               = 0;
+		if (!parseArg(argv[3], surveyRange) || !parseArg(argv[4], numPoints))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
 		const Object *          player                  = NetworkIdManager::getObjectById(userId);
 
 		if (player)

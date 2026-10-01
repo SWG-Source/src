@@ -131,7 +131,7 @@ PersistentCrcString::PersistentCrcString(char const * string, ConstChar)
 	m_buffer(const_cast<char *>(string))
 {
 #ifdef _DEBUG
-	DEBUG_FATAL(strlen(string)+1 >= Os::MAX_PATH_LENGTH, ("source string too long %d/%d",strlen(string)+1, Os::MAX_PATH_LENGTH));
+	DEBUG_FATAL(strlen(string)+1 >= Os::MAX_PATH_LENGTH, ("source string too long %zu/%d",strlen(string)+1, Os::MAX_PATH_LENGTH));
 	char buffer[Os::MAX_PATH_LENGTH];
 	normalize(buffer, string);
 	DEBUG_FATAL(strcmp(string, buffer) != 0, ("source string was not normalized"));

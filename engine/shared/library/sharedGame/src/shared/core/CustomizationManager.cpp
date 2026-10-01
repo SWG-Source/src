@@ -403,7 +403,7 @@ std::string CustomizationManager::getServerSpeciesGender(Object const & creature
 	std::string const templateName = creature.getObjectTemplateName();
 	std::string::size_type serverPos = templateName.find_last_of("/");
 	std::string::size_type const iffPos = templateName.find(".iff", 0);
-	if (serverPos != static_cast<unsigned int>(std::string::npos) && iffPos != static_cast<unsigned int>(std::string::npos))
+	if (serverPos != std::string::npos && iffPos != std::string::npos)
 	{
 		serverPos += strlen("/");
 		result = templateName.substr(serverPos, iffPos - serverPos);
@@ -426,7 +426,7 @@ std::string CustomizationManager::getSharedSpeciesGender(Object const & creature
 	std::string const templateName = creature.getObjectTemplateName();
 	std::string::size_type sharedPos = templateName.find("shared_", 0);
 	std::string::size_type const iffPos = templateName.find(".iff", 0);
-	if (sharedPos != static_cast<unsigned int>(std::string::npos) && iffPos != static_cast<unsigned int>(std::string::npos))
+	if (sharedPos != std::string::npos && iffPos != std::string::npos)
 	{
 		sharedPos += strlen("shared_");
 		result = templateName.substr(sharedPos, iffPos - sharedPos);

@@ -112,7 +112,7 @@ ServerAsteroidManager::FieldHandle ServerAsteroidManager::generateField(Asteroid
 
 	if(asteroidDatas.size() != static_cast<unsigned int>(fieldData.count))
 	{
-		DEBUG_FATAL(true, ("ServerAsteroidManager::generateField should have generated %d asteroids, but we have %d instead", fieldData.count, asteroidDatas.size()));
+		DEBUG_FATAL(true, ("ServerAsteroidManager::generateField should have generated %d asteroids, but we have %zu instead", fieldData.count, asteroidDatas.size()));
 		return BAD_HANDLE;
 	}
 

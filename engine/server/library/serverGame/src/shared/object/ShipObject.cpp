@@ -1154,7 +1154,7 @@ void ShipObject::internalHandleFireShot(Client const *gunnerClient, int const we
 		if (gunnerClient)
 		{
 			deltaTime = gunnerClient->computeDeltaTimeInSeconds(syncStampLong);
-			DEBUG_WARNING(deltaTime < 0.f, ("ShipObject::internalHandleFireShot: deltaTime %1.2f computed for object [id=%s, template=%s] is < 0", getNetworkId().getValueString().c_str(), getObjectTemplateName()));
+			DEBUG_WARNING(deltaTime < 0.f, ("ShipObject::internalHandleFireShot: deltaTime %1.2f computed for object [id=%s, template=%s] is < 0", deltaTime, getNetworkId().getValueString().c_str(), getObjectTemplateName()));
 		}
 
 		serverTransform_p.move_l(Vector::unitZ * deltaTime * getWeaponProjectileSpeed(weaponIndex));

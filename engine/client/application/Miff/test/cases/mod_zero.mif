@@ -1,0 +1,7 @@
+form "TEST"
+{
+	chunk "0000"
+	{
+		int32 5 % 0
+	}
+}

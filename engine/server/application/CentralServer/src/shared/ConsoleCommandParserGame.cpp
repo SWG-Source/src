@@ -78,9 +78,15 @@ bool ConsoleCommandParserGame::performParsing(const NetworkId & track, const Str
 				// kill the game server process specified (by disconnecting it from central)
 				if(argv.size() > 2)
 				{
-					unsigned int pid;
-					sscanf(Unicode::wideToNarrow(argv[2]).c_str(), "%d", &pid);
-					GameServerConnection * gameConn = CentralServer::getInstance().getGameServer(pid);
+					uint32 pid = 0;
+					GameServerConnection * gameConn = nullptr;
+					if(!parseArg(argv[2], pid))
+					{
+						result += getErrorMessage(argv[1], ERR_INVALID_ARGUMENTS);
+						successResult = true;
+					}
+					else
+						gameConn = CentralServer::getInstance().getGameServer(pid);
 					if(gameConn)
 					{
 						gameConn->setDisconnectReason("Central ConsoleCommandParserGame kill command");
@@ -98,7 +104,7 @@ bool ConsoleCommandParserGame::performParsing(const NetworkId & track, const Str
 				for(i = gameServers.begin(); i != gameServers.end(); ++i)
 				{
 					char entry[256] = {"\0"};
-					IGNORE_RETURN(snprintf(entry, sizeof(entry), "%lu, %lu, %s, %s\n", (*i)->getProcessId(), (*i)->getOsProcessId(), (*i)->getRemoteAddress().c_str(), (*i)->getSceneId().c_str()));
+					IGNORE_RETURN(snprintf(entry, sizeof(entry), "%u, %u, %s, %s\n", (*i)->getProcessId(), (*i)->getOsProcessId(), (*i)->getRemoteAddress().c_str(), (*i)->getSceneId().c_str()));
 					result += Unicode::narrowToWide(entry);
 				}
 				ConsoleConnection::onCommandComplete(Unicode::wideToNarrow(result), static_cast<int>(track.getValue()));
@@ -114,11 +120,17 @@ bool ConsoleCommandParserGame::performParsing(const NetworkId & track, const Str
 			// starts the shutdown process
 			else if(cmd == "shutdown")
 			{
-				if( argv.size() > 4 )
+				uint32 timeToShutdown = 0;
+				uint32 maxTime = 0;
+				if( argv.size() > 4 && (!parseArg(argv[2], timeToShutdown) || !parseArg(argv[3], maxTime)) )
+				{
+					LOG("ServerConsole", ("Received an improperly formatted shutdown command."));
+					result += getErrorMessage(argv[1], ERR_INVALID_ARGUMENTS);
+					successResult = true;
+				}
+				else if( argv.size() > 4 )
 				{
 					LOG("ServerConsole", ("Received command to shutdown the cluster."));
-					uint32 timeToShutdown = strtoul(Unicode::wideToNarrow(argv[2]).c_str(), nullptr, 10);
-					uint32 maxTime = strtoul(Unicode::wideToNarrow(argv[3]).c_str(), nullptr, 10);
 					Unicode::String systemMessage = Unicode::narrowToWide("");
 					for(unsigned int i = 4; i < argv.size(); ++i)
 					{
@@ -139,9 +151,14 @@ bool ConsoleCommandParserGame::performParsing(const NetworkId & track, const Str
 			}
 			else if(cmd == "authorizeTransfer")
 			{
-				if(argv.size() > 1)
+				uint32 stationId = 0;
+				if(argv.size() > 2 && !parseArg(argv[2], stationId))
 				{
-					unsigned int stationId = strtoul(Unicode::wideToNarrow(argv[2]).c_str(), nullptr, 10);
+					result += getErrorMessage(argv[1], ERR_INVALID_ARGUMENTS);
+					successResult = true;
+				}
+				else if(argv.size() > 2)
+				{
 					if(stationId > 0)
 					{
 						GenericValueTypeMessage<unsigned int> auth("AuthorizeDownload", stationId);
@@ -164,10 +181,14 @@ bool ConsoleCommandParserGame::performParsing(const NetworkId & track, const Str
 				if(! isalpha(cmd.c_str()[0]))
 				{
 					// check to see if the next parameter is a pid to send the command to
-					uint32 pid;
-					sscanf(Unicode::wideToNarrow(argv[1]).c_str(), "%lu", &pid);
-					GameServerConnection * gameConn = CentralServer::getInstance().getGameServer(pid);
-					if(gameConn)
+					uint32 pid = 0;
+					GameServerConnection * gameConn = nullptr;
+					if(!parseArg(argv[1], pid))
+					{
+						result += getErrorMessage(argv[1], ERR_INVALID_ARGUMENTS);
+						successResult = true;
+					}
+					else if((gameConn = CentralServer::getInstance().getGameServer(pid)) != nullptr)
 					{
 						ConGenericMessage cm(Unicode::wideToNarrow(originalCommand), static_cast<unsigned int>(track.getValue()));
 						gameConn->send(cm, true);

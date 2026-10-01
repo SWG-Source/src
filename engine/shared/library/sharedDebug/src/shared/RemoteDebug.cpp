@@ -151,8 +151,8 @@ uint32 RemoteDebug::registerStream(const std::string& streamName)
 	std::string base;
 	std::string rest = streamName;
 	//look for subchannels with a double backslash
-	uint32 baseIndex = 0;
-	uint32 restIndex = streamName.find('\\');
+	std::string::size_type baseIndex = 0;
+	std::string::size_type restIndex = streamName.find('\\');
 	while(restIndex != std::string::npos)
 	{
 		//pass the '\'
@@ -178,7 +178,7 @@ uint32 RemoteDebug::registerStream(const std::string& streamName)
 			send(NEW_STREAM, newBase.c_str());
 		}
 		//look for any other subChannel
-		uint32 oldRestIndex = restIndex;
+		std::string::size_type oldRestIndex = restIndex;
 		baseIndex = restIndex;
 		restIndex = rest.find('\\');
 		if (restIndex != std::string::npos)
@@ -207,8 +207,8 @@ uint32 RemoteDebug::registerStaticView(const std::string& channelName)
 	std::string base;
 	std::string rest = channelName;
 	//look for subchannels with a double backslash
-	uint32 baseIndex = 0;
-	uint32 restIndex = channelName.find('\\');
+	std::string::size_type baseIndex = 0;
+	std::string::size_type restIndex = channelName.find('\\');
 	while(restIndex != std::string::npos)
 	{
 		//pass the '\'
@@ -234,7 +234,7 @@ uint32 RemoteDebug::registerStaticView(const std::string& channelName)
 			send(NEW_STATIC, newBase.c_str());
 		}
 		//look for any other subChannel
-		uint32 oldRestIndex = restIndex;
+		std::string::size_type oldRestIndex = restIndex;
 		baseIndex = restIndex;
 		restIndex = rest.find('\\');
 		if (restIndex != std::string::npos)
@@ -360,8 +360,8 @@ uint32 RemoteDebug::registerVariable(const char* variableName, void *memLoc, VAR
 	std::string base;
 	std::string rest = variable;
 	//look for subchannels with a double backslash
-	uint32 baseIndex = 0;
-	uint32 restIndex = variable.find('\\');
+	std::string::size_type baseIndex = 0;
+	std::string::size_type restIndex = variable.find('\\');
 	while(restIndex != std::string::npos)
 	{
 		//pass the '\'
@@ -378,7 +378,7 @@ uint32 RemoteDebug::registerVariable(const char* variableName, void *memLoc, VAR
 			registerVariable(newBase.c_str(), nullptr, BOOL, sendToClients);
 		}
 		//look for any other subChannel
-		uint32 oldRestIndex = restIndex;
+		std::string::size_type oldRestIndex = restIndex;
 		baseIndex = restIndex;
 		restIndex = rest.find('\\');
 		if (restIndex != std::string::npos)

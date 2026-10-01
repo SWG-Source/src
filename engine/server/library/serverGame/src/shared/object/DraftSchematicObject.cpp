@@ -150,14 +150,14 @@ void DraftSchematicObject::requestResourceWeights(ServerObject & requester, uint
 	const DraftSchematicObject * const schematic = getSchematic(draftSchematicCrc);
 	if (schematic == nullptr)
 	{
-		WARNING (true, ("DraftSchematicObject::requestResourceWeights invalid schematic [%lu] for [%s]", draftSchematicCrc, requester.getNetworkId ().getValueString ().c_str ()));
+		WARNING (true, ("DraftSchematicObject::requestResourceWeights invalid schematic [%u] for [%s]", draftSchematicCrc, requester.getNetworkId ().getValueString ().c_str ()));
 		return;
 	}
 
 	const ServerDraftSchematicObjectTemplate * const schematicTemplate = safe_cast<const ServerDraftSchematicObjectTemplate *>(schematic->getObjectTemplate());
 	if (schematicTemplate == nullptr)
 	{
-		WARNING (true, ("DraftSchematicObject::requestResourceWeights invalid schematic template [%lu] for [%s]", draftSchematicCrc, requester.getNetworkId ().getValueString ().c_str ()));
+		WARNING (true, ("DraftSchematicObject::requestResourceWeights invalid schematic template [%u] for [%s]", draftSchematicCrc, requester.getNetworkId ().getValueString ().c_str ()));
 		return;
 	}
 

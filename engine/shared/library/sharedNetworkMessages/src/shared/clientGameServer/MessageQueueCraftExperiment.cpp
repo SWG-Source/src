@@ -9,6 +9,7 @@
 
 #include "sharedNetworkMessages/FirstSharedNetworkMessages.h"
 #include "sharedNetworkMessages/MessageQueueCraftExperiment.h"
+#include "Archive/ArchiveCount.h"
 
 #include "sharedFoundation/MemoryBlockManager.h"
 #include "sharedFoundation/ExitChain.h"
@@ -34,11 +35,11 @@ void MessageQueueCraftExperiment::pack(const MessageQueue::Data* const data, Arc
 	const MessageQueueCraftExperiment* const msg = safe_cast<const MessageQueueCraftExperiment*> (data);
 	if (msg)
 	{
-		Archive::put (target, msg->getSequenceId());
-		
 		const std::vector<MessageQueueCraftExperiment::ExperimentInfo> & experiments =
 			msg->getExperiments();
-		int count = experiments.size();
+		int const count = ArchiveCount::fromSize<int>(experiments.size());
+
+		Archive::put (target, msg->getSequenceId());
 		Archive::put (target, count);
 		std::vector<MessageQueueCraftExperiment::ExperimentInfo>::const_iterator iter;
 		for (iter = experiments.begin(); iter != experiments.end(); ++iter)

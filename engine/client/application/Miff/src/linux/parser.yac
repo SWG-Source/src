@@ -30,6 +30,8 @@
 #include <ctype.h> 			/* for strtoupper and strtolower */
 #include <stdio.h>
 #include <stdint.h>          /* for standard types - i.e. uint32_t */
+#include <inttypes.h>        /* for PRId32 */
+#include <stdarg.h>
 
 /*----------------------------------------------------------------**
 ** debug options, turn these on to TEST ONLY!  don't leave these  **
@@ -58,7 +60,7 @@ extern void MIFFinsertChunkData(void * buffer, unsigned bufferSize);
 extern int  MIFFloadRawData(char *fname, void * buffer, unsigned maxBufferSize);
 extern void MIFFexitChunk(void);
 extern void MIFFexitForm(void);
-extern unsigned long MIFFgetLabelHash(char *inputStream);
+extern uint32_t MIFFgetLabelHash(char *inputStream);
 
 /* local prototype declaration */
 void	initGlobalVars(void);
@@ -69,10 +71,10 @@ void	includeBinary(char *fname);
 
 void	write32(int32_t i32);
 void	write16(int16_t i16);
-void	write8(char i8);
+void	write8(int8_t i8);
 void	writeU32(uint32_t ui32);
 void	writeU16(uint16_t ui16);
-void	writeU8(unsigned char u8);
+void	writeU8(uint8_t u8);
 void	writeDouble(double d);
 void	writeFloat(float f);
 void	writeString(char *s);
@@ -84,9 +86,89 @@ void	writeData(void *dataPtr, unsigned dataSize);
 
 void	initSymTable(void);
 long	searchEnumSymbolTable(char *symString);
-long	getEnumValue(long index);
-void	addEnumSymbol(char *symString, long value);
+int32_t	getEnumValue(long index);
+void	addEnumSymbol(char *symString, int32_t value);
 void	parseESCstring(char *str, char *targetBuffer, int sizeOfTarget);
+
+/*-----------------------------------------------------------------------------**
+** Integer expression semantics                                                **
+**                                                                             **
+** An integer value is an int32_t: exactly the 32-bit long of the original     **
+** ILP32 Miff, which is the output the data was authored against.  An input    **
+** compiles to the bytes that build produced, or is rejected with an error     **
+** naming file(line).  (The LP64 build evaluated in a 64-bit long and differed **
+** for operands at or above 2^31.)                                             **
+**                                                                             **
+** Evaluated exactly as the ILP32 build did:                                   **
+**  - a literal becomes the int32_t with its 32-bit pattern (0xFFFFFFFF is -1).**
+**  - & | ^ ~ act on the 32-bit pattern (-1 ^ 0xFFFFFFFF is 0, ~0x80000000 is  **
+**    0x7FFFFFFF).                                                             **
+**  - + - * unary- / % are signed 32-bit, / and % truncating toward zero.      **
+**  - >> is an arithmetic shift of the signed value (0xFFFFFFFF >> 4 is -1).   **
+**  - the implicit next enum value is last + 1 (0xFFFFFFFF is followed by 0).  **
+**  - an integer in a float expression converts from its signed value.         **
+**  - int32 and uint32 fields receive the 32-bit pattern of any value.         **
+**                                                                             **
+** Rejected, and why:                                                          **
+**  - a literal above 4294967295: strtoul() saturated it to 0xFFFFFFFF on      **
+**    ILP32 but not on LP64; neither is the number written.                    **
+**  - + - * unary- whose signed result leaves [INT32_MIN, INT32_MAX] (so also  **
+**    -2147483648, which negates INT32_MIN); << of a negative value, with a    **
+**    count outside [0, 31], or with a result above INT32_MAX; >> with a count **
+**    outside [0, 31]; / or % by zero or INT32_MIN / -1; enum last + 1 past    **
+**    INT32_MAX.  Each is undefined behavior on a 32-bit long, so the original **
+**    had no defined result (division by zero killed it with SIGFPE).          **
+**  - an int8/uint8 or int16/uint16 value that fits neither the signed nor the **
+**    unsigned range of the field.  The original cast it, discarding set bits; **
+**    a value that fits either range is written exactly as before.             **
+**-----------------------------------------------------------------------------*/
+
+/*-----------------------------------------------------------------------------**
+** A rule is reduced only after its lookahead token is read, which may be on   **
+** the next line.  Value errors report the line of the last token of the rule  **
+** being reduced instead; the lexer stamps each token with its line.          **
+**-----------------------------------------------------------------------------*/
+extern int	line_num;		/* found in parser.lex */
+int			reductionLine;
+
+#define	YYLLOC_DEFAULT(Current, Rhs, N)												\
+	do																				\
+	{																				\
+		if (N)																		\
+		{																			\
+			(Current).first_line   = YYRHSLOC(Rhs, 1).first_line;					\
+			(Current).first_column = YYRHSLOC(Rhs, 1).first_column;				\
+			(Current).last_line    = YYRHSLOC(Rhs, N).last_line;					\
+			(Current).last_column  = YYRHSLOC(Rhs, N).last_column;					\
+		}																			\
+		else																		\
+		{																			\
+			(Current).first_line   = (Current).last_line   = YYRHSLOC(Rhs, 0).last_line;	\
+			(Current).first_column = (Current).last_column = YYRHSLOC(Rhs, 0).last_column;	\
+		}																			\
+		reductionLine = (Current).last_line;										\
+	}																				\
+	while (0)
+
+void	valueError(const char *format, ...);
+int32_t	intAdd(int32_t a, int32_t b);
+int32_t	intSub(int32_t a, int32_t b);
+int32_t	intMul(int32_t a, int32_t b);
+int32_t	intDiv(int32_t a, int32_t b);
+int32_t	intMod(int32_t a, int32_t b);
+int32_t	intShiftLeft(int32_t a, int32_t count);
+int32_t	intShiftRight(int32_t a, int32_t count);
+int32_t	intAnd(int32_t a, int32_t b);
+int32_t	intOr(int32_t a, int32_t b);
+int32_t	intXor(int32_t a, int32_t b);
+int32_t	intNot(int32_t a);
+int32_t	intNegate(int32_t a);
+void	writeInt32Value(int32_t value);
+void	writeInt16Value(int32_t value);
+void	writeInt8Value(int32_t value);
+void	writeUint32Value(int32_t value);
+void	writeUint16Value(int32_t value);
+void	writeUint8Value(int32_t value);
 
 /*----------------------------------------------**
 ** Global vars used by all functions and parser **
@@ -102,12 +184,12 @@ int		errorFlag;
 struct structEnumSymTableType
 {
 	char	symbol[MAX_SYMCHARS];
-	long	value;
+	int32_t	value;
 };
 
 struct structEnumSymTableType		symbolEnumTable[MAX_SYMBOLS];
 unsigned					currSymIndex = 0;
-long						lastValue = -1;
+int32_t						lastValue = -1;
 char						id[MAX_SYMCHARS];
 
 /* vars set by pragmas */
@@ -126,8 +208,8 @@ int		usePragmas;
 ** This really gives me the creeps and goosbumps!  DOWN with GLOBAL VARS! **
 **------------------------------------------------------------------------*/
 int		iTemp, jTemp;
-char	byteTemp;
-short	wordTemp;
+int8_t	byteTemp;
+int16_t	wordTemp;
 char	tempStr[MAX_STRING_SIZE];
 
 %}
@@ -135,8 +217,10 @@ char	tempStr[MAX_STRING_SIZE];
 /*--------------------**
 ** Bison declarations **
 **--------------------*/
+%locations
+
 %union {
-	long			ltype;
+	int32_t			ltype;
 	double			dtype;
 	char			*stype;
 	char			chtype;
@@ -146,7 +230,7 @@ char	tempStr[MAX_STRING_SIZE];
 
 /*------------------------------------------------**
 ** define tokens defined in lex file              **
-** NOTE: all LITERALs are treated as signed long  **
+** NOTE: all LITERALs are int32_t (see above)     **
 **       all FLOAT_LITERALs are treated as double **
 **------------------------------------------------*/
 %token	<chtype>	CHAR_LIT
@@ -301,7 +385,7 @@ enumAssign:		IDENTIFIER '=' exprL	{
 											MIFFfreeString($<stype>1);
 										}
 	|			IDENTIFIER				{ /* in this case, inc 1 from last count */
-											addEnumSymbol($<stype>1,  ++lastValue);
+											addEnumSymbol($<stype>1, intAdd(lastValue, 1));
 											MIFFfreeString($<stype>1);
 										}
 	;
@@ -444,28 +528,28 @@ memalloc:	INT32  l32AllocExpr		{ }
 									}
 	;
 
-l32AllocExpr:	exprL					{ write32($<ltype>1); }
-	|			l32AllocExpr ',' exprL	{ write32($<ltype>3); }
+l32AllocExpr:	exprL					{ writeInt32Value($<ltype>1); }
+	|			l32AllocExpr ',' exprL	{ writeInt32Value($<ltype>3); }
 	;
 
-l16AllocExpr:	exprL					{ write16((short) $<ltype>1); }
-	|			l16AllocExpr ',' exprL	{ write16((short) $<ltype>3); }
+l16AllocExpr:	exprL					{ writeInt16Value($<ltype>1); }
+	|			l16AllocExpr ',' exprL	{ writeInt16Value($<ltype>3); }
 	;
 
-l8AllocExpr:	exprL					{ write8((char) $<ltype>1); }
-	|			l8AllocExpr ',' exprL	{ write8((char) $<ltype>3); }
+l8AllocExpr:	exprL					{ writeInt8Value($<ltype>1); }
+	|			l8AllocExpr ',' exprL	{ writeInt8Value($<ltype>3); }
 	;
 
-lU32AllocExpr:	exprL					{ writeU32($<ltype>1); }
-	|			lU32AllocExpr ',' exprL	{ writeU32($<ltype>3); }
+lU32AllocExpr:	exprL					{ writeUint32Value($<ltype>1); }
+	|			lU32AllocExpr ',' exprL	{ writeUint32Value($<ltype>3); }
 	;
 
-lU16AllocExpr:	exprL					{ writeU16((unsigned short) $<ltype>1); }
-	|			lU16AllocExpr ',' exprL	{ writeU16((unsigned short) $<ltype>3); }
+lU16AllocExpr:	exprL					{ writeUint16Value($<ltype>1); }
+	|			lU16AllocExpr ',' exprL	{ writeUint16Value($<ltype>3); }
 	;
 
-lU8AllocExpr:	exprL					{ writeU8((unsigned char) $<ltype>1); }
-	|			lU8AllocExpr ',' exprL	{ writeU8((unsigned char) $<ltype>3); }
+lU8AllocExpr:	exprL					{ writeUint8Value($<ltype>1); }
+	|			lU8AllocExpr ',' exprL	{ writeUint8Value($<ltype>3); }
 	;
 
 fAllocExpr:	exprD					{ writeFloat((float) $<dtype>1); }
@@ -480,29 +564,29 @@ dAllocExpr:	exprD					{ writeDouble($<dtype>1); }
 /*-------------------------**
 ** expression for integers **
 **-------------------------*/
-exprL:		exprL '+' factorL			{ $<ltype>$ = $<ltype>1 + $<ltype>3;	}
-	|		exprL '-' factorL			{ $<ltype>$ = $<ltype>1 - $<ltype>3;	}
-	|		exprL SHIFTLEFT factorL		{ $<ltype>$ = $<ltype>1 << $<ltype>3;	}
-	|		exprL SHIFTRIGHT factorL	{ $<ltype>$ = $<ltype>1 >> $<ltype>3;	}
-	|		exprL '&' factorL			{ $<ltype>$ = $<ltype>1 & $<ltype>3;	}
-	|		exprL '|' factorL			{ $<ltype>$ = $<ltype>1 | $<ltype>3;	}
-	|		exprL '^' factorL			{ $<ltype>$ = $<ltype>1 ^ $<ltype>3;	}
+exprL:		exprL '+' factorL			{ $<ltype>$ = intAdd($<ltype>1, $<ltype>3);			}
+	|		exprL '-' factorL			{ $<ltype>$ = intSub($<ltype>1, $<ltype>3);			}
+	|		exprL SHIFTLEFT factorL		{ $<ltype>$ = intShiftLeft($<ltype>1, $<ltype>3);	}
+	|		exprL SHIFTRIGHT factorL	{ $<ltype>$ = intShiftRight($<ltype>1, $<ltype>3);	}
+	|		exprL '&' factorL			{ $<ltype>$ = intAnd($<ltype>1, $<ltype>3);			}
+	|		exprL '|' factorL			{ $<ltype>$ = intOr($<ltype>1, $<ltype>3);			}
+	|		exprL '^' factorL			{ $<ltype>$ = intXor($<ltype>1, $<ltype>3);			}
 	|		factorL						{ $<ltype>$ = ($<ltype>1);				}
 	;
 
-factorL:	factorL '*' termL			{ $<ltype>$ = $<ltype>1 * $<ltype>3;	}
-	|		factorL '/' termL			{ $<ltype>$ = $<ltype>1 / $<ltype>3;	}
-	|		factorL '%' termL			{ $<ltype>$ = $<ltype>1 % $<ltype>3;	}
+factorL:	factorL '*' termL			{ $<ltype>$ = intMul($<ltype>1, $<ltype>3);	}
+	|		factorL '/' termL			{ $<ltype>$ = intDiv($<ltype>1, $<ltype>3);	}
+	|		factorL '%' termL			{ $<ltype>$ = intMod($<ltype>1, $<ltype>3);	}
 	|		termL						{ $<ltype>$ = ($<ltype>1);				}
 	;
 
 termL:		LIT							{ $<ltype>$ = $<ltype>1;	}
-	|		'~' termL					{ $<ltype>$ = ~$<ltype>2;	}	/* bitwise NOT */
-	|		'-' termL					{ $<ltype>$ = -$<ltype>2;	}	/* Unary minus */
+	|		'~' termL					{ $<ltype>$ = intNot($<ltype>2);	}	/* bitwise NOT */
+	|		'-' termL					{ $<ltype>$ = intNegate($<ltype>2);	}	/* Unary minus */
 	|		'+' termL					{ $<ltype>$ = $<ltype>2;	}	/* Unary plus */
 	|		'(' exprL ')'				{ $<ltype>$ = ($<ltype>2);	}
 	|		IDENTIFIER					{ /* assume it's enum symbol */
-											$<ltype>$ = (signed long) getEnumValue(searchEnumSymbolTable($<stype>1));
+											$<ltype>$ = getEnumValue(searchEnumSymbolTable($<stype>1));
 											MIFFfreeString($<stype>1);
 										}
 	;
@@ -533,7 +617,7 @@ termD:		FLOAT_LIT					{ $<dtype>$ = $<dtype>1;			}
 	|		ASIN '(' exprD ')'			{ $<dtype>$ = asin( $<dtype>3 );	}
 	|		ATAN '(' exprD ')'			{ $<dtype>$ = atan( $<dtype>3 );	}
 	|		IDENTIFIER					{ /* assume it's enum symbol */
-											$<dtype>$ = (signed long) getEnumValue(searchEnumSymbolTable($<stype>1));
+											$<dtype>$ = (double) getEnumValue(searchEnumSymbolTable($<stype>1));
 											MIFFfreeString($<stype>1);
 										}
 	;
@@ -638,9 +722,9 @@ void write16(int16_t i16)
 	MIFFinsertChunkData(&i16, sizeof(int16_t));
 }
 
-void write8(char i8)
+void write8(int8_t i8)
 {
-	MIFFinsertChunkData(&i8, sizeof(char));
+	MIFFinsertChunkData(&i8, sizeof(int8_t));
 }
 
 void writeU32(uint32_t ui32)
@@ -653,9 +737,9 @@ void writeU16(uint16_t ui16)
 	MIFFinsertChunkData(&ui16, sizeof(uint16_t));
 }
 
-void writeU8(unsigned char ui8)
+void writeU8(uint8_t ui8)
 {
-	MIFFinsertChunkData(&ui8, sizeof(char));
+	MIFFinsertChunkData(&ui8, sizeof(uint8_t));
 }
 
 void writeDouble(double d)
@@ -974,19 +1058,19 @@ long searchEnumSymbolTable(char *symString)
 	return(index);
 }
 
-long getEnumValue(long index)
+int32_t getEnumValue(long index)
 {
 	if (index >= 0)
 		return(symbolEnumTable[index].value);
 	return(-1);
 }
 
-void addEnumSymbol(char *symString, long value)
+void addEnumSymbol(char *symString, int32_t value)
 {
 	if (MAX_SYMCHARS < strlen(symString))
 	{
 		/* somebody insane decided to use variable longer then max size! */
-		sprintf(err_msg, "%s is longer then %d characters! [value: %ld]", symString, MAX_SYMCHARS, value);
+		sprintf(err_msg, "%s is longer then %d characters! [value: %" PRId32 "]", symString, MAX_SYMCHARS, value);
 		yyerror(err_msg);
 	}
 	else
@@ -1001,4 +1085,185 @@ void addEnumSymbol(char *symString, long value)
 			yyerror(err_msg);
 		}
 	}
+}
+
+/*-----------------------------------------------------------------------------**
+** Checked integer evaluation.  See "Integer expression semantics" at the top  **
+** of this file.  An error goes through yyerror(), which fails the compile so **
+** no output is written; 0 is returned so parsing can go on to report more.   **
+**-----------------------------------------------------------------------------*/
+void valueError(const char *format, ...)
+{
+	va_list args;
+	int const scanLine = line_num;
+
+	va_start(args, format);
+	vsnprintf(err_msg, sizeof(err_msg), format, args);
+	va_end(args);
+
+	/* yyerror() reports line_num; report the line of the offending rule instead */
+	line_num = reductionLine;
+	yyerror(err_msg);
+	line_num = scanLine;
+}
+
+/* the int32_t with this 32-bit pattern, as a 32-bit long held it */
+static int32_t fromBits(uint32_t bits)
+{
+	return (bits <= INT32_MAX) ? (int32_t) bits : (int32_t) ((int64_t) bits - ((int64_t) 1 << 32));
+}
+
+/* exact is the mathematical result of a signed 32-bit operation */
+static int32_t signedResult(int64_t exact, int32_t a, const char *op, int32_t b)
+{
+	if ((exact < INT32_MIN) || (exact > INT32_MAX))
+	{
+		valueError("%" PRId32 " %s %" PRId32 " overflows a 32-bit signed value", a, op, b);
+		return 0;
+	}
+	return (int32_t) exact;
+}
+
+static int shiftCountValid(int32_t count, const char *op)
+{
+	if ((count < 0) || (count > 31))
+	{
+		valueError("shift count %" PRId32 " of '%s' is outside [0, 31]", count, op);
+		return 0;
+	}
+	return 1;
+}
+
+int32_t intAdd(int32_t a, int32_t b)
+{
+	return signedResult((int64_t) a + b, a, "+", b);
+}
+
+int32_t intSub(int32_t a, int32_t b)
+{
+	return signedResult((int64_t) a - b, a, "-", b);
+}
+
+int32_t intMul(int32_t a, int32_t b)
+{
+	return signedResult((int64_t) a * b, a, "*", b);
+}
+
+int32_t intDiv(int32_t a, int32_t b)
+{
+	if (b == 0)
+	{
+		valueError("division by zero");
+		return 0;
+	}
+	return signedResult((int64_t) a / b, a, "/", b);
+}
+
+int32_t intMod(int32_t a, int32_t b)
+{
+	if (b == 0)
+	{
+		valueError("remainder by zero");
+		return 0;
+	}
+	if ((a == INT32_MIN) && (b == -1))
+	{
+		valueError("%" PRId32 " %% -1 overflows a 32-bit signed value", a);
+		return 0;
+	}
+	return a % b;
+}
+
+int32_t intShiftLeft(int32_t a, int32_t count)
+{
+	if (!shiftCountValid(count, "<<"))
+		return 0;
+	if (a < 0)
+	{
+		valueError("left operand %" PRId32 " of '<<' is negative", a);
+		return 0;
+	}
+	return signedResult((int64_t) a << count, a, "<<", count);
+}
+
+int32_t intShiftRight(int32_t a, int32_t count)
+{
+	if (!shiftCountValid(count, ">>"))
+		return 0;
+
+	/* arithmetic shift, as gcc does for a negative long, without relying on that implementation-defined behavior */
+	return (a >= 0) ? (a >> count) : (-1 - ((-1 - a) >> count));
+}
+
+int32_t intAnd(int32_t a, int32_t b)
+{
+	return fromBits((uint32_t) a & (uint32_t) b);
+}
+
+int32_t intOr(int32_t a, int32_t b)
+{
+	return fromBits((uint32_t) a | (uint32_t) b);
+}
+
+int32_t intXor(int32_t a, int32_t b)
+{
+	return fromBits((uint32_t) a ^ (uint32_t) b);
+}
+
+int32_t intNot(int32_t a)
+{
+	return fromBits(~(uint32_t) a);
+}
+
+int32_t intNegate(int32_t a)
+{
+	return signedResult(-(int64_t) a, 0, "-", a);
+}
+
+/* a field narrower than 32 bits takes a value that fits its signed or its unsigned range */
+static int fitsBits(int32_t value, int bits, const char *typeName)
+{
+	int32_t const minimum = -((int32_t) 1 << (bits - 1));
+	int32_t const maximum = ((int32_t) 1 << bits) - 1;
+
+	if ((value < minimum) || (value > maximum))
+	{
+		valueError("value %" PRId32 " does not fit the %d bits of %s [%" PRId32 ", %" PRId32 "]", value, bits, typeName, minimum, maximum);
+		return 0;
+	}
+	return 1;
+}
+
+void writeInt32Value(int32_t value)
+{
+	write32(value);
+}
+
+void writeUint32Value(int32_t value)
+{
+	writeU32((uint32_t) value);
+}
+
+void writeInt16Value(int32_t value)
+{
+	if (fitsBits(value, 16, "int16"))
+		writeU16((uint16_t) value);
+}
+
+void writeUint16Value(int32_t value)
+{
+	if (fitsBits(value, 16, "uint16"))
+		writeU16((uint16_t) value);
+}
+
+void writeInt8Value(int32_t value)
+{
+	if (fitsBits(value, 8, "int8"))
+		writeU8((uint8_t) value);
+}
+
+void writeUint8Value(int32_t value)
+{
+	if (fitsBits(value, 8, "uint8"))
+		writeU8((uint8_t) value);
 }

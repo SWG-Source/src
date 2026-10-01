@@ -105,7 +105,7 @@ Footprint::Footprint	( Vector const & position, float radius, CollisionProperty 
   m_floorHeight(0.0f),
   m_groundHeight(0.0f),
   m_groundNormal(Vector::unitY),
-  m_addToWorldTime(-1),
+  m_addToWorldTime(0),
   m_addToWorldPos(Vector::zero),
   m_floating(false),
   m_floatingTime(20)
@@ -1459,7 +1459,7 @@ void Footprint::updateFloating ( void )
 	}
 	else
 	{
-		int elapsed = Clock::timeMs() - m_addToWorldTime;
+		int const elapsed = Clock::durationMs<int>(m_addToWorldTime, Clock::timeMs());
 		bool timeout = elapsed > (m_floatingTime * 1000);
 
 		// Things newly added to the world are floating if the Y value of
@@ -1541,7 +1541,7 @@ void Footprint::addToWorld ( void )
 		IGNORE_RETURN( snapToCellFloor() );
 	}
 
-	m_addToWorldTime = static_cast<int>(Clock::timeMs());
+	m_addToWorldTime = Clock::timeMs();
 	m_addToWorldPos = getObjectPosition_p();
 
 	updateFloating();

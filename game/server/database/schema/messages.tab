@@ -4,7 +4,7 @@ create table messages
 	target int, -- BIND_AS(DB::BindableNetworkId)
 	method varchar2(50),
 	data varchar2(4000),
-	call_time int,
+	call_time int, -- BIND_AS(DB::BindableUint32) NULL_LOADS_AS(0)
 	guaranteed char(1),
 	delivery_type int,
 	primary key (message_id)

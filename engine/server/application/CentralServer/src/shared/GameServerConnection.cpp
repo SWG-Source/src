@@ -290,7 +290,7 @@ void GameServerConnection::onReceive(Archive::ByteStream const &message)
 			GetCharactersForAccountCSReplyMsg const msg( ri );
 			// send repsonse to tool.
 			char buf[ 256 ];
-			snprintf( buf, 255, "Character search for %lu\r\n",  msg.getTargetAccountId() );
+			snprintf( buf, 255, "Character search for %u\r\n",  msg.getTargetAccountId() );
 			std::string response = buf;
 			response = response + msg.getResponse();
 			
@@ -322,7 +322,7 @@ void GameServerConnection::onReceive(Archive::ByteStream const &message)
 			response = response + "character id:" + msg.getCharacterId().getValueString() + "\r\n";
 			char buf[ 64 ];
 			
-			snprintf( buf, 64, "%lu", msg.getAccountId() );
+			snprintf( buf, 64, "%u", msg.getAccountId() );
 			
 			response = response + "account id:" + buf + "\r\n";
 			

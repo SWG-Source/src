@@ -316,7 +316,12 @@ bool ConsoleCommandParserServer::performParsing(const NetworkId & userId, const 
 			return true;
 		}
 
-		unsigned long val = strtoul(Unicode::wideToNarrow(argv[1]).c_str(), nullptr, 10);
+		int32 val = 0;
+		if (!parseArg(argv[1], val))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
 		const bool isPublic = (val != 0);
 		SetConnectionServerPublic const p(isPublic);
 
@@ -369,8 +374,13 @@ bool ConsoleCommandParserServer::performParsing(const NetworkId & userId, const 
 			return true;
 		}
 
-		unsigned long secsToWait = strtoul(Unicode::wideToNarrow(argv[1]).c_str(), nullptr, 10);
-		unsigned long maxSecs = strtoul(Unicode::wideToNarrow(argv[2]).c_str(), nullptr, 10);
+		uint32 secsToWait = 0;
+		uint32 maxSecs = 0;
+		if (!parseArg(argv[1], secsToWait) || !parseArg(argv[2], maxSecs))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
 		Unicode::String systemMessage;
 		for (size_t i = 3; i < argv.size(); ++i)
 		{
@@ -401,7 +411,12 @@ bool ConsoleCommandParserServer::performParsing(const NetworkId & userId, const 
 			return true;
 		}
 
-		unsigned long val = strtoul(Unicode::wideToNarrow(argv[1]).c_str(), nullptr, 10);
+		int32 val = 0;
+		if (!parseArg(argv[1], val))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
 		switch (val)
 		{
 		case 1:
@@ -489,7 +504,7 @@ bool ConsoleCommandParserServer::performParsing(const NetworkId & userId, const 
 		ServerWorld::dumpObjectSphereTree(results);
 		result = Unicode::narrowToWide("Sending ");
 		char count[1024];
-		sprintf(count, "%i", results.size());
+		sprintf(count, "%zu", results.size());
 		result += Unicode::narrowToWide(count);
 		result += Unicode::narrowToWide(" object sphere tree nodes to client\n");
 
@@ -506,7 +521,7 @@ bool ConsoleCommandParserServer::performParsing(const NetworkId & userId, const 
 			}
 			sprintf(
 				count,
-				"Sphere id=[%lu] origin=[%f, %f, %f] radius=[%f] OID=[%s] %s\n",
+				"Sphere id=[%td] origin=[%f, %f, %f] radius=[%f] OID=[%s] %s\n",
 				std::distance(results.begin(), i),//reinterpret_cast<unsigned long>(i),
 				(*i).second.getCenter().x,
 				(*i).second.getCenter().y,
@@ -524,7 +539,7 @@ bool ConsoleCommandParserServer::performParsing(const NetworkId & userId, const 
 		ServerWorld::dumpTriggerSphereTree(results);
 		result = Unicode::narrowToWide("Sending ");
 		char count[128];
-		sprintf(count, "%i", results.size());
+		sprintf(count, "%zu", results.size());
 		result += Unicode::narrowToWide(count);
 		result += Unicode::narrowToWide(" trigger sphere tree nodes to client\n");
 
@@ -541,7 +556,7 @@ bool ConsoleCommandParserServer::performParsing(const NetworkId & userId, const 
 
 			sprintf(
 				count,
-				"Sphere id=[%lu] origin=[%f, %f, %f] radius=[%f] OID=[%s] %s\n",
+				"Sphere id=[%td] origin=[%f, %f, %f] radius=[%f] OID=[%s] %s\n",
 				std::distance(results.begin(), i),
 				(*i).second.getCenter().x,
 				(*i).second.getCenter().y,
@@ -582,7 +597,12 @@ bool ConsoleCommandParserServer::performParsing(const NetworkId & userId, const 
 			return true;
 		}
 
-		unsigned long val = strtoul(Unicode::wideToNarrow(argv[1]).c_str(), nullptr, 10);
+		int32 val = 0;
+		if (!parseArg(argv[1], val))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
 		if (user->getClient()->setGodMode(val != 0))
 			result += getErrorMessage(argv[0], ERR_SUCCESS);
 		else
@@ -640,8 +660,18 @@ bool ConsoleCommandParserServer::performParsing(const NetworkId & userId, const 
 	{
 		std::string tableName;
 		tableName = Unicode::wideToNarrow(argv[1]);
-		int col = atoi(Unicode::wideToNarrow(argv[2]).c_str());
-		int row = atoi(Unicode::wideToNarrow(argv[3]).c_str());
+		int32 col = 0;
+		if (!parseArg(argv[2], col))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
+		int32 row = 0;
+		if (!parseArg(argv[3], row))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
 		DataTable * dt = DataTableManager::getTable(tableName);
 		if (dt)
 		{
@@ -727,8 +757,11 @@ bool ConsoleCommandParserServer::performParsing(const NetworkId & userId, const 
 				if (argv.size() > 2)
 				{
 					uint32 processId = GameServer::getInstance().getProcessId();
-					if (argv.size() > 3)
-						processId = strtoul(Unicode::wideToNarrow(argv[3]).c_str(), nullptr, 10);
+					if (argv.size() > 3 && !parseArg(argv[3], processId))
+					{
+						result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+						return true;
+					}
 
 					std::string op = Unicode::wideToNarrow(argv[1]) + " " + Unicode::wideToNarrow(argv[2]);
 
@@ -744,8 +777,11 @@ bool ConsoleCommandParserServer::performParsing(const NetworkId & userId, const 
 			else
 			{
 				uint32 processId = GameServer::getInstance().getProcessId();
-				if (argv.size() > 2)
-					processId = strtoul(Unicode::wideToNarrow(argv[2]).c_str(), nullptr, 10);
+				if (argv.size() > 2 && !parseArg(argv[2], processId))
+				{
+					result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+					return true;
+				}
 
 				std::string op(Unicode::wideToNarrow(argv[1]));
 				if (processId == GameServer::getInstance().getProcessId())
@@ -817,7 +853,12 @@ bool ConsoleCommandParserServer::performParsing(const NetworkId & userId, const 
 	}
 	else if (isAbbrev(argv[0], "setUniverseProcess"))
 	{
-		int processId = atoi(Unicode::wideToNarrow(argv[1]).c_str());
+		int32 processId = 0;
+		if (!parseArg(argv[1], processId))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
 		//Send message to central
 		ChangeUniverseProcessMessage const m(processId);
 		GameServer::getInstance().sendToCentralServer(m);
@@ -887,7 +928,7 @@ bool ConsoleCommandParserServer::performParsing(const NetworkId & userId, const 
 			if (NameManager::getInstance().isPlayer(oid))
 			{
 				result += Unicode::narrowToWide(FormattedString<512>().sprintf("character oid:             %s\n", oid.getValueString().c_str()));
-				result += Unicode::narrowToWide(FormattedString<512>().sprintf("character station id:      %lu\n", NameManager::getInstance().getPlayerStationId(oid)));
+				result += Unicode::narrowToWide(FormattedString<512>().sprintf("character station id:      %u\n", NameManager::getInstance().getPlayerStationId(oid)));
 				result += Unicode::narrowToWide(FormattedString<512>().sprintf("character first name:      %s\n", NameManager::getInstance().getPlayerName(oid).c_str()));
 				result += Unicode::narrowToWide(FormattedString<512>().sprintf("character full name:       %s\n", NameManager::getInstance().getPlayerFullName(oid).c_str()));
 
@@ -908,7 +949,7 @@ bool ConsoleCommandParserServer::performParsing(const NetworkId & userId, const 
 			if (oid.isValid())
 			{
 				result += Unicode::narrowToWide(FormattedString<512>().sprintf("character oid:             %s\n", oid.getValueString().c_str()));
-				result += Unicode::narrowToWide(FormattedString<512>().sprintf("character station id:      %lu\n", NameManager::getInstance().getPlayerStationId(oid)));
+				result += Unicode::narrowToWide(FormattedString<512>().sprintf("character station id:      %u\n", NameManager::getInstance().getPlayerStationId(oid)));
 				result += Unicode::narrowToWide(FormattedString<512>().sprintf("character first name:      %s\n", NameManager::getInstance().getPlayerName(oid).c_str()));
 				result += Unicode::narrowToWide(FormattedString<512>().sprintf("character full name:       %s\n", NameManager::getInstance().getPlayerFullName(oid).c_str()));
 
@@ -950,12 +991,22 @@ bool ConsoleCommandParserServer::performParsing(const NetworkId & userId, const 
 	}
 	else if (isAbbrev(argv[0], "setAiCombatPulseQueueNumber"))
 	{
-		int limit = atol(Unicode::wideToNarrow(argv[1]).c_str());
+		int32 limit = 0;
+		if (!parseArg(argv[1], limit))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
 		AiCombatPulseQueue::setAiPerFrame(limit);
 	}
 	else if (isAbbrev(argv[0], "setAiCombatPulseQueueMaxWaitTimeMs"))
 	{
-		int limit = atol(Unicode::wideToNarrow(argv[1]).c_str());
+		int32 limit = 0;
+		if (!parseArg(argv[1], limit))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
 		AiCombatPulseQueue::setAiMaxWaitTimeMs(limit);
 	}
 	else if (isAbbrev(argv[0], "reloadQuests"))
@@ -1039,7 +1090,12 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 		if (argv.size() == 2)
 		{
 			// specify server by process id
-			uint32 serverId = strtoul(Unicode::wideToNarrow(argv[1]).c_str(), nullptr, 10);
+			uint32 serverId = 0;
+			if (!parseArg(argv[1], serverId))
+			{
+				result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+				return true;
+			}
 			if (serverId != 0)
 			{
 				ExcommunicateGameServerMessage exmsg(serverId, 0, "");
@@ -1053,7 +1109,12 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 		{
 			// specify server by scene & preload role number
 			std::string const &scene = Unicode::wideToNarrow(argv[1]);
-			uint32 preloadRole = strtoul(Unicode::wideToNarrow(argv[2]).c_str(), nullptr, 10);
+			uint32 preloadRole = 0;
+			if (!parseArg(argv[2], preloadRole))
+			{
+				result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+				return true;
+			}
 
 			GenericValueTypeMessage<std::pair<std::string, uint32> > msg("RestartServerByRoleMessage", std::make_pair(scene, preloadRole));
 			if (scene == ConfigServerGame::getSceneID())
@@ -1282,7 +1343,12 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 	}
 	else if (isAbbrev(argv[0], "setNumberOfMoveObjectLists"))
 	{
-		int numMoveLists = atoi(Unicode::wideToNarrow(argv[1]).c_str());
+		int32 numMoveLists = 0;
+		if (!parseArg(argv[1], numMoveLists))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
 
 		ServerWorld::setNumMoveLists(numMoveLists);
 
@@ -1349,7 +1415,12 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 			return true;
 		}
 
-		int const range = atoi(Unicode::wideToNarrow(argv[1]).c_str());
+		int32 range = 0;
+		if (!parseArg(argv[1], range))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
 		if (range < 0)
 		{
 			result += Unicode::narrowToWide("range must be >= 0\n");
@@ -1426,7 +1497,12 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 			return true;
 		}
 
-		int const range = atoi(Unicode::wideToNarrow(argv[1]).c_str());
+		int32 range = 0;
+		if (!parseArg(argv[1], range))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
 		if (range < 0)
 		{
 			result += Unicode::narrowToWide("range must be >= 0\n");
@@ -1509,7 +1585,7 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 
 		if (!connectedCharacterLfgData.empty())
 		{
-			result += Unicode::narrowToWide(FormattedString<512>().sprintf("\nPopulation statistics: %d total\n", connectedCharacterLfgData.size()));
+			result += Unicode::narrowToWide(FormattedString<512>().sprintf("\nPopulation statistics: %zu total\n", connectedCharacterLfgData.size()));
 
 			std::map<std::string, int> const & statistics = LfgCharacterData::calculateStatistics(connectedCharacterLfgData);
 			std::map<std::string, int>::const_iterator iterStatistics;
@@ -1562,7 +1638,7 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 					std::pair<int32, int32> const & groupPickupTimer = groupObject->getGroupPickupTimer();
 					std::pair<std::string, Vector> const & groupPickupLocation = groupObject->getGroupPickupLocation();
 
-					result += Unicode::narrowToWide(FormattedString<512>().sprintf("Group (%s) Pickup Point: %s (%.2f, %.2f, %.2f), (%ld - %ld) (%u seconds left)\n", groupObject->getNetworkId().getValueString().c_str(), groupPickupLocation.first.c_str(), groupPickupLocation.second.x, groupPickupLocation.second.y, groupPickupLocation.second.z, groupPickupTimer.first, groupPickupTimer.second, secondsLeftOnGroupPickup));
+					result += Unicode::narrowToWide(FormattedString<512>().sprintf("Group (%s) Pickup Point: %s (%.2f, %.2f, %.2f), (%d - %d) (%u seconds left)\n", groupObject->getNetworkId().getValueString().c_str(), groupPickupLocation.first.c_str(), groupPickupLocation.second.x, groupPickupLocation.second.y, groupPickupLocation.second.z, groupPickupTimer.first, groupPickupTimer.second, secondsLeftOnGroupPickup));
 				}
 
 				result += Unicode::narrowToWide(FormattedString<512>().sprintf("Group (%s) Members:\n", groupObject->getNetworkId().getValueString().c_str()));
@@ -1695,24 +1771,28 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 	}
 	else if (isAbbrev(argv[0], "listCharacterLastLoginTimeBrief"))
 	{
-		int const days = atoi(Unicode::wideToNarrow(argv[1]).c_str());
+		int32 days = 0;
+		if (!parseArg(argv[1], days))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
 		time_t const cutoff = std::max(static_cast<time_t>(0), static_cast<time_t>(::time(nullptr) - (60 * 60 * 24 * days)));
 
 		std::multimap<time_t, std::pair<std::pair<NetworkId, uint32>, std::string> > resultList;
 		NameManager::getInstance().getPlayerWithLastLoginTimeAfter(cutoff, resultList);
 
-		result += Unicode::narrowToWide(FormattedString<512>().sprintf("%d (out of %d total) characters have logged in since %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoff).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoff).c_str()));
+		result += Unicode::narrowToWide(FormattedString<512>().sprintf("%zu (out of %d total) characters have logged in since %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoff).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoff).c_str()));
 	}
 	else if (isAbbrev(argv[0], "listCharacterLastLoginTimeAfterBrief"))
 	{
 		time_t const rawtime = ::time(nullptr);
 		struct tm * timeinfo = ::localtime(&rawtime);
-		timeinfo->tm_year = atoi(Unicode::wideToNarrow(argv[1]).c_str()) - 1900;
-		timeinfo->tm_mon = atoi(Unicode::wideToNarrow(argv[2]).c_str()) - 1;
-		timeinfo->tm_mday = atoi(Unicode::wideToNarrow(argv[3]).c_str());
-		timeinfo->tm_hour = atoi(Unicode::wideToNarrow(argv[4]).c_str());
-		timeinfo->tm_min = atoi(Unicode::wideToNarrow(argv[5]).c_str());
-		timeinfo->tm_sec = atoi(Unicode::wideToNarrow(argv[6]).c_str());
+		if (!parseDateTimeArgs(argv, 1, *timeinfo))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
 		time_t const cutoff = ::mktime(timeinfo);
 
 		if (cutoff <= 0)
@@ -1724,18 +1804,17 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 		std::multimap<time_t, std::pair<std::pair<NetworkId, uint32>, std::string> > resultList;
 		NameManager::getInstance().getPlayerWithLastLoginTimeAfter(cutoff, resultList);
 
-		result += Unicode::narrowToWide(FormattedString<512>().sprintf("%d (out of %d total) characters have logged in since %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoff).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoff).c_str()));
+		result += Unicode::narrowToWide(FormattedString<512>().sprintf("%zu (out of %d total) characters have logged in since %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoff).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoff).c_str()));
 	}
 	else if (isAbbrev(argv[0], "listCharacterLastLoginTimeBeforeBrief"))
 	{
 		time_t const rawtime = ::time(nullptr);
 		struct tm * timeinfo = ::localtime(&rawtime);
-		timeinfo->tm_year = atoi(Unicode::wideToNarrow(argv[1]).c_str()) - 1900;
-		timeinfo->tm_mon = atoi(Unicode::wideToNarrow(argv[2]).c_str()) - 1;
-		timeinfo->tm_mday = atoi(Unicode::wideToNarrow(argv[3]).c_str());
-		timeinfo->tm_hour = atoi(Unicode::wideToNarrow(argv[4]).c_str());
-		timeinfo->tm_min = atoi(Unicode::wideToNarrow(argv[5]).c_str());
-		timeinfo->tm_sec = atoi(Unicode::wideToNarrow(argv[6]).c_str());
+		if (!parseDateTimeArgs(argv, 1, *timeinfo))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
 		time_t const cutoff = ::mktime(timeinfo);
 
 		if (cutoff <= 0)
@@ -1747,18 +1826,17 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 		std::multimap<time_t, std::pair<std::pair<NetworkId, uint32>, std::string> > resultList;
 		NameManager::getInstance().getPlayerWithLastLoginTimeBefore(cutoff, resultList);
 
-		result += Unicode::narrowToWide(FormattedString<512>().sprintf("%d (out of %d total) characters logged in before %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoff).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoff).c_str()));
+		result += Unicode::narrowToWide(FormattedString<512>().sprintf("%zu (out of %d total) characters logged in before %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoff).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoff).c_str()));
 	}
 	else if (isAbbrev(argv[0], "listCharacterLastLoginTimeBetweenBrief"))
 	{
 		time_t const rawtime = ::time(nullptr);
 		struct tm * timeinfo = ::localtime(&rawtime);
-		timeinfo->tm_year = atoi(Unicode::wideToNarrow(argv[1]).c_str()) - 1900;
-		timeinfo->tm_mon = atoi(Unicode::wideToNarrow(argv[2]).c_str()) - 1;
-		timeinfo->tm_mday = atoi(Unicode::wideToNarrow(argv[3]).c_str());
-		timeinfo->tm_hour = atoi(Unicode::wideToNarrow(argv[4]).c_str());
-		timeinfo->tm_min = atoi(Unicode::wideToNarrow(argv[5]).c_str());
-		timeinfo->tm_sec = atoi(Unicode::wideToNarrow(argv[6]).c_str());
+		if (!parseDateTimeArgs(argv, 1, *timeinfo))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
 		time_t const cutoffLower = ::mktime(timeinfo);
 
 		if (cutoffLower <= 0)
@@ -1768,12 +1846,11 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 		}
 
 		timeinfo = ::localtime(&rawtime);
-		timeinfo->tm_year = atoi(Unicode::wideToNarrow(argv[7]).c_str()) - 1900;
-		timeinfo->tm_mon = atoi(Unicode::wideToNarrow(argv[8]).c_str()) - 1;
-		timeinfo->tm_mday = atoi(Unicode::wideToNarrow(argv[9]).c_str());
-		timeinfo->tm_hour = atoi(Unicode::wideToNarrow(argv[10]).c_str());
-		timeinfo->tm_min = atoi(Unicode::wideToNarrow(argv[11]).c_str());
-		timeinfo->tm_sec = atoi(Unicode::wideToNarrow(argv[12]).c_str());
+		if (!parseDateTimeArgs(argv, 7, *timeinfo))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
 		time_t const cutoffUpper = ::mktime(timeinfo);
 
 		if (cutoffUpper <= 0)
@@ -1791,31 +1868,35 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 		std::multimap<time_t, std::pair<std::pair<NetworkId, uint32>, std::string> > resultList;
 		NameManager::getInstance().getPlayerWithLastLoginTimeBetween(cutoffLower, cutoffUpper, resultList);
 
-		result += Unicode::narrowToWide(FormattedString<512>().sprintf("%d (out of %d total) characters logged in between %s, %s and %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoffLower).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoffLower).c_str(), CalendarTime::convertEpochToTimeStringLocal(cutoffUpper).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoffUpper).c_str()));
+		result += Unicode::narrowToWide(FormattedString<512>().sprintf("%zu (out of %d total) characters logged in between %s, %s and %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoffLower).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoffLower).c_str(), CalendarTime::convertEpochToTimeStringLocal(cutoffUpper).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoffUpper).c_str()));
 	}
 	else if (isAbbrev(argv[0], "listCharacterLastLoginTimeDetailed"))
 	{
-		int const days = atoi(Unicode::wideToNarrow(argv[1]).c_str());
+		int32 days = 0;
+		if (!parseArg(argv[1], days))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
 		time_t const cutoff = std::max(static_cast<time_t>(0), static_cast<time_t>(::time(nullptr) - (60 * 60 * 24 * days)));
 
 		std::multimap<time_t, std::pair<std::pair<NetworkId, uint32>, std::string> > resultList;
 		NameManager::getInstance().getPlayerWithLastLoginTimeAfter(cutoff, resultList);
 
 		for (std::multimap<time_t, std::pair<std::pair<NetworkId, uint32>, std::string> >::const_iterator iter = resultList.begin(); iter != resultList.end(); ++iter)
-			result += Unicode::narrowToWide(FormattedString<512>().sprintf("[%s, %s] %s, %lu, %s\n", CalendarTime::convertEpochToTimeStringLocal(iter->first).c_str(), CalendarTime::convertEpochToTimeStringGMT(iter->first).c_str(), iter->second.first.first.getValueString().c_str(), iter->second.first.second, iter->second.second.c_str()));
+			result += Unicode::narrowToWide(FormattedString<512>().sprintf("[%s, %s] %s, %u, %s\n", CalendarTime::convertEpochToTimeStringLocal(iter->first).c_str(), CalendarTime::convertEpochToTimeStringGMT(iter->first).c_str(), iter->second.first.first.getValueString().c_str(), iter->second.first.second, iter->second.second.c_str()));
 
-		result += Unicode::narrowToWide(FormattedString<512>().sprintf("%d (out of %d total) characters have logged in since %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoff).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoff).c_str()));
+		result += Unicode::narrowToWide(FormattedString<512>().sprintf("%zu (out of %d total) characters have logged in since %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoff).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoff).c_str()));
 	}
 	else if (isAbbrev(argv[0], "listCharacterLastLoginTimeAfterDetailed"))
 	{
 		time_t const rawtime = ::time(nullptr);
 		struct tm * timeinfo = ::localtime(&rawtime);
-		timeinfo->tm_year = atoi(Unicode::wideToNarrow(argv[1]).c_str()) - 1900;
-		timeinfo->tm_mon = atoi(Unicode::wideToNarrow(argv[2]).c_str()) - 1;
-		timeinfo->tm_mday = atoi(Unicode::wideToNarrow(argv[3]).c_str());
-		timeinfo->tm_hour = atoi(Unicode::wideToNarrow(argv[4]).c_str());
-		timeinfo->tm_min = atoi(Unicode::wideToNarrow(argv[5]).c_str());
-		timeinfo->tm_sec = atoi(Unicode::wideToNarrow(argv[6]).c_str());
+		if (!parseDateTimeArgs(argv, 1, *timeinfo))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
 		time_t const cutoff = ::mktime(timeinfo);
 
 		if (cutoff <= 0)
@@ -1828,20 +1909,19 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 		NameManager::getInstance().getPlayerWithLastLoginTimeAfter(cutoff, resultList);
 
 		for (std::multimap<time_t, std::pair<std::pair<NetworkId, uint32>, std::string> >::const_iterator iter = resultList.begin(); iter != resultList.end(); ++iter)
-			result += Unicode::narrowToWide(FormattedString<512>().sprintf("[%s, %s] %s, %lu, %s\n", CalendarTime::convertEpochToTimeStringLocal(iter->first).c_str(), CalendarTime::convertEpochToTimeStringGMT(iter->first).c_str(), iter->second.first.first.getValueString().c_str(), iter->second.first.second, iter->second.second.c_str()));
+			result += Unicode::narrowToWide(FormattedString<512>().sprintf("[%s, %s] %s, %u, %s\n", CalendarTime::convertEpochToTimeStringLocal(iter->first).c_str(), CalendarTime::convertEpochToTimeStringGMT(iter->first).c_str(), iter->second.first.first.getValueString().c_str(), iter->second.first.second, iter->second.second.c_str()));
 
-		result += Unicode::narrowToWide(FormattedString<512>().sprintf("%d (out of %d total) characters have logged in since %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoff).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoff).c_str()));
+		result += Unicode::narrowToWide(FormattedString<512>().sprintf("%zu (out of %d total) characters have logged in since %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoff).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoff).c_str()));
 	}
 	else if (isAbbrev(argv[0], "listCharacterLastLoginTimeBeforeDetailed"))
 	{
 		time_t const rawtime = ::time(nullptr);
 		struct tm * timeinfo = ::localtime(&rawtime);
-		timeinfo->tm_year = atoi(Unicode::wideToNarrow(argv[1]).c_str()) - 1900;
-		timeinfo->tm_mon = atoi(Unicode::wideToNarrow(argv[2]).c_str()) - 1;
-		timeinfo->tm_mday = atoi(Unicode::wideToNarrow(argv[3]).c_str());
-		timeinfo->tm_hour = atoi(Unicode::wideToNarrow(argv[4]).c_str());
-		timeinfo->tm_min = atoi(Unicode::wideToNarrow(argv[5]).c_str());
-		timeinfo->tm_sec = atoi(Unicode::wideToNarrow(argv[6]).c_str());
+		if (!parseDateTimeArgs(argv, 1, *timeinfo))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
 		time_t const cutoff = ::mktime(timeinfo);
 
 		if (cutoff <= 0)
@@ -1854,20 +1934,19 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 		NameManager::getInstance().getPlayerWithLastLoginTimeBefore(cutoff, resultList);
 
 		for (std::multimap<time_t, std::pair<std::pair<NetworkId, uint32>, std::string> >::const_iterator iter = resultList.begin(); iter != resultList.end(); ++iter)
-			result += Unicode::narrowToWide(FormattedString<512>().sprintf("[%s, %s] %s, %lu, %s\n", CalendarTime::convertEpochToTimeStringLocal(iter->first).c_str(), CalendarTime::convertEpochToTimeStringGMT(iter->first).c_str(), iter->second.first.first.getValueString().c_str(), iter->second.first.second, iter->second.second.c_str()));
+			result += Unicode::narrowToWide(FormattedString<512>().sprintf("[%s, %s] %s, %u, %s\n", CalendarTime::convertEpochToTimeStringLocal(iter->first).c_str(), CalendarTime::convertEpochToTimeStringGMT(iter->first).c_str(), iter->second.first.first.getValueString().c_str(), iter->second.first.second, iter->second.second.c_str()));
 
-		result += Unicode::narrowToWide(FormattedString<512>().sprintf("%d (out of %d total) characters logged in before %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoff).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoff).c_str()));
+		result += Unicode::narrowToWide(FormattedString<512>().sprintf("%zu (out of %d total) characters logged in before %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoff).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoff).c_str()));
 	}
 	else if (isAbbrev(argv[0], "listCharacterLastLoginTimeBetweenDetailed"))
 	{
 		time_t const rawtime = ::time(nullptr);
 		struct tm * timeinfo = ::localtime(&rawtime);
-		timeinfo->tm_year = atoi(Unicode::wideToNarrow(argv[1]).c_str()) - 1900;
-		timeinfo->tm_mon = atoi(Unicode::wideToNarrow(argv[2]).c_str()) - 1;
-		timeinfo->tm_mday = atoi(Unicode::wideToNarrow(argv[3]).c_str());
-		timeinfo->tm_hour = atoi(Unicode::wideToNarrow(argv[4]).c_str());
-		timeinfo->tm_min = atoi(Unicode::wideToNarrow(argv[5]).c_str());
-		timeinfo->tm_sec = atoi(Unicode::wideToNarrow(argv[6]).c_str());
+		if (!parseDateTimeArgs(argv, 1, *timeinfo))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
 		time_t const cutoffLower = ::mktime(timeinfo);
 
 		if (cutoffLower <= 0)
@@ -1877,12 +1956,11 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 		}
 
 		timeinfo = ::localtime(&rawtime);
-		timeinfo->tm_year = atoi(Unicode::wideToNarrow(argv[7]).c_str()) - 1900;
-		timeinfo->tm_mon = atoi(Unicode::wideToNarrow(argv[8]).c_str()) - 1;
-		timeinfo->tm_mday = atoi(Unicode::wideToNarrow(argv[9]).c_str());
-		timeinfo->tm_hour = atoi(Unicode::wideToNarrow(argv[10]).c_str());
-		timeinfo->tm_min = atoi(Unicode::wideToNarrow(argv[11]).c_str());
-		timeinfo->tm_sec = atoi(Unicode::wideToNarrow(argv[12]).c_str());
+		if (!parseDateTimeArgs(argv, 7, *timeinfo))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
 		time_t const cutoffUpper = ::mktime(timeinfo);
 
 		if (cutoffUpper <= 0)
@@ -1901,13 +1979,18 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 		NameManager::getInstance().getPlayerWithLastLoginTimeBetween(cutoffLower, cutoffUpper, resultList);
 
 		for (std::multimap<time_t, std::pair<std::pair<NetworkId, uint32>, std::string> >::const_iterator iter = resultList.begin(); iter != resultList.end(); ++iter)
-			result += Unicode::narrowToWide(FormattedString<512>().sprintf("[%s, %s] %s, %lu, %s\n", CalendarTime::convertEpochToTimeStringLocal(iter->first).c_str(), CalendarTime::convertEpochToTimeStringGMT(iter->first).c_str(), iter->second.first.first.getValueString().c_str(), iter->second.first.second, iter->second.second.c_str()));
+			result += Unicode::narrowToWide(FormattedString<512>().sprintf("[%s, %s] %s, %u, %s\n", CalendarTime::convertEpochToTimeStringLocal(iter->first).c_str(), CalendarTime::convertEpochToTimeStringGMT(iter->first).c_str(), iter->second.first.first.getValueString().c_str(), iter->second.first.second, iter->second.second.c_str()));
 
-		result += Unicode::narrowToWide(FormattedString<512>().sprintf("%d (out of %d total) characters logged in between %s, %s and %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoffLower).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoffLower).c_str(), CalendarTime::convertEpochToTimeStringLocal(cutoffUpper).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoffUpper).c_str()));
+		result += Unicode::narrowToWide(FormattedString<512>().sprintf("%zu (out of %d total) characters logged in between %s, %s and %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoffLower).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoffLower).c_str(), CalendarTime::convertEpochToTimeStringLocal(cutoffUpper).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoffUpper).c_str()));
 	}
 	else if (isAbbrev(argv[0], "sendMailToCharacterLastLoginTime"))
 	{
-		int const days = atoi(Unicode::wideToNarrow(argv[1]).c_str());
+		int32 days = 0;
+		if (!parseArg(argv[1], days))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
 		time_t const cutoff = std::max(static_cast<time_t>(0), static_cast<time_t>(::time(nullptr) - (60 * 60 * 24 * days)));
 
 		int const argc = argv.size();
@@ -1935,7 +2018,7 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 
 		if ((s_days == days) && (s_confirmationTimeout > timeNow) && (s_fromName == Unicode::wideToNarrow(argv[2])) && (s_mailSubject == argv[3]) && (s_mailBody == mailBody))
 		{
-			result += Unicode::narrowToWide(FormattedString<512>().sprintf("Sending mail to %d (out of %d total) characters who have logged in since %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoff).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoff).c_str()));
+			result += Unicode::narrowToWide(FormattedString<512>().sprintf("Sending mail to %zu (out of %d total) characters who have logged in since %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoff).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoff).c_str()));
 
 			for (std::multimap<time_t, std::pair<std::pair<NetworkId, uint32>, std::string> >::const_iterator iter = resultList.begin(); iter != resultList.end(); ++iter)
 			{
@@ -1951,7 +2034,7 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 		}
 		else
 		{
-			result += Unicode::narrowToWide(FormattedString<512>().sprintf("The following is the mail that ***WILL BE SENT*** to %d (out of %d total) characters who have logged in since %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoff).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoff).c_str()));
+			result += Unicode::narrowToWide(FormattedString<512>().sprintf("The following is the mail that ***WILL BE SENT*** to %zu (out of %d total) characters who have logged in since %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoff).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoff).c_str()));
 			result += Unicode::narrowToWide("\nPlease confirm that you ***REALLY WANT TO SEND*** this mail and run the command again with the same arguments within 60 seconds to send the mail\n\n");
 
 			s_days = days;
@@ -1972,12 +2055,11 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 	{
 		time_t const rawtime = ::time(nullptr);
 		struct tm * timeinfo = ::localtime(&rawtime);
-		timeinfo->tm_year = atoi(Unicode::wideToNarrow(argv[1]).c_str()) - 1900;
-		timeinfo->tm_mon = atoi(Unicode::wideToNarrow(argv[2]).c_str()) - 1;
-		timeinfo->tm_mday = atoi(Unicode::wideToNarrow(argv[3]).c_str());
-		timeinfo->tm_hour = atoi(Unicode::wideToNarrow(argv[4]).c_str());
-		timeinfo->tm_min = atoi(Unicode::wideToNarrow(argv[5]).c_str());
-		timeinfo->tm_sec = atoi(Unicode::wideToNarrow(argv[6]).c_str());
+		if (!parseDateTimeArgs(argv, 1, *timeinfo))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
 		time_t const cutoff = ::mktime(timeinfo);
 
 		if (cutoff <= 0)
@@ -2011,7 +2093,7 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 
 		if ((s_cutoff == cutoff) && (s_confirmationTimeout > timeNow) && (s_fromName == Unicode::wideToNarrow(argv[7])) && (s_mailSubject == argv[8]) && (s_mailBody == mailBody))
 		{
-			result += Unicode::narrowToWide(FormattedString<512>().sprintf("Sending mail to %d (out of %d total) characters who have logged in since %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoff).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoff).c_str()));
+			result += Unicode::narrowToWide(FormattedString<512>().sprintf("Sending mail to %zu (out of %d total) characters who have logged in since %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoff).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoff).c_str()));
 
 			for (std::multimap<time_t, std::pair<std::pair<NetworkId, uint32>, std::string> >::const_iterator iter = resultList.begin(); iter != resultList.end(); ++iter)
 			{
@@ -2027,7 +2109,7 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 		}
 		else
 		{
-			result += Unicode::narrowToWide(FormattedString<512>().sprintf("The following is the mail that ***WILL BE SENT*** to %d (out of %d total) characters who have logged in since %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoff).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoff).c_str()));
+			result += Unicode::narrowToWide(FormattedString<512>().sprintf("The following is the mail that ***WILL BE SENT*** to %zu (out of %d total) characters who have logged in since %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoff).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoff).c_str()));
 			result += Unicode::narrowToWide("\nPlease confirm that you ***REALLY WANT TO SEND*** this mail and run the command again with the same arguments within 60 seconds to send the mail\n\n");
 
 			s_cutoff = cutoff;
@@ -2048,12 +2130,11 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 	{
 		time_t const rawtime = ::time(nullptr);
 		struct tm * timeinfo = ::localtime(&rawtime);
-		timeinfo->tm_year = atoi(Unicode::wideToNarrow(argv[1]).c_str()) - 1900;
-		timeinfo->tm_mon = atoi(Unicode::wideToNarrow(argv[2]).c_str()) - 1;
-		timeinfo->tm_mday = atoi(Unicode::wideToNarrow(argv[3]).c_str());
-		timeinfo->tm_hour = atoi(Unicode::wideToNarrow(argv[4]).c_str());
-		timeinfo->tm_min = atoi(Unicode::wideToNarrow(argv[5]).c_str());
-		timeinfo->tm_sec = atoi(Unicode::wideToNarrow(argv[6]).c_str());
+		if (!parseDateTimeArgs(argv, 1, *timeinfo))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
 		time_t const cutoff = ::mktime(timeinfo);
 
 		if (cutoff <= 0)
@@ -2087,7 +2168,7 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 
 		if ((s_cutoff == cutoff) && (s_confirmationTimeout > timeNow) && (s_fromName == Unicode::wideToNarrow(argv[7])) && (s_mailSubject == argv[8]) && (s_mailBody == mailBody))
 		{
-			result += Unicode::narrowToWide(FormattedString<512>().sprintf("Sending mail to %d (out of %d total) characters who logged in before %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoff).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoff).c_str()));
+			result += Unicode::narrowToWide(FormattedString<512>().sprintf("Sending mail to %zu (out of %d total) characters who logged in before %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoff).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoff).c_str()));
 
 			for (std::multimap<time_t, std::pair<std::pair<NetworkId, uint32>, std::string> >::const_iterator iter = resultList.begin(); iter != resultList.end(); ++iter)
 			{
@@ -2103,7 +2184,7 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 		}
 		else
 		{
-			result += Unicode::narrowToWide(FormattedString<512>().sprintf("The following is the mail that ***WILL BE SENT*** to %d (out of %d total) characters who logged in before %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoff).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoff).c_str()));
+			result += Unicode::narrowToWide(FormattedString<512>().sprintf("The following is the mail that ***WILL BE SENT*** to %zu (out of %d total) characters who logged in before %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoff).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoff).c_str()));
 			result += Unicode::narrowToWide("\nPlease confirm that you ***REALLY WANT TO SEND*** this mail and run the command again with the same arguments within 60 seconds to send the mail\n\n");
 
 			s_cutoff = cutoff;
@@ -2124,12 +2205,11 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 	{
 		time_t const rawtime = ::time(nullptr);
 		struct tm * timeinfo = ::localtime(&rawtime);
-		timeinfo->tm_year = atoi(Unicode::wideToNarrow(argv[1]).c_str()) - 1900;
-		timeinfo->tm_mon = atoi(Unicode::wideToNarrow(argv[2]).c_str()) - 1;
-		timeinfo->tm_mday = atoi(Unicode::wideToNarrow(argv[3]).c_str());
-		timeinfo->tm_hour = atoi(Unicode::wideToNarrow(argv[4]).c_str());
-		timeinfo->tm_min = atoi(Unicode::wideToNarrow(argv[5]).c_str());
-		timeinfo->tm_sec = atoi(Unicode::wideToNarrow(argv[6]).c_str());
+		if (!parseDateTimeArgs(argv, 1, *timeinfo))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
 		time_t const cutoffLower = ::mktime(timeinfo);
 
 		if (cutoffLower <= 0)
@@ -2139,12 +2219,11 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 		}
 
 		timeinfo = ::localtime(&rawtime);
-		timeinfo->tm_year = atoi(Unicode::wideToNarrow(argv[7]).c_str()) - 1900;
-		timeinfo->tm_mon = atoi(Unicode::wideToNarrow(argv[8]).c_str()) - 1;
-		timeinfo->tm_mday = atoi(Unicode::wideToNarrow(argv[9]).c_str());
-		timeinfo->tm_hour = atoi(Unicode::wideToNarrow(argv[10]).c_str());
-		timeinfo->tm_min = atoi(Unicode::wideToNarrow(argv[11]).c_str());
-		timeinfo->tm_sec = atoi(Unicode::wideToNarrow(argv[12]).c_str());
+		if (!parseDateTimeArgs(argv, 7, *timeinfo))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
 		time_t const cutoffUpper = ::mktime(timeinfo);
 
 		if (cutoffUpper <= 0)
@@ -2185,7 +2264,7 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 
 		if ((s_cutoffLower == cutoffLower) && (s_cutoffUpper == cutoffUpper) && (s_confirmationTimeout > timeNow) && (s_fromName == Unicode::wideToNarrow(argv[13])) && (s_mailSubject == argv[14]) && (s_mailBody == mailBody))
 		{
-			result += Unicode::narrowToWide(FormattedString<512>().sprintf("Sending mail to %d (out of %d total) characters who logged in between %s, %s and %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoffLower).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoffLower).c_str(), CalendarTime::convertEpochToTimeStringLocal(cutoffUpper).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoffUpper).c_str()));
+			result += Unicode::narrowToWide(FormattedString<512>().sprintf("Sending mail to %zu (out of %d total) characters who logged in between %s, %s and %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoffLower).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoffLower).c_str(), CalendarTime::convertEpochToTimeStringLocal(cutoffUpper).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoffUpper).c_str()));
 
 			for (std::multimap<time_t, std::pair<std::pair<NetworkId, uint32>, std::string> >::const_iterator iter = resultList.begin(); iter != resultList.end(); ++iter)
 			{
@@ -2202,7 +2281,7 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 		}
 		else
 		{
-			result += Unicode::narrowToWide(FormattedString<512>().sprintf("The following is the mail that ***WILL BE SENT*** to %d (out of %d total) characters who logged in between %s, %s and %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoffLower).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoffLower).c_str(), CalendarTime::convertEpochToTimeStringLocal(cutoffUpper).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoffUpper).c_str()));
+			result += Unicode::narrowToWide(FormattedString<512>().sprintf("The following is the mail that ***WILL BE SENT*** to %zu (out of %d total) characters who logged in between %s, %s and %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoffLower).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoffLower).c_str(), CalendarTime::convertEpochToTimeStringLocal(cutoffUpper).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoffUpper).c_str()));
 			result += Unicode::narrowToWide("\nPlease confirm that you ***REALLY WANT TO SEND*** this mail and run the command again with the same arguments within 60 seconds to send the mail\n\n");
 
 			s_cutoffLower = cutoffLower;
@@ -2222,24 +2301,28 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 	}
 	else if (isAbbrev(argv[0], "listCharacterCreateTimeBrief"))
 	{
-		int const days = atoi(Unicode::wideToNarrow(argv[1]).c_str());
+		int32 days = 0;
+		if (!parseArg(argv[1], days))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
 		time_t const cutoff = std::max(static_cast<time_t>(0), static_cast<time_t>(::time(nullptr) - (60 * 60 * 24 * days)));
 
 		std::multimap<time_t, std::pair<std::pair<NetworkId, uint32>, std::string> > resultList;
 		NameManager::getInstance().getPlayerWithCreateTimeAfter(cutoff, resultList);
 
-		result += Unicode::narrowToWide(FormattedString<512>().sprintf("%d (out of %d total) characters created since %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoff).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoff).c_str()));
+		result += Unicode::narrowToWide(FormattedString<512>().sprintf("%zu (out of %d total) characters created since %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoff).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoff).c_str()));
 	}
 	else if (isAbbrev(argv[0], "listCharacterCreateTimeAfterBrief"))
 	{
 		time_t const rawtime = ::time(nullptr);
 		struct tm * timeinfo = ::localtime(&rawtime);
-		timeinfo->tm_year = atoi(Unicode::wideToNarrow(argv[1]).c_str()) - 1900;
-		timeinfo->tm_mon = atoi(Unicode::wideToNarrow(argv[2]).c_str()) - 1;
-		timeinfo->tm_mday = atoi(Unicode::wideToNarrow(argv[3]).c_str());
-		timeinfo->tm_hour = atoi(Unicode::wideToNarrow(argv[4]).c_str());
-		timeinfo->tm_min = atoi(Unicode::wideToNarrow(argv[5]).c_str());
-		timeinfo->tm_sec = atoi(Unicode::wideToNarrow(argv[6]).c_str());
+		if (!parseDateTimeArgs(argv, 1, *timeinfo))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
 		time_t const cutoff = ::mktime(timeinfo);
 
 		if (cutoff <= 0)
@@ -2251,18 +2334,17 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 		std::multimap<time_t, std::pair<std::pair<NetworkId, uint32>, std::string> > resultList;
 		NameManager::getInstance().getPlayerWithCreateTimeAfter(cutoff, resultList);
 
-		result += Unicode::narrowToWide(FormattedString<512>().sprintf("%d (out of %d total) characters created since %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoff).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoff).c_str()));
+		result += Unicode::narrowToWide(FormattedString<512>().sprintf("%zu (out of %d total) characters created since %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoff).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoff).c_str()));
 	}
 	else if (isAbbrev(argv[0], "listCharacterCreateTimeBeforeBrief"))
 	{
 		time_t const rawtime = ::time(nullptr);
 		struct tm * timeinfo = ::localtime(&rawtime);
-		timeinfo->tm_year = atoi(Unicode::wideToNarrow(argv[1]).c_str()) - 1900;
-		timeinfo->tm_mon = atoi(Unicode::wideToNarrow(argv[2]).c_str()) - 1;
-		timeinfo->tm_mday = atoi(Unicode::wideToNarrow(argv[3]).c_str());
-		timeinfo->tm_hour = atoi(Unicode::wideToNarrow(argv[4]).c_str());
-		timeinfo->tm_min = atoi(Unicode::wideToNarrow(argv[5]).c_str());
-		timeinfo->tm_sec = atoi(Unicode::wideToNarrow(argv[6]).c_str());
+		if (!parseDateTimeArgs(argv, 1, *timeinfo))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
 		time_t const cutoff = ::mktime(timeinfo);
 
 		if (cutoff <= 0)
@@ -2274,18 +2356,17 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 		std::multimap<time_t, std::pair<std::pair<NetworkId, uint32>, std::string> > resultList;
 		NameManager::getInstance().getPlayerWithCreateTimeBefore(cutoff, resultList);
 
-		result += Unicode::narrowToWide(FormattedString<512>().sprintf("%d (out of %d total) characters created before %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoff).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoff).c_str()));
+		result += Unicode::narrowToWide(FormattedString<512>().sprintf("%zu (out of %d total) characters created before %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoff).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoff).c_str()));
 	}
 	else if (isAbbrev(argv[0], "listCharacterCreateTimeBetweenBrief"))
 	{
 		time_t const rawtime = ::time(nullptr);
 		struct tm * timeinfo = ::localtime(&rawtime);
-		timeinfo->tm_year = atoi(Unicode::wideToNarrow(argv[1]).c_str()) - 1900;
-		timeinfo->tm_mon = atoi(Unicode::wideToNarrow(argv[2]).c_str()) - 1;
-		timeinfo->tm_mday = atoi(Unicode::wideToNarrow(argv[3]).c_str());
-		timeinfo->tm_hour = atoi(Unicode::wideToNarrow(argv[4]).c_str());
-		timeinfo->tm_min = atoi(Unicode::wideToNarrow(argv[5]).c_str());
-		timeinfo->tm_sec = atoi(Unicode::wideToNarrow(argv[6]).c_str());
+		if (!parseDateTimeArgs(argv, 1, *timeinfo))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
 		time_t const cutoffLower = ::mktime(timeinfo);
 
 		if (cutoffLower <= 0)
@@ -2295,12 +2376,11 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 		}
 
 		timeinfo = ::localtime(&rawtime);
-		timeinfo->tm_year = atoi(Unicode::wideToNarrow(argv[7]).c_str()) - 1900;
-		timeinfo->tm_mon = atoi(Unicode::wideToNarrow(argv[8]).c_str()) - 1;
-		timeinfo->tm_mday = atoi(Unicode::wideToNarrow(argv[9]).c_str());
-		timeinfo->tm_hour = atoi(Unicode::wideToNarrow(argv[10]).c_str());
-		timeinfo->tm_min = atoi(Unicode::wideToNarrow(argv[11]).c_str());
-		timeinfo->tm_sec = atoi(Unicode::wideToNarrow(argv[12]).c_str());
+		if (!parseDateTimeArgs(argv, 7, *timeinfo))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
 		time_t const cutoffUpper = ::mktime(timeinfo);
 
 		if (cutoffUpper <= 0)
@@ -2318,31 +2398,35 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 		std::multimap<time_t, std::pair<std::pair<NetworkId, uint32>, std::string> > resultList;
 		NameManager::getInstance().getPlayerWithCreateTimeBetween(cutoffLower, cutoffUpper, resultList);
 
-		result += Unicode::narrowToWide(FormattedString<512>().sprintf("%d (out of %d total) characters created between %s, %s and %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoffLower).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoffLower).c_str(), CalendarTime::convertEpochToTimeStringLocal(cutoffUpper).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoffUpper).c_str()));
+		result += Unicode::narrowToWide(FormattedString<512>().sprintf("%zu (out of %d total) characters created between %s, %s and %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoffLower).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoffLower).c_str(), CalendarTime::convertEpochToTimeStringLocal(cutoffUpper).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoffUpper).c_str()));
 	}
 	else if (isAbbrev(argv[0], "listCharacterCreateTimeDetailed"))
 	{
-		int const days = atoi(Unicode::wideToNarrow(argv[1]).c_str());
+		int32 days = 0;
+		if (!parseArg(argv[1], days))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
 		time_t const cutoff = std::max(static_cast<time_t>(0), static_cast<time_t>(::time(nullptr) - (60 * 60 * 24 * days)));
 
 		std::multimap<time_t, std::pair<std::pair<NetworkId, uint32>, std::string> > resultList;
 		NameManager::getInstance().getPlayerWithCreateTimeAfter(cutoff, resultList);
 
 		for (std::multimap<time_t, std::pair<std::pair<NetworkId, uint32>, std::string> >::const_iterator iter = resultList.begin(); iter != resultList.end(); ++iter)
-			result += Unicode::narrowToWide(FormattedString<512>().sprintf("[%s, %s] %s, %lu, %s\n", CalendarTime::convertEpochToTimeStringLocal(iter->first).c_str(), CalendarTime::convertEpochToTimeStringGMT(iter->first).c_str(), iter->second.first.first.getValueString().c_str(), iter->second.first.second, iter->second.second.c_str()));
+			result += Unicode::narrowToWide(FormattedString<512>().sprintf("[%s, %s] %s, %u, %s\n", CalendarTime::convertEpochToTimeStringLocal(iter->first).c_str(), CalendarTime::convertEpochToTimeStringGMT(iter->first).c_str(), iter->second.first.first.getValueString().c_str(), iter->second.first.second, iter->second.second.c_str()));
 
-		result += Unicode::narrowToWide(FormattedString<512>().sprintf("%d (out of %d total) characters created since %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoff).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoff).c_str()));
+		result += Unicode::narrowToWide(FormattedString<512>().sprintf("%zu (out of %d total) characters created since %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoff).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoff).c_str()));
 	}
 	else if (isAbbrev(argv[0], "listCharacterCreateTimeAfterDetailed"))
 	{
 		time_t const rawtime = ::time(nullptr);
 		struct tm * timeinfo = ::localtime(&rawtime);
-		timeinfo->tm_year = atoi(Unicode::wideToNarrow(argv[1]).c_str()) - 1900;
-		timeinfo->tm_mon = atoi(Unicode::wideToNarrow(argv[2]).c_str()) - 1;
-		timeinfo->tm_mday = atoi(Unicode::wideToNarrow(argv[3]).c_str());
-		timeinfo->tm_hour = atoi(Unicode::wideToNarrow(argv[4]).c_str());
-		timeinfo->tm_min = atoi(Unicode::wideToNarrow(argv[5]).c_str());
-		timeinfo->tm_sec = atoi(Unicode::wideToNarrow(argv[6]).c_str());
+		if (!parseDateTimeArgs(argv, 1, *timeinfo))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
 		time_t const cutoff = ::mktime(timeinfo);
 
 		if (cutoff <= 0)
@@ -2355,20 +2439,19 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 		NameManager::getInstance().getPlayerWithCreateTimeAfter(cutoff, resultList);
 
 		for (std::multimap<time_t, std::pair<std::pair<NetworkId, uint32>, std::string> >::const_iterator iter = resultList.begin(); iter != resultList.end(); ++iter)
-			result += Unicode::narrowToWide(FormattedString<512>().sprintf("[%s, %s] %s, %lu, %s\n", CalendarTime::convertEpochToTimeStringLocal(iter->first).c_str(), CalendarTime::convertEpochToTimeStringGMT(iter->first).c_str(), iter->second.first.first.getValueString().c_str(), iter->second.first.second, iter->second.second.c_str()));
+			result += Unicode::narrowToWide(FormattedString<512>().sprintf("[%s, %s] %s, %u, %s\n", CalendarTime::convertEpochToTimeStringLocal(iter->first).c_str(), CalendarTime::convertEpochToTimeStringGMT(iter->first).c_str(), iter->second.first.first.getValueString().c_str(), iter->second.first.second, iter->second.second.c_str()));
 
-		result += Unicode::narrowToWide(FormattedString<512>().sprintf("%d (out of %d total) characters created since %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoff).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoff).c_str()));
+		result += Unicode::narrowToWide(FormattedString<512>().sprintf("%zu (out of %d total) characters created since %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoff).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoff).c_str()));
 	}
 	else if (isAbbrev(argv[0], "listCharacterCreateTimeBeforeDetailed"))
 	{
 		time_t const rawtime = ::time(nullptr);
 		struct tm * timeinfo = ::localtime(&rawtime);
-		timeinfo->tm_year = atoi(Unicode::wideToNarrow(argv[1]).c_str()) - 1900;
-		timeinfo->tm_mon = atoi(Unicode::wideToNarrow(argv[2]).c_str()) - 1;
-		timeinfo->tm_mday = atoi(Unicode::wideToNarrow(argv[3]).c_str());
-		timeinfo->tm_hour = atoi(Unicode::wideToNarrow(argv[4]).c_str());
-		timeinfo->tm_min = atoi(Unicode::wideToNarrow(argv[5]).c_str());
-		timeinfo->tm_sec = atoi(Unicode::wideToNarrow(argv[6]).c_str());
+		if (!parseDateTimeArgs(argv, 1, *timeinfo))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
 		time_t const cutoff = ::mktime(timeinfo);
 
 		if (cutoff <= 0)
@@ -2381,20 +2464,19 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 		NameManager::getInstance().getPlayerWithCreateTimeBefore(cutoff, resultList);
 
 		for (std::multimap<time_t, std::pair<std::pair<NetworkId, uint32>, std::string> >::const_iterator iter = resultList.begin(); iter != resultList.end(); ++iter)
-			result += Unicode::narrowToWide(FormattedString<512>().sprintf("[%s, %s] %s, %lu, %s\n", CalendarTime::convertEpochToTimeStringLocal(iter->first).c_str(), CalendarTime::convertEpochToTimeStringGMT(iter->first).c_str(), iter->second.first.first.getValueString().c_str(), iter->second.first.second, iter->second.second.c_str()));
+			result += Unicode::narrowToWide(FormattedString<512>().sprintf("[%s, %s] %s, %u, %s\n", CalendarTime::convertEpochToTimeStringLocal(iter->first).c_str(), CalendarTime::convertEpochToTimeStringGMT(iter->first).c_str(), iter->second.first.first.getValueString().c_str(), iter->second.first.second, iter->second.second.c_str()));
 
-		result += Unicode::narrowToWide(FormattedString<512>().sprintf("%d (out of %d total) characters created before %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoff).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoff).c_str()));
+		result += Unicode::narrowToWide(FormattedString<512>().sprintf("%zu (out of %d total) characters created before %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoff).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoff).c_str()));
 	}
 	else if (isAbbrev(argv[0], "listCharacterCreateTimeBetweenDetailed"))
 	{
 		time_t const rawtime = ::time(nullptr);
 		struct tm * timeinfo = ::localtime(&rawtime);
-		timeinfo->tm_year = atoi(Unicode::wideToNarrow(argv[1]).c_str()) - 1900;
-		timeinfo->tm_mon = atoi(Unicode::wideToNarrow(argv[2]).c_str()) - 1;
-		timeinfo->tm_mday = atoi(Unicode::wideToNarrow(argv[3]).c_str());
-		timeinfo->tm_hour = atoi(Unicode::wideToNarrow(argv[4]).c_str());
-		timeinfo->tm_min = atoi(Unicode::wideToNarrow(argv[5]).c_str());
-		timeinfo->tm_sec = atoi(Unicode::wideToNarrow(argv[6]).c_str());
+		if (!parseDateTimeArgs(argv, 1, *timeinfo))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
 		time_t const cutoffLower = ::mktime(timeinfo);
 
 		if (cutoffLower <= 0)
@@ -2404,12 +2486,11 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 		}
 
 		timeinfo = ::localtime(&rawtime);
-		timeinfo->tm_year = atoi(Unicode::wideToNarrow(argv[7]).c_str()) - 1900;
-		timeinfo->tm_mon = atoi(Unicode::wideToNarrow(argv[8]).c_str()) - 1;
-		timeinfo->tm_mday = atoi(Unicode::wideToNarrow(argv[9]).c_str());
-		timeinfo->tm_hour = atoi(Unicode::wideToNarrow(argv[10]).c_str());
-		timeinfo->tm_min = atoi(Unicode::wideToNarrow(argv[11]).c_str());
-		timeinfo->tm_sec = atoi(Unicode::wideToNarrow(argv[12]).c_str());
+		if (!parseDateTimeArgs(argv, 7, *timeinfo))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
 		time_t const cutoffUpper = ::mktime(timeinfo);
 
 		if (cutoffUpper <= 0)
@@ -2428,13 +2509,18 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 		NameManager::getInstance().getPlayerWithCreateTimeBetween(cutoffLower, cutoffUpper, resultList);
 
 		for (std::multimap<time_t, std::pair<std::pair<NetworkId, uint32>, std::string> >::const_iterator iter = resultList.begin(); iter != resultList.end(); ++iter)
-			result += Unicode::narrowToWide(FormattedString<512>().sprintf("[%s, %s] %s, %lu, %s\n", CalendarTime::convertEpochToTimeStringLocal(iter->first).c_str(), CalendarTime::convertEpochToTimeStringGMT(iter->first).c_str(), iter->second.first.first.getValueString().c_str(), iter->second.first.second, iter->second.second.c_str()));
+			result += Unicode::narrowToWide(FormattedString<512>().sprintf("[%s, %s] %s, %u, %s\n", CalendarTime::convertEpochToTimeStringLocal(iter->first).c_str(), CalendarTime::convertEpochToTimeStringGMT(iter->first).c_str(), iter->second.first.first.getValueString().c_str(), iter->second.first.second, iter->second.second.c_str()));
 
-		result += Unicode::narrowToWide(FormattedString<512>().sprintf("%d (out of %d total) characters created between %s, %s and %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoffLower).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoffLower).c_str(), CalendarTime::convertEpochToTimeStringLocal(cutoffUpper).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoffUpper).c_str()));
+		result += Unicode::narrowToWide(FormattedString<512>().sprintf("%zu (out of %d total) characters created between %s, %s and %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoffLower).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoffLower).c_str(), CalendarTime::convertEpochToTimeStringLocal(cutoffUpper).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoffUpper).c_str()));
 	}
 	else if (isAbbrev(argv[0], "sendMailToCharacterCreateTime"))
 	{
-		int const days = atoi(Unicode::wideToNarrow(argv[1]).c_str());
+		int32 days = 0;
+		if (!parseArg(argv[1], days))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
 		time_t const cutoff = std::max(static_cast<time_t>(0), static_cast<time_t>(::time(nullptr) - (60 * 60 * 24 * days)));
 
 		int const argc = argv.size();
@@ -2462,7 +2548,7 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 
 		if ((s_days == days) && (s_confirmationTimeout > timeNow) && (s_fromName == Unicode::wideToNarrow(argv[2])) && (s_mailSubject == argv[3]) && (s_mailBody == mailBody))
 		{
-			result += Unicode::narrowToWide(FormattedString<512>().sprintf("Sending mail to %d (out of %d total) characters created since %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoff).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoff).c_str()));
+			result += Unicode::narrowToWide(FormattedString<512>().sprintf("Sending mail to %zu (out of %d total) characters created since %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoff).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoff).c_str()));
 
 			for (std::multimap<time_t, std::pair<std::pair<NetworkId, uint32>, std::string> >::const_iterator iter = resultList.begin(); iter != resultList.end(); ++iter)
 			{
@@ -2478,7 +2564,7 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 		}
 		else
 		{
-			result += Unicode::narrowToWide(FormattedString<512>().sprintf("The following is the mail that ***WILL BE SENT*** to %d (out of %d total) characters created since %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoff).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoff).c_str()));
+			result += Unicode::narrowToWide(FormattedString<512>().sprintf("The following is the mail that ***WILL BE SENT*** to %zu (out of %d total) characters created since %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoff).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoff).c_str()));
 			result += Unicode::narrowToWide("\nPlease confirm that you ***REALLY WANT TO SEND*** this mail and run the command again with the same arguments within 60 seconds to send the mail\n\n");
 
 			s_days = days;
@@ -2499,12 +2585,11 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 	{
 		time_t const rawtime = ::time(nullptr);
 		struct tm * timeinfo = ::localtime(&rawtime);
-		timeinfo->tm_year = atoi(Unicode::wideToNarrow(argv[1]).c_str()) - 1900;
-		timeinfo->tm_mon = atoi(Unicode::wideToNarrow(argv[2]).c_str()) - 1;
-		timeinfo->tm_mday = atoi(Unicode::wideToNarrow(argv[3]).c_str());
-		timeinfo->tm_hour = atoi(Unicode::wideToNarrow(argv[4]).c_str());
-		timeinfo->tm_min = atoi(Unicode::wideToNarrow(argv[5]).c_str());
-		timeinfo->tm_sec = atoi(Unicode::wideToNarrow(argv[6]).c_str());
+		if (!parseDateTimeArgs(argv, 1, *timeinfo))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
 		time_t const cutoff = ::mktime(timeinfo);
 
 		if (cutoff <= 0)
@@ -2538,7 +2623,7 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 
 		if ((s_cutoff == cutoff) && (s_confirmationTimeout > timeNow) && (s_fromName == Unicode::wideToNarrow(argv[7])) && (s_mailSubject == argv[8]) && (s_mailBody == mailBody))
 		{
-			result += Unicode::narrowToWide(FormattedString<512>().sprintf("Sending mail to %d (out of %d total) characters created since %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoff).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoff).c_str()));
+			result += Unicode::narrowToWide(FormattedString<512>().sprintf("Sending mail to %zu (out of %d total) characters created since %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoff).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoff).c_str()));
 
 			for (std::multimap<time_t, std::pair<std::pair<NetworkId, uint32>, std::string> >::const_iterator iter = resultList.begin(); iter != resultList.end(); ++iter)
 			{
@@ -2554,7 +2639,7 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 		}
 		else
 		{
-			result += Unicode::narrowToWide(FormattedString<512>().sprintf("The following is the mail that ***WILL BE SENT*** to %d (out of %d total) characters created since %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoff).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoff).c_str()));
+			result += Unicode::narrowToWide(FormattedString<512>().sprintf("The following is the mail that ***WILL BE SENT*** to %zu (out of %d total) characters created since %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoff).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoff).c_str()));
 			result += Unicode::narrowToWide("\nPlease confirm that you ***REALLY WANT TO SEND*** this mail and run the command again with the same arguments within 60 seconds to send the mail\n\n");
 
 			s_cutoff = cutoff;
@@ -2575,12 +2660,11 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 	{
 		time_t const rawtime = ::time(nullptr);
 		struct tm * timeinfo = ::localtime(&rawtime);
-		timeinfo->tm_year = atoi(Unicode::wideToNarrow(argv[1]).c_str()) - 1900;
-		timeinfo->tm_mon = atoi(Unicode::wideToNarrow(argv[2]).c_str()) - 1;
-		timeinfo->tm_mday = atoi(Unicode::wideToNarrow(argv[3]).c_str());
-		timeinfo->tm_hour = atoi(Unicode::wideToNarrow(argv[4]).c_str());
-		timeinfo->tm_min = atoi(Unicode::wideToNarrow(argv[5]).c_str());
-		timeinfo->tm_sec = atoi(Unicode::wideToNarrow(argv[6]).c_str());
+		if (!parseDateTimeArgs(argv, 1, *timeinfo))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
 		time_t const cutoff = ::mktime(timeinfo);
 
 		if (cutoff <= 0)
@@ -2614,7 +2698,7 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 
 		if ((s_cutoff == cutoff) && (s_confirmationTimeout > timeNow) && (s_fromName == Unicode::wideToNarrow(argv[7])) && (s_mailSubject == argv[8]) && (s_mailBody == mailBody))
 		{
-			result += Unicode::narrowToWide(FormattedString<512>().sprintf("Sending mail to %d (out of %d total) characters created before %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoff).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoff).c_str()));
+			result += Unicode::narrowToWide(FormattedString<512>().sprintf("Sending mail to %zu (out of %d total) characters created before %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoff).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoff).c_str()));
 
 			for (std::multimap<time_t, std::pair<std::pair<NetworkId, uint32>, std::string> >::const_iterator iter = resultList.begin(); iter != resultList.end(); ++iter)
 			{
@@ -2630,7 +2714,7 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 		}
 		else
 		{
-			result += Unicode::narrowToWide(FormattedString<512>().sprintf("The following is the mail that ***WILL BE SENT*** to %d (out of %d total) characters created before %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoff).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoff).c_str()));
+			result += Unicode::narrowToWide(FormattedString<512>().sprintf("The following is the mail that ***WILL BE SENT*** to %zu (out of %d total) characters created before %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoff).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoff).c_str()));
 			result += Unicode::narrowToWide("\nPlease confirm that you ***REALLY WANT TO SEND*** this mail and run the command again with the same arguments within 60 seconds to send the mail\n\n");
 
 			s_cutoff = cutoff;
@@ -2651,12 +2735,11 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 	{
 		time_t const rawtime = ::time(nullptr);
 		struct tm * timeinfo = ::localtime(&rawtime);
-		timeinfo->tm_year = atoi(Unicode::wideToNarrow(argv[1]).c_str()) - 1900;
-		timeinfo->tm_mon = atoi(Unicode::wideToNarrow(argv[2]).c_str()) - 1;
-		timeinfo->tm_mday = atoi(Unicode::wideToNarrow(argv[3]).c_str());
-		timeinfo->tm_hour = atoi(Unicode::wideToNarrow(argv[4]).c_str());
-		timeinfo->tm_min = atoi(Unicode::wideToNarrow(argv[5]).c_str());
-		timeinfo->tm_sec = atoi(Unicode::wideToNarrow(argv[6]).c_str());
+		if (!parseDateTimeArgs(argv, 1, *timeinfo))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
 		time_t const cutoffLower = ::mktime(timeinfo);
 
 		if (cutoffLower <= 0)
@@ -2666,12 +2749,11 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 		}
 
 		timeinfo = ::localtime(&rawtime);
-		timeinfo->tm_year = atoi(Unicode::wideToNarrow(argv[7]).c_str()) - 1900;
-		timeinfo->tm_mon = atoi(Unicode::wideToNarrow(argv[8]).c_str()) - 1;
-		timeinfo->tm_mday = atoi(Unicode::wideToNarrow(argv[9]).c_str());
-		timeinfo->tm_hour = atoi(Unicode::wideToNarrow(argv[10]).c_str());
-		timeinfo->tm_min = atoi(Unicode::wideToNarrow(argv[11]).c_str());
-		timeinfo->tm_sec = atoi(Unicode::wideToNarrow(argv[12]).c_str());
+		if (!parseDateTimeArgs(argv, 7, *timeinfo))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
 		time_t const cutoffUpper = ::mktime(timeinfo);
 
 		if (cutoffUpper <= 0)
@@ -2712,7 +2794,7 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 
 		if ((s_cutoffLower == cutoffLower) && (s_cutoffUpper == cutoffUpper) && (s_confirmationTimeout > timeNow) && (s_fromName == Unicode::wideToNarrow(argv[13])) && (s_mailSubject == argv[14]) && (s_mailBody == mailBody))
 		{
-			result += Unicode::narrowToWide(FormattedString<512>().sprintf("Sending mail to %d (out of %d total) characters created between %s, %s and %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoffLower).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoffLower).c_str(), CalendarTime::convertEpochToTimeStringLocal(cutoffUpper).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoffUpper).c_str()));
+			result += Unicode::narrowToWide(FormattedString<512>().sprintf("Sending mail to %zu (out of %d total) characters created between %s, %s and %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoffLower).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoffLower).c_str(), CalendarTime::convertEpochToTimeStringLocal(cutoffUpper).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoffUpper).c_str()));
 
 			for (std::multimap<time_t, std::pair<std::pair<NetworkId, uint32>, std::string> >::const_iterator iter = resultList.begin(); iter != resultList.end(); ++iter)
 			{
@@ -2729,7 +2811,7 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 		}
 		else
 		{
-			result += Unicode::narrowToWide(FormattedString<512>().sprintf("The following is the mail that ***WILL BE SENT*** to %d (out of %d total) characters created between %s, %s and %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoffLower).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoffLower).c_str(), CalendarTime::convertEpochToTimeStringLocal(cutoffUpper).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoffUpper).c_str()));
+			result += Unicode::narrowToWide(FormattedString<512>().sprintf("The following is the mail that ***WILL BE SENT*** to %zu (out of %d total) characters created between %s, %s and %s, %s\n", resultList.size(), NameManager::getInstance().getTotalPlayerCount(), CalendarTime::convertEpochToTimeStringLocal(cutoffLower).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoffLower).c_str(), CalendarTime::convertEpochToTimeStringLocal(cutoffUpper).c_str(), CalendarTime::convertEpochToTimeStringGMT(cutoffUpper).c_str()));
 			result += Unicode::narrowToWide("\nPlease confirm that you ***REALLY WANT TO SEND*** this mail and run the command again with the same arguments within 60 seconds to send the mail\n\n");
 
 			s_cutoffLower = cutoffLower;
@@ -2749,10 +2831,16 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 	}
 	else if (isAbbrev(argv[0], "freeCtsTest"))
 	{
-		time_t const sourceCharacterCreateTime = static_cast<time_t>(atoi(Unicode::wideToNarrow(argv[1]).c_str()));
-		uint32 const sourceStationId = static_cast<uint32>(atoi(Unicode::wideToNarrow(argv[2]).c_str()));
+		int32 characterCreateTime = 0;
+		uint32 sourceStationId = 0;
+		uint32 targetStationId = 0;
+		if (!parseArg(argv[1], characterCreateTime) || !parseArg(argv[2], sourceStationId) || !parseArg(argv[4], targetStationId))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
+		time_t const sourceCharacterCreateTime = static_cast<time_t>(characterCreateTime);
 		std::string const sourceCluster = Unicode::wideToNarrow(argv[3]);
-		uint32 const targetStationId = static_cast<uint32>(atoi(Unicode::wideToNarrow(argv[4]).c_str()));
 		std::string const targetCluster = Unicode::wideToNarrow(argv[5]);
 
 		time_t const timeNow = ::time(nullptr);
@@ -2762,10 +2850,10 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 		if (sourceCharacterCreateTime > 0)
 			result += Unicode::narrowToWide(FormattedString<512>().sprintf("      characterCreateTime: %s\n", CalendarTime::convertEpochToTimeStringLocal(sourceCharacterCreateTime).c_str()));
 
-		result += Unicode::narrowToWide(FormattedString<512>().sprintf("\n          sourceStationId: %lu\n", sourceStationId));
+		result += Unicode::narrowToWide(FormattedString<512>().sprintf("\n          sourceStationId: %u\n", sourceStationId));
 		result += Unicode::narrowToWide(FormattedString<512>().sprintf("            sourceCluster: %s\n", sourceCluster.c_str()));
 
-		result += Unicode::narrowToWide(FormattedString<512>().sprintf("\n          targetStationId: %lu\n", targetStationId));
+		result += Unicode::narrowToWide(FormattedString<512>().sprintf("\n          targetStationId: %u\n", targetStationId));
 		result += Unicode::narrowToWide(FormattedString<512>().sprintf("            targetCluster: %s\n", targetCluster.c_str()));
 
 		FreeCtsDataTable::FreeCtsInfo const * freeCtsInfo = FreeCtsDataTable::wouldCharacterTransferBeFree(sourceCharacterCreateTime, sourceStationId, sourceCluster, targetStationId, targetCluster, false);
@@ -2955,9 +3043,7 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 			{
 				if (argv.size() == 4)
 				{
-					destStationId = static_cast<unsigned int>(::atoi(Unicode::wideToNarrow(argv[3]).c_str()));
-
-					if (destStationId == 0)
+					if (!parseArg(argv[3], destStationId) || destStationId == 0)
 					{
 						parseSuccess = false;
 						result += Unicode::narrowToWide(FormattedString<512>().sprintf("invalid destination station id (%s) specified\n", Unicode::wideToNarrow(argv[3]).c_str()));
@@ -3087,7 +3173,12 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 	else if (isAbbrev(argv[0], "adjustGcwImperialScore"))
 	{
 		std::string category = Unicode::wideToNarrow(argv[1]);
-		int adjustment = ::atoi(Unicode::wideToNarrow(argv[2]).c_str());
+		int32 adjustment = 0;
+		if (!parseArg(argv[2], adjustment))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
 
 		if (!Pvp::getGcwScoreCategory(category))
 		{
@@ -3110,7 +3201,12 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 	else if (isAbbrev(argv[0], "adjustGcwRebelScore"))
 	{
 		std::string category = Unicode::wideToNarrow(argv[1]);
-		int adjustment = ::atoi(Unicode::wideToNarrow(argv[2]).c_str());
+		int32 adjustment = 0;
+		if (!parseArg(argv[2], adjustment))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
 
 		if (!Pvp::getGcwScoreCategory(category))
 		{
@@ -3315,7 +3411,11 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 						continue;
 					}
 
-					throttle = ::atoi(argvNarrow.c_str());
+					if (!parseArg(argv[i], throttle))
+					{
+						result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+						return true;
+					}
 					if (throttle <= 0)
 						throttle = 100;
 				}
@@ -3357,7 +3457,11 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 							continue;
 						}
 
-						throttle = ::atoi(argvNarrow.c_str());
+						if (!parseArg(argv[i], throttle))
+						{
+							result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+							return true;
+						}
 						if (throttle <= 0)
 							throttle = 100;
 					}
@@ -3378,7 +3482,13 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 		}
 		else
 		{
-			GenericValueTypeMessage<std::pair<NetworkId, int> > const msg("GetALPQ", std::make_pair(userId, atoi(Unicode::wideToNarrow(argv[1]).c_str())));
+			int32 count = 0;
+			if (!parseArg(argv[1], count))
+			{
+				result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+				return true;
+			}
+			GenericValueTypeMessage<std::pair<NetworkId, int> > const msg("GetALPQ", std::make_pair(userId, count));
 			CommoditiesMarket::sendToCommoditiesServer(msg);
 
 			result += Unicode::narrowToWide("getCommoditiesAuctionLocationPriorityQueue request sent to the commodities server.  Please wait for reply.\n");
@@ -3418,7 +3528,7 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 						result += Unicode::narrowToWide(FormattedString<1024>().sprintf("(%d, %s) [%d, %s]\n", iterOutput->second.first.first, iterOutput->second.second.c_str(), iterOutput->second.first.second, GameObjectTypes::getCanonicalName(iterOutput->second.first.second).c_str()));
 					}
 
-					result += Unicode::narrowToWide(FormattedString<1024>().sprintf("count=%d\n", output.size()));
+					result += Unicode::narrowToWide(FormattedString<1024>().sprintf("count=%zu\n", output.size()));
 				}
 				else
 				{
@@ -3458,7 +3568,12 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 #ifdef _DEBUG
 	else if (isAbbrev(argv[0], "setExtraDelayPerFrameMs"))
 	{
-		int const ms = ::atoi(Unicode::wideToNarrow(argv[1]).c_str());
+		int32 ms = 0;
+		if (!parseArg(argv[1], ms))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
 		result += Unicode::narrowToWide(FormattedString<512>().sprintf("Setting extra sleep time per frame to %dms.\n", ms));
 		GameServer::setExtraDelayPerFrameMs(ms);
 	}
@@ -3468,7 +3583,7 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 		static const Unicode::String unl(Unicode::narrowToWide(std::string("\n")));
 
 		result += Unicode::narrowToWide("PID: ");
-		snprintf(numBuf, sizeof(numBuf), "%lu", GameServer::getInstance().getProcessId());
+		snprintf(numBuf, sizeof(numBuf), "%u", GameServer::getInstance().getProcessId());
 		result += Unicode::narrowToWide(std::string(numBuf)) + unl;
 
 		result += Unicode::narrowToWide("Scene: ") + Unicode::narrowToWide(ConfigServerGame::getSceneID()) + unl;

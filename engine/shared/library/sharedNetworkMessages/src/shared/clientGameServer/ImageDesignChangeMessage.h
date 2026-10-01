@@ -6,6 +6,7 @@
 
 //-----------------------------------------------------------------------
 
+#include "sharedNetworkMessages/NetworkMessageTimestamp.h"
 #include "sharedFoundation/MessageQueue.h"
 #include "sharedNetworkMessages/ControllerMessageMacros.h"
 
@@ -47,7 +48,7 @@ public:
 	std::string const & getNewHairAsset() const;
 	std::string const & getHairCustomizationData() const;
 	DesignType getDesignType() const;
-	uint32_t getStartingTime() const;
+	int32_t getStartingTime() const;
 	int getDesignerRequiredCredits() const;
 	int getRecipientPaidCredits() const;
 	bool getAccepted() const;
@@ -95,7 +96,7 @@ private:
 	std::string m_newHairAsset;
 	std::string m_hairCustomizationData;
 	DesignType m_designType;
-	uint32_t m_startingTime;
+	int32_t m_startingTime;
 	int m_designerRequiredCredits;
 	int m_recipientPaidCredits;
 	bool m_accepted;
@@ -160,7 +161,7 @@ inline ImageDesignChangeMessage::DesignType ImageDesignChangeMessage::getDesignT
 
 //-----------------------------------------------------------------------
 
-inline uint32_t ImageDesignChangeMessage::getStartingTime() const
+inline int32_t ImageDesignChangeMessage::getStartingTime() const
 {
 	return m_startingTime;
 }
@@ -282,7 +283,7 @@ inline void ImageDesignChangeMessage::setDesignType(DesignType const & designTyp
 
 inline void ImageDesignChangeMessage::setStartingTime(time_t const startingTime)
 {
-	m_startingTime = startingTime;
+	m_startingTime = NetworkMessageTimestamp::fromTime(startingTime);
 }
 
 //-----------------------------------------------------------------------

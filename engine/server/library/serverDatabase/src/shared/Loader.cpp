@@ -46,6 +46,7 @@
 #include "sharedDatabaseInterface/DbTaskQueue.h"
 #include "sharedDebug/Profiler.h"
 #include "sharedFoundation/ExitChain.h"
+#include "sharedFoundation/FixedWidthParse.h"
 #include "sharedFoundation/NetworkIdArchive.h"
 #include "sharedLog/Log.h"
 #include "sharedNetworkMessages/GenericValueTypeMessage.h"
@@ -180,7 +181,7 @@ void Loader::update(real updateTime)
 			{
 				UnackedLoadsTimeType::const_iterator i = m_unackedLoadsTime.begin();
 
-				LOG("LoadTimes",("Load queue status:  %i queued locators, %i unacked loads (oldest is %i/%is), %i pending tasks, %i active threads, %i completed tasks", m_numQueuedLocators, m_unackedLoadsTime.size(), i->second.first, (time(0) - i->first), taskQ->getNumPendingTasks(), taskQ->getNumActiveTasks(), taskQ->getNumFinishedTasks()));
+				LOG("LoadTimes",("Load queue status:  %i queued locators, %zu unacked loads (oldest is %i/%llds), %i pending tasks, %i active threads, %i completed tasks", m_numQueuedLocators, m_unackedLoadsTime.size(), i->second.first, static_cast<long long>(time(0) - i->first), taskQ->getNumPendingTasks(), taskQ->getNumActiveTasks(), taskQ->getNumFinishedTasks()));
 			}
 		}
 
@@ -264,7 +265,7 @@ void Loader::startLoad()
 		if ((static_cast<int>(i->second.size()) < ConfigServerDatabase::getMaxUnackedLoadCountPerServer()) && (m_locatorList.find(lastEarlyServer) != m_locatorList.end()))
 		{
 			numberOfIterationsWithoutMatch = 0;
-			LOG("LoadTimes",("Early load (server %lu unacked loads=%i, all server unacked loads=%i)", lastEarlyServer, i->second.size(), m_unackedLoadsTime.size()));
+			LOG("LoadTimes",("Early load (server %u unacked loads=%zu, all server unacked loads=%zu)", lastEarlyServer, i->second.size(), m_unackedLoadsTime.size()));
 			startLoadForServer(lastEarlyServer);
 
 			if (static_cast<int>(m_unackedLoadsTime.size()) >= ConfigServerDatabase::getMaxUnackedLoadCount())
@@ -282,7 +283,7 @@ void Loader::startLoad()
 void Loader::startLoadForServer(uint32 serverId)
 {
 	std::list<std::pair<ObjectLocator*, ObjectLocator*> > *locators = m_locatorList[serverId];
-	DEBUG_FATAL(!locators,("Programmer bug:  called startLoadForServer(%lu), but the server had no pending ObjectLocators",serverId));
+	DEBUG_FATAL(!locators,("Programmer bug:  called startLoadForServer(%u), but the server had no pending ObjectLocators",serverId));
 	if (locators)
 	{
 		if (!locators->empty())
@@ -301,7 +302,7 @@ void Loader::startLoadForServer(uint32 serverId)
 					++discardCount;
 				}
 
-				LOG("LoadTimes",("Discarding %d pending load request for disconnected server %lu", discardCount, serverId));
+				LOG("LoadTimes",("Discarding %d pending load request for disconnected server %u", discardCount, serverId));
 			}
 			else
 			{
@@ -442,7 +443,7 @@ void Loader::receiveMessage(const MessageDispatch::Emitter & source, const Messa
 			RequestOIDsMessage m(ri);
 
 			if (m.getLogRequest())
-				LOG("ObjectIdManager", ("Received RequestOIDsMessage for %lu more object ids for pid %lu", m.getHowMany(), m.getServerId()));
+				LOG("ObjectIdManager", ("Received RequestOIDsMessage for %u more object ids for pid %u", m.getHowMany(), m.getServerId()));
 
 			getObjectIds(static_cast<int>(m.getServerId()),static_cast<int>(m.getHowMany()), m.getLogRequest());
 			break;
@@ -747,7 +748,7 @@ void Loader::shutdown()
 
 void Loader::preloadRequestComplete(uint32 processId, uint32 preloadAreaId)
 {
-	LOG("Preload",("Received all preload requests for server %lu",processId));
+	LOG("Preload",("Received all preload requests for server %u",processId));
 	if (getUnackedLoadCount(processId) > 0 || m_locatorList.find(processId)!=m_locatorList.end())
 	{
 		if (m_serverDiscardList.find(processId) == m_serverDiscardList.end())
@@ -757,7 +758,7 @@ void Loader::preloadRequestComplete(uint32 processId, uint32 preloadAreaId)
 	}
 	else
 	{
-		LOG("Preload",("Done sending preload objects to server %lu.",processId));
+		LOG("Preload",("Done sending preload objects to server %u.",processId));
 		PreloadRequestCompleteMessage msg(processId, preloadAreaId);
 		DatabaseProcess::getInstance().sendToGameServer(processId, msg);
 	}
@@ -801,8 +802,13 @@ void Loader::handleCSGetStructures( const DBCSRequestMessage & msg )
 
 void Loader::handleCSGetCharacters( const DBCSRequestMessage & msg )
 {
+	// "get_characters <station id>"
+	std::string::size_type pos = msg.getCommandLine().find( ' ' );
+	if( pos == std::string::npos )
+		return; // bad parameters.
 	uint32 account_id = 0;
-	sscanf( msg.getCommandLine().c_str(), "get_characters %lu", &account_id );
+	if( !FixedWidthParse::parseUint32( msg.getCommandLine().substr( pos + 1 ), 10, account_id ) )
+		return; // not a station id.
 	TaskGetCharactersForAccount * req = new TaskGetCharactersForAccount( account_id, msg.getLoginServerId(), msg.getToolId() );
 	taskQ->asyncRequest( req );
 	
@@ -818,12 +824,19 @@ void Loader::handleCSGetCharacters( const CSGetCharactersRequestMessage & msg )
 void Loader::handleCSGetDeletedItems( const DBCSRequestMessage & msg )
 {
 	
-	uint32 page_num;
-	char buf [21];
+	// "get_deleted_items <character id> <page number> ..."
+	std::string const & commandLine = msg.getCommandLine();
+	std::string::size_type const idStart = commandLine.find_first_not_of( " \t\n\v\f\r", commandLine.find( ' ' ) );
+	std::string::size_type const idEnd = commandLine.find_first_of( " \t\n\v\f\r", idStart );
+	std::string::size_type const pageStart = commandLine.find_first_not_of( " \t\n\v\f\r", idEnd );
+	std::string::size_type const pageEnd = commandLine.find_first_of( " \t\n\v\f\r", pageStart );
+	uint32 page_num = 0;
 
-	if (sscanf (msg.getCommandLine().c_str(), "get_deleted_items %20s %lu", buf, &page_num) == 2)
+	if (   ( idStart != std::string::npos )
+	    && ( pageStart != std::string::npos )
+	    && FixedWidthParse::parseUint32( commandLine.substr( pageStart, pageEnd == std::string::npos ? std::string::npos : pageEnd - pageStart ), 10, page_num ) )
 	{
-		NetworkId netId(buf);
+		NetworkId netId(commandLine.substr( idStart, idEnd - idStart ));
 		if(!netId.isValid())
 			return;
 		TaskGetDeletedItems *req = new TaskGetDeletedItems(netId, msg.getLoginServerId(), msg.getToolId(), page_num);
@@ -944,7 +957,7 @@ void Loader::handleLoadAck(uint32 serverId, int serialNumber)
 	{
 		// Server was preloading, and it has acknowledged all the requested loads
 		// Tell it that preloading is done
-		LOG("Preload",("Done sending preload objects to server %lu.",serverId));
+		LOG("Preload",("Done sending preload objects to server %u.",serverId));
 		PreloadRequestCompleteMessage msg(serverId, j->second);
 		DatabaseProcess::getInstance().sendToGameServer(serverId, msg);
 		m_preloadingProcesses.erase(j);
