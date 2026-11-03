@@ -8,6 +8,8 @@
 #include "SwgDatabaseServer/FirstSwgDatabaseServer.h"
 #include "SwgDatabaseServer/SwgSnapshot.h"
 
+#include <cinttypes>
+
 #include "Archive/AutoDeltaPackedMap.h"
 #include "Archive/AutoDeltaSet.h"
 #include "Archive/AutoDeltaVector.h"
@@ -1286,13 +1288,9 @@ SwgSnapshot::encodeQuests(Archive::ByteStream &data, DB::BufferString const &par
 
 // ----------------------------------------------------------------------
 
-#ifdef WIN32
-static const char* oldschoolBuffFormat = "%lu %I64u";
-static const char* versionTwoFormat = "%u %u %f %u %I64i %u:";
-#else
-static const char *oldschoolBuffFormat = "%lu %llu";
-static const char *versionTwoFormat = "%u %u %f %u %lli %u:";
-#endif
+static const char *oldschoolBuffFormat = "%" SCNu32 " %" SCNu64;
+static const char *versionTwoFormat = "%" PRIu32 " %" PRIu32 " %f %" PRIu32 " %" PRId64 " %" PRIu32 ":";
+static const char *versionTwoScanFormat = "%" SCNu32 " %" SCNu32 " %f %" SCNu32 " %" SCNd64 " %" SCNu32 ":";
 
 static const char *versionOneFormat = "%u %u %f %u:";
 static const char *versionFormat = "%uv";
@@ -1415,7 +1413,7 @@ void SwgSnapshot::encodePersistedBuffs(Archive::ByteStream &data, DB::BufferStri
         for (std::string::const_iterator i = stringRepresentation.begin(); i != stringRepresentation.end(); ++i) {
             if (*i == ':') {
                 temp[tempPos] = '\0';
-                sscanf(temp, versionTwoFormat, &tempCrc, &tempEndtime, &tempValue, &tempDuration, &tempCaster, &tempStackCount);
+                sscanf(temp, versionTwoScanFormat, &tempCrc, &tempEndtime, &tempValue, &tempDuration, &tempCaster, &tempStackCount);
 
                 tempCommand.cmd = Archive::AutoDeltaMap<uint32, Buff::PackedBuff>::Command::ADD;
                 tempCommand.key = tempCrc;

@@ -28,6 +28,7 @@
 #include "sharedMath/Vector.h"
 
 #include <algorithm>
+#include <cinttypes>
 #include <map>
 #include <stdio.h>
 #include <string>
@@ -208,7 +209,7 @@ void WorldSnapshotParser::createWorldSnapshots (const char* const filename)
 
 		//-- check to see of the line has a portal crc (may be there, may not)
 		portalLayoutCrc = 0;
-		sscanf (current, "%lu", &portalLayoutCrc);
+		sscanf (current, "%" SCNu32, &portalLayoutCrc);
 
 		//-- find the planet
 		const std::string planetNameString (planetName);

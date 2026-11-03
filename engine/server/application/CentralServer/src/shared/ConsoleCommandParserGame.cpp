@@ -14,6 +14,8 @@
 #include "UnicodeUtils.h"
 #include "sharedLog/Log.h"
 
+#include <cinttypes>
+
 
 //-----------------------------------------------------------------------
 
@@ -165,7 +167,7 @@ bool ConsoleCommandParserGame::performParsing(const NetworkId & track, const Str
 				{
 					// check to see if the next parameter is a pid to send the command to
 					uint32 pid;
-					sscanf(Unicode::wideToNarrow(argv[1]).c_str(), "%lu", &pid);
+					sscanf(Unicode::wideToNarrow(argv[1]).c_str(), "%" SCNu32, &pid);
 					GameServerConnection * gameConn = CentralServer::getInstance().getGameServer(pid);
 					if(gameConn)
 					{

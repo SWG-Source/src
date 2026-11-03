@@ -11,6 +11,7 @@
 // ======================================================================
 
 #include <stdio.h>
+#include <cinttypes>
 #include "AutoDeltaMap.h"
 
 // ======================================================================
@@ -244,13 +245,13 @@ namespace Archive
 	template<>
 	inline void AutoDeltaPackedMap<uint32_t, uint32_t>::pack(ByteStream & target, const std::string & buffer)
 	{
-		internal_pack(target, buffer, "%lu %llu");
+		internal_pack(target, buffer, "%" SCNu32 " %" SCNu32);
 	}
 
 	template<>
 	inline void AutoDeltaPackedMap<uint32_t, uint32_t>::unpack(ReadIterator & source, std::string & buffer)
 	{
-		internal_unpack(source, buffer, "%lu %llu:");
+		internal_unpack(source, buffer, "%" PRIu32 " %" PRIu32 ":");
 	}
 #endif
 

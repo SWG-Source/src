@@ -9,6 +9,8 @@
 #include "serverGame/FirstServerGame.h"
 #include "serverGame/CommandCppFuncs.h"
 
+#include <cinttypes>
+
 #include "UnicodeUtils.h"
 #include "serverGame/BiographyManager.h"
 #include "serverGame/BuildingObject.h"
@@ -5500,7 +5502,7 @@ static void commandFuncRequestResourceWeights(const Command&, const NetworkId& a
 	}
 
 	uint32 schematicCrc;
-	sscanf(Unicode::wideToNarrow(params).c_str(), "%lu", &schematicCrc);
+	sscanf(Unicode::wideToNarrow(params).c_str(), "%" SCNu32, &schematicCrc);
 	DraftSchematicObject::requestResourceWeights(*creature, schematicCrc);
 }
 
@@ -5545,7 +5547,7 @@ static void commandFuncRequestDraftSlots(const Command&, const NetworkId& actor,
 	}
 
 	uint32 serverCrc, sharedCrc;
-	sscanf(Unicode::wideToNarrow(params).c_str(), "%lu %lu", &serverCrc, &sharedCrc);
+	sscanf(Unicode::wideToNarrow(params).c_str(), "%" SCNu32 " %" SCNu32, &serverCrc, &sharedCrc);
 
 	MessageQueueDraftSlotsQueryResponse * const message = new MessageQueueDraftSlotsQueryResponse(std::make_pair(serverCrc, sharedCrc));
 	if (!player->requestDraftSlots(serverCrc, nullptr, message))
@@ -5580,11 +5582,11 @@ static void commandFuncRequestDraftSlotsBatch(const Command&, const NetworkId& a
 	std::string serverCrcString = nextStringParm(params, curpos);
 	if (serverCrcString.empty())
 		return;
-	sscanf(serverCrcString.c_str(), "%lu", &uServerCrc);
+	sscanf(serverCrcString.c_str(), "%" SCNu32, &uServerCrc);
 	std::string sharedCrcString = nextStringParm(params, curpos);
 	if (sharedCrcString.empty())
 		return;
-	sscanf(sharedCrcString.c_str(), "%lu", &uSharedCrc);
+	sscanf(sharedCrcString.c_str(), "%" SCNu32, &uSharedCrc);
 
 	bool done = false;
 	while (uServerCrc != 0 && uSharedCrc != 0 && !done)
@@ -5592,17 +5594,17 @@ static void commandFuncRequestDraftSlotsBatch(const Command&, const NetworkId& a
 		MessageQueueDraftSlotsQueryResponse * const message = new MessageQueueDraftSlotsQueryResponse(std::make_pair(uServerCrc, uSharedCrc));
 		if (!player->requestDraftSlots(uServerCrc, nullptr, message))
 		{
-			WARNING(true, ("commandFuncRequestDraftSlotsBatch failed to request draft slots for %lu", uServerCrc));
+			WARNING(true, ("commandFuncRequestDraftSlotsBatch failed to request draft slots for %" PRIu32, uServerCrc));
 			delete message;
 		}
 		serverCrcString = nextStringParm(params, curpos);
 		if (serverCrcString.empty())
 			done = true;
-		sscanf(serverCrcString.c_str(), "%lu", &uServerCrc);
+		sscanf(serverCrcString.c_str(), "%" SCNu32, &uServerCrc);
 		sharedCrcString = nextStringParm(params, curpos);
 		if (sharedCrcString.empty())
 			done = true;
-		sscanf(sharedCrcString.c_str(), "%lu", &uSharedCrc);
+		sscanf(sharedCrcString.c_str(), "%" SCNu32, &uSharedCrc);
 	}
 }
 

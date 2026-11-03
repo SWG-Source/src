@@ -9,6 +9,8 @@
 #include "serverGame/FirstServerGame.h"
 #include "serverGame/CommandQueue.h"
 
+#include <cinttypes>
+
 #include "UnicodeUtils.h"
 #include "serverGame/Chat.h"
 #include "serverGame/ConfigServerGame.h"
@@ -988,11 +990,11 @@ void CommandQueue::persistCooldown(uint32 cooldownGroupCrc, int cooldownTimeSeco
 
 	char buffer[256];
 
-	snprintf(buffer, sizeof(buffer)-1, "commandCooldown.beginTime.%lu", cooldownGroupCrc);
+	snprintf(buffer, sizeof(buffer)-1, "commandCooldown.beginTime.%" PRIu32, cooldownGroupCrc);
 	buffer[sizeof(buffer)-1] = '\0';
 	std::string const coolDownBeginTime = buffer;
 
-	snprintf(buffer, sizeof(buffer)-1, "commandCooldown.endTime.%lu", cooldownGroupCrc);
+	snprintf(buffer, sizeof(buffer)-1, "commandCooldown.endTime.%" PRIu32, cooldownGroupCrc);
 	buffer[sizeof(buffer)-1] = '\0';
 	std::string const coolDownEndTime = buffer;
 
@@ -1015,7 +1017,7 @@ void CommandQueue::depersistCooldown()
 		if (iterObjVar->first.find("commandCooldown.beginTime.") == 0)
 		{
 			uint32 cooldownGroupCrc = 0;
-			if (1 == sscanf(iterObjVar->first.c_str(), "commandCooldown.beginTime.%lu", &cooldownGroupCrc))
+			if (1 == sscanf(iterObjVar->first.c_str(), "commandCooldown.beginTime.%" SCNu32, &cooldownGroupCrc))
 			{
 				int beginTime = 0;
 				if (iterObjVar->second.get(beginTime))
@@ -1035,7 +1037,7 @@ void CommandQueue::depersistCooldown()
 		else if (iterObjVar->first.find("commandCooldown.endTime.") == 0)
 		{
 			uint32 cooldownGroupCrc = 0;
-			if (1 == sscanf(iterObjVar->first.c_str(), "commandCooldown.endTime.%lu", &cooldownGroupCrc))
+			if (1 == sscanf(iterObjVar->first.c_str(), "commandCooldown.endTime.%" SCNu32, &cooldownGroupCrc))
 			{
 				int endTime = 0;
 				if (iterObjVar->second.get(endTime))

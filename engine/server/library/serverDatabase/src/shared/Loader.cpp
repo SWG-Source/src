@@ -8,6 +8,8 @@
 #include "serverDatabase/FirstServerDatabase.h"
 #include "serverDatabase/Loader.h"
 
+#include <cinttypes>
+
 #include "UnicodeUtils.h"
 #include "serverDatabase/CharacterLocator.h"
 #include "serverDatabase/CharacterNameLocator.h"
@@ -802,7 +804,7 @@ void Loader::handleCSGetStructures( const DBCSRequestMessage & msg )
 void Loader::handleCSGetCharacters( const DBCSRequestMessage & msg )
 {
 	uint32 account_id = 0;
-	sscanf( msg.getCommandLine().c_str(), "get_characters %lu", &account_id );
+	sscanf( msg.getCommandLine().c_str(), "get_characters %" SCNu32, &account_id );
 	TaskGetCharactersForAccount * req = new TaskGetCharactersForAccount( account_id, msg.getLoginServerId(), msg.getToolId() );
 	taskQ->asyncRequest( req );
 	
@@ -821,7 +823,7 @@ void Loader::handleCSGetDeletedItems( const DBCSRequestMessage & msg )
 	uint32 page_num;
 	char buf [21];
 
-	if (sscanf (msg.getCommandLine().c_str(), "get_deleted_items %20s %lu", buf, &page_num) == 2)
+	if (sscanf (msg.getCommandLine().c_str(), "get_deleted_items %20s %" SCNu32, buf, &page_num) == 2)
 	{
 		NetworkId netId(buf);
 		if(!netId.isValid())
