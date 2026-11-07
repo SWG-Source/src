@@ -229,6 +229,7 @@ class ConfigServerGame
 		const char *    defaultVendorItemRestrictionRejectionMessage;
 
 		int             weatherUpdateSeconds;
+		int				entertainerCaptchaPercent;
 
 		const char *    instrumentDataTableFilename;
 		const char *    performanceDataTableFilename;
@@ -768,6 +769,7 @@ class ConfigServerGame
 	static const char *     getDefaultVendorItemRestrictionRejectionMessage();
 
 	static int              getWeatherUpdateSeconds();
+	static int				getEntertainerCaptchaPercent();
 	static const char *     getInstrumentDataTableFilename(void);
 	static const char *     getPerformanceDataTableFilename(void);
 	static const int        getCreateQueueScheduleTime(void);
@@ -2005,6 +2007,13 @@ inline int ConfigServerGame::getWeatherUpdateSeconds(void)
 {
 	return data->weatherUpdateSeconds;
 }
+
+
+inline int ConfigServerGame::getEntertainerCaptchaPercent(void)
+{
+	return data->entertainerCaptchaPercent;
+}
+
 
 // ----------------------------------------------------------------------
 

@@ -170,6 +170,9 @@ void ConfigServerGame::install(void)
 	KEY_STRING  (defaultVendorItemRestrictionFile, "datatables/commodity/vendor_item_restriction_default.iff");
 	KEY_STRING  (defaultVendorItemRestrictionRejectionMessage, "@ui_auc:reject_restricted_item");
 	KEY_INT     (weatherUpdateSeconds, 15*60);
+	KEY_INT		(entertainerCaptchaPercent, 40);
+	data->entertainerCaptchaPercent = std::max(0, std::min(100, data->entertainerCaptchaPercent));
+
 	KEY_STRING  (instrumentDataTableFilename, "datatables/tangible/instrument_datatable.iff");
 	KEY_STRING  (performanceDataTableFilename, "datatables/performance/performance.iff");
 	KEY_INT     (createQueueScheduleTime, 75);
