@@ -56,7 +56,7 @@ void StationPlayersCollectorAPI::sendSPCharacterProfileData(const std::string & 
 	DEBUG_REPORT_LOG(ConfigServerGame::getStationPlayersShowAllDebugInfo(), ("[StationPlayersCollectorAPI] : \t Cash: %f\n",msg.GetCash_Balance()));
 	DEBUG_REPORT_LOG(ConfigServerGame::getStationPlayersShowAllDebugInfo(), ("[StationPlayersCollectorAPI] : \t Bank: %f\n",msg.GetBank_Balance()));
 	DEBUG_REPORT_LOG(ConfigServerGame::getStationPlayersShowAllDebugInfo(), ("[StationPlayersCollectorAPI] : \t Template: %s\n",msg.GetObjectTemplateName().c_str()));
-	DEBUG_REPORT_LOG(ConfigServerGame::getStationPlayersShowAllDebugInfo(), ("[StationPlayersCollectorAPI] : \t StationId: %d\n",msg.GetStationId()));
+	DEBUG_REPORT_LOG(ConfigServerGame::getStationPlayersShowAllDebugInfo(), ("[StationPlayersCollectorAPI] : \t StationId: %u\n",msg.GetStationId()));
 	DEBUG_REPORT_LOG(ConfigServerGame::getStationPlayersShowAllDebugInfo(), ("[StationPlayersCollectorAPI] : \t ContainedBy: %s\n",msg.GetContainedBy().getValueString().c_str()));
 	DEBUG_REPORT_LOG(ConfigServerGame::getStationPlayersShowAllDebugInfo(), ("[StationPlayersCollectorAPI] : \t CreateTime: %d\n",msg.GetCreateTime()));
 	DEBUG_REPORT_LOG(ConfigServerGame::getStationPlayersShowAllDebugInfo(), ("[StationPlayersCollectorAPI] : \t PlayedTime: %d\n",msg.GetPlayedTime()));

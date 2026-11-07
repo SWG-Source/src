@@ -162,7 +162,7 @@ void SessionApiClient::OnSessionValidate(const apiTrackingNumber trackingNumber,
 		{
 //			ErrorMessage err("VALIDATION FAILED", "Your station Id was not valid. Wrong password? Account closed?");
 //			i->second->send(err, true);
-			LOG("ClientDisconnect", ("Suid %s by session denial reason %d.", account.GetId(), result));
+			LOG("ClientDisconnect", ("Suid %u by session denial reason %d.", account.GetId(), result));
 			LOG("CustomerService", ("Login:%s by session denial reason %d.", ClientConnection::describeAccount(i->second).c_str(), result));
 			i->second->disconnect();
 		}
@@ -390,9 +390,9 @@ void SessionApiClient::OnGetFeatures(const apiTrackingNumber trackingNumber,
 				if (!adjustAccountFeatureIdRequest->getTargetPlayerDescription().empty() && adjustAccountFeatureIdRequest->getTargetItem().isValid() && !adjustAccountFeatureIdRequest->getTargetItemDescription().empty())
 				{
 					if (adjustAccountFeatureIdRequest->getGameCode() == PlatformGameCode::SWGTCG)
-						LOG("CustomerService",("TcgRedemption: %s ***FAILED TO REDEEM*** %s for SWGTCG account feature Id %lu with OnGetFeatures() error code (%u, %s:%s)", adjustAccountFeatureIdRequest->getTargetPlayerDescription().c_str(), adjustAccountFeatureIdRequest->getTargetItemDescription().c_str(), adjustAccountFeatureIdRequest->getFeatureId(), result, sResultString.c_str(), sResultText.c_str()));
+						LOG("CustomerService",("TcgRedemption: %s ***FAILED TO REDEEM*** %s for SWGTCG account feature Id %u with OnGetFeatures() error code (%u, %s:%s)", adjustAccountFeatureIdRequest->getTargetPlayerDescription().c_str(), adjustAccountFeatureIdRequest->getTargetItemDescription().c_str(), adjustAccountFeatureIdRequest->getFeatureId(), result, sResultString.c_str(), sResultText.c_str()));
 					else if (adjustAccountFeatureIdRequest->getGameCode() == PlatformGameCode::SWG)
-						LOG("CustomerService",("VeteranRewards: %s ***FAILED TO TRADE IN*** %s for SWG account feature Id %lu with OnGetFeatures() error code (%u, %s:%s)", adjustAccountFeatureIdRequest->getTargetPlayerDescription().c_str(), adjustAccountFeatureIdRequest->getTargetItemDescription().c_str(), adjustAccountFeatureIdRequest->getFeatureId(), result, sResultString.c_str(), sResultText.c_str()));
+						LOG("CustomerService",("VeteranRewards: %s ***FAILED TO TRADE IN*** %s for SWG account feature Id %u with OnGetFeatures() error code (%u, %s:%s)", adjustAccountFeatureIdRequest->getTargetPlayerDescription().c_str(), adjustAccountFeatureIdRequest->getTargetItemDescription().c_str(), adjustAccountFeatureIdRequest->getFeatureId(), result, sResultString.c_str(), sResultText.c_str()));
 				}
 
 				GameConnection * const gc = ConnectionServer::getGameConnection(adjustAccountFeatureIdRequest->getGameServer());
@@ -444,9 +444,9 @@ void SessionApiClient::OnGetFeatures(const apiTrackingNumber trackingNumber,
 				if (!adjustAccountFeatureIdResponse->getTargetPlayerDescription().empty() && adjustAccountFeatureIdResponse->getTargetItem().isValid() && !adjustAccountFeatureIdResponse->getTargetItemDescription().empty())
 				{
 					if (adjustAccountFeatureIdResponse->getGameCode() == PlatformGameCode::SWGTCG)
-						LOG("CustomerService",("TcgRedemption: %s ***FAILED TO REDEEM*** %s for SWGTCG account feature Id %lu with OnGetFeatures() error code (%u, %s:%s)", adjustAccountFeatureIdResponse->getTargetPlayerDescription().c_str(), adjustAccountFeatureIdResponse->getTargetItemDescription().c_str(), adjustAccountFeatureIdResponse->getFeatureId(), result, sResultString.c_str(), sResultText.c_str()));
+						LOG("CustomerService",("TcgRedemption: %s ***FAILED TO REDEEM*** %s for SWGTCG account feature Id %u with OnGetFeatures() error code (%u, %s:%s)", adjustAccountFeatureIdResponse->getTargetPlayerDescription().c_str(), adjustAccountFeatureIdResponse->getTargetItemDescription().c_str(), adjustAccountFeatureIdResponse->getFeatureId(), result, sResultString.c_str(), sResultText.c_str()));
 					else if (adjustAccountFeatureIdResponse->getGameCode() == PlatformGameCode::SWG)
-						LOG("CustomerService",("VeteranRewards: %s ***FAILED TO TRADE IN*** %s for SWG account feature Id %lu with OnGetFeatures() error code (%u, %s:%s)", adjustAccountFeatureIdResponse->getTargetPlayerDescription().c_str(), adjustAccountFeatureIdResponse->getTargetItemDescription().c_str(), adjustAccountFeatureIdResponse->getFeatureId(), result, sResultString.c_str(), sResultText.c_str()));
+						LOG("CustomerService",("VeteranRewards: %s ***FAILED TO TRADE IN*** %s for SWG account feature Id %u with OnGetFeatures() error code (%u, %s:%s)", adjustAccountFeatureIdResponse->getTargetPlayerDescription().c_str(), adjustAccountFeatureIdResponse->getTargetItemDescription().c_str(), adjustAccountFeatureIdResponse->getFeatureId(), result, sResultString.c_str(), sResultText.c_str()));
 				}
 
 				GameConnection * const gc = ConnectionServer::getGameConnection(adjustAccountFeatureIdResponse->getGameServer());
@@ -489,9 +489,9 @@ void SessionApiClient::OnGetFeatures(const apiTrackingNumber trackingNumber,
 					if (!adjustAccountFeatureIdResponse->getTargetPlayerDescription().empty() && adjustAccountFeatureIdResponse->getTargetItem().isValid() && !adjustAccountFeatureIdResponse->getTargetItemDescription().empty())
 					{
 						if (adjustAccountFeatureIdResponse->getGameCode() == PlatformGameCode::SWGTCG)
-							LOG("CustomerService",("TcgRedemption: %s ***FAILED TO REDEEM*** %s for SWGTCG account feature Id %lu with OnGetFeatures() error code (MISSING_NEWLY_ADDED_FEATURE_ID:The feature Id was just successfully added, but now it's gone)", adjustAccountFeatureIdResponse->getTargetPlayerDescription().c_str(), adjustAccountFeatureIdResponse->getTargetItemDescription().c_str(), adjustAccountFeatureIdResponse->getFeatureId()));
+							LOG("CustomerService",("TcgRedemption: %s ***FAILED TO REDEEM*** %s for SWGTCG account feature Id %u with OnGetFeatures() error code (MISSING_NEWLY_ADDED_FEATURE_ID:The feature Id was just successfully added, but now it's gone)", adjustAccountFeatureIdResponse->getTargetPlayerDescription().c_str(), adjustAccountFeatureIdResponse->getTargetItemDescription().c_str(), adjustAccountFeatureIdResponse->getFeatureId()));
 						else if (adjustAccountFeatureIdResponse->getGameCode() == PlatformGameCode::SWG)
-							LOG("CustomerService",("VeteranRewards: %s ***FAILED TO TRADE IN*** %s for SWG account feature Id %lu with OnGetFeatures() error code (MISSING_NEWLY_ADDED_FEATURE_ID:The feature Id was just successfully added, but now it's gone)", adjustAccountFeatureIdResponse->getTargetPlayerDescription().c_str(), adjustAccountFeatureIdResponse->getTargetItemDescription().c_str(), adjustAccountFeatureIdResponse->getFeatureId()));
+							LOG("CustomerService",("VeteranRewards: %s ***FAILED TO TRADE IN*** %s for SWG account feature Id %u with OnGetFeatures() error code (MISSING_NEWLY_ADDED_FEATURE_ID:The feature Id was just successfully added, but now it's gone)", adjustAccountFeatureIdResponse->getTargetPlayerDescription().c_str(), adjustAccountFeatureIdResponse->getTargetItemDescription().c_str(), adjustAccountFeatureIdResponse->getFeatureId()));
 					}
 
 					// this situation shouldn't happen, as we just successfully added the feature Id,
@@ -695,9 +695,9 @@ void SessionApiClient::OnGrantFeatureByStationID(const apiTrackingNumber trackin
 			if (!i->second->getTargetPlayerDescription().empty() && i->second->getTargetItem().isValid() && !i->second->getTargetItemDescription().empty())
 			{
 				if (i->second->getGameCode() == PlatformGameCode::SWGTCG)
-					LOG("CustomerService",("TcgRedemption: %s ***FAILED TO REDEEM*** %s for SWGTCG account feature Id %lu with OnGrantFeatureByStationID() error code (%u, %s:%s)", i->second->getTargetPlayerDescription().c_str(), i->second->getTargetItemDescription().c_str(), i->second->getFeatureId(), result, sResultString.c_str(), sResultText.c_str()));
+					LOG("CustomerService",("TcgRedemption: %s ***FAILED TO REDEEM*** %s for SWGTCG account feature Id %u with OnGrantFeatureByStationID() error code (%u, %s:%s)", i->second->getTargetPlayerDescription().c_str(), i->second->getTargetItemDescription().c_str(), i->second->getFeatureId(), result, sResultString.c_str(), sResultText.c_str()));
 				else if (i->second->getGameCode() == PlatformGameCode::SWG)
-					LOG("CustomerService",("VeteranRewards: %s ***FAILED TO TRADE IN*** %s for SWG account feature Id %lu with OnGrantFeatureByStationID() error code (%u, %s:%s)", i->second->getTargetPlayerDescription().c_str(), i->second->getTargetItemDescription().c_str(), i->second->getFeatureId(), result, sResultString.c_str(), sResultText.c_str()));
+					LOG("CustomerService",("VeteranRewards: %s ***FAILED TO TRADE IN*** %s for SWG account feature Id %u with OnGrantFeatureByStationID() error code (%u, %s:%s)", i->second->getTargetPlayerDescription().c_str(), i->second->getTargetItemDescription().c_str(), i->second->getFeatureId(), result, sResultString.c_str(), sResultText.c_str()));
 			}
 
 			GameConnection * const gc = ConnectionServer::getGameConnection(i->second->getGameServer());
@@ -786,9 +786,9 @@ void SessionApiClient::OnModifyFeature_v2(const apiTrackingNumber trackingNumber
 			if (!i->second->getTargetPlayerDescription().empty() && i->second->getTargetItem().isValid() && !i->second->getTargetItemDescription().empty())
 			{
 				if (i->second->getGameCode() == PlatformGameCode::SWGTCG)
-					LOG("CustomerService",("TcgRedemption: %s ***FAILED TO REDEEM*** %s for SWGTCG account feature Id %lu with OnModifyFeature_v2() error code (%u, %s:%s)", i->second->getTargetPlayerDescription().c_str(), i->second->getTargetItemDescription().c_str(), i->second->getFeatureId(), result, sResultString.c_str(), sResultText.c_str()));
+					LOG("CustomerService",("TcgRedemption: %s ***FAILED TO REDEEM*** %s for SWGTCG account feature Id %u with OnModifyFeature_v2() error code (%u, %s:%s)", i->second->getTargetPlayerDescription().c_str(), i->second->getTargetItemDescription().c_str(), i->second->getFeatureId(), result, sResultString.c_str(), sResultText.c_str()));
 				else if (i->second->getGameCode() == PlatformGameCode::SWG)
-					LOG("CustomerService",("VeteranRewards: %s ***FAILED TO TRADE IN*** %s for SWG account feature Id %lu with OnModifyFeature_v2() error code (%u, %s:%s)", i->second->getTargetPlayerDescription().c_str(), i->second->getTargetItemDescription().c_str(), i->second->getFeatureId(), result, sResultString.c_str(), sResultText.c_str()));
+					LOG("CustomerService",("VeteranRewards: %s ***FAILED TO TRADE IN*** %s for SWG account feature Id %u with OnModifyFeature_v2() error code (%u, %s:%s)", i->second->getTargetPlayerDescription().c_str(), i->second->getTargetItemDescription().c_str(), i->second->getFeatureId(), result, sResultString.c_str(), sResultText.c_str()));
 			}
 		}
 		else
@@ -797,9 +797,9 @@ void SessionApiClient::OnModifyFeature_v2(const apiTrackingNumber trackingNumber
 			if (!i->second->getTargetPlayerDescription().empty() && i->second->getTargetItem().isValid() && !i->second->getTargetItemDescription().empty())
 			{
 				if (i->second->getGameCode() == PlatformGameCode::SWGTCG)
-					LOG("CustomerService",("TcgRedemption: %s redeemed %s for SWGTCG account feature Id %lu (%d -> %d)", i->second->getTargetPlayerDescription().c_str(), i->second->getTargetItemDescription().c_str(), i->second->getFeatureId(), i->second->getOldValue(), i->second->getNewValue()));
+					LOG("CustomerService",("TcgRedemption: %s redeemed %s for SWGTCG account feature Id %u (%d -> %d)", i->second->getTargetPlayerDescription().c_str(), i->second->getTargetItemDescription().c_str(), i->second->getFeatureId(), i->second->getOldValue(), i->second->getNewValue()));
 				else if (i->second->getGameCode() == PlatformGameCode::SWG)
-					LOG("CustomerService",("VeteranRewards: %s traded in %s for SWG account feature Id %lu (%d -> %d)", i->second->getTargetPlayerDescription().c_str(), i->second->getTargetItemDescription().c_str(), i->second->getFeatureId(), i->second->getOldValue(), i->second->getNewValue()));
+					LOG("CustomerService",("VeteranRewards: %s traded in %s for SWG account feature Id %u (%d -> %d)", i->second->getTargetPlayerDescription().c_str(), i->second->getTargetItemDescription().c_str(), i->second->getFeatureId(), i->second->getOldValue(), i->second->getNewValue()));
 			}
 		}
 

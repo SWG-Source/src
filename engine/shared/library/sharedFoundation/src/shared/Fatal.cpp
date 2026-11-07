@@ -20,6 +20,10 @@
 #include "sharedFoundation/SetupSharedFoundation.h"
 #include "sharedSynchronization/Mutex.h"
 
+#if defined(_M_X64)
+#include <intrin.h>
+#endif
+
 #include <cstdio>
 #include <string>
 
@@ -171,7 +175,11 @@ static void InternalFatal(const char *format, va_list va)
 
 #ifdef _WIN32
 	{
+#if defined(_M_X64)
+		__debugbreak();
+#else
 		__asm int 3;
+#endif
 	}
 #endif
 

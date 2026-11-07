@@ -71,7 +71,7 @@ private:
 	Address              m_remoteAddress;
 	int                  m_refCount;
 	bool                 m_connected;
-	unsigned long        m_lastSendTime;
+	uint64_t             m_lastSendTime; // absolute Clock::getFrameStartTimeMs()
 	unsigned short       m_bindPort;
 	bool		     m_rawTCP;
 };

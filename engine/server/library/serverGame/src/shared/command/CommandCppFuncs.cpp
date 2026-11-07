@@ -76,6 +76,7 @@
 #include "sharedFoundation/ConstCharCrcLowerString.h"
 #include "sharedFoundation/CrcLowerString.h"
 #include "sharedFoundation/DynamicVariableLocationData.h"
+#include "sharedFoundation/FixedWidthParse.h"
 #include "sharedFoundation/FormattedString.h"
 #include "sharedFoundation/GameControllerMessage.h"
 #include "sharedFoundation/NetworkId.h"
@@ -512,12 +513,74 @@ static std::string nextStringParm(Unicode::String const &str, size_t &curpos)
 
 // ----------------------------------------------------------------------
 
-static int nextIntParm(Unicode::String const &str, size_t &curpos)
+// Integer parameters come from the client. A parameter is one
+// whitespace-delimited token, which must be exactly one integer that fits
+// the destination (FixedWidthParse); anything else makes these return false,
+// and the command is ignored before it acts. The result does not depend on
+// the width of long.
+
+// The next token, or false if there is none.
+static bool nextTokenParm(Unicode::String const &str, size_t &curpos, Unicode::String &token)
 {
-	std::string strParm = nextStringParm(str, curpos);
-	if (strParm.empty())
-		return -1;
-	return atoi(strParm.c_str());
+	size_t endpos = 0;
+	token.clear();
+	if (!Unicode::getFirstToken(str, curpos, endpos, token))
+		return false;
+	curpos = endpos;
+	return true;
+}
+
+// ----------------------------------------------------------------------
+
+// An int32 parameter. A missing parameter reads as -1, as it always has.
+static bool nextIntParm(Unicode::String const &str, size_t &curpos, int32 &value)
+{
+	Unicode::String token;
+	if (!nextTokenParm(str, curpos, token))
+	{
+		value = -1;
+		return true;
+	}
+	return FixedWidthParse::parseInt32(token, 10, value);
+}
+
+// ----------------------------------------------------------------------
+
+// A required int32 parameter.
+static bool nextRequiredIntParm(Unicode::String const &str, size_t &curpos, int32 &value)
+{
+	Unicode::String token;
+	return nextTokenParm(str, curpos, token) && FixedWidthParse::parseInt32(token, 10, value);
+}
+
+// ----------------------------------------------------------------------
+
+// A required uint32 parameter; a sign is rejected.
+static bool nextRequiredUint32Parm(Unicode::String const &str, size_t &curpos, uint32 &value)
+{
+	Unicode::String token;
+	return nextTokenParm(str, curpos, token) && FixedWidthParse::parseUint32(token, 10, value);
+}
+
+// ----------------------------------------------------------------------
+
+// A required 32-bit pattern such as a crc, written signed or unsigned.
+static bool nextRequiredCrcParm(Unicode::String const &str, size_t &curpos, uint32 &value)
+{
+	Unicode::String token;
+	return nextTokenParm(str, curpos, token) && FixedWidthParse::parseBits32(token, 10, value);
+}
+
+// ----------------------------------------------------------------------
+
+// A required uint8 parameter, such as a crafting sequence id.
+static bool nextRequiredUint8Parm(Unicode::String const &str, size_t &curpos, uint8 &value)
+{
+	uint32 v = 0;
+	if (!nextRequiredUint32Parm(str, curpos, v) || v > 0xff)
+		return false;
+	value = static_cast<uint8>(v);
+	return true;
 }
 
 // ----------------------------------------------------------------------
@@ -543,9 +606,15 @@ static float nextFloatParm(Unicode::String const &str, size_t &curpos)
 
 // ----------------------------------------------------------------------
 
-static bool nextBoolParm(Unicode::String const &str, size_t &curpos)
+// An integer parameter read as a bool. A missing parameter reads as -1,
+// which is true, as it always has.
+static bool nextBoolParm(Unicode::String const &str, size_t &curpos, bool &value)
 {
-	return (nextIntParm(str, curpos) != 0);
+	int32 v = 0;
+	if (!nextIntParm(str, curpos, v))
+		return false;
+	value = (v != 0);
+	return true;
 }
 
 // ----------------------------------------------------------------------
@@ -726,7 +795,9 @@ static void commandFuncAdminSetGodMode(Command const &, NetworkId const &actor,
 	NetworkId const &, Unicode::String const &params)
 {
 	size_t pos = 0;
-	bool enable = nextBoolParm(params, pos);
+	bool enable = false;
+	if (!nextBoolParm(params, pos, enable))
+		return;
 
 	Client *client = getClientFromCharacterId(actor);
 	if (client)
@@ -980,7 +1051,10 @@ static void commandFuncShowCtsHistory(Command const &, NetworkId const &actor, N
 		if (i.getValue(ctsTransactionDetail))
 		{
 			Unicode::UnicodeStringVector tokens;
-			if (Unicode::tokenize(ctsTransactionDetail, tokens, nullptr, nullptr) && (tokens.size() >= 4))
+			// ctsHistory is an objvar, which scripts can also write; an entry
+			// whose time is not one int32 is skipped
+			int32 transferTime = 0;
+			if (Unicode::tokenize(ctsTransactionDetail, tokens, nullptr, nullptr) && (tokens.size() >= 4) && FixedWidthParse::parseInt32(tokens[0], 10, transferTime))
 			{
 				Unicode::String characterName;
 				for (size_t i = 3, j = tokens.size(); i < j; ++i)
@@ -991,7 +1065,7 @@ static void commandFuncShowCtsHistory(Command const &, NetworkId const &actor, N
 					characterName += tokens[i];
 				}
 
-				IGNORE_RETURN(orderedCtsHistory.insert(std::make_pair(atoi(Unicode::wideToNarrow(tokens[0]).c_str()), std::make_pair(Unicode::wideToNarrow(characterName), Unicode::wideToNarrow(tokens[1])))));
+				IGNORE_RETURN(orderedCtsHistory.insert(std::make_pair(transferTime, std::make_pair(Unicode::wideToNarrow(characterName), Unicode::wideToNarrow(tokens[1])))));
 			}
 		}
 	}
@@ -1189,7 +1263,7 @@ static void commandFuncAdminListGuilds(Command const &, NetworkId const &actor, 
 				buf[511] = '\0';
 				ConsoleMgr::broadcastString(buf, client);
 			}
-			snprintf(buf, 511, "%d guilds total.", guildIds.size());
+			snprintf(buf, 511, "%zu guilds total.", guildIds.size());
 			ConsoleMgr::broadcastString(buf, client);
 		}
 	}
@@ -1357,8 +1431,10 @@ static void commandFuncAuctionCreate(Command const &, NetworkId const &actor, Ne
 	size_t pos = 0;
 	NetworkId itemId(nextOidParm(params, pos));
 	NetworkId auctionContainerId(nextOidParm(params, pos));
-	int minBid = nextIntParm(params, pos);
-	int timer = nextIntParm(params, pos);
+	int32 minBid = 0;
+	int32 timer = 0;
+	if (!nextIntParm(params, pos, minBid) || !nextIntParm(params, pos, timer))
+		return;
 	Unicode::String userDescription = Unicode::narrowToWide(nextStringParm(params, pos));
 
 	UNREF(timer);
@@ -1385,8 +1461,10 @@ static void commandFuncAuctionCreateImmediate(Command const &, NetworkId const &
 	size_t pos = 0;
 	NetworkId itemId(nextOidParm(params, pos));
 	NetworkId auctionContainerId(nextOidParm(params, pos));
-	int price = nextIntParm(params, pos);
-	int timer = nextIntParm(params, pos);
+	int32 price = 0;
+	int32 timer = 0;
+	if (!nextIntParm(params, pos, price) || !nextIntParm(params, pos, timer))
+		return;
 	Unicode::String userDescription = Unicode::narrowToWide(nextStringParm(params, pos));
 
 	CreatureObject *actorCreature = dynamic_cast<CreatureObject *>(NetworkIdManager::getObjectById(actor));
@@ -1413,8 +1491,10 @@ static void commandFuncAuctionBid(Command const &, NetworkId const &actor, Netwo
 {
 	size_t pos = 0;
 	NetworkId auctionId(nextOidParm(params, pos));
-	int bidAmount = nextIntParm(params, pos);
-	int maxProxyBid = nextIntParm(params, pos);
+	int32 bidAmount = 0;
+	int32 maxProxyBid = 0;
+	if (!nextIntParm(params, pos, bidAmount) || !nextIntParm(params, pos, maxProxyBid))
+		return;
 	CreatureObject *actorCreature = dynamic_cast<CreatureObject *>(NetworkIdManager::getObjectById(actor));
 
 	if (actorCreature)
@@ -1550,10 +1630,9 @@ static void commandFuncSocialInternal(Command const &command, NetworkId const &a
 			}
 
 			const NetworkId targetId(Unicode::wideToNarrow(sv[0]));
-			const uint32    socialType = atoi(Unicode::wideToNarrow(sv[1]).c_str());
-
-			if (!socialType)
-				WARNING(true, ("commandFuncSocialInternal Bad social type specified: '%d'", socialType));
+			uint32 socialType = 0;
+			if (!FixedWidthParse::parseUint32(sv[1], 10, socialType) || !socialType)
+				WARNING(true, ("commandFuncSocialInternal Bad social type specified: '%s'", Unicode::wideToNarrow(sv[1]).c_str()));
 			else
 			{
 				bool animationOk = true;
@@ -1606,8 +1685,10 @@ static void commandFuncSetMoodInternal(Command const &command, NetworkId const &
 		CreatureObject * const obj = dynamic_cast<CreatureObject *>(NetworkIdManager::getObjectById(actor));
 		if (obj)
 		{
-			const uint32 moodType = atoi(Unicode::wideToNarrow(params).c_str());
-			obj->setMood(moodType);
+			size_t curpos = 0;
+			uint32 moodType = 0;
+			if (nextRequiredUint32Parm(params, curpos, moodType))
+				obj->setMood(moodType);
 		}
 	}
 }
@@ -1649,9 +1730,10 @@ static void commandFuncRequestWaypointAtPosition(Command const &command, Network
 						if (planet.size() > bufferLength)
 						{
 							std::string const colorStr = planet.substr(bufferLength);
-							color = static_cast<uint8>(atoi(colorStr.c_str()));
-
-							if ((color >= static_cast<uint8>(Waypoint::NumColors)) || (color == static_cast<uint8>(Waypoint::Invisible)))
+							uint32 colorValue = 0;
+							if (FixedWidthParse::parseUint32(colorStr, 10, colorValue) && (colorValue < static_cast<uint32>(Waypoint::NumColors)) && (colorValue != static_cast<uint32>(Waypoint::Invisible)))
+								color = static_cast<uint8>(colorValue);
+							else
 								color = static_cast<uint8>(Waypoint::Blue);
 						}
 
@@ -1702,10 +1784,18 @@ static void commandFuncSpatialChatInternal(Command const &, NetworkId const &act
 			size_t curpos = 0;
 
 			const NetworkId targetId(nextStringParm(params, curpos));
-			const int chatType = nextIntParm(params, curpos);
-			const int mood = nextIntParm(params, curpos);
-			int flags = nextIntParm(params, curpos);
-			int language = nextIntParm(params, curpos);
+			int32 chatType = 0;
+			int32 mood = 0;
+			int32 flags = 0;
+			int32 language = 0;
+			if (   !nextIntParm(params, curpos, chatType)
+			    || !nextIntParm(params, curpos, mood)
+			    || !nextIntParm(params, curpos, flags)
+			    || !nextIntParm(params, curpos, language))
+			{
+				DEBUG_WARNING(true, ("commandFuncSpatialChatInternal: non-integer parameter"));
+				return;
+			}
 
 			// Verify the language parameter
 
@@ -1855,6 +1945,14 @@ static void commandFuncSpatialChat(Command const &, NetworkId const &actor, Netw
 				return;
 			}
 
+			// the flags are a bit set; accept them written signed or unsigned
+			uint32 flags = 0;
+			if (!FixedWidthParse::parseBits32(flagsString, 10, flags))
+			{
+				WARNING(true, ("commandFuncSpatialChat: flags are not a 32-bit integer"));
+				return;
+			}
+
 			curpos = Unicode::skipWhitespace(params, ++curpos);
 
 			const std::string & narrow_chatTypeName = Unicode::wideToNarrow(chatTypeName);
@@ -1890,7 +1988,6 @@ static void commandFuncSpatialChat(Command const &, NetworkId const &actor, Netw
 				const uint32 moodType = MoodManager::getMoodByCanonicalName(narrow_moodTypeName);
 				const bool isPrivate = SpatialChatManager::isPrivate(chatType);
 
-				uint32 flags = atoi(Unicode::wideToNarrow(flagsString).c_str());
 				if (isPrivate)
 					flags |= MessageQueueSpatialChat::F_isPrivate;
 
@@ -2016,16 +2113,25 @@ static void commandFuncCombatSpam (Command const &, NetworkId const &actor, Netw
 		return;
 	}
 
-	//DEBUG_REPORT_LOG(true, ("Combat spam type: %d\n", Unicode::toInt(combatSpamType)));
+	int32  intValue = 0;
+	int32  bitflags = 0;
+	uint32 spamType = 0;
+	if (   !FixedWidthParse::parseInt32(intValueStr, 10, intValue)
+	    || !FixedWidthParse::parseInt32(bitflagsStr, 10, bitflags)
+	    || !FixedWidthParse::parseUint32(combatSpamType, 10, spamType)
+	    || spamType > 0xff)
+	{
+		WARNING (true, ("Invalid integer arguments to commandFuncCombatSpam"));
+		return;
+	}
+
+	//DEBUG_REPORT_LOG(true, ("Combat spam type: %u\n", spamType));
 
 	const CachedNetworkId otherId (Unicode::wideToNarrow (otherIdStr));
 
-	MessageQueueCombatSpam msg (actorId, (actor.getObject() ? actor.getObject()->getPosition_w() : Vector::zero), targetId, (target.getObject() ? target.getObject()->getPosition_w() : Vector::zero), otherId, 0, Unicode::String (), static_cast<unsigned char>(Unicode::toInt(combatSpamType)));
+	MessageQueueCombatSpam msg (actorId, (actor.getObject() ? actor.getObject()->getPosition_w() : Vector::zero), targetId, (target.getObject() ? target.getObject()->getPosition_w() : Vector::zero), otherId, 0, Unicode::String (), static_cast<unsigned char>(spamType));
 
 	curpos = Unicode::skipWhitespace(params, ++curpos);
-
-	const int    intValue = atoi (Unicode::wideToNarrow (intValueStr).c_str ());
-	const int    bitflags = atoi (Unicode::wideToNarrow (bitflagsStr).c_str ());
 
 	if (bitflags == 0)
 	{
@@ -2364,7 +2470,9 @@ static void commandFuncSetPublicState(Command const &, NetworkId const &actor, N
 {
 	size_t curpos = 0;
 	NetworkId objId(nextOidParm(params, curpos));
-	int publicState = nextIntParm(params, curpos);
+	int32 publicState = 0;
+	if (!nextIntParm(params, curpos, publicState))
+		return;
 
 	Object *obj = NetworkIdManager::getObjectById(objId);
 	Client *client = getClientFromCharacterId(actor);
@@ -2702,9 +2810,11 @@ static void commandFuncHarvesterMakeCrate(Command const &, NetworkId const &acto
 	HarvesterInstallationObject *targetObj = dynamic_cast<HarvesterInstallationObject*>(NetworkIdManager::getObjectById(target));
 	size_t pos = 0;
 	const NetworkId resourceId = nextOidParm(params, pos);
-	const int amount = nextIntParm(params, pos);
-	const bool discard = nextBoolParm(params, pos);
-	const uint8 sequenceId = static_cast<uint8>(nextIntParm(params, pos));
+	int32 amount = 0;
+	bool discard = false;
+	uint8 sequenceId = 0;
+	if (!nextIntParm(params, pos, amount) || !nextBoolParm(params, pos, discard) || !nextRequiredUint8Parm(params, pos, sequenceId))
+		return;
 
 	if (targetObj && actorObj && targetObj->isOnAdminList(*actorObj))
 		targetObj->emptyHopper(actor, resourceId, amount, discard, sequenceId);
@@ -2731,9 +2841,9 @@ static void commandFuncResourceContainerTransfer(Command const &, NetworkId cons
 	size_t pos = 0;
 	NetworkId destId = nextOidParm(params, pos);
 	ResourceContainerObject *destObj = dynamic_cast<ResourceContainerObject*>(NetworkIdManager::getObjectById(destId));
-	int amount = nextIntParm(params, pos);
+	int32 amount = 0;
 
-	if (!sourceObj || !destObj || amount <= 0)
+	if (!nextIntParm(params, pos, amount) || !sourceObj || !destObj || amount <= 0)
 		return;
 
 	Container::ContainerErrorCode error = Container::CEC_Success;
@@ -2813,9 +2923,13 @@ static void commandFuncResourceContainerSplit(Command const &, NetworkId const &
 		return;
 
 	size_t pos = 0;
-	const int amount = nextIntParm(params, pos);
+	int32 amount = 0;
+	if (!nextIntParm(params, pos, amount))
+		return;
 	const CachedNetworkId destContainer(nextOidParm(params, pos));
-	const int arrangementId = nextIntParm(params, pos);
+	int32 arrangementId = 0;
+	if (!nextIntParm(params, pos, arrangementId))
+		return;
 	const Vector & newLocation = nextVectorParm(params, pos);
 
 	Container::ContainerErrorCode error = Container::CEC_Success;
@@ -2842,7 +2956,9 @@ static void commandFuncFactoryCrateSplit(Command const &, NetworkId const &actor
 		return;
 
 	size_t pos = 0;
-	const int amount = nextIntParm(params, pos);
+	int32 amount = 0;
+	if (!nextIntParm(params, pos, amount))
+		return;
 	const CachedNetworkId destContainerId(nextOidParm(params, pos));
 	ServerObject * destContainer = safe_cast<ServerObject *>(destContainerId.getObject());
 	if (destContainer == nullptr || ContainerInterface::getVolumeContainer(*destContainer) == nullptr)
@@ -2973,7 +3089,9 @@ static void commandFuncTransferItem(Command const &, NetworkId const &actor, Net
 
 	size_t curpos = 0;
 	const NetworkId & destId = nextOidParm(params, curpos);
-	const int arrangement = nextIntParm(params, curpos);
+	int32 arrangement = 0;
+	if (!nextIntParm(params, curpos, arrangement))
+		return;
 	const Vector & pos = nextVectorParm(params, curpos);
 	Transform t;
 	t.setPosition_p(pos);
@@ -3364,7 +3482,9 @@ static void commandFuncTransferWeapon(Command const & c, NetworkId const &actor,
 
 	size_t curpos = 0;
 	const NetworkId & destId = nextOidParm(params, curpos);
-	const int arrangement = nextIntParm(params, curpos);
+	int32 arrangement = 0;
+	if (!nextIntParm(params, curpos, arrangement))
+		return;
 	UNREF(destId);
 
 	if (item && actorObject && isGoingInWeaponSlot(*item, arrangement))
@@ -3393,7 +3513,9 @@ void CommandCppFuncs::commandFuncTransferMisc(Command const & c, NetworkId const
 
 	size_t curpos = 0;
 	const NetworkId & destId = nextOidParm(params, curpos);
-	const int arrangement = nextIntParm(params, curpos);
+	int32 arrangement = 0;
+	if (!nextIntParm(params, curpos, arrangement))
+		return;
 
 	//This command can only be used to transfer non-weapon objects not contained directly by the player unless it is not armor
 	if (item && actorObject && !isGoingInWeaponSlot(*item, arrangement) &&
@@ -3480,7 +3602,9 @@ static void commandFuncOpenContainer(Command const & cmd, NetworkId const &actor
 	size_t curpos = 0;
 
 	std::string slotName;
-	int sequence = nextIntParm(params, curpos);
+	int32 sequence = 0;
+	if (!nextIntParm(params, curpos, sequence))
+		return;
 	if (curpos != std::string::npos)
 	{
 		++curpos;
@@ -5027,7 +5151,7 @@ static void commandFuncGuildPickRandomGuildMember(Command const &, NetworkId con
 		}
 		else
 		{
-			Chat::sendSystemMessage(*targetObj, Unicode::narrowToWide(FormattedString<1024>().sprintf("Guild member \"%s\" was randomly chosen out of %d guild members in guild %s [%s].", gmi->m_name.c_str(), results.size(), GuildInterface::getGuildName(targetObj->getGuildId()).c_str(), GuildInterface::getGuildAbbrev(targetObj->getGuildId()).c_str())), Unicode::emptyString);
+			Chat::sendSystemMessage(*targetObj, Unicode::narrowToWide(FormattedString<1024>().sprintf("Guild member \"%s\" was randomly chosen out of %zu guild members in guild %s [%s].", gmi->m_name.c_str(), results.size(), GuildInterface::getGuildName(targetObj->getGuildId()).c_str(), GuildInterface::getGuildAbbrev(targetObj->getGuildId()).c_str())), Unicode::emptyString);
 
 			// reminder of the -online option
 			if (!onlineOption && (randomMember != targetObj->getNetworkId()) && (ServerUniverse::getConnectedCharacterLfgData().count(randomMember) <= 0))
@@ -5234,7 +5358,7 @@ static void commandFuncCityPickRandomCitizen(Command const &, NetworkId const &a
 		}
 		else
 		{
-			Chat::sendSystemMessage(*targetObj, Unicode::narrowToWide(FormattedString<1024>().sprintf("Citizen \"%s\" was randomly chosen out of %d citizens in city %s.", ci->m_citizenName.c_str(), results.size(), CityInterface::getCityInfo(cityIds[0]).getCityName().c_str())), Unicode::emptyString);
+			Chat::sendSystemMessage(*targetObj, Unicode::narrowToWide(FormattedString<1024>().sprintf("Citizen \"%s\" was randomly chosen out of %zu citizens in city %s.", ci->m_citizenName.c_str(), results.size(), CityInterface::getCityInfo(cityIds[0]).getCityName().c_str())), Unicode::emptyString);
 
 			// reminder of the -online option
 			if (!onlineOption && (randomMember != targetObj->getNetworkId()) && (ServerUniverse::getConnectedCharacterLfgData().count(randomMember) <= 0))
@@ -5262,7 +5386,9 @@ static void commandFuncCityPickRandomCitizen(Command const &, NetworkId const &a
 static void commandFuncShowDanceVisuals(Command const &, NetworkId const &actor, NetworkId const &, Unicode::String const &params)
 {
 	size_t pos = 0;
-	bool enable = nextBoolParm(params, pos);
+	bool enable = false;
+	if (!nextBoolParm(params, pos, enable))
+		return;
 	CreatureObject *creature = dynamic_cast<CreatureObject*>(NetworkIdManager::getObjectById(actor));
 	if (creature)
 	{
@@ -5275,7 +5401,9 @@ static void commandFuncShowDanceVisuals(Command const &, NetworkId const &actor,
 static void commandFuncShowMusicianVisuals(Command const &, NetworkId const &actor, NetworkId const &, Unicode::String const &params)
 {
 	size_t pos = 0;
-	bool enable = nextBoolParm(params, pos);
+	bool enable = false;
+	if (!nextBoolParm(params, pos, enable))
+		return;
 	CreatureObject *creature = dynamic_cast<CreatureObject*>(NetworkIdManager::getObjectById(actor));
 	if (creature)
 	{
@@ -5306,7 +5434,9 @@ static void commandFuncPlaceStructure(const Command& /*command*/, const NetworkI
 	const float x = nextFloatParm(parameters, pos);
 	const float z = nextFloatParm(parameters, pos);
 	const Vector position(x, 0.f, z);
-	const int rotation = nextIntParm(parameters, pos);
+	int32 rotation = 0;
+	if (!nextIntParm(parameters, pos, rotation))
+		return;
 
 	ScriptParams scriptParameters;
 	scriptParameters.addParam(actor);
@@ -5427,7 +5557,9 @@ static void commandFuncSitServer(const Command& /*command*/, const NetworkId& ac
 static void commandFuncGetAttributes(Command const &, NetworkId const &actor, NetworkId const &target, Unicode::String const & params)
 {
 	size_t curpos = 0;
-	int const clientRevision = nextIntParm(params, curpos);
+	int32 clientRevision = 0;
+	if (!nextIntParm(params, curpos, clientRevision))
+		return;
 	TaskGetAttributes * const task = new TaskGetAttributes(actor, target, clientRevision);
 	NonCriticalTaskQueue::getInstance().addTask(task);
 }
@@ -5436,14 +5568,23 @@ static void commandFuncGetAttributes(Command const &, NetworkId const &actor, Ne
 
 static void commandFuncGetAttributesBatch(Command const &, NetworkId const &actor, NetworkId const &, Unicode::String const & params)
 {
+	// read every (object, revision) pair before acting on any of them
+	std::vector<std::pair<NetworkId, int32> > requests;
 	size_t curpos = 0;
 	NetworkId obj = nextOidParm(params, curpos);
 	while (obj != NetworkId::cms_invalid)
 	{
-		int const clientRevision = nextIntParm(params, curpos);
-		TaskGetAttributes * const task = new TaskGetAttributes(actor, obj, clientRevision);
-		NonCriticalTaskQueue::getInstance().addTask(task);
+		int32 clientRevision = 0;
+		if (!nextIntParm(params, curpos, clientRevision))
+			return;
+		requests.push_back(std::make_pair(obj, clientRevision));
 		obj = nextOidParm(params, curpos);
+	}
+
+	for (std::vector<std::pair<NetworkId, int32> >::const_iterator i = requests.begin(); i != requests.end(); ++i)
+	{
+		TaskGetAttributes * const task = new TaskGetAttributes(actor, i->first, i->second);
+		NonCriticalTaskQueue::getInstance().addTask(task);
 	}
 }
 
@@ -5473,8 +5614,10 @@ static void commandFuncPurchaseTicket(const Command& /*command*/, const NetworkI
 	const Unicode::String travelPoint1 = Unicode::narrowToWide(underscoreToSpace(nextStringParm(parameters, pos)));
 	const Unicode::String planetName2 = Unicode::narrowToWide(nextStringParm(parameters, pos));
 	const Unicode::String travelPoint2 = Unicode::narrowToWide(underscoreToSpace(nextStringParm(parameters, pos)));
-	const bool roundTrip = nextBoolParm(parameters, pos);
-	const bool instantTravel = nextBoolParm(parameters, pos);
+	bool roundTrip = false;
+	bool instantTravel = false;
+	if (!nextBoolParm(parameters, pos, roundTrip) || !nextBoolParm(parameters, pos, instantTravel))
+		return;
 
 	ScriptParams scriptParameters;
 	scriptParameters.addParam(actor);
@@ -5501,8 +5644,10 @@ static void commandFuncRequestResourceWeights(const Command&, const NetworkId& a
 		return;
 	}
 
-	uint32 schematicCrc;
-	sscanf(Unicode::wideToNarrow(params).c_str(), "%" SCNu32, &schematicCrc);
+	size_t curpos = 0;
+	uint32 schematicCrc = 0;
+	if (!nextRequiredCrcParm(params, curpos, schematicCrc))
+		return;
 	DraftSchematicObject::requestResourceWeights(*creature, schematicCrc);
 }
 
@@ -5517,15 +5662,22 @@ static void commandFuncRequestResourceWeightsBatch(const Command&, const Network
 		return;
 	}
 
-	int schematicCrc;
-
+	// read every crc up to the end or a -1 terminator before acting on any
+	std::vector<uint32> schematicCrcs;
 	size_t curpos = 0;
-	schematicCrc = nextIntParm(params, curpos);
-	while (schematicCrc != -1)
+	Unicode::String token;
+	while (nextTokenParm(params, curpos, token))
 	{
-		DraftSchematicObject::requestResourceWeights(*creature, static_cast<uint32>(schematicCrc));
-		schematicCrc = nextIntParm(params, curpos);
+		uint32 schematicCrc = 0;
+		if (!FixedWidthParse::parseBits32(token, 10, schematicCrc))
+			return;
+		if (schematicCrc == 0xffffffffu)
+			break;
+		schematicCrcs.push_back(schematicCrc);
 	}
+
+	for (std::vector<uint32>::const_iterator i = schematicCrcs.begin(); i != schematicCrcs.end(); ++i)
+		DraftSchematicObject::requestResourceWeights(*creature, *i);
 }
 
 //----------------------------------------------------------------------
@@ -5546,8 +5698,11 @@ static void commandFuncRequestDraftSlots(const Command&, const NetworkId& actor,
 		return;
 	}
 
-	uint32 serverCrc, sharedCrc;
-	sscanf(Unicode::wideToNarrow(params).c_str(), "%" SCNu32 " %" SCNu32, &serverCrc, &sharedCrc);
+	size_t curpos = 0;
+	uint32 serverCrc = 0;
+	uint32 sharedCrc = 0;
+	if (!nextRequiredCrcParm(params, curpos, serverCrc) || !nextRequiredCrcParm(params, curpos, sharedCrc))
+		return;
 
 	MessageQueueDraftSlotsQueryResponse * const message = new MessageQueueDraftSlotsQueryResponse(std::make_pair(serverCrc, sharedCrc));
 	if (!player->requestDraftSlots(serverCrc, nullptr, message))
@@ -5575,36 +5730,31 @@ static void commandFuncRequestDraftSlotsBatch(const Command&, const NetworkId& a
 		return;
 	}
 
-	uint32 uServerCrc = 0;
-	uint32 uSharedCrc = 0;
+	// Read (server crc, shared crc) pairs up to the end, an incomplete pair
+	// or a pair containing 0, before acting on any of them.
+	std::vector<std::pair<uint32, uint32> > crcs;
 	size_t curpos = 0;
-
-	std::string serverCrcString = nextStringParm(params, curpos);
-	if (serverCrcString.empty())
-		return;
-	sscanf(serverCrcString.c_str(), "%" SCNu32, &uServerCrc);
-	std::string sharedCrcString = nextStringParm(params, curpos);
-	if (sharedCrcString.empty())
-		return;
-	sscanf(sharedCrcString.c_str(), "%" SCNu32, &uSharedCrc);
-
-	bool done = false;
-	while (uServerCrc != 0 && uSharedCrc != 0 && !done)
+	Unicode::String serverCrcString;
+	Unicode::String sharedCrcString;
+	while (nextTokenParm(params, curpos, serverCrcString) && nextTokenParm(params, curpos, sharedCrcString))
 	{
-		MessageQueueDraftSlotsQueryResponse * const message = new MessageQueueDraftSlotsQueryResponse(std::make_pair(uServerCrc, uSharedCrc));
-		if (!player->requestDraftSlots(uServerCrc, nullptr, message))
+		uint32 uServerCrc = 0;
+		uint32 uSharedCrc = 0;
+		if (!FixedWidthParse::parseBits32(serverCrcString, 10, uServerCrc) || !FixedWidthParse::parseBits32(sharedCrcString, 10, uSharedCrc))
+			return;
+		if (uServerCrc == 0 || uSharedCrc == 0)
+			break;
+		crcs.push_back(std::make_pair(uServerCrc, uSharedCrc));
+	}
+
+	for (std::vector<std::pair<uint32, uint32> >::const_iterator i = crcs.begin(); i != crcs.end(); ++i)
+	{
+		MessageQueueDraftSlotsQueryResponse * const message = new MessageQueueDraftSlotsQueryResponse(*i);
+		if (!player->requestDraftSlots(i->first, nullptr, message))
 		{
-			WARNING(true, ("commandFuncRequestDraftSlotsBatch failed to request draft slots for %" PRIu32, uServerCrc));
+			WARNING(true, ("commandFuncRequestDraftSlotsBatch failed to request draft slots for %u", i->first));
 			delete message;
 		}
-		serverCrcString = nextStringParm(params, curpos);
-		if (serverCrcString.empty())
-			done = true;
-		sscanf(serverCrcString.c_str(), "%" SCNu32, &uServerCrc);
-		sharedCrcString = nextStringParm(params, curpos);
-		if (sharedCrcString.empty())
-			done = true;
-		sscanf(sharedCrcString.c_str(), "%" SCNu32, &uSharedCrc);
 	}
 }
 
@@ -5699,7 +5849,10 @@ static void commandFuncSelectDraftSchematic(const Command&, const NetworkId& act
 		return;
 	}
 
-	int schematicIndex = atoi(Unicode::wideToNarrow(params).c_str());
+	size_t curpos = 0;
+	int32 schematicIndex = 0;
+	if (!nextRequiredIntParm(params, curpos, schematicIndex))
+		return;
 
 	player->selectDraftSchematic(schematicIndex);
 }
@@ -5723,7 +5876,10 @@ static void commandFuncNextCraftingStage(const Command&, const NetworkId& actor,
 		return;
 	}
 
-	uint8 sequenceId = static_cast<uint8>(atoi(Unicode::wideToNarrow(params).c_str()));
+	size_t curpos = 0;
+	uint8 sequenceId = 0;
+	if (!nextRequiredUint8Parm(params, curpos, sequenceId))
+		return;
 	int result = player->goToNextCraftingStage();
 
 	MessageQueueGenericIntResponse * response = new MessageQueueGenericIntResponse(
@@ -5753,8 +5909,10 @@ static void commandFuncCreatePrototype(const Command&, const NetworkId& actor, c
 	}
 
 	size_t pos = 0;
-	const uint8 sequenceId = static_cast<uint8>(nextIntParm(params, pos));
-	bool realPrototype = nextBoolParm(params, pos);
+	uint8 sequenceId = 0;
+	bool realPrototype = false;
+	if (!nextRequiredUint8Parm(params, pos, sequenceId) || !nextBoolParm(params, pos, realPrototype))
+		return;
 
 	const bool result = player->createPrototype(realPrototype);
 
@@ -5785,7 +5943,10 @@ static void commandFuncCreateManfSchematic(const Command&, const NetworkId& acto
 		return;
 	}
 
-	const uint8 sequenceId = static_cast<uint8>(atoi(Unicode::wideToNarrow(params).c_str()));
+	size_t curpos = 0;
+	uint8 sequenceId = 0;
+	if (!nextRequiredUint8Parm(params, curpos, sequenceId))
+		return;
 
 	const bool result = player->createManufacturingSchematic();
 
@@ -5861,7 +6022,10 @@ static void commandFuncRestartCraftingSession(const Command&, const NetworkId& a
 		return;
 	}
 
-	uint8 sequenceId = static_cast<uint8>(atoi(Unicode::wideToNarrow(params).c_str()));
+	size_t curpos = 0;
+	uint8 sequenceId = 0;
+	if (!nextRequiredUint8Parm(params, curpos, sequenceId))
+		return;
 
 	const bool success = player->restartCrafting();
 
@@ -6679,8 +6843,17 @@ static void commandFuncNpcConversationStart(Command const &, NetworkId const &ac
 		return;
 	}
 
+	// "<starter> <conversation name>"
+	size_t curpos = 0;
+	int32 starterValue = 0;
+	if (!nextRequiredIntParm(params, curpos, starterValue))
+	{
+		DEBUG_WARNING(true, ("commandFuncNpcConversationStart: bad params %s", realParams.c_str()));
+		return;
+	}
+
 	const char * const conversationName = &realParams[2];
-	NpcConversationData::ConversationStarter const starter = static_cast<NpcConversationData::ConversationStarter>(atoi(realParams.c_str()));
+	NpcConversationData::ConversationStarter const starter = static_cast<NpcConversationData::ConversationStarter>(starterValue);
 
 	player->startNpcConversation(*npc, conversationName, starter, 0);
 }
@@ -6711,8 +6884,10 @@ static void commandFuncNpcConversationSelect(Command const &, NetworkId const &a
 		return;
 	}
 
-	std::string realParams(Unicode::wideToNarrow(params));
-	int selection = atoi(realParams.c_str());
+	size_t curpos = 0;
+	int32 selection = 0;
+	if (!nextRequiredIntParm(params, curpos, selection))
+		return;
 	player->respondToNpc(selection);
 }
 
@@ -6817,7 +6992,9 @@ static void commandFuncSetSpokenLanguage(Command const &, NetworkId const &actor
 		if (playerObject != nullptr)
 		{
 			size_t pos = 0;
-			int const languageId = nextIntParm(params, pos);
+			int32 languageId = 0;
+			if (!nextIntParm(params, pos, languageId))
+				return;
 			std::string skillModName;
 			GameLanguageManager::getLanguageSpeakSkillModName(languageId, skillModName);
 
@@ -6942,7 +7119,7 @@ static void commandFuncGetAccountInfo(Command const &, NetworkId const &actor, N
 						if (!accountFeatureIdsString.empty())
 							accountFeatureIdsString += ", ";
 
-						accountFeatureIdsString += FormattedString<1024>().sprintf("%lu:%d", iterAccountFeatureIds->first, iterAccountFeatureIds->second);
+						accountFeatureIdsString += FormattedString<1024>().sprintf("%u:%d", iterAccountFeatureIds->first, iterAccountFeatureIds->second);
 
 						if (VeteranRewardManager::isFeatureIdBlockedBySubscriptionBit(*player, iterAccountFeatureIds->first))
 							accountFeatureIdsString += "*";
@@ -7256,8 +7433,10 @@ static void commandFuncFormCommand(Command const &, NetworkId const & actor, Net
 	if (tokens.size() == 0)
 		return;
 
-	std::string const commandStr = Unicode::wideToNarrow(tokens[0]);
-	FormManager::Command const command = static_cast<FormManager::Command>(atoi(commandStr.c_str()));
+	int32 commandValue = 0;
+	if (!FixedWidthParse::parseInt32(tokens[0], 10, commandValue))
+		return;
+	FormManager::Command const command = static_cast<FormManager::Command>(commandValue);
 
 	switch (command)
 	{
@@ -7374,7 +7553,10 @@ static void commandFuncInstallShipComponents(Command const &, NetworkId const & 
 	if (!ship)
 		return;
 
-	ShipChassisSlotType::Type const slotType = static_cast<ShipChassisSlotType::Type const>(nextIntParm(params, pos));
+	int32 slotValue = 0;
+	if (!nextIntParm(params, pos, slotValue))
+		return;
+	ShipChassisSlotType::Type const slotType = static_cast<ShipChassisSlotType::Type const>(slotValue);
 	NetworkId const & componentId = nextOidParm(params, pos);
 	Object * const componentObj = NetworkIdManager::getObjectById(componentId);
 	ServerObject * const componentServerObj = componentObj ? componentObj->asServerObject() : nullptr;
@@ -7479,7 +7661,10 @@ static void commandFuncUninstallShipComponents(Command const &, NetworkId const 
 	if (!ship)
 		return;
 
-	ShipChassisSlotType::Type const slotType = static_cast<ShipChassisSlotType::Type const>(nextIntParm(params, pos));
+	int32 slotValue = 0;
+	if (!nextIntParm(params, pos, slotValue))
+		return;
+	ShipChassisSlotType::Type const slotType = static_cast<ShipChassisSlotType::Type const>(slotValue);
 
 	IGNORE_RETURN(ship->uninstallComponent(actor, slotType, *actorInv));
 }
@@ -7521,7 +7706,10 @@ static void commandFuncInsertItemIntoShipComponentSlot(Command const &, NetworkI
 	if (!ship)
 		return;
 
-	ShipChassisSlotType::Type const slotType = static_cast<ShipChassisSlotType::Type const>(nextIntParm(params, pos));
+	int32 slotValue = 0;
+	if (!nextIntParm(params, pos, slotValue))
+		return;
+	ShipChassisSlotType::Type const slotType = static_cast<ShipChassisSlotType::Type const>(slotValue);
 
 	if (!ship->isSlotInstalled(slotType))
 		return;
@@ -7677,8 +7865,8 @@ static void commandFuncSetFormationSlot(Command const &, NetworkId const & actor
 			if (group->getGroupLeaderId() == actor)
 			{
 				size_t pos = 0;
-				int const formationSlot = nextIntParm(params, pos);
-				if (formationSlot > -1)
+				int32 formationSlot = -1;
+				if (nextIntParm(params, pos, formationSlot) && formationSlot > -1)
 				{
 					group->setShipFormationSlotForMember(target, formationSlot);
 				}
@@ -7785,8 +7973,10 @@ static void commandFuncLaunchIntoSpace(Command const &, NetworkId const & actor,
 
 		if (tokens.size() > tokenIndex)
 		{
-			int const numberOfNetworkIds = atoi(Unicode::wideToNarrow(tokens[tokenIndex]).c_str());
-			for (int i = 0; i < numberOfNetworkIds; ++i)
+			int32 numberOfNetworkIds = 0;
+			if (!FixedWidthParse::parseInt32(tokens[tokenIndex], 10, numberOfNetworkIds))
+				return;
+			for (int32 i = 0; i < numberOfNetworkIds; ++i)
 			{
 				++tokenIndex;
 				if (tokens.size() > tokenIndex)
@@ -7796,6 +7986,12 @@ static void commandFuncLaunchIntoSpace(Command const &, NetworkId const & actor,
 					{
 						networkIds.push_back(Id);
 					}
+				}
+				else
+				{
+					// no tokens remain, so the rest of the count adds nothing
+					// and every later token index reads as absent
+					break;
 				}
 			}
 		}
@@ -7854,7 +8050,10 @@ static void commandFuncAcceptQuest(Command const &, NetworkId const & actor, Net
 		return;
 	}
 
-	uint32 const questCrc = atoi(Unicode::wideToNarrow(params).c_str());
+	size_t curpos = 0;
+	uint32 questCrc = 0;
+	if (!nextRequiredCrcParm(params, curpos, questCrc))
+		return;
 	if (playerObject->getPendingRequestQuestCrc() == questCrc)
 	{
 		NetworkId const & questGiver = playerObject->getPendingRequestQuestGiver();
@@ -7886,7 +8085,9 @@ static void commandFuncReceiveReward(Command const &, NetworkId const & actor, N
 
 	if (sv.empty())
 		return;
-	uint32 const questCrc = atoi(Unicode::wideToNarrow(sv[0]).c_str());
+	uint32 questCrc = 0;
+	if (!FixedWidthParse::parseBits32(sv[0], 10, questCrc))
+		return;
 	std::string selectedReward;
 	if (sv.size() > 1)
 		selectedReward = Unicode::wideToNarrow(sv[1]);
@@ -7905,7 +8106,9 @@ static void commandFuncAbandonQuest(Command const &, NetworkId const & actor, Ne
 	size_t pos = 0;
 
 	//not currently used, but can distinguish between different quest types
-	int const questSystemType = nextIntParm(params, pos);
+	int32 questSystemType = 0;
+	if (!nextIntParm(params, pos, questSystemType))
+		return;
 	UNREF(questSystemType);
 	std::string const & questName = nextStringParm(params, pos);
 
@@ -7955,12 +8158,12 @@ static void commandFuncExchangeListCredits(Command const &, NetworkId const &act
 
 	if (sv.empty())
 		return;
-	uint32 const credits = (uint32)atoi(Unicode::wideToNarrow(sv[0]).c_str());
-	if (credits <= 0)
+	uint32 credits = 0;
+	if (!FixedWidthParse::parseUint32(sv[0], 10, credits) || credits == 0)
 		return;
 
 	char message[512];
-	sprintf(message, "Listing %ld credits on station exchange.", credits);
+	sprintf(message, "Listing %u credits on station exchange.", credits);
 	Chat::sendSystemMessage(*actorCreature, Unicode::narrowToWide(message), Unicode::emptyString);
 
 	ExchangeListCreditsMessage const msg(actor, credits, GameServer::getInstance().getProcessId());
@@ -8601,7 +8804,7 @@ static void commandFuncDeputizeWarden(Command const &, NetworkId const &actor, N
 
 			// send a messageTo to the target to complete the deputize process
 			char buffer[1024];
-			snprintf(buffer, sizeof(buffer) - 1, "%s|%lu", gm->getNetworkId().getValueString().c_str(), gmPlayerObject->getStationId());
+			snprintf(buffer, sizeof(buffer) - 1, "%s|%u", gm->getNetworkId().getValueString().c_str(), gmPlayerObject->getStationId());
 			buffer[sizeof(buffer) - 1] = '\0';
 
 			MessageToQueue::getInstance().sendMessageToC(parsedNetworkId,
@@ -8670,7 +8873,7 @@ static void commandFuncUndeputizeWarden(Command const &, NetworkId const &actor,
 
 			// send a messageTo to the target to complete the undeputize process
 			char buffer[1024];
-			snprintf(buffer, sizeof(buffer) - 1, "%s|%lu", gm->getNetworkId().getValueString().c_str(), gmPlayerObject->getStationId());
+			snprintf(buffer, sizeof(buffer) - 1, "%s|%u", gm->getNetworkId().getValueString().c_str(), gmPlayerObject->getStationId());
 			buffer[sizeof(buffer) - 1] = '\0';
 
 			MessageToQueue::getInstance().sendMessageToC(parsedNetworkId,
@@ -8693,8 +8896,8 @@ static void commandFuncRemoveBuff(Command const &, NetworkId const &actor, Netwo
 	if (player)
 	{
 		size_t pos = 0;
-		int32 const buffCrc = nextIntParm(params, pos);
-		if (buffCrc && BuffManager::getIsBuffPlayerRemovable(buffCrc))
+		uint32 buffCrc = 0;
+		if (nextRequiredCrcParm(params, pos, buffCrc) && buffCrc && BuffManager::getIsBuffPlayerRemovable(buffCrc))
 		{
 			player->removeBuff(buffCrc);
 		}
@@ -9442,12 +9645,13 @@ static void commandFuncAreaPickRandomPlayer(Command const &, NetworkId const &ac
 				}
 				else
 				{
-					range = ::atoi(Unicode::wideToNarrow(*iter).c_str());
-					if ((range < 1) || (range > 256))
+					int32 rangeValue = 0;
+					if (!FixedWidthParse::parseInt32(*iter, 10, rangeValue) || (rangeValue < 1) || (rangeValue > 256))
 					{
 						Chat::sendSystemMessage(*targetObj, Unicode::narrowToWide("Range must be 1-256."), Unicode::emptyString);
 						return;
 					}
+					range = rangeValue;
 				}
 			}
 		}
@@ -9633,7 +9837,7 @@ static void commandFuncRoomPickRandomPlayer(Command const &, NetworkId const &ac
 	else
 	{
 		int const random = ::rand() % validPlayers.size();
-		Chat::sendSystemMessage(*targetObj, Unicode::narrowToWide(FormattedString<1024>().sprintf("Player \"%s\" was randomly chosen out of %d players in this room.", Unicode::wideToNarrow(validPlayers[random]->getAssignedObjectName()).c_str(), validPlayers.size())), Unicode::emptyString);
+		Chat::sendSystemMessage(*targetObj, Unicode::narrowToWide(FormattedString<1024>().sprintf("Player \"%s\" was randomly chosen out of %zu players in this room.", Unicode::wideToNarrow(validPlayers[random]->getAssignedObjectName()).c_str(), validPlayers.size())), Unicode::emptyString);
 
 		// do emote at the selected player, if requested
 		if (socialType > 0)

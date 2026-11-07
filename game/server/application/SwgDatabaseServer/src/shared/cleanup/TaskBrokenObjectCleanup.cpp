@@ -31,7 +31,7 @@ bool TaskBrokenObjectCleanup::process(DB::Session *session)
 		if( qry.result.getValue() == 0 )   // cleanup done
 			break;
 	}
-	LOG("TaskBrokenObjectCleanup",("TIME = %d", time(0)-t_start ));
+	LOG("TaskBrokenObjectCleanup",("TIME = %lld", static_cast<long long>(time(0)-t_start) ));
 	return true;
 }
 

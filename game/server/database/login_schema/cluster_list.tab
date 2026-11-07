@@ -1,10 +1,10 @@
 create table cluster_list --NO_IMPORT
 (
-	id number, 
+	id number, -- BIND_AS(DB::BindableUint32)
 	name varchar2(255),
 	num_characters number,
 	address varchar2(255),
-	port number default 44463,
+	port number default 44463, -- LOAD_RANGE(0,65535): TaskGetClusterList narrows it to uint16
 	secret char(1),
 	locked char(1),
 	not_recommended char(1),

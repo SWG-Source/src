@@ -672,7 +672,7 @@ void JediManagerObject::updateJediLocation(const NetworkId & id, const Vector & 
 			}
 			if (!m_jediOnline.get(index))
 			{
-				LOG("CustomerService", ("Jedi: Jedi %s was offline but we received a position update, so we are marking them online.",PlayerObject::getAccountDescription(id).c_str(), scene.c_str()));
+				LOG("CustomerService", ("Jedi: Jedi %s was offline but we received a position update, so we are marking them online. Scene: %s",PlayerObject::getAccountDescription(id).c_str(), scene.c_str()));
 				m_jediOnline.set(index, 1);
 			}
 		}

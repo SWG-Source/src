@@ -2057,8 +2057,8 @@ void CityObject::checkForDualCitizenship() const
 				cities += ci.getCityName();
 			}
 
-			LOG("CityFixup", ("(%s, %s) is a citizen of %d cities (%s).", iterCitizens->first.getValueString().c_str(), NameManager::getInstance().getPlayerFullName(iterCitizens->first).c_str(), iterCitizens->second.size(), cities.c_str()));
-			LOG("CustomerService", ("DualCitizenship:(%s, %s) is a citizen of %d cities (%s).", iterCitizens->first.getValueString().c_str(), NameManager::getInstance().getPlayerFullName(iterCitizens->first).c_str(), iterCitizens->second.size(), cities.c_str()));
+			LOG("CityFixup", ("(%s, %s) is a citizen of %zu cities (%s).", iterCitizens->first.getValueString().c_str(), NameManager::getInstance().getPlayerFullName(iterCitizens->first).c_str(), iterCitizens->second.size(), cities.c_str()));
+			LOG("CustomerService", ("DualCitizenship:(%s, %s) is a citizen of %zu cities (%s).", iterCitizens->first.getValueString().c_str(), NameManager::getInstance().getPlayerFullName(iterCitizens->first).c_str(), iterCitizens->second.size(), cities.c_str()));
 		}
 	}
 }

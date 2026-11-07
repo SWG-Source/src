@@ -495,7 +495,7 @@ void ServerSecureTrade::completeTrade()
 			cancelTrade(*m_recipient);
 			return;
 		}
-		LOG("CustomerService", ("Trade:%s received %d money from %s", PlayerObject::getAccountDescription(m_initiator->getNetworkId()).c_str(), initatorTotalMoney, PlayerObject::getAccountDescription(m_recipient->getNetworkId()).c_str()));
+		LOG("CustomerService", ("Trade:%s received %ld money from %s", PlayerObject::getAccountDescription(m_initiator->getNetworkId()).c_str(), initatorTotalMoney, PlayerObject::getAccountDescription(m_recipient->getNetworkId()).c_str()));
 	}
 	else if (initatorTotalMoney < 0)
 	{
@@ -505,7 +505,7 @@ void ServerSecureTrade::completeTrade()
 			cancelTrade(*m_initiator);
 			return;
 		}
-		LOG("CustomerService", ("Trade:%s received %d money from %s", PlayerObject::getAccountDescription(m_recipient->getNetworkId()).c_str(), -initatorTotalMoney, PlayerObject::getAccountDescription(m_initiator->getNetworkId()).c_str()));
+		LOG("CustomerService", ("Trade:%s received %ld money from %s", PlayerObject::getAccountDescription(m_recipient->getNetworkId()).c_str(), -initatorTotalMoney, PlayerObject::getAccountDescription(m_initiator->getNetworkId()).c_str()));
 	}
 
 	//Then contents

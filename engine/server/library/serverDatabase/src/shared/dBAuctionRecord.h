@@ -38,7 +38,7 @@ struct AuctionRecord
 	NetworkId               m_ownerId;
 	int                     m_active;
 	int                     m_itemSize;
-	int                     m_itemTemplateId;
+	uint32                  m_itemTemplateId;
 };
 
 // ======================================================================

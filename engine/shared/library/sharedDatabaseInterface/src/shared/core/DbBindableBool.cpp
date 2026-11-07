@@ -14,7 +14,13 @@ using namespace DB;
 
 BindableBool::BindableBool() : Bindable()
 {
+	value[0]='N'; // a NULL column reads as false, never as an uninitialised byte
 	value[1]='\0';
+}
+
+void BindableBool::clearValue()
+{
+	value[0]='N';
 }
 
 BindableBool::BindableBool(bool _value) :

@@ -30,7 +30,7 @@ LocationBuffer::~LocationBuffer()
 
 bool LocationBuffer::save(DB::Session *session)
 {
-	LOG("SaveCounts",("Locations:  %i saved to db",m_saveData.size()));
+	LOG("SaveCounts",("Locations:  %zu saved to db",m_saveData.size()));
 	
 	DBQuery::SaveLocationQuery qry;
 	for (SaveDataType::const_iterator i=m_saveData.begin(); i!=m_saveData.end(); ++i)
@@ -39,7 +39,8 @@ bool LocationBuffer::save(DB::Session *session)
 		const std::vector<BufferEntry> &data=i->second;
 		for (std::vector<BufferEntry>::const_iterator j=data.begin(); j!=data.end(); ++j)
 		{
-			qry.setData(networkId, j->m_listId, j->m_action, j->m_index, j->m_data);
+			if (!qry.setData(networkId, j->m_listId, j->m_action, j->m_index, j->m_data))
+				return false;
 			if (! (session->exec(&qry)))
 				return false;
 		}
@@ -77,6 +78,8 @@ bool LocationBuffer::load(DB::Session *session, const DB::TagSet &tags, const st
 				temp.location.setCenter(static_cast<float>(i->x.getValue()),static_cast<float>(i->y.getValue()),static_cast<float>(i->z.getValue()));
 				temp.location.setRadius(static_cast<float>(i->radius.getValue()));
 		
+				// list ids and indexes are unsigned 32-bit columns: a stored negative
+				// value is a 32-bit server's size_t at or above 2^31
 				m_loadData[IndexKey(i->object_id.getValue(),i->list_id.getValue(),i->index.getValue())]=temp;
 			}
 		}
@@ -110,7 +113,7 @@ void LocationBuffer::getLocationList(const NetworkId &objectId, size_t listId, s
 	for (LoadDataType::const_iterator i=m_loadData.find(IndexKey(objectId, listId, 0)); (i!=m_loadData.end()) && (i->first.m_objectId == objectId) && (i->first.m_listId == listId); ++i)
 	{
 #ifdef _DEBUG
-		DEBUG_FATAL(i->first.m_index != expectedIndex++,("Programmer bug:  location list was not sorted or had gaps in the sequence.  Object id %s, list id %i, sequence %i\n",objectId.getValueString().c_str(), listId, i->first.m_index));
+		DEBUG_FATAL(i->first.m_index != expectedIndex++,("Programmer bug:  location list was not sorted or had gaps in the sequence.  Object id %s, list id %zu, sequence %zu\n",objectId.getValueString().c_str(), listId, i->first.m_index));
 #endif
 
 		values.push_back(i->second);

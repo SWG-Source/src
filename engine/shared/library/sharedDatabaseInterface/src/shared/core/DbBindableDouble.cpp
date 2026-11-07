@@ -17,6 +17,13 @@
 
 using namespace DB;
 
+void BindableDouble::clearValue()
+{
+	value = -999.0; // the value of a default-constructed (NULL) column
+}
+
+// ----------------------------------------------------------------------
+
 BindableDouble::BindableDouble() : Bindable(), value(-999.0)
 {
 }

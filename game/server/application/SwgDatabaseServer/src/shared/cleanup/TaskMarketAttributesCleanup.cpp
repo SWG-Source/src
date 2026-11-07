@@ -31,7 +31,7 @@ bool TaskMarketAttributesCleanup::process(DB::Session *session)
 		if( qry.result.getValue() == 0 )   // cleanup done
 			break;
 	}
-	LOG("TaskMarketAttributesCleanup",("TIME = %d", time(0)-t_start ));
+	LOG("TaskMarketAttributesCleanup",("TIME = %lld", static_cast<long long>(time(0)-t_start) ));
 	return true;
 }
 

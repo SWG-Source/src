@@ -555,7 +555,7 @@ void DatabaseProcess::receiveMessage(const MessageDispatch::Emitter & source, co
 			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
 			ExcommunicateGameServerMessage msg(ri);
 
-			LOG("GameGameConnect",("Database Process was told to drop connection to %lu by Central",msg.getServerId()));
+			LOG("GameGameConnect",("Database Process was told to drop connection to %u by Central",msg.getServerId()));
 			
 			FATAL (msg.getServerId() == getProcessId(),("Crashing because Central told us to (probably indicates we weren't responding to pings)"));
 			GameServerConnection *conn =getConnectionByProcess(msg.getServerId());
@@ -641,7 +641,7 @@ void DatabaseProcess::sendToGameServer(uint32 serverId, GameNetworkMessage const
 	if (i!=gameServerConnections.end())
 		i->second->send(message,true);
 	else
-		DEBUG_WARNING(true,("Tried to send to game server %lu without connection.\n",serverId));
+		DEBUG_WARNING(true,("Tried to send to game server %u without connection.\n",serverId));
 }
 
 // ----------------------------------------------------------------------

@@ -53,7 +53,12 @@ bool ConsoleCommandParser::performParsing(const NetworkId & track, const StringV
 	{
 		if(isCommand(argv[1], "requestMove"))
 		{
-			if(argv.size() > 5)
+			uint32 stationId = 0;
+			if(argv.size() > 5 && !parseArg(argv[2], stationId))
+			{
+				result += getErrorMessage(argv[1], ERR_INVALID_ARGUMENTS);
+			}
+			else if(argv.size() > 5)
 			{
 				std::string stationIdString = Unicode::wideToNarrow(argv[2]);
 				std::string characterName = Unicode::wideToNarrow(argv[3]);
@@ -71,7 +76,6 @@ bool ConsoleCommandParser::performParsing(const NetworkId & track, const StringV
 				result += Unicode::narrowToWide(" to cluster ");
 				result += Unicode::narrowToWide(destinationServer);
 
-				const unsigned int stationId = static_cast<const unsigned int>(atoi (stationIdString.c_str()));
 				const unsigned int trackId = static_cast<const unsigned int>(track.getValue());
 
 				//todo : drive these through the command handler, just testing
@@ -97,7 +101,13 @@ bool ConsoleCommandParser::performParsing(const NetworkId & track, const StringV
 		}
 		else if (isCommand(argv[1], "requestAccountMove"))
 		{
-			if (argv.size() > 3)
+			uint32 sourceStationId = 0;
+			uint32 destinationStationId = 0;
+			if (argv.size() > 3 && (!parseArg(argv[2], sourceStationId) || !parseArg(argv[3], destinationStationId)))
+			{
+				result += getErrorMessage(argv[1], ERR_INVALID_ARGUMENTS);
+			}
+			else if (argv.size() > 3)
 			{
 				std::string sourceStationIdString      = Unicode::wideToNarrow(argv[2]);
 				std::string destinationStationIdString = Unicode::wideToNarrow(argv[3]);
@@ -110,8 +120,6 @@ bool ConsoleCommandParser::performParsing(const NetworkId & track, const StringV
 				result += Unicode::narrowToWide(destinationStationIdString);
 				result += Unicode::narrowToWide("\n");
 
-				const unsigned int sourceStationId      = static_cast<const unsigned int>(atoi (sourceStationIdString.c_str()));
-				const unsigned int destinationStationId = static_cast<const unsigned int>(atoi (destinationStationIdString.c_str()));
 				const unsigned int trackId              = static_cast<const unsigned int>(track.getValue());
 
 				TransferServer::requestTransferAccount(trackId, sourceStationId, destinationStationId, trackId);

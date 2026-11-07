@@ -14,6 +14,198 @@
 
 // ======================================================================
 
+#if defined(_M_X64)
+#include <intrin.h>
+#include <xmmintrin.h>
+
+bool SseMath::canDoSseMath()
+{
+	// Was: __asm { mov eax, 1; cpuid; mov featureBits, edx } wrapped in
+	// a try/catch so an illegal-instruction trap on pre-CPUID hardware
+	// could be caught. CPUID has been universal on Windows-supported
+	// hardware for many years, and __cpuid() is the portable intrinsic
+	// equivalent.
+	int cpuInfo[4] = { 0, 0, 0, 0 };
+	__cpuid(cpuInfo, 1);
+	const unsigned int featureBits = static_cast<unsigned int>(cpuInfo[3]);  // edx
+
+	const bool cpuHasSse         = ((featureBits & 0x02000000u) != 0);
+	const bool cpuHasSaveRestore = ((featureBits & 0x01000000u) != 0);
+
+	return cpuHasSse && cpuHasSaveRestore;
+}
+
+// ======================================================================
+//
+// Helper: load three rows of a 3x4 affine transform.
+// The original asm reads the Transform layout directly via offsets
+// 0/16/32. Transform stores its three rows as float[4] (16 bytes each),
+// so we load each row without requiring extra Transform alignment.
+
+namespace
+{
+	inline void loadTransformRows(const Transform &transform,
+	                              __m128 &row0, __m128 &row1, __m128 &row2)
+	{
+		row0 = _mm_loadu_ps(transform.getMatrix()[0]);
+		row1 = _mm_loadu_ps(transform.getMatrix()[1]);
+		row2 = _mm_loadu_ps(transform.getMatrix()[2]);
+	}
+
+	// Splat a single float across all 4 lanes of an xmm register.
+	// Equivalent to: movss xmm6, scale; shufps xmm6, xmm6, 0x00.
+	inline __m128 splat4(float v)
+	{
+		return _mm_set1_ps(v);
+	}
+}
+
+// ----------------------------------------------------------------------
+
+Vector SseMath::rotateTranslateScale_l2p(const Transform &transform, const Vector &vector, float scale)
+{
+	__m128 row0, row1, row2;
+	loadTransformRows(transform, row0, row1, row2);
+
+	// Source vector, w=1 for translate.
+	__m128 src = _mm_setr_ps(vector.x, vector.y, vector.z, 1.0f);
+
+	const __m128 scaleVec = splat4(scale);
+
+	const __m128 r0 = _mm_mul_ps(_mm_mul_ps(src, row0), scaleVec);
+	const __m128 r1 = _mm_mul_ps(_mm_mul_ps(src, row1), scaleVec);
+	const __m128 r2 = _mm_mul_ps(_mm_mul_ps(src, row2), scaleVec);
+
+	// Horizontal add, same as original.
+	__declspec(align(16)) float r0a[4]; _mm_store_ps(r0a, r0);
+	__declspec(align(16)) float r1a[4]; _mm_store_ps(r1a, r1);
+	__declspec(align(16)) float r2a[4]; _mm_store_ps(r2a, r2);
+
+	return Vector(
+		r0a[0] + r0a[1] + r0a[2] + r0a[3],
+		r1a[0] + r1a[1] + r1a[2] + r1a[3],
+		r2a[0] + r2a[1] + r2a[2] + r2a[3]);
+}
+
+// ----------------------------------------------------------------------
+
+Vector SseMath::rotateScale_l2p(const Transform &transform, const Vector &vector, float scale)
+{
+	__m128 row0, row1, row2;
+	loadTransformRows(transform, row0, row1, row2);
+
+	// w=0 means no translate component.
+	__m128 src = _mm_setr_ps(vector.x, vector.y, vector.z, 0.0f);
+
+	const __m128 scaleVec = splat4(scale);
+
+	const __m128 r0 = _mm_mul_ps(_mm_mul_ps(src, row0), scaleVec);
+	const __m128 r1 = _mm_mul_ps(_mm_mul_ps(src, row1), scaleVec);
+	const __m128 r2 = _mm_mul_ps(_mm_mul_ps(src, row2), scaleVec);
+
+	__declspec(align(16)) float r0a[4]; _mm_store_ps(r0a, r0);
+	__declspec(align(16)) float r1a[4]; _mm_store_ps(r1a, r1);
+	__declspec(align(16)) float r2a[4]; _mm_store_ps(r2a, r2);
+
+	// Sum lanes [0..2] only, retaining the original fourth-lane multiply.
+	return Vector(
+		r0a[0] + r0a[1] + r0a[2],
+		r1a[0] + r1a[1] + r1a[2],
+		r2a[0] + r2a[1] + r2a[2]);
+}
+
+// ----------------------------------------------------------------------
+
+void SseMath::skinPositionNormal_l2p(const Transform &transform, const Vector &sourcePosition, const Vector &sourceNormal, float scale, Vector &destPosition, Vector &destNormal)
+{
+	__m128 row0, row1, row2;
+	loadTransformRows(transform, row0, row1, row2);
+
+	const __m128 scaleVec = splat4(scale);
+
+	// Position: w=1 -> picks up translate column.
+	{
+		__m128 src = _mm_setr_ps(sourcePosition.x, sourcePosition.y, sourcePosition.z, 1.0f);
+
+		const __m128 r0 = _mm_mul_ps(_mm_mul_ps(src, row0), scaleVec);
+		const __m128 r1 = _mm_mul_ps(_mm_mul_ps(src, row1), scaleVec);
+		const __m128 r2 = _mm_mul_ps(_mm_mul_ps(src, row2), scaleVec);
+
+		__declspec(align(16)) float r0a[4]; _mm_store_ps(r0a, r0);
+		__declspec(align(16)) float r1a[4]; _mm_store_ps(r1a, r1);
+		__declspec(align(16)) float r2a[4]; _mm_store_ps(r2a, r2);
+
+		destPosition.x = r0a[0] + r0a[1] + r0a[2] + r0a[3];
+		destPosition.y = r1a[0] + r1a[1] + r1a[2] + r1a[3];
+		destPosition.z = r2a[0] + r2a[1] + r2a[2] + r2a[3];
+	}
+
+	// Normal: original stored 1.0 in the w lane and then summed only
+	// the first three lanes - effectively dropping the translate column.
+	{
+		__m128 src = _mm_setr_ps(sourceNormal.x, sourceNormal.y, sourceNormal.z, 1.0f);
+
+		const __m128 r0 = _mm_mul_ps(_mm_mul_ps(src, row0), scaleVec);
+		const __m128 r1 = _mm_mul_ps(_mm_mul_ps(src, row1), scaleVec);
+		const __m128 r2 = _mm_mul_ps(_mm_mul_ps(src, row2), scaleVec);
+
+		__declspec(align(16)) float r0a[4]; _mm_store_ps(r0a, r0);
+		__declspec(align(16)) float r1a[4]; _mm_store_ps(r1a, r1);
+		__declspec(align(16)) float r2a[4]; _mm_store_ps(r2a, r2);
+
+		destNormal.x = r0a[0] + r0a[1] + r0a[2];
+		destNormal.y = r1a[0] + r1a[1] + r1a[2];
+		destNormal.z = r2a[0] + r2a[1] + r2a[2];
+	}
+}
+
+// ----------------------------------------------------------------------
+
+void SseMath::skinPositionNormalAdd_l2p(const Transform &transform, const Vector &sourcePosition, const Vector &sourceNormal, float scale, Vector &destPosition, Vector &destNormal)
+{
+	__m128 row0, row1, row2;
+	loadTransformRows(transform, row0, row1, row2);
+
+	const __m128 scaleVec = splat4(scale);
+
+	// Position: accumulate into destPosition (note `+=` vs `=`).
+	{
+		__m128 src = _mm_setr_ps(sourcePosition.x, sourcePosition.y, sourcePosition.z, 1.0f);
+
+		const __m128 r0 = _mm_mul_ps(_mm_mul_ps(src, row0), scaleVec);
+		const __m128 r1 = _mm_mul_ps(_mm_mul_ps(src, row1), scaleVec);
+		const __m128 r2 = _mm_mul_ps(_mm_mul_ps(src, row2), scaleVec);
+
+		__declspec(align(16)) float r0a[4]; _mm_store_ps(r0a, r0);
+		__declspec(align(16)) float r1a[4]; _mm_store_ps(r1a, r1);
+		__declspec(align(16)) float r2a[4]; _mm_store_ps(r2a, r2);
+
+		destPosition.x += r0a[0] + r0a[1] + r0a[2] + r0a[3];
+		destPosition.y += r1a[0] + r1a[1] + r1a[2] + r1a[3];
+		destPosition.z += r2a[0] + r2a[1] + r2a[2] + r2a[3];
+	}
+
+	// Normal: accumulate into destNormal.
+	{
+		__m128 src = _mm_setr_ps(sourceNormal.x, sourceNormal.y, sourceNormal.z, 1.0f);
+
+		const __m128 r0 = _mm_mul_ps(_mm_mul_ps(src, row0), scaleVec);
+		const __m128 r1 = _mm_mul_ps(_mm_mul_ps(src, row1), scaleVec);
+		const __m128 r2 = _mm_mul_ps(_mm_mul_ps(src, row2), scaleVec);
+
+		__declspec(align(16)) float r0a[4]; _mm_store_ps(r0a, r0);
+		__declspec(align(16)) float r1a[4]; _mm_store_ps(r1a, r1);
+		__declspec(align(16)) float r2a[4]; _mm_store_ps(r2a, r2);
+
+		destNormal.x += r0a[0] + r0a[1] + r0a[2];
+		destNormal.y += r1a[0] + r1a[1] + r1a[2];
+		destNormal.z += r2a[0] + r2a[1] + r2a[2];
+	}
+}
+
+// ======================================================================
+
+#else
 #define SSE_ALIGN  __declspec(align(16))
 #define SSE_VARIABLE_COUNT 5
 
@@ -428,3 +620,5 @@ void SseMath::skinPositionNormalAdd_l2p(const Transform &transform, const Vector
 } //lint !e715 // scale/transform not referenced - it's in the asm
 
 // ======================================================================
+
+#endif

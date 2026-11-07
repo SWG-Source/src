@@ -87,7 +87,7 @@ void CollisionCallbackManagerNamespace::remove()
 	if (!s_ignoreIntersectList.empty())
 	{
 		//-- If you see this warning, it means that addIgnoreIntersect was called without a corresponding removeIgnoreIntersect.
-		WARNING(true, ("CollisionCallbackManagerNamespace::remove() The s_ignoreIntersectList is not empty(%u), this is a sign of a reference counting problem.", s_ignoreIntersectList.size()));
+		WARNING(true, ("CollisionCallbackManagerNamespace::remove() The s_ignoreIntersectList is not empty(%zu), this is a sign of a reference counting problem.", s_ignoreIntersectList.size()));
 	}
 }
 

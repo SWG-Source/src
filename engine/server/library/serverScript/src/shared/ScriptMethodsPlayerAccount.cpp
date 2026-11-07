@@ -23,6 +23,7 @@
 #include "serverNetworkMessages/RenameCharacterMessage.h"
 #include "serverScript/ScriptParameters.h"
 #include "sharedFoundation/ConstCharCrcLowerString.h"
+#include "sharedFoundation/FixedWidthParse.h"
 #include "sharedLog/Log.h"
 #include "sharedNetworkMessages/GenericValueTypeMessage.h"
 #include "sharedNetworkMessages/NameErrors.h"
@@ -419,7 +420,7 @@ jboolean JNICALL ScriptMethodsPlayerAccountNamespace::setCompletedTutorial(JNIEn
 
 	const unsigned int stationId = playerObject->getClient()->getStationId();
 
-	LOG("CustomerService", ("Setting tutorial bit to %s for stationId %i\n", (value) ? "true" : "false", stationId));
+	LOG("CustomerService", ("Setting tutorial bit to %s for stationId %u\n", (value) ? "true" : "false", stationId));
 	GenericValueTypeMessage< std::pair<unsigned int, bool> > const updateTutorial("LoginToggleCompletedTutorial", std::pair<unsigned int, bool>(stationId, (bool)value));
 	GameServer::getInstance().sendToCentralServer(updateTutorial);
 	return true;
@@ -504,7 +505,10 @@ jobject JNICALL ScriptMethodsPlayerAccountNamespace::getCharacterCtsHistory(JNIE
 		if (i.getValue(ctsTransactionDetail))
 		{
 			Unicode::UnicodeStringVector tokens;
-			if (Unicode::tokenize(ctsTransactionDetail, tokens, nullptr, nullptr) && (tokens.size() >= 4))
+			// ctsHistory is an objvar, which scripts can also write; an entry
+			// whose time is not one int32 is skipped
+			int32 transferTime = 0;
+			if (Unicode::tokenize(ctsTransactionDetail, tokens, nullptr, nullptr) && (tokens.size() >= 4) && FixedWidthParse::parseInt32(tokens[0], 10, transferTime))
 			{
 				Unicode::String * characterName = new Unicode::String();
 				for (size_t i = 3, j = tokens.size(); i < j; ++i)
@@ -515,7 +519,7 @@ jobject JNICALL ScriptMethodsPlayerAccountNamespace::getCharacterCtsHistory(JNIE
 					*characterName += tokens[i];
 				}
 
-				IGNORE_RETURN(orderedCtsHistory.insert(std::make_pair(atoi(Unicode::wideToNarrow(tokens[0]).c_str()), std::make_pair(characterName, new Unicode::String(tokens[1])))));
+				IGNORE_RETURN(orderedCtsHistory.insert(std::make_pair(transferTime, std::make_pair(characterName, new Unicode::String(tokens[1])))));
 			}
 		}
 	}
@@ -572,18 +576,27 @@ jobjectArray JNICALL ScriptMethodsPlayerAccountNamespace::getCharacterRetroactiv
 				// can only handle INT (type 0) and INT_ARRAY (type 1) objvar type at this time
 				if (iterObjvar->second.getType() == DynamicVariable::INT)
 				{
-					int iValue;
-					iterObjvar->second.get(iValue);
-					params.addParam(iValue, iterObjvar->first);
-					addedAnything = true;
+					// an objvar whose text is not one int32 is not passed on
+					int iValue = 0;
+					if (iterObjvar->second.get(iValue))
+					{
+						params.addParam(iValue, iterObjvar->first);
+						addedAnything = true;
+					}
 				}
 				else if (iterObjvar->second.getType() == DynamicVariable::INT_ARRAY)
 				{
 					// iaValue will be owned and deleted by params
 					std::vector<int> * iaValue = new std::vector<int>();
-					iterObjvar->second.get(*iaValue);
-					params.addParam(*iaValue, iterObjvar->first, true);
-					addedAnything = true;
+					if (iterObjvar->second.get(*iaValue))
+					{
+						params.addParam(*iaValue, iterObjvar->first, true);
+						addedAnything = true;
+					}
+					else
+					{
+						delete iaValue;
+					}
 				}
 			}
 		}
@@ -1003,11 +1016,11 @@ jstring JNICALL ScriptMethodsPlayerAccountNamespace::getPlayerUsername(JNIEnv *e
 
     CreatureObject const * creatureObject = nullptr;
     JavaLibrary::getObject(player, creatureObject);
-    DEBUG_WARNING(!creatureObject, ("JavaLibrary::getPlayerUsername: could not get creatureObject for player %d", player));
+    DEBUG_WARNING(!creatureObject, ("JavaLibrary::getPlayerUsername: could not get creatureObject for player %lld", static_cast<long long>(player)));
     if (creatureObject)
     {
         const Client * playerClient = creatureObject->getClient();
-        DEBUG_WARNING(!playerClient, ("JavaLibrary::getPlayerUsername: could not get playerClient for player %d", player));
+        DEBUG_WARNING(!playerClient, ("JavaLibrary::getPlayerUsername: could not get playerClient for player %lld", static_cast<long long>(player)));
         if(playerClient)
         {
             return JavaString(playerClient->getAccountName()).getReturnValue();

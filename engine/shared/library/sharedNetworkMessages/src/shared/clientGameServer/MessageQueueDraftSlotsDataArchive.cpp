@@ -7,6 +7,7 @@
 
 #include "sharedNetworkMessages/FirstSharedNetworkMessages.h"
 #include "sharedNetworkMessages/MessageQueueDraftSlotsDataArchive.h"
+#include "Archive/ArchiveCount.h"
 
 #include "sharedNetworkMessages/MessageQueueDraftSlotsData.h"
 #include "sharedNetworkMessages/MessageQueueDraftSlotsDataOptionArchive.h"
@@ -50,10 +51,10 @@ namespace Archive
 
 	void put (ByteStream & target, const MessageQueueDraftSlotsData & source)
 	{
+		int const optionCount = ArchiveCount::fromSize<int>(source.options.size());
+
 		Archive::put (target, source.name);
 		Archive::put (target, source.optional);
-
-		int optionCount = source.options.size();
 		Archive::put (target, optionCount);
 
 		bool componentSlot = false;

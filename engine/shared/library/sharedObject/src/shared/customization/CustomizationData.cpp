@@ -166,21 +166,25 @@ void CustomizationData::install()
 int CustomizationData::parseSeparatedHexInt(const std::string &data, int startPosition, int &endPosition)
 {
 	//-- find end of int portion of string
-	endPosition = static_cast<int>(data.find(cms_stringFieldSeparator, static_cast<std::string::size_type>(startPosition)));
-	if (endPosition == static_cast<int>(std::string::npos))
-		return static_cast<int>(std::string::npos);
+	std::string::size_type const separatorPosition = data.find(cms_stringFieldSeparator, static_cast<std::string::size_type>(startPosition));
+	if (separatorPosition == std::string::npos)
+	{
+		endPosition = -1;
+		return -1;
+	}
+	endPosition = static_cast<int>(separatorPosition);
 
 	//-- read value.
 	std::string intString(data, static_cast<std::string::size_type>(startPosition), static_cast<std::string::size_type>(endPosition));
 
-	int       value      = static_cast<int>(std::string::npos);
+	int       value      = -1;
 	const int scanResult = sscanf(intString.c_str(), "%x", &value);
 
 	if (scanResult != 1)
 	{
 		// failed to scan hex int
-		endPosition = static_cast<int>(std::string::npos);
-		value       = static_cast<int>(std::string::npos);
+		endPosition = -1;
+		value       = -1;
 	}
 	else
 	{
@@ -211,9 +215,13 @@ int CustomizationData::parseSeparatedHexInt(const std::string &data, int startPo
 std::string CustomizationData::parseSeparatedString(const std::string &data, int startPosition, int &endPosition)
 {
 	//-- find end of int portion of string
-	endPosition = static_cast<int>(data.find(cms_stringFieldSeparator, static_cast<std::string::size_type>(startPosition)));
-	if (endPosition == static_cast<int>(std::string::npos))
+	std::string::size_type const separatorPosition = data.find(cms_stringFieldSeparator, static_cast<std::string::size_type>(startPosition));
+	if (separatorPosition == std::string::npos)
+	{
+		endPosition = -1;
 		return std::string("");
+	}
+	endPosition = static_cast<int>(separatorPosition);
 
 	//-- return the value, incrementing the end position past the separator character.
 	const std::string::size_type embeddedStringLength = static_cast<std::string::size_type>(endPosition - startPosition);
@@ -794,7 +802,7 @@ void CustomizationData::deregisterModificationListener(ModificationCallback modi
 	ModificationCallbackDataVector::iterator findIt = std::find(m_modificationCallbacks->begin(), m_modificationCallbacks->end(), ModificationCallbackData(modificationCallback, context));
 	if (findIt == m_modificationCallbacks->end())
 	{
-		WARNING(true, ("specified callback/context pair not registered [0x%08x/0x%08x]", modificationCallback, context));
+		WARNING(true, ("specified callback/context pair not registered [%p/%p]", reinterpret_cast<const void *>(modificationCallback), context));
 		return;
 	}
 
@@ -1119,7 +1127,7 @@ void CustomizationData::removeDependentCustomizationData(CustomizationData *cust
 		}
 	}
 
-	WARNING(!hasEntry, ("removeDependentCustomizationData(): customizationData [0x%08x] not dependent on this instance.", customizationData));
+	WARNING(!hasEntry, ("removeDependentCustomizationData(): customizationData [%p] not dependent on this instance.", static_cast<const void *>(customizationData)));
 }
 
 // ----------------------------------------------------------------------

@@ -9,6 +9,7 @@
 #include "serverUtility/AdminAccountManager.h"
 
 #include "sharedFoundation/ExitChain.h"
+#include "sharedFoundation/FixedWidthParse.h"
 #include "sharedUtility/DataTable.h"
 #include "sharedUtility/DataTableManager.h"
 
@@ -77,20 +78,14 @@ int AdminAccountManager::getAdminLevel(const std::string & account)
 		std::ostringstream postBuffer;
 		postBuffer << "user_name=" << account << "&secretKey=" << ConfigServerUtility::getExternalAdminLevelsSecretKey();
 		std::string response = webAPI::simplePost(ConfigServerUtility::getExternalAdminLevelsURL(), std::string(postBuffer.str()), "");
-		// aconite 4/3/22
-		// stoi inconsistently throws an invalid argument exception from this request 
-		// which causes the login and/or game server to crash on an auth or /setGod;
-		// this is a temporary patch to safeguard against that until this can be further evaluated
-		try
+		// The response text must be exactly one int32, optionally surrounded
+		// by whitespace. Anything else (empty text, "success", or a remote
+		// message that merely starts with digits) grants no admin level.
+		int32 newLevel = 0;
+		if(FixedWidthParse::parseInt32(response, 10, newLevel) && newLevel != 0)
 		{
-			int newLevel = std::stoi(response);
-			if(newLevel != 0)
-			{
-				level = newLevel;
-			}
+			level = newLevel;
 		}
-		catch(std::invalid_argument const& ex) {}
-		catch(std::out_of_range const& ex) {}
 		return level;
 	}
 

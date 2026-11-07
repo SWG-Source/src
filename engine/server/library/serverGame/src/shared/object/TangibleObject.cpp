@@ -5362,15 +5362,16 @@ bool TangibleObject::isOnAdminList(const CreatureObject& player) const
 	if(player.getClient() && player.getClient()->isGod())
 		return true;
 
-	if(getObjVars().hasItem("player_structure.admin_all_characters"))
-    {
-	    static int suid;
-	    getObjVars().getItem("player_structure.admin_all_characters", suid);
-	    if(NameManager::getInstance().getPlayerStationId(player.getNetworkId()) == suid)
-        {
-	        return true;
-        }
-    }
+	// Grants admin to every character of one account. The objvar is an int
+	// holding the station id's 32 bits. (This used a function-level static,
+	// so a structure whose objvar could not be read as an int reused the
+	// previous structure's account.)
+	int suid = 0;
+	if (getObjVars().getItem("player_structure.admin_all_characters", suid)
+		&& NameManager::getInstance().getPlayerStationId(player.getNetworkId()) == static_cast<StationId>(suid))
+	{
+		return true;
+	}
 
 	// In script, the admin list is stored as a list of strings.
 	// The format of the list is:

@@ -704,7 +704,7 @@ const Region * RegionMaster::addDynamicRegion(const UniverseObject & source)
 			break;
 		default:
 			DEBUG_WARNING(true, ("RegionMaster::addDynamicRegion object %s has unknown "
-				"geometry type", source.getNetworkId().getValueString().c_str(),
+				"geometry type %d", source.getNetworkId().getValueString().c_str(),
 				geometry));
 			return nullptr;
 	}

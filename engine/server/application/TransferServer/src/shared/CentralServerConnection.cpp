@@ -139,7 +139,7 @@ void CentralServerConnection::onReceive(const Archive::ByteStream & message)
 			{
 				const UploadCharacterMessage ucm(data->stationId, data->packedData, dcm.getGameServerId(), dcm.getToCharacterId(), true);
 				send(ucm, true);
-				LOG("CustomerService", ("CharacterTransfer: Character data for SUID %d downloaded\n", data->stationId));
+				LOG("CustomerService", ("CharacterTransfer: Character data for SUID %u downloaded\n", data->stationId));
 			}
 			else
 			{
@@ -166,10 +166,10 @@ void CentralServerConnection::onReceive(const Archive::ByteStream & message)
 			const TransferReplyCharacterList reply(ri);
 			
 			// TESTING!
-			LOG("CustomerService", ("CharacterTransfer: Received character list for station id %d\n", reply.getStationId()));
+			LOG("CustomerService", ("CharacterTransfer: Received character list for station id %u\n", reply.getStationId()));
 			const std::vector<AvatarRecord> & avatarList = reply.getAvatarList();
 			std::vector<AvatarRecord>::const_iterator i;
-			LOG("CustomerService", ("CharacterTransfer: Enumerating %d characters", avatarList.size()));
+			LOG("CustomerService", ("CharacterTransfer: Enumerating %zu characters", avatarList.size()));
 			for(i = avatarList.begin() ; i != avatarList.end(); ++i)
 			{
 				LOG("CustomerService", ("CharacterTransfer: m_name = \"%s\" m_networkId = %s\n", Unicode::wideToNarrow(i->m_name).c_str(), i->m_networkId.getValueString().c_str()));
@@ -380,21 +380,21 @@ void CentralServerConnection::onReceive(const Archive::ByteStream & message)
 		case constcrc("TransferAccountReplySuccessTransferServer") :
 		{
 			const GenericValueTypeMessage<TransferAccountData> reply(ri);
-			LOG("CustomerService", ("CharacterTransfer: Received TransferAccountReplySuccessTransferServer from station Id %d to station Id %d", reply.getValue().getSourceStationId(), reply.getValue().getDestinationStationId()));
+			LOG("CustomerService", ("CharacterTransfer: Received TransferAccountReplySuccessTransferServer from station Id %u to station Id %u", reply.getValue().getSourceStationId(), reply.getValue().getDestinationStationId()));
 			TransferServer::replyTransferAccountSuccess(reply.getValue());
 			break;
 		}
 		case constcrc("TransferAccountFailedToUpdateGameDatabase") :
 		{
 			const GenericValueTypeMessage<TransferAccountData> reply(ri);
-			LOG("CustomerService", ("CharacterTransfer: Received TransferAccountFailedToUpdateGameDatabase for transfer from station Id %d to station Id %d", reply.getValue().getSourceStationId(), reply.getValue().getDestinationStationId()));
+			LOG("CustomerService", ("CharacterTransfer: Received TransferAccountFailedToUpdateGameDatabase for transfer from station Id %u to station Id %u", reply.getValue().getSourceStationId(), reply.getValue().getDestinationStationId()));
 			TransferServer::failedToTransferAccountNoCentralConnection(reply.getValue());
 			break;
 		}
 		case constcrc("TransferAccountFailedDestinationNotEmpty") :
 		{
 			const GenericValueTypeMessage<TransferAccountData> reply(ri);
-			LOG("CustomerService", ("CharacterTransfer: Received TransferAccountFailedDestinationNotEmpty for transfer from station Id %d to station Id %d", reply.getValue().getSourceStationId(), reply.getValue().getDestinationStationId()));
+			LOG("CustomerService", ("CharacterTransfer: Received TransferAccountFailedDestinationNotEmpty for transfer from station Id %u to station Id %u", reply.getValue().getSourceStationId(), reply.getValue().getDestinationStationId()));
 			TransferServer::failedToTransferAccountDestinationNotEmpty(reply.getValue());
 			break;
 		}

@@ -518,11 +518,11 @@ ProceduralTerrainAppearance::ProceduralTerrainAppearance (const ProceduralTerrai
 ProceduralTerrainAppearance::~ProceduralTerrainAppearance ()
 {
 	//-- delete clear flora map
-	DEBUG_WARNING (!m_clearCollidableFloraMap->empty (), ("ProceduralTerrainAppearance: %u clear flora objects leaked\n", m_clearCollidableFloraMap->size ()));
+	DEBUG_WARNING (!m_clearCollidableFloraMap->empty (), ("ProceduralTerrainAppearance: %zu clear flora objects leaked\n", m_clearCollidableFloraMap->size ()));
 	delete m_clearCollidableFloraMap;
 
 	//-- delete flora
-	DEBUG_WARNING (!m_floraMap->empty (), ("ProceduralTerrainAppearance: %u flora objects leaked\n", m_floraMap->size ()));
+	DEBUG_WARNING (!m_floraMap->empty (), ("ProceduralTerrainAppearance: %zu flora objects leaked\n", m_floraMap->size ()));
 
 	while (!m_floraMap->empty ())
 	{
@@ -1490,9 +1490,9 @@ void ProceduralTerrainAppearance::debugDump () const
 	DEBUG_REPORT_PRINT (true, ("-- ProceduralTerrainAppearance\n"));
 	DEBUG_REPORT_PRINT (true, ("   maximumNumberOfChunks = %i\n", maximumNumberOfChunksAllowed));
 	DEBUG_REPORT_PRINT (true, ("          numberOfChunks = %i\n", getNumberOfChunks ()));
-	DEBUG_REPORT_PRINT (true, ("          flora map size = %i\n", m_floraMap->size ()));
-	DEBUG_REPORT_PRINT (true, ("   cached flora map size = %i\n", m_cachedFloraMap->size ()));
-	DEBUG_REPORT_PRINT (true, ("    clear flora map size = %i\n", m_clearCollidableFloraMap->size ()));
+	DEBUG_REPORT_PRINT (true, ("          flora map size = %zu\n", m_floraMap->size ()));
+	DEBUG_REPORT_PRINT (true, ("   cached flora map size = %zu\n", m_cachedFloraMap->size ()));
+	DEBUG_REPORT_PRINT (true, ("    clear flora map size = %zu\n", m_clearCollidableFloraMap->size ()));
 	DEBUG_REPORT_PRINT (true, ("chunksGeneratedThisFrame = %i\n", m_chunksGeneratedThisFrame));
 
 	const Chunk* const chunk = findAnyChunk ();

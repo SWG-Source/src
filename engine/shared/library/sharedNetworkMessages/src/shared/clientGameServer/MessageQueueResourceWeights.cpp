@@ -99,8 +99,8 @@ void MessageQueueResourceWeights::pack (const MessageQueue::Data* const data, Ar
 		if (attribCount > msg->m_assemblyWeights.size() || msg->m_assemblyWeights.size() != msg->m_resourceMaxWeights.size())
 		{
 			WARNING(true, ("MessageQueueResourceWeights::pack has mismatching "
-				"weight arrays! Attrib count = %u, assembly weights = %u, "
-				"resource weights = %u", attribCount, msg->m_assemblyWeights.size(),
+				"weight arrays! Attrib count = %zu, assembly weights = %zu, "
+				"resource weights = %zu", attribCount, msg->m_assemblyWeights.size(),
 				msg->m_resourceMaxWeights.size()));
 			udata = 0;
 			Archive::put(target, udata);	
@@ -174,7 +174,7 @@ void MessageQueueResourceWeights::pack (const MessageQueue::Data* const data, Ar
 		if (missingCount > 0)
 		{
 			WARNING(true, ("MessageQueueResourceWeights::pack for schematic "
-				"template crc %u has mismatching weight counts! Attrib count = %d, "
+				"template crc %u has mismatching weight counts! Attrib count = %zu, "
 				"assembly count = %d, resource count = %d", msg->m_crc.first,
 				attribCount, assemblyCount, resourceCount));
 			// fill in the byte stream with some dummy data

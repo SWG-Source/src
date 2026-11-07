@@ -58,7 +58,7 @@ public:
 	virtual void          onConnectionClosed       () = 0;
 	virtual void          onConnectionOpened       () = 0;
 	virtual void          onConnectionOverflowing  (const unsigned int bytesPending);
-	virtual void          onConnectionStalled      (const unsigned long stallTimeMs);
+	virtual void          onConnectionStalled      (const uint32_t stallTimeMs);
 	virtual void          reportReceive            (const Archive::ByteStream & bs);
 	virtual void          reportSend               (const Archive::ByteStream & bs);
 	virtual void          onReceive                (const Archive::ByteStream & bs) = 0;
@@ -114,13 +114,13 @@ private:
 	int                          m_bytesSent;
 	int                          m_sendPeakBytesPerSecond;
 	int                          m_sendAverageBytesPerSecond;
-	unsigned long                m_connectionStartTime;
+	uint64_t                     m_connectionStartTime; // absolute Clock::getFrameStartTimeMs()
 	int                          m_recvPeakBytesPerSecond;
 	int                          m_recvAverageBytesPerSecond;
-	unsigned long                m_lastRecvTime;
-	unsigned long                m_lastSendTime;
-	unsigned long                m_lastRecvReportTime;
-	unsigned long                m_lastSendReportTime;
+	uint64_t                     m_lastRecvTime;
+	uint64_t                     m_lastSendTime;
+	uint64_t                     m_lastRecvReportTime;
+	uint64_t                     m_lastSendReportTime;
 	unsigned long                m_recvBytesReportInterval;
 	unsigned long                m_sendBytesReportInterval;
 	Service *                    m_service;

@@ -48,9 +48,7 @@ void DB::TaskRequest::workerThreadLoop(DB::Session *ses)
 			{
 				if (qry.fetch() > 0)
 				{
-					long result;
-					qry.value.getValue(result);
-					if (result == 1)
+					if (!qry.value.isNull() && qry.value.getValue() == 1)
 					{
 						// the connection is good, but the query in process() failed
 						errorCount++;

@@ -94,12 +94,12 @@ void PlanetProxyObject::update(int x, int y, int z, NetworkId containedBy, uint3
 		static unsigned long authTransferSanityCheckTimeMs = ConfigPlanetServer::getAuthTransferSanityCheckTimeMs();
 		if (Clock::timeMs() - m_authTransferTimeMs > authTransferSanityCheckTimeMs)
 		{
-			DEBUG_WARNING(true, ("Resending auth transfer for %s to %lu due to receiving a stale position update.", m_objectId.getValueString().c_str(), authoritativeServer));
+			DEBUG_WARNING(true, ("Resending auth transfer for %s to %u due to receiving a stale position update.", m_objectId.getValueString().c_str(), authoritativeServer));
 			sendAuthorityChange(authoritativeServer, m_authoritativeServer, false);
 			return;
 		}
 		if (ConfigPlanetServer::getLogObjectLoading())
-			LOG("ObjectLoading", ("Ignoring update for %s from %lu because server was not authoritative.", m_objectId.getValueString().c_str(), authoritativeServer));
+			LOG("ObjectLoading", ("Ignoring update for %s from %u because server was not authoritative.", m_objectId.getValueString().c_str(), authoritativeServer));
 		return;
 	}
 
@@ -180,7 +180,7 @@ void PlanetProxyObject::update(int x, int y, int z, NetworkId containedBy, uint3
 			if (m_containedBy == NetworkId::cms_invalid)
 			{
 				if (ConfigPlanetServer::getLogObjectLoading())
-					LOG("ObjectLoading", ("Changing authority for object %s from %lu to %lu because node %s is authoritative on that server.",
+					LOG("ObjectLoading", ("Changing authority for object %s from %u to %u because node %s is authoritative on that server.",
 						m_objectId.getValueString().c_str(), m_authoritativeServer, preferredServer, m_quadtreeNode->getDebugNodeString().c_str()));
 				changeAuthority(preferredServer, false, false); // changes m_authoritativeServer and sends message
 
@@ -474,7 +474,7 @@ void PlanetProxyObject::sendAuthorityChange(uint32 currentAuthServer, uint32 new
 void PlanetProxyObject::sendAddProxy(uint32 proxyServer)
 {
 	if (ConfigPlanetServer::getLogObjectLoading())
-		LOG("ObjectLoading", ("Gameserver %lu needs a proxy of object %s", proxyServer, m_objectId.getValueString().c_str()));
+		LOG("ObjectLoading", ("Gameserver %u needs a proxy of object %s", proxyServer, m_objectId.getValueString().c_str()));
 	if (isAuthorityClean())
 	{
 		LoadObjectMessage const loadMsg(getObjectId(), proxyServer);
@@ -492,7 +492,7 @@ void PlanetProxyObject::sendAddProxy(uint32 proxyServer)
 void PlanetProxyObject::sendRemoveProxy(uint32 proxyServer)
 {
 	if (ConfigPlanetServer::getLogObjectLoading())
-		LOG("ObjectLoading", ("Gameserver %lu no longer needs a proxy of object %s", proxyServer, m_objectId.getValueString().c_str()));
+		LOG("ObjectLoading", ("Gameserver %u no longer needs a proxy of object %s", proxyServer, m_objectId.getValueString().c_str()));
 	if (isAuthorityClean())
 	{
 		UnloadProxyMessage msg(getObjectId(), proxyServer);

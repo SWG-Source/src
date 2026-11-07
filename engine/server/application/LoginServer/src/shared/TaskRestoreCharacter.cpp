@@ -17,7 +17,7 @@
 
 // ======================================================================
 
-TaskRestoreCharacter::TaskRestoreCharacter(uint32 clusterId, const std::string &whoRequested, StationId stationId, const Unicode::String &characterName, const NetworkId &characterId, int templateId, bool jedi) :
+TaskRestoreCharacter::TaskRestoreCharacter(uint32 clusterId, const std::string &whoRequested, StationId stationId, const Unicode::String &characterName, const NetworkId &characterId, uint32 templateId, bool jedi) :
 		TaskRequest(),
 		m_clusterId(clusterId),
 		m_whoRequested(whoRequested),
@@ -35,8 +35,8 @@ TaskRestoreCharacter::TaskRestoreCharacter(uint32 clusterId, const std::string &
 bool TaskRestoreCharacter::process(DB::Session *session)
 {
 	RestoreCharacterQuery qry;
-	qry.cluster_id = static_cast<long>(m_clusterId);
-	qry.station_id = static_cast<long>(m_stationId);
+	qry.cluster_id = m_clusterId;
+	qry.station_id = m_stationId;
 	qry.character_name = m_characterName;
 	qry.character_id = m_characterId;
 	qry.template_id = m_templateId;

@@ -53,7 +53,7 @@ bool TaskObjectTemplateListUpdater::process(DB::Session *session)
 			}
 			if ( i_lines % 1000 == 0 )  // periodic log
 			{
-				LOG("TaskObjectTemplateListUpdater",("(%d) = %s", time(0), s_sql ));
+				LOG("TaskObjectTemplateListUpdater",("(%lld) = %s", static_cast<long long>(time(0)), s_sql ));
 			}
 			AnyQuery qry( s_sql );
 			session->exec(&qry);

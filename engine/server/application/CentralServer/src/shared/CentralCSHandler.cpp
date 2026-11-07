@@ -8,6 +8,7 @@
 #include "serverNetworkMessages/CSDBNetMessages.h"
 #include "serverNetworkMessages/TransferCharacterData.h"
 #include "serverNetworkMessages/TransferCharacterDataArchive.h"
+#include "sharedFoundation/FixedWidthParse.h"
 #include "sharedNetworkMessages/GenericValueTypeMessage.h"
 #include "serverNetworkMessages/StructureListMessage.h"
 
@@ -78,7 +79,7 @@ void CentralCSHandler::handleStructureListResponse( StructureListMessage& msg )
 	for( unsigned i = 0; i < data.size(); ++i )
 	{
 		StructureListMessageData &row = data[ i ];
-		snprintf(buf,512,"structure-%u:(%s)%s %s(%.02f %.02f %.02f)%ld\r\n", i,
+		snprintf(buf,512,"structure-%u:(%s)%s %s(%.02f %.02f %.02f)%d\r\n", i,
 							       row.m_structureId.getValueString().c_str(),
 							       row.m_objectTemplate.c_str(),
 							       row.m_location.c_str(),
@@ -320,22 +321,29 @@ CentralCSHandler::~CentralCSHandler()
 
 CS_CMD( login_character )
 {
-	const unsigned &pos = request.getCommandString().find(" ");
+	std::string::size_type const pos = request.getCommandString().find(" ");
 	std::string id;
 	std::string account;
 
 	if(pos == std::string::npos)
 		return;
-	const unsigned &pos2 = request.getCommandString().find(" ", pos + 1 );
+	std::string::size_type const pos2 = request.getCommandString().find(" ", pos + 1 );
+	if(pos2 == std::string::npos)
+		return;
 	id = request.getCommandString().substr(pos, pos2 - pos);
 	account = request.getCommandString().substr(pos2 + 1);
+
+	// the account is a station id; reject anything that is not one
+	uint32 stationId = 0;
+	if (account.find('\0') != std::string::npos || !FixedWidthParse::parseUint32(account.c_str(), 10, stationId))
+		return;
 
 	// TODO:  Find a way to tell if the player is logged into a different
 	// character on the same account.
 
 	TransferCharacterData data(TransferRequestMoveValidation::TRS_transfer_server);
 	data.setCharacterId(NetworkId(id));
-	data.setSourceStationId(atoi(account.c_str()));
+	data.setSourceStationId(stationId);
 	data.setCSToolId(request.getToolId());
 	const GenericValueTypeMessage<TransferCharacterData> loginCharacter("TransferGetLoginLocationData", data);
 	CentralServer::getInstance().sendToDBProcess( loginCharacter, true );

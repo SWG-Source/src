@@ -9,6 +9,10 @@
 #include "unicodeArchive/UnicodeArchive.h"
 
 #include "Archive/Archive.h"
+#include "Archive/ArchiveCount.h"
+
+#include <limits>
+#include <stdexcept>
 
 //======================================================================
 
@@ -20,22 +24,29 @@ namespace Archive
 		unsigned int size = 0;
 		Archive::get (source, size);
 		
-		const unsigned char * const buf            = source.getBuffer();
-		const Unicode::unicode_char_t * const ubuf = reinterpret_cast<const Unicode::unicode_char_t *>(buf);
-		
-		target.assign (ubuf, ubuf + size);
-		
-		const unsigned int readSize                = size * sizeof (Unicode::unicode_char_t);
-		source.advance(readSize);
+		if (size > source.getSize() / sizeof(Unicode::unicode_char_t))
+			throw ReadException("Archive::get(Unicode::String) - payload exceeds remaining buffer");
+
+		// Own aligned, contiguous code units instead of dereferencing an unaligned packet.
+		Unicode::String decoded(size, Unicode::unicode_char_t(0));
+		if (size)
+		{
+			unsigned int const readSize = size * static_cast<unsigned int>(sizeof(Unicode::unicode_char_t));
+			source.get(&decoded[0], readSize);
+		}
+		target.swap(decoded);
 	}
 	
 	//-----------------------------------------------------------------------
 	
 	void put(ByteStream & target, const Unicode::String & source)
 	{
-		const unsigned int size = source.size ();
+		const unsigned int size = ArchiveCount::fromSize<unsigned int>(source.size ());
+		if (size > (std::numeric_limits<unsigned int>::max)() / sizeof(Unicode::unicode_char_t))
+			throw std::out_of_range("Unicode payload exceeds ByteStream byte count range");
+		unsigned int const byteSize = size * static_cast<unsigned int>(sizeof(Unicode::unicode_char_t));
 		Archive::put (target, size);
-		target.put (source.data(), size * sizeof (Unicode::unicode_char_t));
+		target.put (source.data(), byteSize);
 	}
 }
 	

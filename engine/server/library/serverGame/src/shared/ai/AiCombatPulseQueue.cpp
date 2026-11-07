@@ -16,10 +16,11 @@ namespace AiCombatPulseQueueNamespace
 	int s_numberPerFrame;
 	unsigned int s_maxWaitTimeMs;
 
-	typedef std::pair<Watcher<TangibleObject>, unsigned long>  ScheduledAiMapEntry;
-	typedef std::map<Watcher<TangibleObject>, unsigned long>   ScheduledAiMap;
-	typedef std::pair<unsigned long, ScheduledAiMap::iterator>     TimeOrderedAiMultiMapEntry;
-	typedef std::multimap<unsigned long, ScheduledAiMap::iterator> TimeOrderedAiMultiMap;
+	// times are absolute Clock::getFrameStartTimeMs() values
+	typedef std::pair<Watcher<TangibleObject>, uint64_t>  ScheduledAiMapEntry;
+	typedef std::map<Watcher<TangibleObject>, uint64_t>   ScheduledAiMap;
+	typedef std::pair<uint64_t, ScheduledAiMap::iterator>     TimeOrderedAiMultiMapEntry;
+	typedef std::multimap<uint64_t, ScheduledAiMap::iterator> TimeOrderedAiMultiMap;
 
 	ScheduledAiMap s_scheduledAi;
 	TimeOrderedAiMultiMap s_timeOrderedAi;
@@ -48,7 +49,7 @@ void AiCombatPulseQueue::schedule(TangibleObject * const object, int waitTimeMs,
 	if (object == nullptr)
 		return;
 
-	unsigned long desiredTime = Clock::getFrameStartTimeMs() + currentFrameTimeMs + waitTimeMs;
+	uint64_t const desiredTime = Clock::getFrameStartTimeMs() + currentFrameTimeMs + waitTimeMs;
 
 	// entry is inserted as <object pointer, time we want an onCombatLoop callback>
 	std::pair<ScheduledAiMap::iterator, bool> insertReturn = s_scheduledAi.insert(ScheduledAiMapEntry(Watcher<TangibleObject>(object), desiredTime));
@@ -80,7 +81,7 @@ void AiCombatPulseQueue::setAiMaxWaitTimeMs(unsigned int amount)
 void AiCombatPulseQueue::alter(real time)
 {
 	int count = 0;
-	unsigned long timeMs = Clock::getFrameStartTimeMs() + static_cast<unsigned long>(time * 1000.0f);
+	uint64_t const timeMs = Clock::getFrameStartTimeMs() + static_cast<unsigned long>(time * 1000.0f);
 
 	s_timeOrderedAi.clear();
 

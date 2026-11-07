@@ -417,8 +417,8 @@ void AiMovementPatrol::addDebug(AiDebugString & aiDebugString)
 
 	aiDebugString.addText(fs.sprintf("PATROL\n"), PackedRgb::solidCyan);
 	aiDebugString.addText(fs.sprintf("%s\n", m_stateName.c_str()), PackedRgb::solidCyan);
-	aiDebugString.addText(fs.sprintf("pathSize(%u)\n", path->size()), PackedRgb::solidCyan);
-	aiDebugString.addText(fs.sprintf("patrolPathSize(%u)\n", m_patrolPath.size()), PackedRgb::solidCyan);
+	aiDebugString.addText(fs.sprintf("pathSize(%zu)\n", path->size()), PackedRgb::solidCyan);
+	aiDebugString.addText(fs.sprintf("patrolPathSize(%zu)\n", m_patrolPath.size()), PackedRgb::solidCyan);
 	aiDebugString.addText(fs.sprintf("random(%s)\n", m_random ? "yes" : "no"), PackedRgb::solidCyan);
 	aiDebugString.addText(fs.sprintf("flip(%s)\n", m_flip ? "yes" : "no"), PackedRgb::solidCyan);
 	aiDebugString.addText(fs.sprintf("repeat(%s)\n", m_repeat ? "yes" : "no"), PackedRgb::solidCyan);

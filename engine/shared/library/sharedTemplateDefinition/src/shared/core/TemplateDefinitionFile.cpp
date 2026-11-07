@@ -328,7 +328,7 @@ void TemplateDefinitionFile::writeClassSourceBegin(File &fp, const TemplateData 
 	{
 		fp.print("#include \"sharedTemplate/FirstSharedTemplate.h\"\n");
 		fp.print("#include \"sharedTemplateDefinition/TemplateData.h\"\n");
-		fp.print("#include \"sharedTemplateDefinition/TemplateGlobals.h\"\n", name);
+		fp.print("#include \"sharedTemplateDefinition/TemplateGlobals.h\"\n");
 	}
 	else if (m_templateLocation == LOC_CLIENT)
 		fp.print("#include \"%s\"\n", CLIENT_TEMPLATE_PRECOMPILED_HEADER_NAME);

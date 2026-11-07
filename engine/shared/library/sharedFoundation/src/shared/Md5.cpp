@@ -116,7 +116,7 @@ void Md5::update(void const *data, int length)
 				bytesToCopy = length;
 
 			// copy the data into the temp buffer
-			memmove(m_buffer + m_bufferedBytes, byteData, bytesToCopy);
+			imemmove(m_buffer + m_bufferedBytes, byteData, bytesToCopy);
 			m_bufferedBytes += bytesToCopy;
 			byteData += bytesToCopy;
 			length -= bytesToCopy;

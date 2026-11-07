@@ -519,9 +519,9 @@ void PlanetServer::receiveMessage(const MessageDispatch::Emitter & source, const
 			m_gameServers[id]=new GameServerData(conn);
 			conn->setProcessId(id);
 			conn->setPreloadNumber(msg.getPreloadNumber());
-			LOG("PlanetServerConnections",("Game Server %lu (preload %d) connected on scene %s.  m_startingGameServers is now %i", id, msg.getPreloadNumber(), ConfigPlanetServer::getSceneID(),m_startingGameServers->size()));
+			LOG("PlanetServerConnections",("Game Server %u (preload %d) connected on scene %s.  m_startingGameServers is now %zu", id, msg.getPreloadNumber(), ConfigPlanetServer::getSceneID(),m_startingGameServers->size()));
 
-			DEBUG_REPORT_LOG(true,("Game Server %lu (preload %d) connected on scene %s.\n", id, msg.getPreloadNumber(), ConfigPlanetServer::getSceneID()));
+			DEBUG_REPORT_LOG(true,("Game Server %u (preload %d) connected on scene %s.\n", id, msg.getPreloadNumber(), ConfigPlanetServer::getSceneID()));
 
 			ServerInfo info;
 			info.ipAddress = conn->getRemoteAddress();
@@ -559,7 +559,7 @@ void PlanetServer::receiveMessage(const MessageDispatch::Emitter & source, const
 				GameServerMapType::iterator mapIter = m_gameServers.find(id);
 				if (mapIter==m_gameServers.end())
 				{
-					WARNING_STRICT_FATAL(true,("GameServer %lu wasn't in the map, but we got GameServerReadyMessage from it.",id));
+					WARNING_STRICT_FATAL(true,("GameServer %u wasn't in the map, but we got GameServerReadyMessage from it.",id));
 					return;
 				}
 				Scene::getInstance().setMapSize(msg.getMapWidth());
@@ -576,10 +576,10 @@ void PlanetServer::receiveMessage(const MessageDispatch::Emitter & source, const
 				const GameServerUniverseLoadedMessage msg(ri);
 
 				uint32 id = conn->getProcessId();
-				LOG("PlanetServerConnections", ("Game Server %lu (preload %d) has loaded the universe objects.", conn->getProcessId(), conn->getPreloadNumber()));
+				LOG("PlanetServerConnections", ("Game Server %u (preload %d) has loaded the universe objects.", conn->getProcessId(), conn->getPreloadNumber()));
 
 				GameServerMapType::iterator mapIter = m_gameServers.find(id);
-				WARNING_STRICT_FATAL(mapIter==m_gameServers.end(),("GameServer %s wasn't in the map, but we got UniverseLoadedMessage from it.",id));
+				WARNING_STRICT_FATAL(mapIter==m_gameServers.end(),("GameServer %u wasn't in the map, but we got UniverseLoadedMessage from it.",id));
 				if (mapIter==m_gameServers.end())
 					return;
 				mapIter->second->universeLoaded();
@@ -730,7 +730,7 @@ void PlanetServer::receiveMessage(const MessageDispatch::Emitter & source, const
 			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
 			ExcommunicateGameServerMessage msg(ri);
 
-			LOG("GameGameConnect",("Planet Server %s was told to drop connection to %lu by Central",Scene::getInstance().getSceneId().c_str(),msg.getServerId()));
+			LOG("GameGameConnect",("Planet Server %s was told to drop connection to %u by Central",Scene::getInstance().getSceneId().c_str(),msg.getServerId()));
 
 			GameServerConnection *conn =getGameServerConnection(msg.getServerId());
 			if (conn)
@@ -801,12 +801,12 @@ void PlanetServer::receiveMessage(const MessageDispatch::Emitter & source, const
 				if (fromServer == nullptr)
 				{
 					WARNING(true, ("Message GameServerForceChangeAuthorityMessage: no "
-						"from server %lu", msg.getFromProcess()));
+						"from server %u", msg.getFromProcess()));
 				}
 				if (toServer == nullptr)
 				{
 					WARNING(true, ("Message GameServerForceChangeAuthorityMessage: no "
-						"to server %lu", msg.getToProcess()));
+						"to server %u", msg.getToProcess()));
 				}
 				if (object == nullptr)
 				{
@@ -817,7 +817,7 @@ void PlanetServer::receiveMessage(const MessageDispatch::Emitter & source, const
 			else if (Scene::getInstance().getGameServerForObject(msg.getId()) != msg.getFromProcess())
 			{
 				WARNING(true, ("Message GameServerForceChangeAuthorityMessage: object "
-					"%s was supposed to be on process %lu, but we think it is on %lu",
+					"%s was supposed to be on process %u, but we think it is on %u",
 					msg.getId().getValueString().c_str(), msg.getFromProcess(),
 					Scene::getInstance().getGameServerForObject(msg.getId())));
 			}
@@ -919,7 +919,7 @@ void PlanetServer::receiveMessage(const MessageDispatch::Emitter & source, const
 			{
 				if (ConfigPlanetServer::getLogObjectLoading())
 					LOG("ObjectLoading",
-						("Set authoritative denied by game server:  restoring authority for object %s to server %lu",
+						("Set authoritative denied by game server:  restoring authority for object %s to server %u",
 						 msg.getValue().first.getValueString().c_str(),msg.getValue().second));
 
 				object->restoreAuthority(msg.getValue().second);
@@ -1015,7 +1015,7 @@ void PlanetServer::sendToGameServer(const uint32 id, const GameNetworkMessage & 
 	if (conn)
 		conn->send(msg, true);
 	else
-		DEBUG_REPORT_LOG(true,("Not sending message to server %lu because we are not connected.\n",id));
+		DEBUG_REPORT_LOG(true,("Not sending message to server %u because we are not connected.\n",id));
 }
 
 // ----------------------------------------------------------------------
@@ -1088,7 +1088,7 @@ void PlanetServer::handleRequestGameServerForLoginMessage(const RequestGameServe
 		uint32 gameServerId = pendingSave->second;
 		if (getGameServerConnection(pendingSave->second)) //make sure it's still up
 		{
-			LOG(loginTrace,("Reconnecting character %s who logged out but has not yet been saved.  Game server is %lu",msg->getCharacterId().getValueString().c_str(),gameServerId));
+			LOG(loginTrace,("Reconnecting character %s who logged out but has not yet been saved.  Game server is %u",msg->getCharacterId().getValueString().c_str(),gameServerId));
 
 			GameServerForLoginMessage const reply(msg->getStationId(), gameServerId, msg->getCharacterId());
 			sendToCentral(reply, true);
@@ -1188,7 +1188,7 @@ void PlanetServer::forceLoadCharacter(NetworkId const &characterId, NetworkId co
 
 void PlanetServer::loadCharacterForLogin(NetworkId const &characterId, Vector const &coords, unsigned long gameServerId)
 {
-	LOG(loginTrace, ("Character not loaded, sending PlanetLoadCharacter(%s, gs %d) to CentralServer", characterId.getValueString().c_str(), gameServerId));
+	LOG(loginTrace, ("Character not loaded, sending PlanetLoadCharacter(%s, gs %lu) to CentralServer", characterId.getValueString().c_str(), gameServerId));
 
 	// unload if we think it is loaded
 	PlanetProxyObject *object = Scene::getInstance().findObjectByID(characterId);
@@ -1314,7 +1314,7 @@ void PlanetServer::startGameServer(const std::set<PreloadServerId> & preloadServ
 			}
 
 			options += " preloadNumber=";
-			snprintf(numberBuf, sizeof(numberBuf), "%lu", i->first);
+			snprintf(numberBuf, sizeof(numberBuf), "%u", i->first);
 			options += numberBuf;
 			
 			options += " sceneID=";

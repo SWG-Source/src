@@ -55,7 +55,7 @@ private:
 	unsigned short             m_remotePort;
 	NetLogConnection *         m_connection;
 	bool                       m_connectionOpen;
-	unsigned long              m_connectTime;
+	uint64_t                   m_connectTime; // absolute Clock::timeMs()
 	std::vector<LogMessage>* m_logMessageQueue1;
 	std::vector<LogMessage>* m_logMessageQueue2;
 };

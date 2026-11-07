@@ -38,7 +38,7 @@ ChunkLocator::ChunkLocator(int nodeX, int nodeZ, const std::string &sceneId, uin
 ChunkLocator::~ChunkLocator()
 {
 	if (ConfigServerDatabase::getLogChunkLoading())
-		LOG("ChunkLocator",("Chunk %s (%i,%i) (server %lu) -- %i objects %i ms",m_sceneId->c_str(), m_nodeX, m_nodeZ, m_serverId, m_objectCount,m_queryTime));
+		LOG("ChunkLocator",("Chunk %s (%i,%i) (server %u) -- %i objects %i ms",m_sceneId->c_str(), m_nodeX, m_nodeZ, m_serverId, m_objectCount,m_queryTime));
 
 	delete m_sceneId;
 	m_sceneId=0;
@@ -52,13 +52,13 @@ bool ChunkLocator::locateObjects(DB::Session *session, const std::string &schema
 	
 	DBQuery::GetChunkQuery qry(schema);
 	qry.setChunk(*m_sceneId, m_nodeX, m_nodeZ);
-	int startTime = Clock::timeMs();
+	uint64_t const startTime = Clock::timeMs();
 
 	bool rval = session->exec(&qry);
 	qry.done();
 
 	m_objectCount = qry.getObjectCount();
-	m_queryTime = Clock::timeMs()-startTime;
+	m_queryTime = Clock::durationMs<int>(startTime, Clock::timeMs());
 
 	objectsLocated = m_objectCount;
 	return rval;

@@ -112,7 +112,7 @@ private:
 
 	static std::map< std::string, uint32 >   sm_outgoingBytesMap_Working;  // working stats that will rotate after 1 minute 
 	static std::map< std::string, uint32 >   sm_outgoingBytesMap_Stats;    // computed stats from the last minute 
-	static uint32				 sm_outgoingBytesMap_Worktime; // time we started filling in the working map
+	static uint64_t				 sm_outgoingBytesMap_Worktime; // time we started filling in the working map
 
 	std::string                       m_accountName;
 	bool                              m_canCreateRegularCharacter;
@@ -161,9 +161,9 @@ private:
 	bool                              m_validatingCharacter;
 	unsigned int                      m_receiveHistoryBytes;
 	unsigned int                      m_receiveHistoryPackets;
-	unsigned long                     m_receiveHistoryMs;
-	unsigned long                     m_receiveLastTimeMs;
-	mutable unsigned long             m_sendLastTimeMs;
+	uint64_t                          m_receiveHistoryMs;
+	uint64_t                          m_receiveLastTimeMs;
+	mutable uint64_t                  m_sendLastTimeMs;
 	std::string                       m_sessionId;
 	bool                              m_sessionValidated;
 	int                               m_connectionServerLag;

@@ -301,7 +301,7 @@ void PreloadManager::removeGameServer(uint32 serverId)
  */
 void PreloadManager::preloadCompleteOnServer(uint32 serverId)
 {
-	DEBUG_REPORT_LOG(ConfigPlanetServer::getLogPreloading(),("Preload is finished on server %lu (planet %s)\n",serverId, Scene::getInstance().getSceneId().c_str()));
+	DEBUG_REPORT_LOG(ConfigPlanetServer::getLogPreloading(),("Preload is finished on server %u (planet %s)\n",serverId, Scene::getInstance().getSceneId().c_str()));
 
 	PreloadServerId const preloadId = getPreloadServerId(serverId);
 	m_serversWaiting->erase(preloadId);
@@ -473,7 +473,7 @@ void PreloadManager::getDebugString(std::string &output) const
 			}
 			
 			char temp[100];
-			sprintf(temp," %lu-%ds (%lu)",*i,loadTime,realServerId);
+			sprintf(temp," %u-%ds (%u)",*i,loadTime,realServerId);
 			output+=temp;
 		}
 	}

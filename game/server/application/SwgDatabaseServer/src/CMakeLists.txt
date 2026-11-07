@@ -158,7 +158,7 @@ endif()
 include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/shared/buffers
     ${CMAKE_CURRENT_SOURCE_DIR}/shared/core
-    ${CMAKE_CURRENT_SOURCE_DIR}/shared/generated
+    ${CMAKE_CURRENT_BINARY_DIR}/generated
     ${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedDatabaseInterface/include/public
     ${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedDebug/include/public
     ${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedFile/include/public
@@ -196,6 +196,8 @@ include_directories(
 )
 
 set(MAKE_SCHEMA_H ${SWG_ENGINE_SOURCE_DIR}/server/library/codegen/make_schema_h.pl)
+# Schema.h is generated from every table definition, so a changed .tab file
+# (a new column, or a BIND_AS that changes a column's C++ type) regenerates it.
 file(TO_NATIVE_PATH ${MAKE_SCHEMA_H} MAKE_SCHEMA_H_NATIVE)
 
 set(MAKE_PACKAGES ${SWG_ENGINE_SOURCE_DIR}/server/library/codegen/make_packages.pl)
@@ -207,47 +209,69 @@ file(TO_NATIVE_PATH ${MAKE_QUERIES} MAKE_QUERIES_NATIVE)
 set(PACKAGE_DATA ${SWG_ENGINE_SOURCE_DIR}/server/library/codegen/package_data.txt)
 file(TO_NATIVE_PATH ${PACKAGE_DATA} PACKAGE_DATA_NATIVE)
 
+set(PERSISTER_PLSQLH ${SWG_GAME_SOURCE_DIR}/server/database/packages/persister.plsqlh)
+file(TO_NATIVE_PATH ${PERSISTER_PLSQLH} PERSISTER_PLSQLH_NATIVE)
+
+set(SCHEMA_DIRECTORY ${SWG_GAME_SOURCE_DIR}/server/database/schema)
+# CONFIGURE_DEPENDS re-globs at build time so that added tables are seen.
+if(CMAKE_VERSION VERSION_LESS 3.12)
+    message(FATAL_ERROR "SwgDatabaseServer schema generation requires CMake 3.12 or newer")
+endif()
+file(GLOB SCHEMA_TABLES CONFIGURE_DEPENDS ${SCHEMA_DIRECTORY}/*.tab)
+
+# Removing a table must also regenerate Schema.h, so the table list is an input
+# too; configure_file rewrites it only when the list changes.
+set(SCHEMA_TABLE_LIST ${CMAKE_CURRENT_BINARY_DIR}/schema_tables.txt)
+string(REPLACE ";" "\n" SCHEMA_TABLE_LINES "${SCHEMA_TABLES}")
+file(WRITE ${SCHEMA_TABLE_LIST}.in "${SCHEMA_TABLE_LINES}\n")
+configure_file(${SCHEMA_TABLE_LIST}.in ${SCHEMA_TABLE_LIST} COPYONLY)
+
+# Generated sources belong to this build directory, not the source tree, so
+# that build directories never share or race on them.  Each generator edits a
+# private copy of its template which is renamed into place only once complete.
+set(GENERATED_DIR ${CMAKE_CURRENT_BINARY_DIR}/generated/SwgDatabaseServer)
+file(MAKE_DIRECTORY ${GENERATED_DIR})
 
 
 set(SCHEMA_H_TEMPLATE ${CMAKE_CURRENT_SOURCE_DIR}/shared/generated/Schema_h.template)
 file(TO_NATIVE_PATH ${SCHEMA_H_TEMPLATE} SCHEMA_H_TEMPLATE_NATIVE)
 
-set(SCHEMA_H_OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/shared/generated/Schema.h)
+set(SCHEMA_H_OUTPUT ${GENERATED_DIR}/Schema.h)
 file(TO_NATIVE_PATH ${SCHEMA_H_OUTPUT} SCHEMA_H_OUTPUT_NATIVE)
 
 
 set(ENCODER_CPP_TEMPLATE ${CMAKE_CURRENT_SOURCE_DIR}/shared/generated/Encoder_cpp.template)
 file(TO_NATIVE_PATH ${ENCODER_CPP_TEMPLATE} ENCODER_CPP_TEMPLATE_NATIVE)
 
-set(ENCODER_CPP_OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/shared/generated/Encoder.cpp)
+set(ENCODER_CPP_OUTPUT ${GENERATED_DIR}/Encoder.cpp)
 file(TO_NATIVE_PATH ${ENCODER_CPP_OUTPUT} ENCODER_CPP_OUTPUT_NATIVE)
 
 
 set(DECODER_CPP_TEMPLATE ${CMAKE_CURRENT_SOURCE_DIR}/shared/generated/Decoder_cpp.template)
 file(TO_NATIVE_PATH ${DECODER_CPP_TEMPLATE} DECODER_CPP_TEMPLATE_NATIVE)
 
-set(DECODER_CPP_OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/shared/generated/Decoder.cpp)
+set(DECODER_CPP_OUTPUT ${GENERATED_DIR}/Decoder.cpp)
 file(TO_NATIVE_PATH ${DECODER_CPP_OUTPUT} DECODER_CPP_OUTPUT_NATIVE)
 
 
 set(LOAD_OBJECT_CPP_TEMPLATE ${CMAKE_CURRENT_SOURCE_DIR}/shared/generated/LoadObject_cpp.template)
 file(TO_NATIVE_PATH ${LOAD_OBJECT_CPP_TEMPLATE} LOAD_OBJECT_CPP_TEMPLATE_NATIVE)
 
-set(LOAD_OBJECT_CPP_OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/shared/generated/LoadObject.cpp)
+set(LOAD_OBJECT_CPP_OUTPUT ${GENERATED_DIR}/LoadObject.cpp)
 file(TO_NATIVE_PATH ${LOAD_OBJECT_CPP_OUTPUT} LOAD_OBJECT_CPP_OUTPUT_NATIVE)
 
 
 set(OBJECT_QUERIES_CPP_TEMPLATE ${CMAKE_CURRENT_SOURCE_DIR}/shared/generated/ObjectQueries_cpp.template)
 file(TO_NATIVE_PATH ${OBJECT_QUERIES_CPP_TEMPLATE} OBJECT_QUERIES_CPP_TEMPLATE_NATIVE)
 
-set(OBJECT_QUERIES_CPP_OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/shared/generated/ObjectQueries.cpp)
+set(OBJECT_QUERIES_CPP_OUTPUT ${GENERATED_DIR}/ObjectQueries.cpp)
 file(TO_NATIVE_PATH ${OBJECT_QUERIES_CPP_OUTPUT} OBJECT_QUERIES_CPP_OUTPUT_NATIVE)
 
 
 set(OBJECT_QUERIES_H_TEMPLATE ${CMAKE_CURRENT_SOURCE_DIR}/shared/generated/ObjectQueries_h.template)
 file(TO_NATIVE_PATH ${OBJECT_QUERIES_H_TEMPLATE} OBJECT_QUERIES_H_TEMPLATE_NATIVE)
 
-set(OBJECT_QUERIES_H_OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/shared/generated/ObjectQueries.h)
+set(OBJECT_QUERIES_H_OUTPUT ${GENERATED_DIR}/ObjectQueries.h)
 file(TO_NATIVE_PATH ${OBJECT_QUERIES_H_OUTPUT} OBJECT_QUERIES_H_OUTPUT_NATIVE)
 
 if(WIN32)
@@ -256,44 +280,62 @@ endif()
 
 add_custom_command(
     OUTPUT ${SCHEMA_H_OUTPUT_NATIVE}
-    COMMAND ${CMAKE_COMMAND} -E copy ${SCHEMA_H_TEMPLATE_NATIVE} ${SCHEMA_H_OUTPUT_NATIVE}
-    COMMAND ${PERL_EXECUTABLE} "${MAKE_SCHEMA_H}" --ddldirectory "${SWG_GAME_SOURCE_DIR}/server/database/schema" --output "${SCHEMA_H_OUTPUT_NATIVE}" ${WINDOWS_PLATFORM}
-    DEPENDS ${SCHEMA_H_TEMPLATE_NATIVE} ${MAKE_SCHEMA_H}
+    COMMAND ${CMAKE_COMMAND} -E copy ${SCHEMA_H_TEMPLATE_NATIVE} ${SCHEMA_H_OUTPUT_NATIVE}.tmp
+    COMMAND ${PERL_EXECUTABLE} "${MAKE_SCHEMA_H_NATIVE}" --ddldirectory "${SCHEMA_DIRECTORY}" --output "${SCHEMA_H_OUTPUT_NATIVE}.tmp" ${WINDOWS_PLATFORM}
+    COMMAND ${CMAKE_COMMAND} -E rename ${SCHEMA_H_OUTPUT_NATIVE}.tmp ${SCHEMA_H_OUTPUT_NATIVE}
+    DEPENDS ${SCHEMA_H_TEMPLATE_NATIVE} ${MAKE_SCHEMA_H_NATIVE} ${SCHEMA_TABLE_LIST} ${SCHEMA_TABLES}
 )
 
 add_custom_command(
     OUTPUT ${ENCODER_CPP_OUTPUT_NATIVE}
-    COMMAND ${CMAKE_COMMAND} -E copy ${ENCODER_CPP_TEMPLATE_NATIVE} ${ENCODER_CPP_OUTPUT_NATIVE}
-    COMMAND ${PERL_EXECUTABLE} "${MAKE_PACKAGES_NATIVE}" --datafile "${PACKAGE_DATA_NATIVE}" --encoder "${ENCODER_CPP_OUTPUT_NATIVE}" ${WINDOWS_PLATFORM}
+    COMMAND ${CMAKE_COMMAND} -E copy ${ENCODER_CPP_TEMPLATE_NATIVE} ${ENCODER_CPP_OUTPUT_NATIVE}.tmp
+    COMMAND ${PERL_EXECUTABLE} "${MAKE_PACKAGES_NATIVE}" --datafile "${PACKAGE_DATA_NATIVE}" --encoder "${ENCODER_CPP_OUTPUT_NATIVE}.tmp" ${WINDOWS_PLATFORM}
+    COMMAND ${CMAKE_COMMAND} -E rename ${ENCODER_CPP_OUTPUT_NATIVE}.tmp ${ENCODER_CPP_OUTPUT_NATIVE}
     DEPENDS ${ENCODER_CPP_TEMPLATE_NATIVE} ${MAKE_PACKAGES_NATIVE} ${PACKAGE_DATA_NATIVE}
 )
 
 add_custom_command(
     OUTPUT ${DECODER_CPP_OUTPUT_NATIVE}
-    COMMAND ${CMAKE_COMMAND} -E copy ${DECODER_CPP_TEMPLATE_NATIVE} ${DECODER_CPP_OUTPUT_NATIVE}
-    COMMAND ${PERL_EXECUTABLE} "${MAKE_PACKAGES_NATIVE}" --datafile "${PACKAGE_DATA_NATIVE}" --decoder "${DECODER_CPP_OUTPUT_NATIVE}" ${WINDOWS_PLATFORM}
+    COMMAND ${CMAKE_COMMAND} -E copy ${DECODER_CPP_TEMPLATE_NATIVE} ${DECODER_CPP_OUTPUT_NATIVE}.tmp
+    COMMAND ${PERL_EXECUTABLE} "${MAKE_PACKAGES_NATIVE}" --datafile "${PACKAGE_DATA_NATIVE}" --decoder "${DECODER_CPP_OUTPUT_NATIVE}.tmp" ${WINDOWS_PLATFORM}
+    COMMAND ${CMAKE_COMMAND} -E rename ${DECODER_CPP_OUTPUT_NATIVE}.tmp ${DECODER_CPP_OUTPUT_NATIVE}
     DEPENDS ${DECODER_CPP_TEMPLATE_NATIVE} ${MAKE_PACKAGES_NATIVE} ${PACKAGE_DATA_NATIVE}
 )
 
 add_custom_command(
     OUTPUT ${LOAD_OBJECT_CPP_OUTPUT_NATIVE}
-    COMMAND ${CMAKE_COMMAND} -E copy ${LOAD_OBJECT_CPP_TEMPLATE_NATIVE} ${LOAD_OBJECT_CPP_OUTPUT_NATIVE}
-    COMMAND ${PERL_EXECUTABLE} "${MAKE_PACKAGES_NATIVE}" --datafile "${PACKAGE_DATA_NATIVE}" --loadobject "${LOAD_OBJECT_CPP_OUTPUT_NATIVE}" ${WINDOWS_PLATFORM}
+    COMMAND ${CMAKE_COMMAND} -E copy ${LOAD_OBJECT_CPP_TEMPLATE_NATIVE} ${LOAD_OBJECT_CPP_OUTPUT_NATIVE}.tmp
+    COMMAND ${PERL_EXECUTABLE} "${MAKE_PACKAGES_NATIVE}" --datafile "${PACKAGE_DATA_NATIVE}" --loadobject "${LOAD_OBJECT_CPP_OUTPUT_NATIVE}.tmp" ${WINDOWS_PLATFORM}
+    COMMAND ${CMAKE_COMMAND} -E rename ${LOAD_OBJECT_CPP_OUTPUT_NATIVE}.tmp ${LOAD_OBJECT_CPP_OUTPUT_NATIVE}
     DEPENDS ${LOAD_OBJECT_CPP_TEMPLATE_NATIVE} ${MAKE_PACKAGES_NATIVE} ${PACKAGE_DATA_NATIVE}
 )
 
 add_custom_command(
     OUTPUT ${OBJECT_QUERIES_CPP_OUTPUT_NATIVE}
-    COMMAND ${CMAKE_COMMAND} -E copy ${OBJECT_QUERIES_CPP_TEMPLATE_NATIVE} ${OBJECT_QUERIES_CPP_OUTPUT_NATIVE}
-    COMMAND ${PERL_EXECUTABLE} "${MAKE_QUERIES}" --plsql "${SWG_GAME_SOURCE_DIR}/server/database/packages/persister.plsqlh" --source "${OBJECT_QUERIES_CPP_OUTPUT_NATIVE}" ${WINDOWS_PLATFORM}
-    DEPENDS ${OBJECT_QUERIES_CPP_TEMPLATE_NATIVE} ${MAKE_QUERIES}
+    COMMAND ${CMAKE_COMMAND} -E copy ${OBJECT_QUERIES_CPP_TEMPLATE_NATIVE} ${OBJECT_QUERIES_CPP_OUTPUT_NATIVE}.tmp
+    COMMAND ${PERL_EXECUTABLE} "${MAKE_QUERIES_NATIVE}" --plsql "${PERSISTER_PLSQLH_NATIVE}" --source "${OBJECT_QUERIES_CPP_OUTPUT_NATIVE}.tmp" ${WINDOWS_PLATFORM}
+    COMMAND ${CMAKE_COMMAND} -E rename ${OBJECT_QUERIES_CPP_OUTPUT_NATIVE}.tmp ${OBJECT_QUERIES_CPP_OUTPUT_NATIVE}
+    DEPENDS ${OBJECT_QUERIES_CPP_TEMPLATE_NATIVE} ${MAKE_QUERIES_NATIVE} ${PERSISTER_PLSQLH_NATIVE}
 )
 
 add_custom_command(
     OUTPUT ${OBJECT_QUERIES_H_OUTPUT_NATIVE}
-    COMMAND ${CMAKE_COMMAND} -E copy ${OBJECT_QUERIES_H_TEMPLATE_NATIVE} ${OBJECT_QUERIES_H_OUTPUT_NATIVE}
-    COMMAND ${PERL_EXECUTABLE} "${MAKE_QUERIES}" --plsql "${SWG_GAME_SOURCE_DIR}/server/database/packages/persister.plsqlh" --header "${OBJECT_QUERIES_H_OUTPUT_NATIVE}" ${WINDOWS_PLATFORM}
-    DEPENDS ${OBJECT_QUERIES_H_TEMPLATE_NATIVE} ${MAKE_QUERIES}
+    COMMAND ${CMAKE_COMMAND} -E copy ${OBJECT_QUERIES_H_TEMPLATE_NATIVE} ${OBJECT_QUERIES_H_OUTPUT_NATIVE}.tmp
+    COMMAND ${PERL_EXECUTABLE} "${MAKE_QUERIES_NATIVE}" --plsql "${PERSISTER_PLSQLH_NATIVE}" --header "${OBJECT_QUERIES_H_OUTPUT_NATIVE}.tmp" ${WINDOWS_PLATFORM}
+    COMMAND ${CMAKE_COMMAND} -E rename ${OBJECT_QUERIES_H_OUTPUT_NATIVE}.tmp ${OBJECT_QUERIES_H_OUTPUT_NATIVE}
+    DEPENDS ${OBJECT_QUERIES_H_TEMPLATE_NATIVE} ${MAKE_QUERIES_NATIVE} ${PERSISTER_PLSQLH_NATIVE}
+)
+
+# Both the server and its snapshot test compile these generated sources.
+# Give their custom commands one owner so parallel target builds cannot run
+# two generators against the same temporary output files.
+add_custom_target(swg_database_codegen DEPENDS
+    ${SCHEMA_H_OUTPUT}
+    ${ENCODER_CPP_OUTPUT}
+    ${DECODER_CPP_OUTPUT}
+    ${LOAD_OBJECT_CPP_OUTPUT}
+    ${OBJECT_QUERIES_CPP_OUTPUT}
+    ${OBJECT_QUERIES_H_OUTPUT}
 )
 
 add_executable(SwgDatabaseServer
@@ -306,6 +348,8 @@ add_executable(SwgDatabaseServer
     ${OBJECT_QUERIES_CPP_OUTPUT}
     ${OBJECT_QUERIES_H_OUTPUT}
 )
+
+add_dependencies(SwgDatabaseServer swg_database_codegen)
 
 target_link_libraries(SwgDatabaseServer
     sharedCollision
@@ -347,3 +391,36 @@ target_link_libraries(SwgDatabaseServer
     ${CURL_LIBRARIES}
     ${CMAKE_DL_LIBS}
 )
+
+# ----------------------------------------------------------------------
+# Tests of the 32-bit database bindings. Not built by default:
+#   make int32_db_binding_test int32_snapshot_send_test
+# They connect to a scratch schema named by the environment; see
+# game/server/database/tools/int32_audit/test/README.md.
+
+set(INT32_TEST_DIR ${SWG_GAME_SOURCE_DIR}/server/database/tools/int32_audit/test)
+get_target_property(SWG_DATABASE_SERVER_LIBRARIES SwgDatabaseServer LINK_LIBRARIES)
+
+add_executable(int32_db_binding_test EXCLUDE_FROM_ALL
+    ${INT32_TEST_DIR}/db_binding_test.cpp
+    ${INT32_TEST_DIR}/TestConnection.h
+)
+target_link_libraries(int32_db_binding_test ${SWG_DATABASE_SERVER_LIBRARIES})
+
+# The SwgDatabaseServer sources without its main(), and the test's main().
+add_executable(int32_snapshot_send_test EXCLUDE_FROM_ALL
+    ${SHARED_SOURCES}
+    ${SCHEMA_H_OUTPUT}
+    ${ENCODER_CPP_OUTPUT}
+    ${DECODER_CPP_OUTPUT}
+    ${LOAD_OBJECT_CPP_OUTPUT}
+    ${OBJECT_QUERIES_CPP_OUTPUT}
+    ${OBJECT_QUERIES_H_OUTPUT}
+    ${INT32_TEST_DIR}/snapshot_send_test.cpp
+    ${INT32_TEST_DIR}/TestConnection.h
+)
+add_dependencies(int32_snapshot_send_test swg_database_codegen)
+
+# The server's main() pulls some library objects in first; without it the
+# static libraries need to be searched as a group.
+target_link_libraries(int32_snapshot_send_test -Wl,--start-group ${SWG_DATABASE_SERVER_LIBRARIES} -Wl,--end-group)

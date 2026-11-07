@@ -9,6 +9,10 @@
 #include "sharedDebug/RemoteDebug.h"
 #include "sharedDebug/RemoteDebug_inner.h"
 
+#include "sharedFoundation/FixedWidthParse.h"
+
+#include <algorithm>
+#include <cstring>
 #include <string>
 #include <list>
 #include <map>
@@ -312,7 +316,10 @@ void RemoteDebugClient::receive(const unsigned char * const message, const uint3
 		break;
 
 	case RemoteDebug::VARIABLE_TYPE:
-		t = atoi(ms_buffer);
+		// the payload is the type as nul-terminated decimal text; ignore
+		// the message unless it is exactly one int32
+		if (!FixedWidthParse::parseInt32(std::string(ms_buffer, strnlen(ms_buffer, std::min<size_t>(sizeOfPayload, MAX_BUFFER_SIZE))), 10, t))
+			break;
 		varType = static_cast<VARIABLE_TYPES>(t);
 		(*ms_variableValues)[channelNumber]->setType(varType);
 		if (ms_variableTypeFunction)

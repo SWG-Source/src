@@ -24,7 +24,7 @@
 class LoginRestoreCharacterMessage : public GameNetworkMessage
 {
   public:
-    LoginRestoreCharacterMessage (const std::string &whoRequested, const NetworkId &characterId, StationId account, const Unicode::String &characterName, int templateId, bool jedi);
+    LoginRestoreCharacterMessage (const std::string &whoRequested, const NetworkId &characterId, StationId account, const Unicode::String &characterName, uint32 templateId, bool jedi);
     LoginRestoreCharacterMessage (Archive::ReadIterator & source);
     virtual ~LoginRestoreCharacterMessage ();
 
@@ -33,7 +33,7 @@ class LoginRestoreCharacterMessage : public GameNetworkMessage
 	const NetworkId &     getCharacterId() const;
 	StationId             getAccount() const;
 	const Unicode::String getCharacterName() const;
-	int                   getTemplateId() const;
+	uint32                   getTemplateId() const;
 	bool                  getJedi() const;
   	
   private:
@@ -41,7 +41,7 @@ class LoginRestoreCharacterMessage : public GameNetworkMessage
 	Archive::AutoVariable<NetworkId>       m_characterId;
     Archive::AutoVariable<StationId>       m_account;
 	Archive::AutoVariable<Unicode::String> m_characterName;
-	Archive::AutoVariable<int>             m_templateId;
+	Archive::AutoVariable<uint32>             m_templateId;
 	Archive::AutoVariable<bool>            m_jedi;
   
   private: // disable:
@@ -81,7 +81,7 @@ inline const Unicode::String LoginRestoreCharacterMessage::getCharacterName() co
 
 // ----------------------------------------------------------------------
 
-inline int LoginRestoreCharacterMessage::getTemplateId() const
+inline uint32 LoginRestoreCharacterMessage::getTemplateId() const
 {
 	return m_templateId.get();
 }

@@ -251,7 +251,7 @@ char *ConvertCommandLine(int argc, char ** argv)
 	if(totalSize>1023)
 	{
 		int argIndex = 0;
-		fprintf(stderr, "Exceeded command line args length of %d. Total size is %d\n", sizeof(buffer), totalSize);
+		fprintf(stderr, "Exceeded command line args length of %zu. Total size is %d\n", sizeof(buffer), totalSize);
 		for(argIndex = 0; argIndex < argc; ++argIndex)
 		{
 			fprintf(stderr, "argv[%d]=\"%s\"\n", argIndex, argv[argIndex]);

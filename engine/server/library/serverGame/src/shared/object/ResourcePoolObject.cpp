@@ -100,7 +100,7 @@ void ResourcePoolObject::debugOutput(Unicode::String &output) const
 		output+=Unicode::narrowToWide("  DEPLETED");
 	else
 	{
-		sprintf(buffer,"  %lu time units left\n",(m_depletedTimestamp - ServerClock::getInstance().getGameTimeSeconds())/ConfigServerGame::getResourceTimeScale());
+		sprintf(buffer,"  %u time units left\n",(m_depletedTimestamp - ServerClock::getInstance().getGameTimeSeconds())/ConfigServerGame::getResourceTimeScale());
 		output+=Unicode::narrowToWide(buffer);
 	}
 }

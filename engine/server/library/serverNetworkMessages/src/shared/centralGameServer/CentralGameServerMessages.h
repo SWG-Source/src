@@ -587,21 +587,21 @@ public:
 class DatabaseCreateCharacterSuccess : public GameNetworkMessage
 {
 public:
-	DatabaseCreateCharacterSuccess(const NetworkId &objectId, StationId stationId, const Unicode::String &characterName, int templateId, bool jedi);
+	DatabaseCreateCharacterSuccess(const NetworkId &objectId, StationId stationId, const Unicode::String &characterName, uint32 templateId, bool jedi);
 	DatabaseCreateCharacterSuccess(Archive::ReadIterator & source);
 	~DatabaseCreateCharacterSuccess();
 
 	const NetworkId &        getObjectId() const;
 	const StationId          getStationId() const;
 	const Unicode::String &  getCharacterName() const;
-	const int                getTemplateId() const;
+	uint32                getTemplateId() const;
 	const bool               getJedi() const;
 
 private:
 	Archive::AutoVariable<NetworkId>                m_objectId;
 	Archive::AutoVariable<StationId>                m_stationId;
 	Archive::AutoVariable<Unicode::String>          m_characterName;
-	Archive::AutoVariable<int>                      m_templateId;
+	Archive::AutoVariable<uint32>                      m_templateId;
 	Archive::AutoVariable<bool>                     m_jedi;
 
 	DatabaseCreateCharacterSuccess();
@@ -632,7 +632,7 @@ inline const Unicode::String & DatabaseCreateCharacterSuccess::getCharacterName(
 
 // ----------------------------------------------------------------------
 
-inline const int DatabaseCreateCharacterSuccess::getTemplateId() const
+inline uint32 DatabaseCreateCharacterSuccess::getTemplateId() const
 {
 	return m_templateId.get();
 }

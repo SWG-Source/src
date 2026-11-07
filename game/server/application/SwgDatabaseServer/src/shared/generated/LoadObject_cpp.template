@@ -421,7 +421,7 @@ void SwgSnapshot::loadObject(DB::Session *session,const Tag &typeId, const Netwo
 	}
 }
 
-void SwgSnapshot::newObject(NetworkId const & objectId, int templateId, Tag typeId)
+void SwgSnapshot::newObject(NetworkId const & objectId, uint32 templateId, Tag typeId)
 {
 	m_objectTableBuffer.newObject(objectId, templateId, typeId);
 	switch(typeId)

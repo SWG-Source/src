@@ -9,6 +9,8 @@
 #ifndef INCLUDED_CrashReportInformation_H
 #define INCLUDED_CrashReportInformation_H
 
+
+#include "sharedFoundation/FormatAttribute.h"
 // ======================================================================
 
 class CrashReportInformation
@@ -18,7 +20,7 @@ public:
 	static void install();
 	static void remove();
 
-	static DLLEXPORT void addStaticText(char const * format, ...);
+	static DLLEXPORT void addStaticText(char const * format, ...) SWG_FORMAT_PRINTF(1, 2);
 
 	static void           addDynamicText(char const * text);
 	static void           removeDynamicText(char const * text);

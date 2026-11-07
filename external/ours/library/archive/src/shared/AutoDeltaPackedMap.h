@@ -128,8 +128,8 @@ namespace Archive
 		char temp[200];
 		
 		typename AutoDeltaMap<KeyType, ValueType, ObjectType>::Command c;
-		int32_t commandCount;
-		int32_t baselineCommandCount;
+		uint32_t commandCount;
+		uint32_t baselineCommandCount;
 
 		Archive::get(source, commandCount);
 		Archive::get(source, baselineCommandCount);
@@ -140,7 +140,7 @@ namespace Archive
 		}
 		else
 		{
-			for (int32_t i = 0; i < commandCount; ++i)
+			for (uint32_t i = 0; i < commandCount; ++i)
 			{
 				Archive::get(source, c.cmd);
 				Archive::get(source, c.key);

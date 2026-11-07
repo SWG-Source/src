@@ -31,8 +31,8 @@ namespace DBQuery
 		int getMinVersionNumber();
 		
 	  private:
-		DB::BindableLong current_version_number;
-		DB::BindableLong min_version_number;
+		DB::BindableInt32 current_version_number;
+		DB::BindableInt32 min_version_number;
 
 	  private:
 		GetVersionNumberQuery              (const GetVersionNumberQuery &); // disable

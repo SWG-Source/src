@@ -894,7 +894,7 @@ void WaveForm::load(Iff &iff)
 	}
 	iff.exitForm(TAG_WVFM);
 
-	DEBUG_FATAL((m_controlPointList.size() < 2), ("Waveforms require at least two control points to be defined. Control points defined: (%d).", m_controlPointList.size()));
+	DEBUG_FATAL((m_controlPointList.size() < 2), ("Waveforms require at least two control points to be defined. Control points defined: (%zu).", m_controlPointList.size()));
 
 #ifdef _DEBUG
 		ControlPointList::const_iterator iterControlPointList = m_controlPointList.begin();

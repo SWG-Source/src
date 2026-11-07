@@ -1667,7 +1667,7 @@ jboolean JNICALL ScriptMethodsCombatNamespace::doCombatResults(JNIEnv *env, jobj
 	if (!JavaLibrary::convert(animationIdString, animationString))
 		return JNI_FALSE;
 
-	unsigned int replaceWildcardIndex = animationString.find('^');
+	std::string::size_type replaceWildcardIndex = animationString.find('^');
 
 	if( replaceWildcardIndex != std::string::npos)
 	{

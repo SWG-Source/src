@@ -156,7 +156,7 @@ void JNICALL ScriptMethodsHateListNamespace::addHateDot(JNIEnv * /*env*/, jobjec
 
 	if (hateTargetNetworkId == NetworkId::cms_invalid)
 	{
-		JAVA_THROW_SCRIPT_EXCEPTION(true, ("ScriptMethodsHateList::addHateDot() object(%s) hate(%.2f) seconds(%d) Unable to resolve the hateTarget(%s) to a NetworkId.", networkId.getValueString().c_str(), hateTargetNetworkId.getValueString().c_str(), hate, seconds));
+		JAVA_THROW_SCRIPT_EXCEPTION(true, ("ScriptMethodsHateList::addHateDot() object(%s) hate(%.2f) seconds(%d) Unable to resolve the hateTarget(%s) to a NetworkId.", networkId.getValueString().c_str(), hate, seconds, hateTargetNetworkId.getValueString().c_str()));
 		return;
 	}
 
@@ -410,14 +410,14 @@ jfloat JNICALL ScriptMethodsHateListNamespace::getAILeashTime(JNIEnv * /*env*/, 
 
         if (objectTangibleObject == nullptr)
         {
-                JAVA_THROW_SCRIPT_EXCEPTION(true, ("ScriptMethodsHateList::setAILeashTime() object(%s)  time(%.2f) Unable to resolve the object to a TangibleObject.", networkId.getValueString().c_str(), time));
+                JAVA_THROW_SCRIPT_EXCEPTION(true, ("ScriptMethodsHateList::setAILeashTime() object(%s) Unable to resolve the object to a TangibleObject.", networkId.getValueString().c_str()));
                 return 0.0;
         }
 
         LOGC(AiLogManager::isLogging(networkId), "debug_ai", 
 		("ScriptMethodsHateList::setAILeashTime() object(%s) time(%f)", 
 		networkId.getValueString().c_str(), 
-		time
+		objectTangibleObject->getAILeashTime()
 	));
 
         return objectTangibleObject->getAILeashTime();

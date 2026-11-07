@@ -8,6 +8,8 @@
 #ifndef INCLUDED_FormattedString_H
 #define INCLUDED_FormattedString_H
 
+
+#include "sharedFoundation/FormatAttribute.h"
 #include <cstdio>
 
 // ----------------------------------------------------------------------
@@ -18,8 +20,8 @@ public:
 
 	FormattedString();
 
-	char const * sprintf(const char * format, ...);
-	char const * vsprintf(const char * format, va_list va);
+	char const * sprintf(const char * format, ...) SWG_FORMAT_PRINTF(2, 3);
+	char const * vsprintf(const char * format, va_list va) SWG_FORMAT_PRINTF(2, 0);
 
 private:
 

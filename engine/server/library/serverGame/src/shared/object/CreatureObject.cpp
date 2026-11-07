@@ -103,6 +103,7 @@
 #include "sharedFoundation/DynamicVariableList.h"
 #include "sharedFoundation/DynamicVariableListNestedList.h"
 #include "sharedFoundation/DynamicVariableLocationData.h"
+#include "sharedFoundation/FixedWidthParse.h"
 #include "sharedFoundation/FormattedString.h"
 #include "sharedFoundation/GameControllerMessage.h"
 #include "sharedFoundation/TemporaryCrcString.h"
@@ -1869,7 +1870,7 @@ void CreatureObject::onLoadedFromDatabase()
 				// check for Jedi initialization
 				if (getObjVars().hasItem(OBJVAR_NEW_JEDI_FORCE))
 				{
-					int start_force;
+					int start_force = 0;
 					getObjVars().getItem(OBJVAR_NEW_JEDI_FORCE, start_force);
 					removeObjVarItem(OBJVAR_NEW_JEDI_FORCE);
 					if (start_force > 0)
@@ -1943,9 +1944,11 @@ void CreatureObject::onLoadedFromDatabase()
 							if (i.getValue(ctsTransactionDetail))
 							{
 								Unicode::UnicodeStringVector tokens;
-								if (Unicode::tokenize(ctsTransactionDetail, tokens, nullptr, nullptr) && (tokens.size() >= 4))
+								// ctsHistory is an objvar, which scripts can also write;
+								// an entry whose time is not one int32 is skipped
+								int32 transferTime = 0;
+								if (Unicode::tokenize(ctsTransactionDetail, tokens, nullptr, nullptr) && (tokens.size() >= 4) && FixedWidthParse::parseInt32(tokens[0], 10, transferTime))
 								{
-									int const transferTime = atoi(Unicode::wideToNarrow(tokens[0]).c_str());
 									if ((earliestTransferTime == -1) || (transferTime < earliestTransferTime))
 									{
 										earliestTransferTime = transferTime;
@@ -2654,11 +2657,12 @@ void CreatureObject::setupSkillData()
 		{
 			DynamicVariableList::NestedList mods(getObjVars(), OBJVAR_NOT_SKILL_MODS);
 			DynamicVariableList::NestedList::const_iterator i(mods.begin());
-			int value;
 			for (; i != mods.end(); ++i)
 			{
-				i.getValue(value);
-				addModValue(i.getName(), value, true);
+				// a mod whose text is not one int32 is not applied
+				int value = 0;
+				if (i.getValue(value))
+					addModValue(i.getName(), value, true);
 			}
 		}
 		{
@@ -2681,7 +2685,13 @@ void CreatureObject::setupSkillData()
 			DynamicVariableList::NestedList::const_iterator i(schematics.begin());
 			for (; i != schematics.end(); ++i)
 			{
-				grantSchematic(strtoul(i.getName().c_str(), nullptr, 10), true);
+				// PlayerObject writes the names as "%u" crcs; objvars can also
+				// be written by scripts, so a name that is not one is skipped
+				uint32 schematicCrc = 0;
+				if (FixedWidthParse::parseUint32(i.getName(), 10, schematicCrc))
+					grantSchematic(schematicCrc, true);
+				else
+					WARNING(true, ("CreatureObject %s: %s.%s is not a schematic crc", getNetworkId().getValueString().c_str(), OBJVAR_NOT_SKILL_SCHEMATICS.c_str(), i.getName().c_str()));
 			}
 		}
 
@@ -9284,8 +9294,11 @@ void CreatureObject::handleCMessageTo(MessageToPayload const &message)
 		std::vector<int8>::const_iterator spacePos = std::find(packedData.begin(), packedData.end(), ' ');
 		if (spacePos != packedData.end())
 		{
-			int amount = atoi(std::string(spacePos + 1, packedData.end()).c_str());
-			grantExperiencePoints(std::string(packedData.begin(), spacePos), amount);
+			int32 amount = 0;
+			if (FixedWidthParse::parseInt32(std::string(spacePos + 1, packedData.end()), 10, amount))
+				grantExperiencePoints(std::string(packedData.begin(), spacePos), amount);
+			else
+				WARNING(true, ("C++experience for %s: the amount is not a 32-bit integer", getNetworkId().getValueString().c_str()));
 		}
 	}
 	else if (message.getMethod() == "C++AddJediSlot")
@@ -9403,13 +9416,17 @@ void CreatureObject::handleCMessageTo(MessageToPayload const &message)
 		{
 			std::string packedData(message.getPackedDataVector().begin(), message.getPackedDataVector().end());
 
-			// Parse the info from the message
-			char     petNetworkIdBuffer[100];
-			unsigned msgSendCount;
-			sscanf(packedData.c_str(), "%s %u", petNetworkIdBuffer, &msgSendCount);
+			// Parse the info from the message: "<pet network id> <send count>"
+			std::string::size_type const spacePos = packedData.find(' ');
+			uint32 msgSendCount = 0;
+			if (spacePos == std::string::npos || !FixedWidthParse::parseUint32(packedData.substr(spacePos + 1), 10, msgSendCount))
+			{
+				WARNING(true, ("C++RemovePetFromGroup for %s: malformed data", getNetworkId().getValueString().c_str()));
+				return;
+			}
 
 			// Turn the string into a network Id
-			NetworkId petNetworkId( petNetworkIdBuffer );
+			NetworkId petNetworkId( packedData.substr(0, spacePos) );
 
 			// Try to remove the pet from the group
 			GroupObject *group = getGroup();
@@ -9472,11 +9489,17 @@ void CreatureObject::handleCMessageTo(MessageToPayload const &message)
 					flip = data.at(locationStart++) != '0';
 					repeat = data.at(locationStart++) != '0';
 				}
-				int startPoint = 0;
+				int32 startPoint = 0;
 				if (data.size() > locationStart && data.at(locationStart) == '*')
 				{
 					++locationStart;
-					startPoint = atoi(data.substr(locationStart).c_str());
+					// the location names are script-supplied text in the same
+					// payload, so the start point is not trusted to be a number
+					if (!FixedWidthParse::parseInt32(data.substr(locationStart), 10, startPoint))
+					{
+						WARNING(true, ("C++WaitForPatrolPreload for %s: the start point is not a 32-bit integer", getNetworkId().getValueString().c_str()));
+						return;
+					}
 				}
 
 				aiCreatureController->patrol(locations, random, flip, repeat, startPoint);
@@ -10238,19 +10261,32 @@ void CreatureObject::handleCMessageTo(MessageToPayload const &message)
 
 			Unicode::String const delimiters(Unicode::narrowToWide("|"));
 			Unicode::UnicodeStringVector tokens;
-			if ((Unicode::tokenize(Unicode::narrowToWide(params), tokens, &delimiters, nullptr)) && (tokens.size() == 10))
+			int32 difficulty = 0;
+			int32 profession = 0;
+			int32 isPC = 0;
+			int32 shipIsPOB = 0;
+			int32 ownsPOB = 0;
+			int32 inCombat = 0;
+			if (   (Unicode::tokenize(Unicode::narrowToWide(params), tokens, &delimiters, nullptr))
+			    && (tokens.size() == 10)
+			    && FixedWidthParse::parseInt32(tokens[3], 10, difficulty)
+			    && FixedWidthParse::parseInt32(tokens[4], 10, profession)
+			    && FixedWidthParse::parseInt32(tokens[5], 10, isPC)
+			    && FixedWidthParse::parseInt32(tokens[7], 10, shipIsPOB)
+			    && FixedWidthParse::parseInt32(tokens[8], 10, ownsPOB)
+			    && FixedWidthParse::parseInt32(tokens[9], 10, inCombat))
 			{
 				success = true;
 				existingGroupId = NetworkId(Unicode::wideToNarrow(tokens[0]));
 				inviterId = NetworkId(Unicode::wideToNarrow(tokens[1]));
 				inviterName = Unicode::wideToNarrow(tokens[2]);
-				inviterDifficulty = atoi(Unicode::wideToNarrow(tokens[3]).c_str());
-				inviterProfession = static_cast<LfgCharacterData::Profession>(atoi(Unicode::wideToNarrow(tokens[4]).c_str()));
-				inviterIsPC = (atoi(Unicode::wideToNarrow(tokens[5]).c_str()) != 0);
+				inviterDifficulty = difficulty;
+				inviterProfession = static_cast<LfgCharacterData::Profession>(profession);
+				inviterIsPC = (isPC != 0);
 				inviterShipId = NetworkId(Unicode::wideToNarrow(tokens[6]));
-				inviterShipIsPOB = (atoi(Unicode::wideToNarrow(tokens[7]).c_str()) != 0);
-				inviterOwnsPOB = (atoi(Unicode::wideToNarrow(tokens[8]).c_str()) != 0);
-				inviterInCombat = (atoi(Unicode::wideToNarrow(tokens[9]).c_str()) != 0);
+				inviterShipIsPOB = (shipIsPOB != 0);
+				inviterOwnsPOB = (ownsPOB != 0);
+				inviterInCombat = (inCombat != 0);
 			}
 
 			GroupObject * existingGroup = nullptr;
@@ -10405,7 +10441,14 @@ void CreatureObject::handleCMessageTo(MessageToPayload const &message)
 
 			Unicode::String const delimiters(Unicode::narrowToWide("|"));
 			Unicode::UnicodeStringVector tokens;
-			if ((Unicode::tokenize(Unicode::narrowToWide(params), tokens, &delimiters, nullptr)) && (tokens.size() == 5))
+			int32 x = 0;
+			int32 y = 0;
+			int32 z = 0;
+			if (   (Unicode::tokenize(Unicode::narrowToWide(params), tokens, &delimiters, nullptr))
+			    && (tokens.size() == 5)
+			    && FixedWidthParse::parseInt32(tokens[1], 10, x)
+			    && FixedWidthParse::parseInt32(tokens[2], 10, y)
+			    && FixedWidthParse::parseInt32(tokens[3], 10, z))
 			{
 				// tell group member that the group pickup point has been created
 				if (getClient())
@@ -10423,9 +10466,6 @@ void CreatureObject::handleCMessageTo(MessageToPayload const &message)
 				if (playerObject)
 				{
 					std::string const planetName = Unicode::wideToNarrow(tokens[0]);
-					int const x = atoi(Unicode::wideToNarrow(tokens[1]).c_str());
-					int const y = atoi(Unicode::wideToNarrow(tokens[2]).c_str());
-					int const z = atoi(Unicode::wideToNarrow(tokens[3]).c_str());
 
 					Location const location(Vector(static_cast<real>(x), static_cast<real>(y), static_cast<real>(z)), NetworkId::cms_invalid, Location::getCrcBySceneName(planetName));
 					playerObject->createOrUpdateReusableWaypoint(location, "groupPickupWp", Unicode::narrowToWide("Group Pickup Point"), Waypoint::White);
@@ -10438,9 +10478,16 @@ void CreatureObject::handleCMessageTo(MessageToPayload const &message)
 		if (!message.getPackedDataVector().empty())
 		{
 			std::string const params(message.getPackedDataVector().begin(), message.getPackedDataVector().end());
-			LoginUpgradeAccountMessage::OccupyUnlockedSlotResponse const response = static_cast<LoginUpgradeAccountMessage::OccupyUnlockedSlotResponse>(::atoi(params.c_str()));
+			int32 responseCode = 0;
+			bool const responseParsed = FixedWidthParse::parseInt32(params, 10, responseCode);
+			LoginUpgradeAccountMessage::OccupyUnlockedSlotResponse const response = static_cast<LoginUpgradeAccountMessage::OccupyUnlockedSlotResponse>(responseCode);
 
-			if (response == LoginUpgradeAccountMessage::OUSR_success)
+			if (!responseParsed)
+			{
+				// CS log the response
+				LOG("CustomerService",("JediUnlockedSlot:%s OccupyUnlockedSlot request FAILED - unparsable result code", PlayerObject::getAccountDescription(this).c_str()));
+			}
+			else if (response == LoginUpgradeAccountMessage::OUSR_success)
 			{
 				// CS log the response
 				LOG("CustomerService",("JediUnlockedSlot:%s OccupyUnlockedSlot request SUCCESS", PlayerObject::getAccountDescription(this).c_str()));
@@ -10494,9 +10541,16 @@ void CreatureObject::handleCMessageTo(MessageToPayload const &message)
 		if (!message.getPackedDataVector().empty())
 		{
 			std::string const params(message.getPackedDataVector().begin(), message.getPackedDataVector().end());
-			LoginUpgradeAccountMessage::VacateUnlockedSlotResponse const response = static_cast<LoginUpgradeAccountMessage::VacateUnlockedSlotResponse>(::atoi(params.c_str()));
+			int32 responseCode = 0;
+			bool const responseParsed = FixedWidthParse::parseInt32(params, 10, responseCode);
+			LoginUpgradeAccountMessage::VacateUnlockedSlotResponse const response = static_cast<LoginUpgradeAccountMessage::VacateUnlockedSlotResponse>(responseCode);
 
-			if (response == LoginUpgradeAccountMessage::VUSR_success)
+			if (!responseParsed)
+			{
+				// CS log the response
+				LOG("CustomerService",("JediUnlockedSlot:%s VacateUnlockedSlot request FAILED - unparsable result code", PlayerObject::getAccountDescription(this).c_str()));
+			}
+			else if (response == LoginUpgradeAccountMessage::VUSR_success)
 			{
 				// CS log the response
 				LOG("CustomerService",("JediUnlockedSlot:%s VacateUnlockedSlot request SUCCESS", PlayerObject::getAccountDescription(this).c_str()));
@@ -10644,7 +10698,7 @@ void CreatureObject::handleCMessageTo(MessageToPayload const &message)
 			{
 				if (msg.getResultCode() == RESULT_SUCCESS)
 				{
-					ConsoleMgr::broadcastString(FormattedString<1024>().sprintf("request for feature Id for account (%lu) was successful", msg.getTargetStationId()),
+					ConsoleMgr::broadcastString(FormattedString<1024>().sprintf("request for feature Id for account (%u) was successful", msg.getTargetStationId()),
 						getClient());
 
 					if (msg.getGameCode() == PlatformGameCode::SWG)
@@ -10657,12 +10711,12 @@ void CreatureObject::handleCMessageTo(MessageToPayload const &message)
 					{
 						std::map<uint32, std::string> const & sessionFeatureIdsData = msg.getSessionFeatureIdsData();
 
-						ConsoleMgr::broadcastString(FormattedString<1024>().sprintf("session/Platform reported successful result code (%u, %s:%s), (%d) feature Ids for account (%lu)", msg.getResultCode(), msg.getSessionResultString().c_str(), msg.getSessionResultText().c_str(), sessionFeatureIdsData.size(), msg.getTargetStationId()),
+						ConsoleMgr::broadcastString(FormattedString<1024>().sprintf("session/Platform reported successful result code (%u, %s:%s), (%zu) feature Ids for account (%u)", msg.getResultCode(), msg.getSessionResultString().c_str(), msg.getSessionResultText().c_str(), sessionFeatureIdsData.size(), msg.getTargetStationId()),
 							getClient());
 
 						for (std::map<uint32, std::string>::const_iterator iter = sessionFeatureIdsData.begin(); iter != sessionFeatureIdsData.end(); ++iter)
 						{
-							ConsoleMgr::broadcastString(FormattedString<1024>().sprintf("%lu (%s)", iter->first, iter->second.c_str()),
+							ConsoleMgr::broadcastString(FormattedString<1024>().sprintf("%u (%s)", iter->first, iter->second.c_str()),
 								getClient());
 						}
 					}
@@ -10670,12 +10724,12 @@ void CreatureObject::handleCMessageTo(MessageToPayload const &message)
 					{
 						std::map<uint32, int> const & featureIds = msg.getFeatureIds();
 
-						ConsoleMgr::broadcastString(FormattedString<1024>().sprintf("(%d) feature Ids for account (%lu)", featureIds.size(), msg.getTargetStationId()),
+						ConsoleMgr::broadcastString(FormattedString<1024>().sprintf("(%zu) feature Ids for account (%u)", featureIds.size(), msg.getTargetStationId()),
 							getClient());
 
 						for (std::map<uint32, int>::const_iterator iter = featureIds.begin(); iter != featureIds.end(); ++iter)
 						{
-							ConsoleMgr::broadcastString(FormattedString<1024>().sprintf("%lu (%d)", iter->first, iter->second),
+							ConsoleMgr::broadcastString(FormattedString<1024>().sprintf("%u (%d)", iter->first, iter->second),
 								getClient());
 						}
 					}
@@ -10683,9 +10737,9 @@ void CreatureObject::handleCMessageTo(MessageToPayload const &message)
 				else
 				{
 					if (msg.getResultCameFromSession())
-						ConsoleMgr::broadcastString(FormattedString<1024>().sprintf("request for feature Id for account (%lu) failed with error code (%u, %s:%s)", msg.getTargetStationId(), msg.getResultCode(), msg.getSessionResultString().c_str(), msg.getSessionResultText().c_str()), getClient());
+						ConsoleMgr::broadcastString(FormattedString<1024>().sprintf("request for feature Id for account (%u) failed with error code (%u, %s:%s)", msg.getTargetStationId(), msg.getResultCode(), msg.getSessionResultString().c_str(), msg.getSessionResultText().c_str()), getClient());
 					else
-						ConsoleMgr::broadcastString(FormattedString<1024>().sprintf("request for feature Id for account (%lu) failed with error code (%u)", msg.getTargetStationId(), msg.getResultCode()), getClient());
+						ConsoleMgr::broadcastString(FormattedString<1024>().sprintf("request for feature Id for account (%u) failed with error code (%u)", msg.getTargetStationId(), msg.getResultCode()), getClient());
 				}
 			}
 
@@ -11460,8 +11514,8 @@ void CreatureObject::handleCMessageTo(MessageToPayload const &message)
 		if (!message.getPackedDataVector().empty())
 		{
 			std::string const params(message.getPackedDataVector().begin(), message.getPackedDataVector().end());
-			const int cityId = atoi(params.c_str());
-			if (cityId > 0)
+			int32 cityId = 0;
+			if (FixedWidthParse::parseInt32(params, 10, cityId) && cityId > 0)
 				CityInterface::enterCityChatRoom(cityId, *this);
 		}
 	}
@@ -11470,8 +11524,8 @@ void CreatureObject::handleCMessageTo(MessageToPayload const &message)
 		if (!message.getPackedDataVector().empty())
 		{
 			std::string const params(message.getPackedDataVector().begin(), message.getPackedDataVector().end());
-			const int cityId = atoi(params.c_str());
-			if (cityId > 0)
+			int32 cityId = 0;
+			if (FixedWidthParse::parseInt32(params, 10, cityId) && cityId > 0)
 				CityInterface::leaveCityChatRoom(cityId, *this);
 		}
 	}
@@ -12085,7 +12139,7 @@ std::vector<unsigned char> CreatureObject::uploadCharacterData(const bool withIt
 			{
 				result.push_back(tmp[static_cast<size_t>(i)]);
 			}
-			LOG("CustomerService", ("CharacterTransfer: CreatureObject::uploadCharacterData() yields a buffer %d bytes long", result.size()));
+			LOG("CustomerService", ("CharacterTransfer: CreatureObject::uploadCharacterData() yields a buffer %zu bytes long", result.size()));
 		}
 	}
 	return result;
@@ -12588,7 +12642,7 @@ void CreatureObject::unequipAllItems()
 	if (!equipmentContainer)
 	{
 		WARNING(true,
-			("unequipAllItems() called on object id=[%s], template=[%s] on server id=[%d]: failed to get equipment slotted container, error code=[%d].",
+			("unequipAllItems() called on object id=[%s], template=[%s] on server id=[%d]: failed to get equipment slotted container.",
 			getNetworkId().getValueString().c_str(),
 			getObjectTemplateName(),
 			static_cast<int>(GameServer::getInstance().getProcessId())
@@ -15344,7 +15398,7 @@ void CreatureObject::addPackedAppearanceWearable(std::string const &appearanceDa
 void CreatureObject::saveDecorationLayout(ServerObject const & pobSourceObject, int saveSlotNumber, std::string const & description)
 {
 	int debugNumItems = 0;
-	const uint32_t debugStartTimeMs = Clock::timeMs();
+	const uint64_t debugStartTimeMs = Clock::timeMs();
 
 	if (!isAuthoritative())
 		return;
@@ -15538,8 +15592,7 @@ void CreatureObject::saveDecorationLayout(ServerObject const & pobSourceObject, 
 
 	if ((debugNumItems > 0) && getClient()->isGod())
 	{
-		const uint32_t debugEndTimeMs = Clock::timeMs();
-		Chat::sendSystemMessage(*this, Unicode::narrowToWide(FormattedString<256>().sprintf("!!!GOD MODE STATISTICS!!! %d items saved in %lums", debugNumItems, (debugEndTimeMs - debugStartTimeMs))), Unicode::emptyString);
+		Chat::sendSystemMessage(*this, Unicode::narrowToWide(FormattedString<256>().sprintf("!!!GOD MODE STATISTICS!!! %d items saved in %ums", debugNumItems, Clock::durationMs<uint32_t>(debugStartTimeMs, Clock::timeMs()))), Unicode::emptyString);
 	}
 }
 
@@ -15547,7 +15600,7 @@ void CreatureObject::saveDecorationLayout(ServerObject const & pobSourceObject, 
 
 void CreatureObject::restoreDecorationLayout(ServerObject const & pobTargetObject, int saveSlotNumber)
 {
-	const uint32_t debugStartTimeMs = Clock::timeMs();
+	const uint64_t debugStartTimeMs = Clock::timeMs();
 
 	if (!isAuthoritative())
 		return;
@@ -15883,8 +15936,7 @@ void CreatureObject::restoreDecorationLayout(ServerObject const & pobTargetObjec
 
 	if ((debugNumItems > 0) && getClient()->isGod())
 	{
-		const uint32_t debugEndTimeMs = Clock::timeMs();
-		Chat::sendSystemMessage(*this, Unicode::narrowToWide(FormattedString<256>().sprintf("!!!GOD MODE STATISTICS!!! %d items read (%d will be moved) in %lums", debugNumItems, numItemsToBeMoved, (debugEndTimeMs - debugStartTimeMs))), Unicode::emptyString);
+		Chat::sendSystemMessage(*this, Unicode::narrowToWide(FormattedString<256>().sprintf("!!!GOD MODE STATISTICS!!! %d items read (%d will be moved) in %ums", debugNumItems, numItemsToBeMoved, Clock::durationMs<uint32_t>(debugStartTimeMs, Clock::timeMs()))), Unicode::emptyString);
 	}
 }
 

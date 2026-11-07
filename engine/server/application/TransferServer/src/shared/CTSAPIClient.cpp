@@ -158,7 +158,7 @@ void CTSAPIClient::onRequestTransferAccount(const unsigned server_track, const u
 	std::map<unsigned int, TransactionTrackData>::const_iterator f = s_activeTransfers.find(uid);
 	if(f == s_activeTransfers.end())
 	{
-		LOG("CTSAPI", ("CTSAPIClient::onRequestTransferAccount(%d, d, %d, %d)", server_track, uid, destuid, transactionID));
+		LOG("CTSAPI", ("CTSAPIClient::onRequestTransferAccount(%u, %u, %u, %u)", server_track, uid, destuid, transactionID));
 		TransferServer::requestTransferAccount(server_track, uid, destuid, transactionID);
 	}
 	else

@@ -34,6 +34,7 @@
 #include "sharedFoundation/Crc.h"
 #include "sharedFoundation/DynamicVariable.h"
 #include "sharedFoundation/DynamicVariableList.h"
+#include "sharedFoundation/FixedWidthParse.h"
 #include "sharedFoundation/Os.h"
 #include "sharedGame/TextManager.h"
 #include "sharedLog/Log.h"
@@ -1096,10 +1097,17 @@ void JavaLibrary::initializeJavaThread()
 	tempOption.optionString = "-XX:MaxMetaspaceSize=96m";
 	options.push_back(tempOption);
 
-	// rice options!!!!1! yay - actually after much trial and error these are a good mix for speed and efficiency
-	// i should split these someday into separate optionStrings...or not
-	// some may be default, not needed, or ignored by whatever version we're using -darth
-	tempOption.optionString = "-Xrs -XX:-UsePerfData -XX:-AllowUserSignalHandlers -XX:UseSSE=3 -XX+DoEscapeAnalysis -XX:AutoBoxCacheMax:2000 -XX:+OptimizeStringConcat -XX:+OptimizeFill -XX:+EliminateAutoBox -XX:+UseCompressedStrings -XX:+UseCompressedOops -XX:+EliminateLocks -XX:UseFastAccessorMethods -XX:+UseStringCache -XgcPrio:throughput -XXkeepAreaRatio:1 -XXlazyUnlocking -XXcallProfiling -XXcompactRatio:1";
+	// -Xrs: the server owns the process's signals. Without it the JVM installs
+	// its own SIGTERM handler, and a SIGTERM (e.g. killall) halts the VM from
+	// Java: the VM thread then runs exit(), whose C++ static destructors call
+	// back into JNI while that thread holds a safepoint, and the process hangs.
+	//
+	// Each JavaVMOption is one option. These used to be packed into a single
+	// string, which the JVM ignored as unrecognized (ignoreUnrecognized below),
+	// so -Xrs and the tuning flags that followed it never took effect; several
+	// of those flags are malformed, removed from current JVMs, or JRockit-only.
+	// They are not carried over: enabling them now would be an untested change.
+	tempOption.optionString = "-Xrs";
 	options.push_back(tempOption);
 
 	// left over from SOE, below...probably won't use these most of the time
@@ -4506,17 +4514,29 @@ int JavaLibrary::runScript(const NetworkId & caller, const std::string& script,
 		return SCRIPT_OVERRIDE;
 	}
 
-	// add the rest of the parameters
+	// add the rest of the parameters; every one argList describes must be present
+	if (args.size() < argList.size())
+	{
+		LOG("ScriptInvestigation", ("runSCripts4 failed because of missing params"));
+		return SCRIPT_OVERRIDE;
+	}
 	for (unsigned i = 0; i < argList.size(); ++i)
 	{
 		LocalRefParamPtr arg = LocalRefParam::cms_nullPtr;
-		const char *stringArg = Unicode::wideToNarrow(args[i]).c_str();
+		// keep the narrow copy alive while stringArg points into it
+		std::string const narrowArg(Unicode::wideToNarrow(args[i]));
+		const char *stringArg = narrowArg.c_str();
 		switch (argList[i])
 		{
 		case 'i':
 		{
-			jint param = atoi(stringArg);
-			arg = createNewObject(ms_clsInteger, ms_midInteger, param);
+			int32 param = 0;
+			if (!FixedWidthParse::parseInt32(args[i], 10, param))
+			{
+				LOG("ScriptInvestigation", ("runSCripts4 failed because of bad int param"));
+				return SCRIPT_OVERRIDE;
+			}
+			arg = createNewObject(ms_clsInteger, ms_midInteger, static_cast<jint>(param));
 		}
 		break;
 		case 'f':
@@ -5100,7 +5120,7 @@ bool JavaLibrary::unpackDictionary(const std::vector<int8> & packedData,
 				if (crc != dataCrc)
 				{
 					WARNING(true, ("JavaLibrary::unpackDictionary got packed data with "
-						"bad crc! Expected: %lu, got %lu.", crc, dataCrc));
+						"bad crc! Expected: %u, got %u.", crc, dataCrc));
 					return false;
 				}
 			}

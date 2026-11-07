@@ -58,7 +58,7 @@ bool TaskChangeStationId::process(DB::Session *session)
 void TaskChangeStationId::onComplete()
 {
 	// part of account to account move request for character transfer system
-	LOG("CustomerService", ("CharacterTransfer: Completed database change for account transfer from %lu to %lu: sending reply back to transfer server on %s", m_sourceStationId, m_destinationStationId, m_requestData->getStartGalaxy().c_str()));
+	LOG("CustomerService", ("CharacterTransfer: Completed database change for account transfer from %u to %u: sending reply back to transfer server on %s", m_sourceStationId, m_destinationStationId, m_requestData->getStartGalaxy().c_str()));
 	const GenericValueTypeMessage<TransferAccountData> response("TransferAccountReplySuccessTransferServer", *m_requestData);
 	CentralServerConnection::sendToCentralServer(m_requestData->getStartGalaxy(), response);
 }
@@ -67,8 +67,8 @@ void TaskChangeStationId::onComplete()
 
 TaskChangeStationId::ChangeStationIdQuery::ChangeStationIdQuery() :
 		Query(),
-		destination_station_id(0),
-		source_station_id(0)
+		destination_station_id(0u),
+		source_station_id(0u)
 {
 }
 

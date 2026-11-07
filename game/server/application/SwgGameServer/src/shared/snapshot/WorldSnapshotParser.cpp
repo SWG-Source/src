@@ -300,7 +300,7 @@ void WorldSnapshotParser::createWorldSnapshots (const char* const filename)
 
 					if (portalLayoutCrc != extractedPortalLayoutCrc)
 					{
-						DEBUG_REPORT_LOG_PRINT (true, ("skipping %i - server object template %s specifies shared object template %s with portal layout file %s with mismatched crcs [%lu != %lu] <%s %1.2f, %1.2f>\n", networkIdInt, serverObjectTemplateName, sharedObjectTemplateName.c_str (), portalLayoutFilename.c_str (), portalLayoutCrc, extractedPortalLayoutCrc, planetName, position.x, position.z));
+						DEBUG_REPORT_LOG_PRINT (true, ("skipping %i - server object template %s specifies shared object template %s with portal layout file %s with mismatched crcs [%u != %u] <%s %1.2f, %1.2f>\n", networkIdInt, serverObjectTemplateName, sharedObjectTemplateName.c_str (), portalLayoutFilename.c_str (), portalLayoutCrc, extractedPortalLayoutCrc, planetName, position.x, position.z));
 						continue;
 					}
 				}

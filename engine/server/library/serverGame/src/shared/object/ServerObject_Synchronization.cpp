@@ -991,7 +991,7 @@ void ServerObject::clearDeltas() const
 
 void ServerObject::addServerToProxyList(uint32 proxyServerProcessId)
 {
-	FATAL(!isAuthoritative(), ("ServerObject::addServerToProxyList: obj %s, processId %lu, while non-auth", getDebugInformation().c_str(), proxyServerProcessId));
+	FATAL(!isAuthoritative(), ("ServerObject::addServerToProxyList: obj %s, processId %u, while non-auth", getDebugInformation().c_str(), proxyServerProcessId));
 
 	if (isProxiedOnServer(proxyServerProcessId))
 		return;
@@ -1017,7 +1017,7 @@ void ServerObject::removeServerFromProxyList(uint32 proxyServerProcessId)
 
 	if (getAuthServerProcessId() != proxyServerProcessId)
 	{
-		FATAL(!isAuthoritative(), ("ServerObject::removeServerFromProxyList: obj %s, processId %lu, while non-auth", getDebugInformation().c_str(), proxyServerProcessId));
+		FATAL(!isAuthoritative(), ("ServerObject::removeServerFromProxyList: obj %s, processId %u, while non-auth", getDebugInformation().c_str(), proxyServerProcessId));
 
 		ServerMessageForwarding::begin(proxyServerProcessId);
 

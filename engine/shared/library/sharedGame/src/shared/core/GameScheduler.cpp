@@ -61,7 +61,7 @@ void GameScheduler::alter(float elapsedTime)
 	DEBUG_FATAL(!s_installed, ("GameScheduler not installed."));
 	NOT_NULL(s_scheduler);
 
-	const unsigned long schedulerTickCount = s_scheduler->getCurrentCount() + static_cast<unsigned long>(elapsedTime * static_cast<float>(cs_ticksPerSecond));
+	const uint64_t schedulerTickCount = s_scheduler->getCurrentCount() + static_cast<unsigned long>(elapsedTime * static_cast<float>(cs_ticksPerSecond));
 	s_scheduler->update(schedulerTickCount);
 }
 

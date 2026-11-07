@@ -11,6 +11,7 @@
 
 #include "StringId.h"
 #include "sharedFoundation/DynamicVariableList.h"
+#include "sharedFoundation/FixedWidthParse.h"
 #include "sharedFoundation/DynamicVariableLocationData.h"
 #include "sharedFoundation/NetworkId.h"
 #include "sharedFoundation/NetworkIdArchive.h"
@@ -471,7 +472,15 @@ bool DynamicVariable::get(int & value) const
 		FATAL((sizeof(int) > sizeof(m_cachedValue[0])),("DynamicVariable cache size mismatch for type INT"));
 #endif
 
-		*(reinterpret_cast<int *>(&(m_cachedValue[0]))) = atoi(Unicode::wideToNarrow(m_value).c_str());
+		// The text of an INT objvar comes from the database, from packed
+		// objvars and from scripts. Text that is not exactly one int32 is
+		// not an int value: report it as such rather than as 0 or as a value
+		// that depends on the width of long.
+		int32 parsed = 0;
+		if (!FixedWidthParse::parseInt32(m_value, 10, parsed))
+			return false;
+
+		*(reinterpret_cast<int *>(&(m_cachedValue[0]))) = parsed;
 
 		m_cachedValueDirty = false;
 	}
@@ -498,31 +507,24 @@ bool DynamicVariable::get(std::vector<int> &value) const
 		std::vector<int> & cachedValue = *(reinterpret_cast<std::vector<int> *>(m_cachedValue[0]));
 		cachedValue.clear();
 
-		static const int BUFSIZE = 15;
-		char buffer[BUFSIZE];
-		char *bufpos=buffer;
-		std::string packedString=Unicode::wideToNarrow(m_value);
-
-		for(std::string::const_iterator i = packedString.begin();
-			i != packedString.end() && bufpos < buffer + BUFSIZE; ++i)
+		// The packed text is "%i:" per element. As for INT, the array is
+		// unreadable unless every element is exactly one int32 and every
+		// element, including the last, is terminated by ':'. Elements are
+		// checked in the original text, so a non-ASCII code unit or an
+		// embedded nul cannot pass as a digit.
+		Unicode::String::size_type start = 0;
+		while (start < m_value.size())
 		{
-			if ((*i)==':')
+			Unicode::String::size_type const end = m_value.find(':', start);
+			int32 element = 0;
+			if (end == Unicode::String::npos || !FixedWidthParse::parseInt32(m_value.substr(start, end - start), 10, element))
 			{
-				*bufpos='\0';
-				cachedValue.push_back(atoi(buffer));
-				bufpos=buffer;
+				cachedValue.clear();
+				value.clear();
+				return false;
 			}
-			else
-			{
-				*(bufpos++)=*i;
-			}
-		}
-		if (bufpos >= buffer + BUFSIZE)
-		{
-			WARNING_STRICT_FATAL(true, ("DynamicVariable::get int array, "
-				"tried to overrun buffer!"));
-			value.clear();
-			return false;
+			cachedValue.push_back(element);
+			start = end + 1;
 		}
 
 		m_cachedValueDirty = false;

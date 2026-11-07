@@ -22,6 +22,8 @@
 #include "sharedFoundation/Crc.h"
 #include "sharedNetworkMessages/GenericValueTypeMessage.h"
 
+#include <limits>
+
 using namespace JNIWrappersNamespace;
 
 
@@ -621,6 +623,10 @@ jint JNICALL ScriptMethodsScriptNamespace::getCalendarTimeSeconds2(JNIEnv * env,
 	if (!timeinfo)
 		return -1;
 
+	// year - 1900 and month - 1 must not overflow.
+	if (year < std::numeric_limits<jint>::min() + 1900 || month < std::numeric_limits<jint>::min() + 1)
+		return -1;
+
 	timeinfo->tm_year = year - 1900;
 	timeinfo->tm_mon = month - 1;
 	timeinfo->tm_mday = day;
@@ -628,7 +634,13 @@ jint JNICALL ScriptMethodsScriptNamespace::getCalendarTimeSeconds2(JNIEnv * env,
 	timeinfo->tm_min = minute;
 	timeinfo->tm_sec = second;
 
-	return ::mktime(timeinfo);
+	// The script API carries calendar time as a 32-bit int. A date it cannot
+	// hold is an error (-1), as mktime reports it where time_t is 32-bit,
+	// rather than a truncated time that looks valid.
+	time_t const result = ::mktime(timeinfo);
+	if (result < std::numeric_limits<jint>::min() || result > std::numeric_limits<jint>::max())
+		return -1;
+	return static_cast<jint>(result);
 }
 
 //-----------------------------------------------------------------------

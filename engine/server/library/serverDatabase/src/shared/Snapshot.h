@@ -58,12 +58,19 @@ public:
 	
 	virtual bool saveToDB              (DB::Session *session) =0;
 	virtual bool load                  (DB::Session *session) =0;
+	/**
+	 * Encode everything send() will transmit, without transmitting it.
+	 * Returns false if the snapshot holds data that cannot be sent (a
+	 * value outside the member it is sent as); the load must then be
+	 * rejected, and send() must not be called.
+	 */
+	virtual bool prepareSend           () const =0;
 	virtual bool send                  (GameServerConnection *connection) const =0;
 	virtual void saveCompleted         ();
 
 	void takeTimestamp();
 
-	virtual void newObject             (const NetworkId & objectId, int templateId, Tag typeId) =0;
+	virtual void newObject             (const NetworkId & objectId, uint32 templateId, Tag typeId) =0;
 //	virtual void addObjectIdForLoad    (NetworkId & objectId)=0; //TODO:  the load list could be moved into Snapshot, intead of being in the derived class
 
 	void addLocator                    (ObjectLocator *newLocator);

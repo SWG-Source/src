@@ -46,6 +46,13 @@ bool Bindable::isNull() const
 void Bindable::setNull()
 {
 	indicator=-1;
+	clearValue();
+}
+
+// ----------------------------------------------------------------------
+
+void Bindable::clearValue()
+{
 }
 
 // ----------------------------------------------------------------------

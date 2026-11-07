@@ -9,6 +9,8 @@
 #ifndef INCLUDED_LogManager_H
 #define INCLUDED_LogManager_H
 
+
+#include "sharedFoundation/FormatAttribute.h"
 // ======================================================================
 
 class LogMessage;
@@ -34,7 +36,7 @@ public:
 	// note: setArgs() and log() always come as a pair, and must do so to avoid deadlocks
 	static void setArgs(std::string const &channel, Unicode::String const &unicodeAttach);
 	static void setArgs(std::string const &channel);
-	static void log(char const *format, ...);
+	static void log(char const *format, ...) SWG_FORMAT_PRINTF(1, 2);
 	static void logLongText(std::string const & channel, std::string const & longText);
 
 	static void observeLogMessage(LogMessage const &msg);

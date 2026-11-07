@@ -35,10 +35,10 @@ public:
 
 public:
 
-	StaticCallbackEntry(unsigned long when, Callback cb, const void *context);
+	StaticCallbackEntry(uint64_t when, Callback cb, const void *context);
 	~StaticCallbackEntry();
 
-	unsigned long  getExpireCount() const;
+	uint64_t       getExpireCount() const;
 	void           expired() const;
 
 private:
@@ -58,7 +58,7 @@ private:
 
 private:
 
-	unsigned long  m_expireCount;
+	uint64_t       m_expireCount;
 	Callback       m_staticCallbackFunction;
 	const void    *m_context;
 
@@ -68,7 +68,7 @@ private:
 
 /** @return the expiration count ("time", "frame", whatever) of the callback.
 */
-inline unsigned long StaticCallbackEntry::getExpireCount() const
+inline uint64_t StaticCallbackEntry::getExpireCount() const
 {
 	return m_expireCount;
 }

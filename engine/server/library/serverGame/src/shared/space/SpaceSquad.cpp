@@ -192,7 +192,7 @@ void SpaceSquad::track(Object const & target) const
 // ----------------------------------------------------------------------
 void SpaceSquad::moveTo(SpacePath * const path) const
 {
-	LOGC(ConfigServerGame::isSpaceAiLoggingEnabled(), "space_debug_ai", ("SpaceSquad::moveTo() squadId(%d) path(0x%p) pathSize(%u)", getId(), path, (path != nullptr) ? path->getTransformList().size() : 0));
+	LOGC(ConfigServerGame::isSpaceAiLoggingEnabled(), "space_debug_ai", ("SpaceSquad::moveTo() squadId(%d) path(0x%p) pathSize(%zu)", getId(), path, (path != nullptr) ? path->getTransformList().size() : 0));
 
 	UnitMap const & unitMap = getUnitMap();
 	UnitMap::const_iterator iterUnitMap = unitMap.begin();
@@ -208,7 +208,7 @@ void SpaceSquad::moveTo(SpacePath * const path) const
 // ----------------------------------------------------------------------
 void SpaceSquad::addPatrolPath(SpacePath * const path) const
 {
-	LOGC(ConfigServerGame::isSpaceAiLoggingEnabled(), "space_debug_ai", ("SpaceSquad::addPatrolPath() squadId(%d) squadSize(%u) path(0x%p) pathSize(%u)", getId(), getUnitMap().size(), path, (path != nullptr) ? path->getTransformList().size() : 0));
+	LOGC(ConfigServerGame::isSpaceAiLoggingEnabled(), "space_debug_ai", ("SpaceSquad::addPatrolPath() squadId(%d) squadSize(%zu) path(0x%p) pathSize(%zu)", getId(), getUnitMap().size(), path, (path != nullptr) ? path->getTransformList().size() : 0));
 
 	UnitMap const & unitMap = getUnitMap();
 	UnitMap::const_iterator iterUnitMap = unitMap.begin();
@@ -224,7 +224,7 @@ void SpaceSquad::addPatrolPath(SpacePath * const path) const
 // ----------------------------------------------------------------------
 void SpaceSquad::clearPatrolPath()
 {
-	LOGC(ConfigServerGame::isSpaceAiLoggingEnabled(), "space_debug_ai", ("SpaceSquad::clearPatrolPath() squadId(%d) squadSize(%u)", getId(), getUnitMap().size()));
+	LOGC(ConfigServerGame::isSpaceAiLoggingEnabled(), "space_debug_ai", ("SpaceSquad::clearPatrolPath() squadId(%d) squadSize(%zu)", getId(), getUnitMap().size()));
 
 	UnitMap const & unitMap = getUnitMap();
 	UnitMap::const_iterator iterUnitMap = unitMap.begin();
@@ -240,7 +240,7 @@ void SpaceSquad::clearPatrolPath()
 // ----------------------------------------------------------------------
 void SpaceSquad::follow(NetworkId const & followedUnit, Vector const & direction_l, float const distance) const
 {
-	LOGC(ConfigServerGame::isSpaceAiLoggingEnabled(), "space_debug_ai", ("SpaceSquad::follow() squadId(%d) squadSize(%u) followedUnit(%s) direction_l(%.2f, %.2f, %.2f) distance(%.2f)", getId(), getUnitMap().size(), followedUnit.getValueString().c_str(), direction_l.x, direction_l.y, direction_l.z, distance));
+	LOGC(ConfigServerGame::isSpaceAiLoggingEnabled(), "space_debug_ai", ("SpaceSquad::follow() squadId(%d) squadSize(%zu) followedUnit(%s) direction_l(%.2f, %.2f, %.2f) distance(%.2f)", getId(), getUnitMap().size(), followedUnit.getValueString().c_str(), direction_l.x, direction_l.y, direction_l.z, distance));
 
 	UnitMap const & unitMap = getUnitMap();
 	UnitMap::const_iterator iterUnitMap = unitMap.begin();

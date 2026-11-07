@@ -821,8 +821,8 @@ void TaskManager::update()
 
 	Clock::setFrameRateLimit(4.0f);
 
-	static uint32 lastTime = 0;
-	uint32 currentTime = Clock::timeMs();
+	static uint64_t lastTime = 0;
+	uint64_t const currentTime = Clock::timeMs();
 	if (!instance().m_nodeToConnectToList.empty() && currentTime > lastTime + 1000)
 	{
 		std::vector<NodeEntry>::iterator i = instance().m_nodeToConnectToList.begin();

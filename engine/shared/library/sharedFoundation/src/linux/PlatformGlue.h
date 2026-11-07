@@ -8,6 +8,7 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <pthread.h>
+#include <cinttypes>
 
 typedef unsigned short int WORD;
 typedef uint32_t DWORD;
@@ -24,9 +25,10 @@ int _stricmp(const char* string1, const char* string2);
 //String to numeric conversions
 char* _itoa(int value, char* stringOut, int radix);
 
-//Format specifier for non-portable printf
-#define UINT64_FORMAT_SPECIFIER "%llu"
-#define INT64_FORMAT_SPECIFIER "%lli"
+//Format specifier for non-portable printf and scanf of uint64/int64 (uint64_t/int64_t:
+//long long on 32-bit, long on 64-bit Linux, so the length modifier must follow the type)
+#define UINT64_FORMAT_SPECIFIER "%" PRIu64
+#define INT64_FORMAT_SPECIFIER "%" PRIi64
 
 //Constant definition macro for 64 bit values
 #define UINT64_LITERAL(a) a ## ull

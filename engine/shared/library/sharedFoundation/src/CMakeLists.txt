@@ -44,6 +44,7 @@ set(SHARED_SOURCES
 	shared/Fatal.h
 	shared/FirstSharedFoundation.h
 	shared/FloatMath.h
+	shared/FormatAttribute.h
 	shared/FormattedString.h
 	shared/GameControllerMessage.h
 	shared/LabelHash.cpp
@@ -74,6 +75,9 @@ set(SHARED_SOURCES
 	shared/StaticCallbackEntry.cpp
 	shared/StaticCallbackEntry.h
 	shared/StationId.h
+	shared/FixedWidthParse.h
+	shared/StationIdFromAccountName.cpp
+	shared/StationIdFromAccountName.h
 	shared/StlForwardDeclaration.h
 	shared/StringCompare.h
 	shared/Tag.h

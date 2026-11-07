@@ -49,7 +49,7 @@ namespace OfflineMoneyCustomPersistStepNamespace
 
 	private:
 		DB::BindableNetworkId m_sourceObject;
-		DB::BindableLong m_amount;
+		DB::BindableInt32 m_amount;
 		DB::BindableBool m_result;
 
 	private:
