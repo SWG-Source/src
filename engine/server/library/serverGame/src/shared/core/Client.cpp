@@ -384,7 +384,8 @@ Client::Client(ConnectionServerConnection &connection, const NetworkId &characte
     }
 
     // Send server-specific settings to the client
-    ParametersMessage const msg(ConfigServerGame::getWeatherUpdateSeconds());
+    ParametersMessage const msg(ConfigServerGame::getWeatherUpdateSeconds(),
+		ConfigServerGame::getEntertainerCaptchaPercent());
     send(msg, true);
 
     ObjectTracker::addPlayer();
