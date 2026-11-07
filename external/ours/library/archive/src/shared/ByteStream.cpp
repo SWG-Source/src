@@ -245,7 +245,7 @@ void ByteStream::put(void const * const source, const unsigned int sourceSize)
 	unsigned int const newCapacity = getAllocationSize(newSize);
 	if (!data || data->getRef() > 1 || data->size < newCapacity)
 	{
-		std::auto_ptr<Data> replacement(Data::getNewData());
+		std::unique_ptr<Data> replacement(Data::getNewData());
 		if (replacement->size < newCapacity)
 		{
 			unsigned char * const buffer = new unsigned char[newCapacity];
@@ -273,7 +273,7 @@ void ByteStream::reAllocate(const unsigned int newSize)
 {
 	if (!data || data->getRef() > 1 || data->size < newSize)
 	{
-		std::auto_ptr<Data> replacement(Data::getNewData());
+		std::unique_ptr<Data> replacement(Data::getNewData());
 		if (replacement->size < newSize)
 		{
 			unsigned char * const buffer = new unsigned char[newSize];
