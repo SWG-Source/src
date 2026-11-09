@@ -4,7 +4,8 @@ as
 	procedure set_clock (p_time number)
 	as
 	begin
-		update clock set last_save_time = p_time, last_save_timestamp = sysdate;
+		-- never move the saved game time backwards (host clock stepped back)
+		update clock set last_save_time = greatest(nvl(last_save_time, p_time), p_time), last_save_timestamp = sysdate;
 	end;
 
 	procedure add_player (p_station_id number, p_character_object objectid, p_character_name varchar2, p_normalized_name varchar2)
