@@ -48,7 +48,7 @@ public:
 
 	//getters
 	bool         isActive() const;
-	float        getTickCount() const;
+	uint32       getTickCount() const;
 
 	// power functions
 	float        getPower(void) const;
@@ -57,7 +57,7 @@ public:
 	float        getPowerRate(void) const;
 	void         setPowerRate(float rate);
 	float        getTimePowered(void) const;
-	float        getOutOfPowerTime(void) const;
+	double       getOutOfPowerTime(void) const;
 
 	struct InstallationObjectPointerHash
 	{
@@ -72,8 +72,10 @@ public:
 
 protected:
 	
-	void         setTickCount(float count);
-	void         setActivateStartTime(float time);
+	void         setTickCount(uint32 count);
+	void         setActivateStartTime(uint32 time);
+
+	static uint32 toGameSeconds(double time);
 
 	virtual const SharedObjectTemplate *  getDefaultSharedTemplate(void) const;
 
@@ -88,11 +90,11 @@ private:
 
 //BPM InstallationObject : TangibleObject // Begin persisted members.
 	Archive::AutoDeltaVariable<int32>  m_installationType;	///< The type of installation (accessible by game scripts).
-	Archive::AutoDeltaVariable<float>  m_tickCount;         ///< For active installations, the tick count the last time they harvested resources
+	Archive::AutoDeltaVariable<uint32> m_tickCount;         ///< For active installations, the game time (ServerClock::getGameTimeSeconds()) of the last harvest; 0 when inactive
 	Archive::AutoDeltaVariable<bool>   m_activated;
 	Archive::AutoDeltaVariable<float>  m_power;             // Amount of power the installation has
 	Archive::AutoDeltaVariable<float>  m_powerRate;         // Power used, in units/hour
-	Archive::AutoDeltaVariable<float>  m_activateStartTime; // Time when the installation was turned on, from ServerClock::getGameTimeSeconds()
+	Archive::AutoDeltaVariable<uint32> m_activateStartTime; // Time when the installation was turned on, from ServerClock::getGameTimeSeconds()
 //EPM
 	
 /// Members yet to be implemented.
@@ -105,12 +107,12 @@ inline bool InstallationObject::isActive() const
 	return m_activated.get();
 }
 
-inline float InstallationObject::getTickCount() const
+inline uint32 InstallationObject::getTickCount() const
 {
 	return m_tickCount.get();
 }
 
-inline void InstallationObject::setTickCount(float count)
+inline void InstallationObject::setTickCount(uint32 count)
 {
 	if (isAuthoritative())
 		m_tickCount = count;

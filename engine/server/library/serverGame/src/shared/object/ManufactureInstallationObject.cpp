@@ -45,6 +45,8 @@
 #include "sharedObject/SlottedContainer.h"
 #include "sharedObject/VolumeContainer.h"
 
+#include <cmath>
+
 //----------------------------------------------------------------------
 
 // slot names
@@ -560,7 +562,7 @@ void ManufactureInstallationObject::activate(const NetworkId &actorId)
 
 	if (isActive())
 	{
-		setTickCount(static_cast<float>(ServerClock::getInstance().getGameTimeSeconds()));
+		setTickCount(ServerClock::getInstance().getGameTimeSeconds());
 		setObjVarItem(OBJVAR_NUM_ITEMS, 0);
 
 #if 0
@@ -664,8 +666,9 @@ void ManufactureInstallationObject::harvest()
 				return;
 			}
 
-			float currentTime = static_cast<float>(ServerClock::getInstance().getGameTimeSeconds());
-			float deltaTime = currentTime - getTickCount();
+			// double: game times past 2^24 seconds do not fit a float exactly
+			uint32 const currentTime = ServerClock::getInstance().getGameTimeSeconds();
+			double deltaTime = static_cast<double>(currentTime) - static_cast<double>(getTickCount());
 			float timePerObject = getTimePerObject();
 			if (timePerObject < 1.0f)
 			{
@@ -674,10 +677,10 @@ void ManufactureInstallationObject::harvest()
 				timePerObject = 1.0f;
 			}
 			// make sure we had enough power to make the items
-			float outOfPowerTime = getOutOfPowerTime();
+			double const outOfPowerTime = getOutOfPowerTime();
 			if (outOfPowerTime >= 0 && outOfPowerTime < currentTime)
 			{
-				deltaTime = outOfPowerTime - getTickCount();
+				deltaTime = outOfPowerTime - static_cast<double>(getTickCount());
 				if (deltaTime < timePerObject)
 				{
 					// turn off the station
@@ -715,7 +718,9 @@ void ManufactureInstallationObject::harvest()
 			// the items in the queue)
 			if (maxItemCount == 0)
 				deltaTime = 0;
-			setTickCount(currentTime - deltaTime);
+			// The tick count is whole seconds: keep only the whole seconds of the
+			// leftover time, so the station never runs ahead of its schedule.
+			setTickCount(toGameSeconds(static_cast<double>(currentTime) - std::floor(deltaTime)));
 			return;
 		}
 	}

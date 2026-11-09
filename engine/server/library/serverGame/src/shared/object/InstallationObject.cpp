@@ -38,6 +38,7 @@
 #include "swgServerNetworkMessages/MessageQueueResourceFinishHarvest.h"
 #include "swgServerNetworkMessages/MessageQueueResourceSetInstalledEfficiency.h"
 
+#include <limits>
 #include <stdio.h>
 #include <vector>
 
@@ -60,7 +61,7 @@ using namespace InstallationObjectNamespace;
 InstallationObject::InstallationObject(const ServerInstallationObjectTemplate* newTemplate) :
 	TangibleObject(newTemplate),
 	m_installationType(0),
-	m_tickCount(0.0f),
+	m_tickCount(0),
 	m_activated(false),
 	m_power(0),
 	m_powerRate(0),
@@ -198,7 +199,7 @@ void InstallationObject::activate(const NetworkId &actorId)
 		m_activated = true;
 		setCondition(ServerTangibleObjectTemplate::C_onOff);
 		setObjVarItem(OBJVAR_ACCUMULATED_TIME, 0.0f);
-		m_activateStartTime = static_cast<float>(ServerClock::getInstance().getGameTimeSeconds());
+		m_activateStartTime = ServerClock::getInstance().getGameTimeSeconds();
 		m_power = currentPower;
 		scheduleForAlter();
 	}
@@ -226,11 +227,10 @@ void InstallationObject::deactivate()
 			return;
 
 		// adjust power for time active
-		float currentTime = static_cast<float>(ServerClock::getInstance().getGameTimeSeconds());
-		setActivateStartTime(currentTime);
+		setActivateStartTime(ServerClock::getInstance().getGameTimeSeconds());
 		
 		// turn the station off
-		m_tickCount = 0.0f;
+		m_tickCount = 0;
 		m_activated = false;
 		clearCondition(ServerTangibleObjectTemplate::C_onOff);
 		scheduleForAlter();
@@ -272,7 +272,7 @@ void InstallationObject::finishActivate(float installedEfficiency, float tickCou
 	{
 		if (m_activated.get())
 		{
-			m_tickCount = tickCount;
+			m_tickCount = toGameSeconds(tickCount);
 		}
 		else
 		{
@@ -342,8 +342,7 @@ float InstallationObject::getTimePowered(void) const
 {
 	if (isActive())
 	{
-		float currentTime = static_cast<float>(ServerClock::getInstance().getGameTimeSeconds());
-		const_cast<InstallationObject*>(this)->setActivateStartTime(currentTime);
+		const_cast<InstallationObject*>(this)->setActivateStartTime(ServerClock::getInstance().getGameTimeSeconds());
 	}
 
 	float accumulatedTime = 0.0f;
@@ -359,13 +358,14 @@ float InstallationObject::getTimePowered(void) const
  * @return the time in secs, -1 if it never runs out, and 0 if the installation 
  *         is inactive
  */
-float InstallationObject::getOutOfPowerTime(void) const
+double InstallationObject::getOutOfPowerTime(void) const
 {
+	// double: a game time past 2^24 seconds does not fit a float exactly
 	if (isActive() && m_powerRate.get() > 0)
-		return m_activateStartTime.get() + (m_power.get() / m_powerRate.get()) * 3600.0f;
+		return static_cast<double>(m_activateStartTime.get()) + (static_cast<double>(m_power.get()) / m_powerRate.get()) * 3600.0;
 	else if (m_powerRate.get() <= 0)
-		return -1.0f;
-	return 0.0f;
+		return -1.0;
+	return 0.0;
 }	// InstallationObject::getOutOfPowerTime
 
 // ----------------------------------------------------------------------
@@ -386,7 +386,7 @@ void InstallationObject::setPowerRate(float rate)
 		if (isActive())
 		{
 			// adjust the power for our current rate by changing the active time to our current time
-			setActivateStartTime(static_cast<float>(ServerClock::getInstance().getGameTimeSeconds()));
+			setActivateStartTime(ServerClock::getInstance().getGameTimeSeconds());
 		}
 		m_powerRate = rate;	
 	}
@@ -400,7 +400,7 @@ void InstallationObject::setPowerRate(float rate)
  *
  * @param time		the new activation time for the installation
  */
-void InstallationObject::setActivateStartTime(float time)
+void InstallationObject::setActivateStartTime(uint32 time)
 {
 	// if we're not active, there's no point in changing the time
 	if (!isActive())
@@ -411,7 +411,8 @@ void InstallationObject::setActivateStartTime(float time)
 		(m_power.get() > 0 || m_powerRate.get() <= 0))
 	{
 		// figure out how much power we used to get to the time value
-		float deltaTime = time - m_activateStartTime.get();
+		// the difference of two whole game seconds is exact
+		float deltaTime = static_cast<float>(time - m_activateStartTime.get());
 		if (m_powerRate.get() > 0)
 		{
 			float deltaPower = (deltaTime / 3600.0f) * m_powerRate.get();
@@ -497,6 +498,22 @@ void InstallationObject::changePower(float delta)
 const InstallationObject::AllInstallationsSet & InstallationObject::getAllInstallations()
 {
 	return g_installationList;
+}
+
+//-----------------------------------------------------------------------
+
+/**
+ * Converts a game time held as a floating-point value to whole game seconds.
+ * A fraction is dropped; NaN and negative values become 0 (inactive) and
+ * values past the uint32 range are clamped.
+ */
+uint32 InstallationObject::toGameSeconds(double time)
+{
+	if (!(time > 0.0))
+		return 0;
+	if (time >= static_cast<double>(std::numeric_limits<uint32>::max()))
+		return std::numeric_limits<uint32>::max();
+	return static_cast<uint32>(time);
 }
 
 // ======================================================================

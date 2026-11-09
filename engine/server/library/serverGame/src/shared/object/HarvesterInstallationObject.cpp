@@ -160,7 +160,7 @@ void HarvesterInstallationObject::activate(const NetworkId &actorId)
 		Vector location(getTransform_o2p().getPosition_p());
 		//apply current extraction rate multplier for things like harvester bonus
 		m_installedEfficiency = (m_currentExtractionRate.get() * ConfigServerGame::getHarvesterExtractionRateMultiplier()) * resourcePool->getEfficiencyAtLocation(location.x,location.z);
-		setTickCount(static_cast<float>(ServerClock::getInstance().getGameTimeSeconds()));
+		setTickCount(ServerClock::getInstance().getGameTimeSeconds());
 	}
 }
 
@@ -202,21 +202,24 @@ void HarvesterInstallationObject::harvest()
 				if (condition< 0 || condition > 1)
 					condition = 0;
 
-				float oldTickCount = getTickCount();
-				float amountCollected = (pool->harvest(m_installedEfficiency.get(), static_cast<uint32>(getTickCount()))) * condition;
-				float newTickCount = static_cast<float>(ServerClock::getInstance().getGameTimeSeconds());
+				uint32 const oldTickCount = getTickCount();
+				float amountCollected = (pool->harvest(m_installedEfficiency.get(), oldTickCount)) * condition;
+				uint32 const newTickCount = ServerClock::getInstance().getGameTimeSeconds();
 				setTickCount(newTickCount);
 
 				// Check for out of power
-				if ((getOutOfPowerTime() > 0) && (getOutOfPowerTime() < newTickCount))
+				double const outOfPowerTime = getOutOfPowerTime();
+				if ((outOfPowerTime > 0) && (outOfPowerTime < newTickCount))
 				{
-					if (getOutOfPowerTime() < oldTickCount)
+					if (outOfPowerTime < oldTickCount || newTickCount <= oldTickCount)
 					{
+						// out of power before the last harvest, or no time has
+						// passed since it (the ratio below would be 0/0)
 						amountCollected = 0;
 					}
 					else
 					{
-						float runRatio = (getOutOfPowerTime() - oldTickCount) / (newTickCount - oldTickCount);
+						float runRatio = static_cast<float>((outOfPowerTime - oldTickCount) / (newTickCount - oldTickCount));
 						DEBUG_REPORT_LOG(true,("Scaling output by %f because power ran out.\n",runRatio));
 						amountCollected *= runRatio;
 					}
