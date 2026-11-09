@@ -28,6 +28,7 @@ private:
 	uint32_t serverFrame;
 	uint32_t subtractInterval;
 	mutable time_t lastTime;
+	bool heldBack;
 };
 
 //-----------------------------------------------------------------------
