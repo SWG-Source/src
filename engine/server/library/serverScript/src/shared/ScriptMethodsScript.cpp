@@ -59,6 +59,25 @@ namespace ScriptMethodsScriptNamespace
 	jstring      JNICALL getCalendarTimeStringLocal_YYYYMMDDHHMMSS(JNIEnv *env, jobject self, jint calendarTimeSeconds);
 	jint         JNICALL secondsUntilCalendarTimeDayOfWeek(JNIEnv *env, jobject self, jint dayOfWeek, jint hour, jint minute, jint second);
 	jint         JNICALL secondsUntilCalendarTimeDayOfMonth(JNIEnv *env, jobject self, jint month, jint dayOfMonth, jint hour, jint minute, jint second);
+
+	// Largest float that converts to int without overflow (2^31 - 128).
+	float const cs_maxMessageDelaySeconds = 2147483520.0f;
+
+	// Clamp a script delay in float before narrowing it: NaN and negative delays become 0, and
+	// delays too large for an int become the maximum supported delay instead of wrapping.
+	float clampMessageDelay(jfloat const delay)
+	{
+		if (!(delay > 0.0f))
+			return 0.0f;
+		if (delay > cs_maxMessageDelaySeconds)
+			return cs_maxMessageDelaySeconds;
+		return delay;
+	}
+
+	int convertMessageDelay(jfloat const delay)
+	{
+		return static_cast<int>(clampMessageDelay(delay));
+	}
 }
 
 //========================================================================
@@ -386,12 +405,12 @@ jboolean JNICALL ScriptMethodsScriptNamespace::remoteMessageTo(JNIEnv *env, jobj
 		// add crc info to the string so we can verify it when we get the message
 		if (!localParams.empty())
 		{
-			MessageToQueue::getInstance().sendMessageToJava(NetworkId(receiver), methodNameStdString, localParams, static_cast<int>(delay), guaranteed == JNI_TRUE, NetworkId(undeliveredCallbackObject), undeliveredCallbackMethodNameStdString);
+			MessageToQueue::getInstance().sendMessageToJava(NetworkId(receiver), methodNameStdString, localParams, convertMessageDelay(delay), guaranteed == JNI_TRUE, NetworkId(undeliveredCallbackObject), undeliveredCallbackMethodNameStdString);
 		}
 	}
 	else
 	{
-		MessageToQueue::getInstance().sendMessageToJava(NetworkId(receiver), methodNameStdString, std::vector<int8>(), static_cast<int>(delay), guaranteed == JNI_TRUE, NetworkId(undeliveredCallbackObject), undeliveredCallbackMethodNameStdString);
+		MessageToQueue::getInstance().sendMessageToJava(NetworkId(receiver), methodNameStdString, std::vector<int8>(), convertMessageDelay(delay), guaranteed == JNI_TRUE, NetworkId(undeliveredCallbackObject), undeliveredCallbackMethodNameStdString);
 	}
 	
 	return JNI_TRUE;
@@ -433,7 +452,7 @@ void JNICALL ScriptMethodsScriptNamespace::messageToPlayersOnPlanet(JNIEnv *env,
 	// running this planet; each game server will then check for
 	// all players within the range and send the player the messageTo;
 	// we need to do this because the range could cover multiple game servers
-	GenericValueTypeMessage<std::pair<std::pair<std::pair<std::string, std::vector<int8> >, std::pair<float, bool> >, std::pair<Vector, float> > > const m("MessageToPlayersOnPlanet", std::make_pair(std::make_pair(std::make_pair(methodNameStdString, localParams), std::make_pair(delay, (includeDisconnectedPlayers != JNI_FALSE))), std::make_pair(vectorLocation, (loc ? radius : -1.0f))));
+	GenericValueTypeMessage<std::pair<std::pair<std::pair<std::string, std::vector<int8> >, std::pair<float, bool> >, std::pair<Vector, float> > > const m("MessageToPlayersOnPlanet", std::make_pair(std::make_pair(std::make_pair(methodNameStdString, localParams), std::make_pair(clampMessageDelay(delay), (includeDisconnectedPlayers != JNI_FALSE))), std::make_pair(vectorLocation, (loc ? radius : -1.0f))));
 	GameServer::getInstance().sendToPlanetServer(m);
 }
 
@@ -538,10 +557,10 @@ void JNICALL ScriptMethodsScriptNamespace::recurringMessageTo(JNIEnv * /*env*/, 
 			return;
 		}
 
-		MessageToQueue::getInstance().sendRecurringMessageToJava(NetworkId(receiver), methodNameStdString, localParams, static_cast<int>(delay));
+		MessageToQueue::getInstance().sendRecurringMessageToJava(NetworkId(receiver), methodNameStdString, localParams, convertMessageDelay(delay));
 	}
 	else
-		MessageToQueue::getInstance().sendRecurringMessageToJava(NetworkId(receiver), methodNameStdString, std::vector<int8>(), static_cast<int>(delay));
+		MessageToQueue::getInstance().sendRecurringMessageToJava(NetworkId(receiver), methodNameStdString, std::vector<int8>(), convertMessageDelay(delay));
 }
 
 // ----------------------------------------------------------------------

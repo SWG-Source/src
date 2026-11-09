@@ -13738,6 +13738,20 @@ void CreatureObject::addBuff(uint32 buffNameCrc, float duration, float dynamicVa
 	addBuff( buffNameCrc, duration, dynamicValue, duration, caster, stackCount);
 }
 
+namespace CreatureObjectAddBuffNamespace
+{
+	// Return the buff removal timestamp now + duration, clamped so it neither wraps past 2^32
+	// nor reaches the 0xFFFFFFFF permanent-buff sentinel. The comparison is done in double,
+	// which represents every uint32 exactly, so the float duration is never narrowed out of range.
+	uint32 computeBuffRemovalTimestamp(uint32 const now, float const duration)
+	{
+		uint32 const maxDuration = (now < 0xFFFFFFFEu) ? (0xFFFFFFFEu - now) : 0u;
+		if (!(static_cast<double>(duration) < static_cast<double>(maxDuration)))
+			return now + maxDuration;
+		return now + static_cast<uint32>(duration);
+	}
+}
+
 void CreatureObject::addBuff(uint32 buffNameCrc, float timeTillRemoval, float dynamicValue, float totalDuration, NetworkId caster, uint32 stackCount)
 {
 	if (!isAuthoritative())
@@ -13763,13 +13777,13 @@ void CreatureObject::addBuff(uint32 buffNameCrc, float timeTillRemoval, float dy
 			timestamp = 0xFFFFFFFF;
 		else
 		{
-			timestamp += static_cast<uint32>(defaultDuration);
+			timestamp = CreatureObjectAddBuffNamespace::computeBuffRemovalTimestamp(timestamp, defaultDuration);
 			totalDuration = defaultDuration;
 		}
 	}
 	else
 	{
-		timestamp += static_cast<uint32>(timeTillRemoval);
+		timestamp = CreatureObjectAddBuffNamespace::computeBuffRemovalTimestamp(timestamp, timeTillRemoval);
 	}
 	bool reapply = false;
 	if(hasBuff(buffNameCrc))

@@ -67,7 +67,7 @@ void AiCreatureWeaponActions::addServerNpAutoDeltaVariables(Archive::AutoDeltaBy
 {
 	stream.addVariable(m_singleUseActionList);
 	stream.addVariable(m_delayRepeatActionList);
-	stream.addVariable(m_delayRepeatActionList);
+	stream.addVariable(m_instantRepeatActionList);
 }
 
 // ----------------------------------------------------------------------
