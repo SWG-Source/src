@@ -23,8 +23,8 @@ namespace Base
 		{
 			while(m_blocks[i] != nullptr)
 			{
-				unsigned *tmp = m_blocks[i];
-				m_blocks[i] = (unsigned *)*m_blocks[i];
+				uintptr_t *tmp = m_blocks[i];
+				m_blocks[i] = (uintptr_t *)*m_blocks[i];
 				free(tmp);
 			}
 		}
@@ -36,7 +36,7 @@ namespace Base
 	void *BlockAllocator::getBlock(unsigned bytes)
 	{
 		unsigned accum = 16, bits = 16;
-		unsigned *handle = nullptr;
+		uintptr_t *handle = nullptr;
 
 		// Perform a binary search looking for the highest bit.
 
@@ -79,7 +79,7 @@ namespace Base
 		if(m_blocks[accum] == 0)
 		{
 			// remove the pre allocated block from the linked list
-			handle = (unsigned *)calloc(((1 << accum) / 4) + 2, sizeof(unsigned));
+			handle = (uintptr_t *)calloc(((1 << accum) / 4) + 2, sizeof(uintptr_t));
 			handle[1] = accum;
 			handle[0] = 0;
 		}
@@ -87,20 +87,20 @@ namespace Base
 		{
 			// Allocate a new block 
 			handle = m_blocks[accum];
-			m_blocks[accum] = (unsigned *)handle[0];
+			m_blocks[accum] = (uintptr_t *)handle[0];
 			handle[0] = 0;
 		}
 		// return a pointer that skips over the header used for the allocator's purposes
 		return(handle + 2);
 	}
 
-	void BlockAllocator::returnBlock(unsigned *handle)
+	void BlockAllocator::returnBlock(uintptr_t *handle)
 	{
 		// C++ allows for safe deletion of a nullptr pointer
 		if(handle)
 		{
 			// Update the allocator linked list, insert this entry at the head
-			*(handle - 2) = (unsigned)m_blocks[*(handle - 1)];
+			*(handle - 2) = (uintptr_t)m_blocks[*(handle - 1)];
 			// Add this entry to the proper linked list node
 			m_blocks[*(handle - 1)] = (handle - 2);
 		}

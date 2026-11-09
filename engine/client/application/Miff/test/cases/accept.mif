@@ -1,0 +1,17 @@
+enum Flags { F0 = 1, F1 = 2, F2 = 4, F3, BIG = 0x7FFFFFFE, BIGNEXT, NEG = -5, NEGNEXT };
+form "TEST"
+{
+	chunk "0000"
+	{
+		uint32 0xFFFFFFFF, 0x80000000 | 1, 1 << 30, -1 & 0xFF, 4294967295u, 0777, 0x0, BIGNEXT, F0 | F1 | F2, ~0 & 0xFFFF
+		int32 -2147483647 - 1, 2147483647, 7 / -2, -7 % 3, -7 / 2, -16 >> 2, -1 >> 31, 0x7FFFFFFF >> 30, ~5, -(3 - 10), NEGNEXT, 3 * -4, (1 << 30) - 1 + (1 << 30), 5 | 3
+		int16 -32768, 32767, -50, 12 * 100
+		uint16 65535, 0, 33003
+		int8 -128, 127, -1
+		uint8 255, 0, 255 & 0x0F
+		float 3, -2147483647, 2147483647, 1.5 * 2, NEG, sin(0.5)
+		double 7, 0.1, BIG
+		string "abc"
+		labelhash "hello"
+	}
+}

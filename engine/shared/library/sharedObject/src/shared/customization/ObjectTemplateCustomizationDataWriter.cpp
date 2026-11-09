@@ -41,7 +41,7 @@ void ObjectTemplateCustomizationDataWriter::addRangedIntCustomizationVariable(co
 	//-- Check for skipping shared_owner variables.
 	if (!m_writeSharedOwnerVariables)
 	{
-		bool const isSharedOwnerVariable = (static_cast<int>(variableName.find("shared_owner")) != static_cast<int>(std::string::npos));
+		bool const isSharedOwnerVariable = (variableName.find("shared_owner") != std::string::npos);
 		if (isSharedOwnerVariable)
 		{
 			// Skip it.
@@ -50,7 +50,7 @@ void ObjectTemplateCustomizationDataWriter::addRangedIntCustomizationVariable(co
 	}
 
 	//-- Check for special case variable for breasts.
-	if (static_cast<int>(variableName.find("blend_flat_chest")) != static_cast<int>(std::string::npos))
+	if (variableName.find("blend_flat_chest") != std::string::npos)
 	{
 		// Found this one, adjust minimum value.
 		minValueInclusive = -155;
@@ -87,7 +87,7 @@ void ObjectTemplateCustomizationDataWriter::addPaletteColorCustomizationVariable
 	//-- Check for skipping shared_owner variables.
 	if (!m_writeSharedOwnerVariables)
 	{
-		bool const isSharedOwnerVariable = (static_cast<int>(variableName.find("shared_owner")) != static_cast<int>(std::string::npos));
+		bool const isSharedOwnerVariable = (variableName.find("shared_owner") != std::string::npos);
 		if (isSharedOwnerVariable)
 		{
 			// Skip it.
@@ -182,7 +182,7 @@ bool ObjectTemplateCustomizationDataWriter::writeToFile(const std::string &pathN
 			{
 				// -- Fixup last entry to use ] in place of final comma.
 				std::string::size_type position = it->rfind(',');
-				DEBUG_FATAL(static_cast<int>(position) == static_cast<int>(std::string::npos), ("bad data, where's the final comma?"));
+				DEBUG_FATAL(position == std::string::npos, ("bad data, where's the final comma?"));
 
 				(*it)[position] = ']';
 			}
@@ -207,7 +207,7 @@ bool ObjectTemplateCustomizationDataWriter::writeToFile(const std::string &pathN
 			{
 				// -- Fixup last entry to use ] in place of final comma.
 				std::string::size_type position = it->rfind(',');
-				DEBUG_FATAL(static_cast<int>(position) == static_cast<int>(std::string::npos), ("bad data, where's the final comma?"));
+				DEBUG_FATAL(position == std::string::npos, ("bad data, where's the final comma?"));
 
 				(*it)[position] = ']';
 			}

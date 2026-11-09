@@ -100,7 +100,7 @@ void DatabaseMetricsData::updateData()
 	if (ageOldestUnackedLoad > ConfigServerDatabase::getOldestUnackedLoadAlertThresholdSeconds())
 	{
 		char buffer[64];
-		IGNORE_RETURN(snprintf(buffer, sizeof(buffer)-1, "Threshold %d seconds exceeded by (server %lu)",
+		IGNORE_RETURN(snprintf(buffer, sizeof(buffer)-1, "Threshold %d seconds exceeded by (server %u)",
 			ConfigServerDatabase::getOldestUnackedLoadAlertThresholdSeconds(), Loader::getInstance().getServerOldestUnackedLoad()));
 		buffer[sizeof(buffer)-1] = '\0';
 

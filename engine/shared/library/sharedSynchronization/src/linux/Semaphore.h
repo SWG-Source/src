@@ -10,6 +10,10 @@
 #ifndef INCLUDED_Semaphore_h
 #define INCLUDED_Semaphore_h
 
+// A case-insensitive shared source directory can resolve <semaphore.h> to this
+// file. Continue past our include directory to load the POSIX declarations.
+#include_next <semaphore.h>
+
 class Semaphore
 {
 public:

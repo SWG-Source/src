@@ -3,6 +3,7 @@
 
 //---------------------------------------------------------------------
 
+#include "ArchiveCount.h"
 #include "ByteStream.h"
 #include <string>
 #include <map>
@@ -30,42 +31,28 @@ inline void get(ReadIterator & source, float & target)
 
 //---------------------------------------------------------------------
 
-inline void get(ReadIterator & source, unsigned long int & target)
+inline void get(ReadIterator & source, uint32_t & target)
 {
 	source.get(&target, 4);
 }
 
 //---------------------------------------------------------------------
 
-inline void get(ReadIterator & source, signed long int & target)
+inline void get(ReadIterator & source, int32_t & target)
 {
 	source.get(&target, 4);
 }
 
 //---------------------------------------------------------------------
 
-inline void get(ReadIterator & source, unsigned int & target)
-{
-	source.get(&target, 4);
-}
-
-//---------------------------------------------------------------------
-
-inline void get(ReadIterator & source, signed int & target)
-{
-	source.get(&target, 4);
-}
-
-//---------------------------------------------------------------------
-
-inline void get(ReadIterator & source, unsigned short int & target)
+inline void get(ReadIterator & source, uint16_t & target)
 {
 	source.get(&target, 2);
 }
 
 //---------------------------------------------------------------------
 
-inline void get(ReadIterator & source, signed short int & target)
+inline void get(ReadIterator & source, int16_t & target)
 {
 	source.get(&target, 2);
 }
@@ -95,8 +82,12 @@ inline void get(ReadIterator & source, std::string & target)
 		size = len;
 	else
 		get(source, size);
-	const char * c = reinterpret_cast<const char * const>(source.getBuffer());
-	target = std::string(c, size);
+	if (size > source.getSize())
+		throw ReadException("Archive::get(string) - payload exceeds remaining buffer");
+	if (size)
+		target.assign(reinterpret_cast<const char *>(source.getBuffer()), size);
+	else
+		target.clear();
 	source.advance(size);
 }
 
@@ -113,6 +104,8 @@ inline void get(ReadIterator & source, ByteStream & target)
 {
 	unsigned int s;
 	get(source, s);
+	if (s > source.getSize())
+		throw ReadException("Archive::get(ByteStream) - payload exceeds remaining buffer");
 	target.put(source.getBuffer(), s);
 	source.advance(s);
 }
@@ -190,9 +183,9 @@ template<typename A> inline void get_ptr(ReadIterator & source, std::vector<cons
 
 template<typename Key, typename Value> inline void get(ReadIterator & source, std::map<Key, Value> & target)
 {
-	size_t numKeys;
+	uint32_t numKeys;
 	get(source, numKeys);
-	size_t i;
+	uint32_t i;
 	for(i = 0; i < numKeys; ++i)
 	{
 		Key k;
@@ -229,42 +222,28 @@ inline void put(ByteStream & target, const float & source)
 
 //---------------------------------------------------------------------
 
-inline void put(ByteStream & target, const unsigned long int & source)
+inline void put(ByteStream & target, const uint32_t & source)
 {
 	target.put(&source, 4);
 }
 
 //---------------------------------------------------------------------
 
-inline void put(ByteStream & target, const signed long int & source)
+inline void put(ByteStream & target, const int32_t & source)
 {
 	target.put(&source, 4);
 }
 
 //---------------------------------------------------------------------
 
-inline void put(ByteStream & target, const unsigned int & source)
-{
-	target.put(&source, 4);
-}
-
-//---------------------------------------------------------------------
-
-inline void put(ByteStream & target, const signed int & source)
-{
-	target.put(&source, 4);
-}
-
-//---------------------------------------------------------------------
-
-inline void put(ByteStream & target, const unsigned short int & source)
+inline void put(ByteStream & target, const uint16_t & source)
 {
 	target.put(&source, 2);
 }
 
 //---------------------------------------------------------------------
 
-inline void put(ByteStream & target, const signed short int & source)
+inline void put(ByteStream & target, const int16_t & source)
 {
 	target.put(&source, 2);
 }
@@ -294,19 +273,19 @@ inline void put(ByteStream & target, const char & source)
 
 inline void put(ByteStream & target, const std::string & source)
 {
-	if (source.size() < 65535)
+	unsigned int const size = ArchiveCount::fromSize<unsigned int>(source.size());
+	if (size < 65535)
 	{
-		unsigned short len = static_cast<unsigned short>(source.size());
+		unsigned short len = static_cast<uint16_t>(size);
 		put(target, len);
 	}
 	else
 	{
-		unsigned short len = static_cast<unsigned short>(65535);
+		unsigned short len = static_cast<uint16_t>(65535);
 		put(target, len);
-		unsigned int size = source.size();
 		put(target, size);
 	}
-	target.put(source.data(), source.size());
+	target.put(source.data(), size);
 }
 
 //---------------------------------------------------------------------
@@ -345,7 +324,7 @@ template<typename A, typename B> inline void put(ByteStream & target, const std:
 
 template<typename A> inline void put(ByteStream & target, const std::vector<A> & source)
 {
-	signed int length = source.size();
+	int32_t length = ArchiveCount::fromSize<int32_t>(source.size());
 	target.put(&length, 4);
 	for(int i = 0; i < length; ++i)
 	{
@@ -357,7 +336,7 @@ template<typename A> inline void put(ByteStream & target, const std::vector<A> &
 
 template<typename A> inline void put(ByteStream & target, const std::set<A> & source)
 {
-	signed int length = source.size();
+	int32_t length = ArchiveCount::fromSize<int32_t>(source.size());
 	target.put(&length, 4);
 	for (typename std::set<A>::const_iterator i = source.begin(); i != source.end(); ++i)
 		put(target, *i);
@@ -367,7 +346,7 @@ template<typename A> inline void put(ByteStream & target, const std::set<A> & so
 
 template<typename A> inline void put(ByteStream & target, const std::deque<A> & source)
 {
-	signed int length = source.size();
+	int32_t length = ArchiveCount::fromSize<int32_t>(source.size());
 	target.put(&length, 4);
 	for(int i = 0; i < length; ++i)
 	{
@@ -379,7 +358,7 @@ template<typename A> inline void put(ByteStream & target, const std::deque<A> & 
 
 template<typename Key, typename Value> inline void put(ByteStream & target, const std::map<Key, Value> & source)
 {
-	size_t numKeys = source.size();
+	uint32_t numKeys = ArchiveCount::fromSize<uint32_t>(source.size());
 	put(target, numKeys);
 	for (typename std::map<Key, Value>::const_iterator i = source.begin(); i != source.end(); ++i)
 	{

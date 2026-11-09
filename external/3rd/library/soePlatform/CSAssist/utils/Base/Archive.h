@@ -667,8 +667,9 @@ const unsigned MAX_ARRAY_SIZE = 1024;
 	    Base::get(source, arraySize);
 	    ValueType v;
 
-        if (arraySize > MAX_ARRAY_SIZE)
+        if (arraySize > MAX_ARRAY_SIZE) {
             arraySize = 0;
+        }
 
 	    for(unsigned int i = 0; i < arraySize; ++i)
 	    {

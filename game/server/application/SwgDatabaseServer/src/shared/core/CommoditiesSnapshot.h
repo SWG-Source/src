@@ -51,6 +51,7 @@ public:
 	virtual void handleMessageToAck    (const MessageToId &messageId);
 	virtual void handleAddResourceTypeMessage (const AddResourceTypeMessage &) { ;}
 	virtual void handleBountyHunterTargetMessage (const BountyHunterTargetMessage &) { ;}
+	virtual bool prepareSend           () const;
 	virtual bool send                  (GameServerConnection *connection) const;
 
 	// Saving and Loading:
@@ -63,7 +64,7 @@ public:
 	virtual void startLoadAfterSaveComplete();
 
 	// Functions for object creation:
-	virtual void newObject(NetworkId const & objectId, int templateId, Tag typeId);
+	virtual void newObject(NetworkId const & objectId, uint32 templateId, Tag typeId);
 	
 protected:
 	MarketAuctionsBufferDelete m_deleteMarketAuctionsBuffer;

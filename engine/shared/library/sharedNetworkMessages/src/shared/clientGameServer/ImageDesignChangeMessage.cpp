@@ -5,6 +5,7 @@
 
 #include "sharedNetworkMessages/FirstSharedNetworkMessages.h"
 #include "sharedNetworkMessages/ImageDesignChangeMessage.h"
+#include "Archive/ArchiveCount.h"
 
 #include "sharedFoundation/ExitChain.h"
 #include "sharedFoundation/GameControllerMessage.h"
@@ -109,6 +110,11 @@ void ImageDesignChangeMessage::pack(MessageQueue::Data const * const data, Archi
 
 	if (msg)
 	{
+		std::map<std::string, float> const & morphs = msg->getMorphParameterChanges();
+		std::map<std::string, int> const & indexes = msg->getIndexParameterChanges();
+		int const morphCount = ArchiveCount::fromSize<int>(morphs.size());
+		int const indexCount = ArchiveCount::fromSize<int>(indexes.size());
+
 		Archive::put(target, msg->getDesignerId());
 		Archive::put(target, msg->getRecipientId());
 		Archive::put(target, msg->getTerminalId());
@@ -126,18 +132,14 @@ void ImageDesignChangeMessage::pack(MessageQueue::Data const * const data, Archi
 		Archive::put(target, msg->getMarkingsSkillMod());
 		Archive::put(target, msg->getHairSkillMod());
 
-		std::map<std::string, float> const & morphs = msg->getMorphParameterChanges();
-		int size = morphs.size();
-		Archive::put(target, size);
+		Archive::put(target, morphCount);
 		for(std::map<std::string, float>::const_iterator i = morphs.begin(); i != morphs.end(); ++i)
 		{
 			Archive::put(target, i->first);
 			Archive::put(target, i->second);
 		}
 
-		std::map<std::string, int> const & indexes = msg->getIndexParameterChanges();
-		size = indexes.size();
-		Archive::put(target, size);
+		Archive::put(target, indexCount);
 		for(std::map<std::string, int>::const_iterator j = indexes.begin(); j != indexes.end(); ++j)
 		{
 			Archive::put(target, j->first);
@@ -157,7 +159,7 @@ MessageQueue::Data* ImageDesignChangeMessage::unpack(Archive::ReadIterator & sou
 	bool tempBool = false;
 	std::string tempStr;
 	int tempInt = 0;
-	time_t tempTime = 0;
+	int32_t tempTime = 0;
 
 	Archive::get(source, tempId);
 	msg->setDesignerId(tempId);

@@ -41,7 +41,7 @@ class TaskVendorObjectCleanup : public DB::TaskRequest
 		virtual bool bindColumns();
 		virtual QueryMode getExecutionMode() const;
 
-		DB::BindableLong result;
+		DB::BindableInt32 result;
 
 	  private:
 		DataCleanupQuery(const DataCleanupQuery&);

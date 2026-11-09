@@ -75,7 +75,7 @@ void TransferServerConnection::onReceive(const Archive::ByteStream & message)
 		{
 			const UploadCharacterMessage ucm(ri);
 			CentralServer::getInstance().sendToGameServer(ucm.getFromGameServerId(), ucm, true);
-			LOG("TransferServerConnection", ("Received character data for SUID %lu for character object %s on game server %d", ucm.getStationId(), ucm.getFromCharacterId().getValueString().c_str(), ucm.getFromGameServerId()));
+			LOG("TransferServerConnection", ("Received character data for SUID %u for character object %s on game server %d", ucm.getStationId(), ucm.getFromCharacterId().getValueString().c_str(), ucm.getFromGameServerId()));
 			break;
 		}
 		case constcrc("CharacterTransferStatusMessage") :
@@ -161,7 +161,7 @@ void TransferServerConnection::onReceive(const Archive::ByteStream & message)
 		case constcrc("ToggleAvatarLoginStatus") :
 		{
 			ToggleAvatarLoginStatus toggle(ri);
-			LOG("CustomerService", ("CharacterTransfer: Received ToggleAvatarLoginStatus for station ID %d, Character Object %s", toggle.getStationId(), toggle.getCharacterId().getValueString().c_str()));
+			LOG("CustomerService", ("CharacterTransfer: Received ToggleAvatarLoginStatus for station ID %u, Character Object %s", toggle.getStationId(), toggle.getCharacterId().getValueString().c_str()));
 			IGNORE_RETURN(CentralServer::getInstance().sendToArbitraryLoginServer(toggle));
 			break;
 		}
@@ -184,7 +184,7 @@ void TransferServerConnection::onReceive(const Archive::ByteStream & message)
 		{
 			// got message to transfer a character from one account to another - have to update in loginServer
 			GenericValueTypeMessage<TransferAccountData> accountTransferRequest(ri);
-			LOG("CustomerService", ("CharacterTransfer: Received TransferAccountRequestLoginServer from station ID %d to station ID %d", accountTransferRequest.getValue().getSourceStationId(), accountTransferRequest.getValue().getDestinationStationId()));
+			LOG("CustomerService", ("CharacterTransfer: Received TransferAccountRequestLoginServer from station ID %u to station ID %u", accountTransferRequest.getValue().getSourceStationId(), accountTransferRequest.getValue().getDestinationStationId()));
 			IGNORE_RETURN(CentralServer::getInstance().sendToArbitraryLoginServer(accountTransferRequest));
 			break;
 		}

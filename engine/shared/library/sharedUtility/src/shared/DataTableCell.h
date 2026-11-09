@@ -31,16 +31,16 @@ public:
 		,CT_float
 	};
 
-	explicit DataTableCell(int         value);
+	explicit DataTableCell(int32       value);
 	explicit DataTableCell(float       value);
 	explicit DataTableCell(const char *value);
 	~DataTableCell();
 
-	CellType    getType()           const { return m_type; }
-	int         getIntValue()       const { return m_value.m_i; }
-	float       getFloatValue()     const { return m_value.m_f; }
-	const char *getStringValue()    const;
-	int         getStringValueCrc() const { return m_value.m_s.m_crc; }
+	CellType      getType()           const { return m_type; }
+	int32         getIntValue()       const { return m_value.m_i; }
+	float         getFloatValue()     const { return m_value.m_f; }
+	const char   *getStringValue()    const;
+	int32         getStringValueCrc() const { return m_value.m_s.m_crc; }
 
 private:
 	const CellType m_type;
@@ -48,12 +48,12 @@ private:
 	{
 		union
 		{
-			int   m_i;
+			int32   m_i;
 			float m_f;
 			struct
 			{
 				const char *m_sz;
-				int         m_crc;
+				int32         m_crc;
 			} m_s;
 		};
 	} m_value;

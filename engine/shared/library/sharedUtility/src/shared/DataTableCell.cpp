@@ -55,7 +55,7 @@ void DataTableCell::operator delete(void *pointer)
 
 // ----------------------------------------------------------------------
 
-DataTableCell::DataTableCell(int value)
+DataTableCell::DataTableCell(int32 value)
 :	 m_type(CT_int)
 {
 	m_value.m_i=value;

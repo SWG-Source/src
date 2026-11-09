@@ -52,7 +52,7 @@ void PlanetServerConnection::onConnectionOpened()
 	GameGameServerConnect c(GameServer::getInstance().getProcessId(), false, ConfigServerUtility::getSpawnCookie(), ConfigServerGame::getPreloadNumber());
 	send(c, true);
 
-	LOG("PlanetServerConnections",("Game Server %lu (preload %d) connected to planet server and sent GameGameServerConnect", GameServer::getInstance().getProcessId(), ConfigServerGame::getPreloadNumber()));
+	LOG("PlanetServerConnections",("Game Server %u (preload %d) connected to planet server and sent GameGameServerConnect", GameServer::getInstance().getProcessId(), ConfigServerGame::getPreloadNumber()));
 }
 
 //-----------------------------------------------------------------------

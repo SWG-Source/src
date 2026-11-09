@@ -98,7 +98,7 @@ void ServerBaseImpl::run()
 	REPORT_LOG(true, ("\t[ServerBase] : ServerBaseImpl::run() - un setting up connections.\n"));
 	unsetupConnections();
 
-	LOG("ServerStartup",("%s %lu exiting", ConfigServerBase::getServerName(), Os::getProcessId()));
+	LOG("ServerStartup",("%s %d exiting", ConfigServerBase::getServerName(), Os::getProcessId()));
 
 }
 

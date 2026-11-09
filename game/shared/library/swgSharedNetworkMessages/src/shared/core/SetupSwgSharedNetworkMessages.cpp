@@ -191,7 +191,7 @@ namespace SetupSwgSharedNetworkMessagesNamespace
 
 	void packAddToPlayerSpawnQueueMessage(const MessageQueue::Data * data, Archive::ByteStream & target)
 	{
-		const MessageQueueGenericValueType<std::pair<NetworkId, unsigned long> > * const msg = dynamic_cast<const MessageQueueGenericValueType<std::pair<NetworkId, unsigned long> > *>(data);
+		const MessageQueueGenericValueType<std::pair<NetworkId, uint32_t> > * const msg = dynamic_cast<const MessageQueueGenericValueType<std::pair<NetworkId, uint32_t> > *>(data);
 		if(msg)
 		{
 			Archive::put(target, msg->getValue());
@@ -200,9 +200,9 @@ namespace SetupSwgSharedNetworkMessagesNamespace
 
 	MessageQueue::Data* unpackAddToPlayerSpawnQueueMessage(Archive::ReadIterator & source)
 	{
-		std::pair<NetworkId, unsigned long>  v;
+		std::pair<NetworkId, uint32_t>  v;
 		Archive::get(source, v);
-		MessageQueueGenericValueType<std::pair<NetworkId, unsigned long> > * result = new MessageQueueGenericValueType<std::pair<NetworkId, unsigned long> >(v);
+		MessageQueueGenericValueType<std::pair<NetworkId, uint32_t> > * result = new MessageQueueGenericValueType<std::pair<NetworkId, uint32_t> >(v);
 		return result;
 	}
 

@@ -10,18 +10,19 @@
 #define PLATFORM_LINUX
 
 #include <cstdio>
+#include <stdint.h>
 // ======================================================================
 // basic types that we assume to be around
 
-typedef unsigned int           uint;
+typedef uint32_t               uint;
 typedef unsigned char          uint8;
 typedef unsigned short         uint16;
-typedef unsigned long          uint32;
+typedef uint32_t               uint32;
 typedef signed char            int8;
 typedef signed short           int16;
-typedef signed long            int32;
-typedef signed long long int   int64;
-typedef unsigned long long int uint64;
+typedef int32_t                int32;
+typedef int64_t                int64;
+typedef uint64_t               uint64;
 typedef float                  real;
 typedef FILE*                  FILE_HANDLE;
 

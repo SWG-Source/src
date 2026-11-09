@@ -38,8 +38,8 @@ public:
 
 	// TODO: make these typedefs platform dependent
 
-	typedef unsigned long       id_type;
-	typedef unsigned long       crc_type;
+	typedef uint32_t       id_type;
+	typedef uint32_t       crc_type;
 
 								LocalizedString(id_type id, crc_type sourceCrc, Unicode::String const & str);
 								LocalizedString(id_type id, Unicode::String const & str); // GENERATE Crc FROM UNICODE.

@@ -39,7 +39,7 @@ m_textIndex (0)
 
 //----------------------------------------------------------------------
 
-StringId::StringId (const std::string & table, unsigned long textIndex) :
+StringId::StringId (const std::string & table, uint32_t textIndex) :
 m_table     (table),
 m_text      (),
 m_textIndex (textIndex)
@@ -238,7 +238,7 @@ void StringId::setText (const std::string & text)
 
 //----------------------------------------------------------------------
 
-void StringId::setTextIndex (unsigned long textIndex) const
+void StringId::setTextIndex (uint32_t textIndex) const
 {
 	m_textIndex = textIndex;
 }

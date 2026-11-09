@@ -8,6 +8,8 @@
 #ifndef INCLUDED_FormattedString_H
 #define INCLUDED_FormattedString_H
 
+
+#include "sharedFoundation/FormatAttribute.h"
 #include <cstdio>
 
 // ----------------------------------------------------------------------
@@ -18,8 +20,8 @@ public:
 
 	FormattedString();
 
-	char const * sprintf(char const * format, ...);
-	char const * vsprintf(char const * format, va_list const & va);
+	char const * sprintf(const char * format, ...) SWG_FORMAT_PRINTF(2, 3);
+	char const * vsprintf(const char * format, va_list va) SWG_FORMAT_PRINTF(2, 0);
 
 private:
 
@@ -40,7 +42,7 @@ inline FormattedString<bufferSize>::FormattedString()
 
 //-----------------------------------------------------------------------------
 template <int bufferSize>
-inline char const * FormattedString<bufferSize>::sprintf(char const * const format, ...)
+inline char const * FormattedString<bufferSize>::sprintf(const char * format, ...)
 {
 	char const * result = nullptr;
 	va_list va;
@@ -56,7 +58,7 @@ inline char const * FormattedString<bufferSize>::sprintf(char const * const form
 
 // ----------------------------------------------------------------------
 template <int bufferSize>
-inline char const * FormattedString<bufferSize>::vsprintf(char const * const format, va_list const & va)
+inline char const * FormattedString<bufferSize>::vsprintf(const char * format, va_list va)
 {
 	// Format the string
 

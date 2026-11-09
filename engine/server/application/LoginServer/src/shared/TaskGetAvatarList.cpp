@@ -138,7 +138,7 @@ void TaskGetAvatarList::onComplete()
 		if (m_transferAccountData->getDestinationHasAvatars())
 		{
 			// send a message back to the transfer server
-			LOG("CustomerService", ("CharacterTransfer: Cannot complete account transfer from %lu to %lu: destination stationId contains avatars\n", m_transferAccountData->getSourceStationId(), m_transferAccountData->getDestinationStationId()));
+			LOG("CustomerService", ("CharacterTransfer: Cannot complete account transfer from %u to %u: destination stationId contains avatars\n", m_transferAccountData->getSourceStationId(), m_transferAccountData->getDestinationStationId()));
 			const GenericValueTypeMessage<TransferAccountData> response("TransferAccountFailedDestinationNotEmpty", *m_transferAccountData);
 			CentralServerConnection::sendToCentralServer(m_transferAccountData->getStartGalaxy(), response);
 		}

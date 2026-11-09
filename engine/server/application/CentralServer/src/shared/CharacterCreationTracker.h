@@ -26,7 +26,7 @@ public:
 
 public:
 	void handleCreateNewCharacter             (const ConnectionCreateCharacter &msg);
-	void handleDatabaseCreateCharacterSuccess (StationId account, const Unicode::String &characterName, const NetworkId &characterObjectId, int templateId, bool jedi);
+	void handleDatabaseCreateCharacterSuccess (StationId account, const Unicode::String &characterName, const NetworkId &characterObjectId, uint32 templateId, bool jedi);
 	void handleLoginCreateCharacterAck        (StationId account);
 	void handleGameCreateCharacterFailed      (StationId account, Unicode::String const &characterName, StringId const &errorMessage, std::string const &optionalDetailedErrorMessage);
 	void retryGameServerCreates               ();

@@ -54,7 +54,7 @@ ResourcePoolObject::~ResourcePoolObject()
  */
 float ResourcePoolObject::harvest(float installedEfficiency, uint32 lastHarvestTime) const
 {
-	int elapsedTime=static_cast<int>(std::min(ServerClock::getInstance().getGameTimeSeconds(),m_depletedTimestamp) - lastHarvestTime);
+	uint32_t elapsedTime=static_cast<uint32_t>(std::min(ServerClock::getInstance().getGameTimeSeconds(),static_cast<uint32_t>(m_depletedTimestamp)) - lastHarvestTime);
 	if (elapsedTime < 0)
 		return 0;
 	float elapsedTicks =static_cast<float>(elapsedTime) / static_cast<float>(ConfigServerGame::getSecondsPerResourceTick());
@@ -100,7 +100,7 @@ void ResourcePoolObject::debugOutput(Unicode::String &output) const
 		output+=Unicode::narrowToWide("  DEPLETED");
 	else
 	{
-		sprintf(buffer,"  %lu time units left\n",(m_depletedTimestamp - ServerClock::getInstance().getGameTimeSeconds())/ConfigServerGame::getResourceTimeScale());
+		sprintf(buffer,"  %u time units left\n",(m_depletedTimestamp - ServerClock::getInstance().getGameTimeSeconds())/ConfigServerGame::getResourceTimeScale());
 		output+=Unicode::narrowToWide(buffer);
 	}
 }

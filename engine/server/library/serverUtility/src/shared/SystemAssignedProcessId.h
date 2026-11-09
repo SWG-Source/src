@@ -14,17 +14,17 @@
 class SystemAssignedProcessId : public GameNetworkMessage
 {
 public:
-	explicit SystemAssignedProcessId(const unsigned long id);
+	explicit SystemAssignedProcessId(const uint32_t id);
 	explicit SystemAssignedProcessId(Archive::ReadIterator & source);
 	~SystemAssignedProcessId();
 
-	const unsigned long getId  () const;
+	const uint32_t getId  () const;
 
 private:
 	SystemAssignedProcessId & operator = (const SystemAssignedProcessId & rhs);
 	SystemAssignedProcessId(const SystemAssignedProcessId & source);
 
-	Archive::AutoVariable<unsigned long>  m_id;
+	Archive::AutoVariable<uint32_t>  m_id;
 };
 
 //-----------------------------------------------------------------------

@@ -88,7 +88,7 @@ void LogServer::run()
 void LogServer::mainLoop()
 {
 	unsigned long limit = 100;
-	unsigned long startTime;
+	uint64_t startTime;
 
 	while (!m_done)
 	{

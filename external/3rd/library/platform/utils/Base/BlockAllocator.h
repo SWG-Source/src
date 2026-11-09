@@ -17,7 +17,7 @@ namespace Base
 		BlockAllocator();
 		~BlockAllocator();
 		void *getBlock(unsigned accum);
-		void returnBlock(unsigned *handle);
+		void returnBlock(uintptr_t *handle);
 
 	private:
 		uintptr_t  *m_blocks[31];

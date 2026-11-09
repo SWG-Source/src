@@ -34,15 +34,14 @@
 #include "sharedSkillSystem/SkillManager.h"
 #include "sharedSkillSystem/SkillObject.h"
 #include <unordered_map>
-#include <limits>
 #include <map>
 #include <vector>
 
 // ============================================================================
 
-unsigned long CharacterMatchManager::ms_numberOfCharacterMatchRequests = 0;
-unsigned long CharacterMatchManager::ms_numberOfCharacterMatchResults = 0;
-unsigned long CharacterMatchManager::ms_timeSpentOnCharacterMatchRequestsMs = 0;
+uint32_t CharacterMatchManager::ms_numberOfCharacterMatchRequests = 0;
+uint32_t CharacterMatchManager::ms_numberOfCharacterMatchResults = 0;
+uint32_t CharacterMatchManager::ms_timeSpentOnCharacterMatchRequestsMs = 0;
 
 // ============================================================================
 //
@@ -172,7 +171,7 @@ bool CharacterMatchManagerNamespace::isMatch(std::map<LfgDataTable::LfgNode cons
 void CharacterMatchManager::requestMatch(NetworkId const &networkId, MatchMakingCharacterPreferenceId const &matchMakingCharacterPreferenceId)
 {
 	PROFILER_AUTO_BLOCK_DEFINE("CharacterMatchManager::requestMatch");
-	const unsigned long startTimeMs = Clock::timeMs();
+	const uint64_t startTimeMs = Clock::timeMs();
 	++ms_numberOfCharacterMatchRequests;
 
 	ServerObject * const requestServerObject = safe_cast<ServerObject *>(NetworkIdManager::getObjectById(networkId));
@@ -639,16 +638,7 @@ void CharacterMatchManager::requestMatch(NetworkId const &networkId, MatchMaking
 		requestCreatureObject->onCharacterMatchRetrieved(mmcr);
 	}
 
-	const unsigned long endTimeMs = Clock::timeMs();
-	if (endTimeMs >= startTimeMs)
-	{
-		ms_timeSpentOnCharacterMatchRequestsMs += (endTimeMs - startTimeMs);
-	}
-	else // time wrapped
-	{
-		static const unsigned long max = std::numeric_limits<unsigned long>::max();
-		ms_timeSpentOnCharacterMatchRequestsMs += (max - startTimeMs + endTimeMs);
-	}
+	ms_timeSpentOnCharacterMatchRequestsMs += Clock::durationMs<uint32_t>(startTimeMs, Clock::timeMs());
 }
 
 // ============================================================================

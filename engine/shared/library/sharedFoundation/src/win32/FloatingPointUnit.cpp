@@ -11,6 +11,10 @@
 
 #include "sharedFoundation/ConfigSharedFoundation.h"
 
+#if defined(_M_X64)
+#include <xmmintrin.h>
+#endif
+
 // ======================================================================
 
 int                          FloatingPointUnit::updateNumber;
@@ -21,6 +25,22 @@ bool                         FloatingPointUnit::exceptionEnabled[E_max];
 
 // ======================================================================
 
+#if defined(_M_X64)
+// MXCSR has rounding and exception masks, but no adjustable significand precision.
+const WORD CONTROL_MASK         = 0xffc0;
+const WORD ROUND_MASK           = _MM_ROUND_MASK;
+const WORD ROUND_NEAREST        = _MM_ROUND_NEAREST;
+const WORD ROUND_CHOP           = _MM_ROUND_TOWARD_ZERO;
+const WORD ROUND_DOWN           = _MM_ROUND_DOWN;
+const WORD ROUND_UP             = _MM_ROUND_UP;
+const WORD EXCEPTION_PRECISION  = _MM_MASK_INEXACT;
+const WORD EXCEPTION_UNDERFLOW  = _MM_MASK_UNDERFLOW;
+const WORD EXCEPTION_OVERFLOW   = _MM_MASK_OVERFLOW;
+const WORD EXCEPTION_ZERO_DIVIDE = _MM_MASK_DIV_ZERO;
+const WORD EXCEPTION_DENORMAL   = _MM_MASK_DENORM;
+const WORD EXCEPTION_INVALID    = _MM_MASK_INVALID;
+const WORD EXCEPTION_ALL        = _MM_MASK_MASK;
+#else
 const WORD PRECISION_MASK        = BINARY4(0000,0011,0000,0000);
 const WORD PRECISION_24          = BINARY4(0000,0000,0000,0000);
 const WORD PRECISION_53          = BINARY4(0000,0010,0000,0000);
@@ -40,20 +60,31 @@ const WORD EXCEPTION_DENORMAL    = BINARY4(0000,0000,0000,0010);
 const WORD EXCEPTION_INVALID     = BINARY4(0000,0000,0000,0001);
 const WORD EXCEPTION_ALL         = BINARY4(0000,0000,0011,1111);
 
+#endif
+
 // ======================================================================
 
 void FloatingPointUnit::install(void)
 {
+#if defined(_M_X64)
+	precision = P_fixedByType;
+#else
 	precision = P_24;
+#endif
 	rounding  = R_roundToNearestOrEven;
 	memset(exceptionEnabled, 0, sizeof(exceptionEnabled));
 
 	// preserve all other bits
 	status  = getControlWord();
+#if defined(_M_X64)
+	status &= ~(ROUND_MASK | EXCEPTION_ALL);
+	status |= ROUND_NEAREST | EXCEPTION_ALL;
+#else
 	status &= ~(PRECISION_MASK | ROUND_MASK | EXCEPTION_ALL);
 
 	// set to single precision, rounding, and all exceptions masked
 	status |= PRECISION_24 | ROUND_NEAREST | EXCEPTION_ALL;
+#endif
 
 	// check the config platform flags to see if we should enable some exceptions
 	if (ConfigSharedFoundation::getFpuExceptionPrecision())
@@ -114,22 +145,34 @@ void FloatingPointUnit::update(void)
 
 WORD FloatingPointUnit::getControlWord(void)
 {
+#if defined(_M_X64)
+	return static_cast<WORD>(_mm_getcsr() & CONTROL_MASK);
+#else
 	WORD controlWord = 0;
 
 	__asm fnstcw controlWord;
 	return controlWord;
+#endif
 }
 
 // ----------------------------------------------------------------------
 
 void FloatingPointUnit::setControlWord(WORD controlWord)
 {
+#if defined(_M_X64)
+	// Updating control must not clear accumulated exception flags or reserved bits.
+	unsigned int const current = _mm_getcsr();
+	_mm_setcsr((current & ~static_cast<unsigned int>(CONTROL_MASK)) | (controlWord & CONTROL_MASK));
+#else
 	UNREF(controlWord);
 	__asm fldcw controlWord;
+#endif
 }
 
 // ----------------------------------------------------------------------
 
+// Keep the legacy Win32 setter, including its old-state behavior, unchanged.
+#if !defined(_M_X64)
 void FloatingPointUnit::setPrecision(Precision newPrecision)
 {
 	WORD bits = 0;
@@ -165,6 +208,8 @@ void FloatingPointUnit::setPrecision(Precision newPrecision)
 }
 
 // ----------------------------------------------------------------------
+
+#endif
 
 void FloatingPointUnit::setRounding(Rounding newRounding)
 {

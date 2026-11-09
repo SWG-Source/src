@@ -21,7 +21,7 @@
 struct AvatarRecord
 {
 	Unicode::String m_name;
-	int m_objectTemplateId;
+	uint32_t m_objectTemplateId;
 	NetworkId m_networkId;
 	uint32 m_clusterId;
 	int m_characterType;

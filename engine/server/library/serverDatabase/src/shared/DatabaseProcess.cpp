@@ -195,7 +195,9 @@ DatabaseProcess::~DatabaseProcess()
 void DatabaseProcess::run(void)
 {
 	static bool shouldSleep = ConfigServerDatabase::getShouldSleep();
-	bool idle=false;
+#ifdef _DEBUG
+	bool idle = false;
+#endif
 	int loopcount=0;
 	float nextQueryCountTime=0;
 
@@ -261,7 +263,7 @@ void DatabaseProcess::run(void)
 		if (Persister::getInstance().isIdle() && Loader::getInstance().isIdle() && DataLookup::getInstance().isIdle())
 		{
 			DEBUG_REPORT_LOG(ConfigServerDatabase::getReportSaveTimes() && !idle,("Database process is idle.\n"));
-			idle=true;
+			// idle=true;
 			if (taskService)
 			{
 				ServerIdleMessage msg(true);
@@ -270,7 +272,7 @@ void DatabaseProcess::run(void)
 		}
 		else
 		{
-			idle=false;
+			// idle=false;
 			if (taskService)
 			{
 				ServerIdleMessage msg(false);
@@ -553,7 +555,7 @@ void DatabaseProcess::receiveMessage(const MessageDispatch::Emitter & source, co
 			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
 			ExcommunicateGameServerMessage msg(ri);
 
-			LOG("GameGameConnect",("Database Process was told to drop connection to %lu by Central",msg.getServerId()));
+			LOG("GameGameConnect",("Database Process was told to drop connection to %u by Central",msg.getServerId()));
 			
 			FATAL (msg.getServerId() == getProcessId(),("Crashing because Central told us to (probably indicates we weren't responding to pings)"));
 			GameServerConnection *conn =getConnectionByProcess(msg.getServerId());
@@ -639,7 +641,7 @@ void DatabaseProcess::sendToGameServer(uint32 serverId, GameNetworkMessage const
 	if (i!=gameServerConnections.end())
 		i->second->send(message,true);
 	else
-		DEBUG_WARNING(true,("Tried to send to game server %lu without connection.\n",serverId));
+		DEBUG_WARNING(true,("Tried to send to game server %u without connection.\n",serverId));
 }
 
 // ----------------------------------------------------------------------

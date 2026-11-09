@@ -141,7 +141,7 @@ void CentralServerConnection::onReceive(const Archive::ByteStream & message)
 			const ToggleAvatarLoginStatus t(ri);
 			if(t.getEnabled())
 			{
-				LOG("CustomerService", ("CharacterTransfer: ToggleAvatarLoginStatus(%s, %d, %s, true)", t.getClusterName().c_str(), t.getStationId(), t.getCharacterId().getValueString().c_str()));
+				LOG("CustomerService", ("CharacterTransfer: ToggleAvatarLoginStatus(%s, %u, %s, true)", t.getClusterName().c_str(), t.getStationId(), t.getCharacterId().getValueString().c_str()));
 			}
 			else
 			{
@@ -150,7 +150,7 @@ void CentralServerConnection::onReceive(const Archive::ByteStream & message)
 				GenericValueTypeMessage<unsigned int> const closeRequest("TransferCloseClientConnection", t.getStationId());
 				LoginServer::getInstance().sendToCluster(LoginServer::getInstance().getClusterIDByName(t.getClusterName()), closeRequest);
 
-				LOG("CustomerService", ("CharacterTransfer: ToggleAvatarLoginStatus(%s, %d, %s, false)\n", t.getClusterName().c_str(), t.getStationId(), t.getCharacterId().getValueString().c_str()));
+				LOG("CustomerService", ("CharacterTransfer: ToggleAvatarLoginStatus(%s, %u, %s, false)\n", t.getClusterName().c_str(), t.getStationId(), t.getCharacterId().getValueString().c_str()));
 			}
 			DatabaseConnection::getInstance().toggleDisableCharacter(LoginServer::getInstance().getClusterIDByName(t.getClusterName()), t.getCharacterId(), t.getStationId(), t.getEnabled());
 			break;
@@ -213,7 +213,7 @@ void CentralServerConnection::onReceive(const Archive::ByteStream & message)
 		case constcrc("TransferAccountRequestLoginServer") :
 		{
 			const GenericValueTypeMessage<TransferAccountData> request(ri);
-			LOG("CustomerService", ("CharacterTransfer: Received TransferAccountRequestLoginServer from station ID %d to from station ID %d", request.getValue().getSourceStationId(), request.getValue().getDestinationStationId()));
+			LOG("CustomerService", ("CharacterTransfer: Received TransferAccountRequestLoginServer from station ID %u to from station ID %u", request.getValue().getSourceStationId(), request.getValue().getDestinationStationId()));
 			const TransferAccountData requestData = request.getValue();
 			DatabaseConnection::getInstance().requestAvatarListAccountTransfer(&requestData);
 			break;
@@ -340,7 +340,7 @@ bool CentralServerConnection::sendCharacterListResponse(unsigned int stationId, 
 	}
 	else
 	{
-		LOG("Connection", ("Could not find a connection server to send character list response to for character %d\n", stationId));
+		LOG("Connection", ("Could not find a connection server to send character list response to for character %u\n", stationId));
 	}
 	return result;
 }

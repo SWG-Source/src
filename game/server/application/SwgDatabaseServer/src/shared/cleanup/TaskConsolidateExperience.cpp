@@ -127,7 +127,7 @@ bool TaskConsolidateExperience::splitExperience(const std::string &packedData, s
 	size_t spacePos=packedData.find(' ');
 	if (spacePos==std::string::npos) return false;
 	type=std::string(packedData,0,spacePos);
-	std::string amountString(packedData,spacePos+1,static_cast<unsigned int>(std::string::npos));
+	std::string amountString(packedData,spacePos+1,std::string::npos);
 	amount=atoi(amountString.c_str());
 	if (amount <= 0) return false; // string is probably badly-formed or parsed wrong
 	return true;

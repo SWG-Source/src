@@ -549,7 +549,9 @@ BaseExtent * convertToSimpleExtent ( BaseExtent const * sourceExtent )
         {
             Extent const * extent = safe_cast<Extent const *>(sourceExtent);
 
-            if(!extent) return nullptr;
+            if(!extent) {
+                return nullptr;
+            }
 
             return new SimpleExtent( MultiShape( extent->getShape() ) );
         }
@@ -558,7 +560,9 @@ BaseExtent * convertToSimpleExtent ( BaseExtent const * sourceExtent )
         {
             CylinderExtent const * extent = safe_cast<CylinderExtent const *>(sourceExtent);
 
-            if(!extent) return nullptr;
+            if(!extent) {
+                return nullptr;
+            }
 
             return new SimpleExtent( MultiShape( extent->getShape() ) );
         }
@@ -567,7 +571,9 @@ BaseExtent * convertToSimpleExtent ( BaseExtent const * sourceExtent )
         {
             BoxExtent const * extent = safe_cast<BoxExtent const *>(sourceExtent);
 
-            if(!extent) return nullptr;
+            if(!extent) {
+                return nullptr;
+            }
 
             return new SimpleExtent( MultiShape( extent->getShape() ) );
         }
@@ -576,7 +582,9 @@ BaseExtent * convertToSimpleExtent ( BaseExtent const * sourceExtent )
 		{
             MeshExtent const * extent = safe_cast<MeshExtent const *>(sourceExtent);
 
-            if(!extent) return nullptr;
+            if(!extent) {
+                return nullptr;
+            }
 
 			return extent->clone();
 		}
@@ -585,7 +593,9 @@ BaseExtent * convertToSimpleExtent ( BaseExtent const * sourceExtent )
         {
             DetailExtent const * extent = safe_cast<DetailExtent const *>(sourceExtent);
 
-            if(!extent) return nullptr;
+            if(!extent) {
+                return nullptr;
+            }
 
             DetailExtent * newExtent = new DetailExtent();
 
@@ -603,7 +613,9 @@ BaseExtent * convertToSimpleExtent ( BaseExtent const * sourceExtent )
         {
             ComponentExtent const * extent = safe_cast<ComponentExtent const *>(sourceExtent);
 
-            if(!extent) return nullptr;
+            if(!extent) {
+                return nullptr;
+            }
 
             ComponentExtent * newExtent = new ComponentExtent();
 

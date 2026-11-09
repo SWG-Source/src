@@ -100,8 +100,9 @@ bool GameScriptObject::installScriptEngine(void)
 	ms_scriptDataMap = new GameScriptObject::ScriptDataMap;
     Scripting::InitScriptFuncHashMap();
     JavaLibrary::install();
-    if (JavaLibrary::instance() == nullptr)
+    if (JavaLibrary::instance() == nullptr) {
         return false;
+    }
 	enableNewJediTracking(ConfigServerGame::getEnableNewJedi());
     return true;
 }	// GameScriptObject::installScriptEngine

@@ -34,6 +34,7 @@
 #include "sharedFoundation/Crc.h"
 #include "sharedFoundation/DynamicVariable.h"
 #include "sharedFoundation/DynamicVariableList.h"
+#include "sharedFoundation/FixedWidthParse.h"
 #include "sharedFoundation/Os.h"
 #include "sharedGame/TextManager.h"
 #include "sharedLog/Log.h"
@@ -781,16 +782,26 @@ void JavaLibrary::fatalHandler(int signum)
 	{
 		// try to see if our call stack came from C or Java
 		void *frameAddress = __builtin_frame_address(0);
-		// the address that generated the segfault is stored at an offset of 0x44 from
-		// the frame address
-		// @todo: find documentation on the offset to verify it is stable
-		void *crashAddress1 = *((void**)((static_cast<char *>(frameAddress)) + 0x44));
+
 		// pass the crash address to addr2line to get the file name where the crash occurred
+		// These are zero initialized because the strstr() checks below read them
+		// whenever a lookup fails.
 		static const int BUFLEN = 2048;
-		char lib1[BUFLEN], lib2[BUFLEN];
-		char file1[BUFLEN], file2[BUFLEN];
-		int line1, line2;
-		bool result1 = DebugHelp::lookupAddress(reinterpret_cast<uint32>(crashAddress1), lib1, file1, BUFLEN, line1);
+		char lib1[BUFLEN] = { '\0' }, lib2[BUFLEN] = { '\0' };
+		char file1[BUFLEN] = { '\0' }, file2[BUFLEN] = { '\0' };
+		int line1 = 0, line2 = 0;
+		bool result1 = false;
+
+		// The faulting address used to be read from a fixed 0x44 byte offset into
+		// this frame. That constant describes the 32-bit x86 frame layout only; on
+		// x86-64 it is both misaligned and meaningless, and dereferencing it from
+		// inside a SIGSEGV handler risks a recursive fault that loses the crash
+		// report entirely. The __builtin_return_address() probe below is portable
+		// and already covers this case.
+#if defined(__i386__)
+		void *crashAddress1 = *((void**)((static_cast<char *>(frameAddress)) + 0x44));
+		result1 = DebugHelp::lookupAddress(reinterpret_cast<uint64>(crashAddress1), lib1, file1, BUFLEN, line1);
+#endif
 
 		// do a second test based on the return address
 		// it turns out that in some java crashes we don't even have 2 return
@@ -801,31 +812,36 @@ void JavaLibrary::fatalHandler(int signum)
 		void *crashAddress2c = nullptr;
 		void *frameAddressA = nullptr;
 		void *frameAddressB = nullptr;
-		uint32 frameAddressHigh = (reinterpret_cast<uint32>(frameAddress) >> 16);
+		uint64 frameAddressHigh = (reinterpret_cast<uint64>(frameAddress) >> 16);
 		crashAddress2a = __builtin_return_address(0);
+// Suppress Wframe-address for these lines - we could crash the program calling __builtin_return_address and frame_address
+// with non-zero values.  However, we likely don't care as we're crashing at this point anyway due to bad Java.
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wframe-address"
 		if (crashAddress2a != nullptr)
 		{
 			frameAddressA = __builtin_frame_address(1);
 			if (frameAddressA != nullptr &&
-				(reinterpret_cast<uint32>(frameAddressA) >> 16 == frameAddressHigh))
+				(reinterpret_cast<uint64>(frameAddressA) >> 16 == frameAddressHigh))
 			{
 				crashAddress2b = __builtin_return_address(1);
 				if (crashAddress2b != nullptr)
 				{
 					frameAddressB = __builtin_frame_address(2);
 					if (frameAddressB != nullptr &&
-						(reinterpret_cast<uint32>(frameAddressB) >> 16 == frameAddressHigh))
+						(reinterpret_cast<uint64>(frameAddressB) >> 16 == frameAddressHigh))
 					{
 						crashAddress2c = __builtin_return_address(2);
 						if (crashAddress2c != nullptr)
 						{
-							result2 = DebugHelp::lookupAddress(reinterpret_cast<uint32>(
+							result2 = DebugHelp::lookupAddress(reinterpret_cast<uint64>(
 								crashAddress2c), lib2, file2, BUFLEN, line2);
 						}
 					}
 				}
 			}
 		}
+#pragma GCC diagnostic pop
 
 		bool javaCrash = true;
 		if ((result1 || result2) && strstr(lib1, "libjvm.so") == nullptr && strstr(lib2, "libjvm.so") == nullptr)
@@ -1081,10 +1097,17 @@ void JavaLibrary::initializeJavaThread()
 	tempOption.optionString = "-XX:MaxMetaspaceSize=96m";
 	options.push_back(tempOption);
 
-	// rice options!!!!1! yay - actually after much trial and error these are a good mix for speed and efficiency
-	// i should split these someday into separate optionStrings...or not
-	// some may be default, not needed, or ignored by whatever version we're using -darth
-	tempOption.optionString = "-Xrs -XX:-UsePerfData -XX:-AllowUserSignalHandlers -XX:UseSSE=3 -XX+DoEscapeAnalysis -XX:AutoBoxCacheMax:2000 -XX:+OptimizeStringConcat -XX:+OptimizeFill -XX:+EliminateAutoBox -XX:+UseCompressedStrings -XX:+UseCompressedOops -XX:+EliminateLocks -XX:UseFastAccessorMethods -XX:+UseStringCache -XgcPrio:throughput -XXkeepAreaRatio:1 -XXlazyUnlocking -XXcallProfiling -XXcompactRatio:1";
+	// -Xrs: the server owns the process's signals. Without it the JVM installs
+	// its own SIGTERM handler, and a SIGTERM (e.g. killall) halts the VM from
+	// Java: the VM thread then runs exit(), whose C++ static destructors call
+	// back into JNI while that thread holds a safepoint, and the process hangs.
+	//
+	// Each JavaVMOption is one option. These used to be packed into a single
+	// string, which the JVM ignored as unrecognized (ignoreUnrecognized below),
+	// so -Xrs and the tuning flags that followed it never took effect; several
+	// of those flags are malformed, removed from current JVMs, or JRockit-only.
+	// They are not carried over: enabling them now would be an untested change.
+	tempOption.optionString = "-Xrs";
 	options.push_back(tempOption);
 
 	// left over from SOE, below...probably won't use these most of the time
@@ -1955,6 +1978,7 @@ bool JavaLibrary::registerNatives(const JNINativeMethod natives[], int count)
 		{
 			ms_env->ExceptionClear();
 			DEBUG_REPORT_LOG(true, ("RegisterNatives failed: %s: %s\n", natives[i].name, natives[i].signature));
+			WARNING(true, ("RegisterNatives failed: could not register Java method: %s: with signature %s (does it exist in the codebase?)\n", natives[i].name, natives[i].signature));
 			result = lresult;
 		}
 	}
@@ -4490,17 +4514,29 @@ int JavaLibrary::runScript(const NetworkId & caller, const std::string& script,
 		return SCRIPT_OVERRIDE;
 	}
 
-	// add the rest of the parameters
+	// add the rest of the parameters; every one argList describes must be present
+	if (args.size() < argList.size())
+	{
+		LOG("ScriptInvestigation", ("runSCripts4 failed because of missing params"));
+		return SCRIPT_OVERRIDE;
+	}
 	for (unsigned i = 0; i < argList.size(); ++i)
 	{
 		LocalRefParamPtr arg = LocalRefParam::cms_nullPtr;
-		const char *stringArg = Unicode::wideToNarrow(args[i]).c_str();
+		// keep the narrow copy alive while stringArg points into it
+		std::string const narrowArg(Unicode::wideToNarrow(args[i]));
+		const char *stringArg = narrowArg.c_str();
 		switch (argList[i])
 		{
 		case 'i':
 		{
-			jint param = atoi(stringArg);
-			arg = createNewObject(ms_clsInteger, ms_midInteger, param);
+			int32 param = 0;
+			if (!FixedWidthParse::parseInt32(args[i], 10, param))
+			{
+				LOG("ScriptInvestigation", ("runSCripts4 failed because of bad int param"));
+				return SCRIPT_OVERRIDE;
+			}
+			arg = createNewObject(ms_clsInteger, ms_midInteger, static_cast<jint>(param));
 		}
 		break;
 		case 'f':
@@ -5084,7 +5120,7 @@ bool JavaLibrary::unpackDictionary(const std::vector<int8> & packedData,
 				if (crc != dataCrc)
 				{
 					WARNING(true, ("JavaLibrary::unpackDictionary got packed data with "
-						"bad crc! Expected: %lu, got %lu.", crc, dataCrc));
+						"bad crc! Expected: %u, got %u.", crc, dataCrc));
 					return false;
 				}
 			}

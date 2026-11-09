@@ -37,6 +37,9 @@ namespace DB {
 		void *getBuffer();
 
 		virtual std::string outputValue() const;
+
+	  protected:
+		virtual void clearValue();
 		
 	}; //lint !e1721 !e1509 // no virtual destructor, unusual operator =
 

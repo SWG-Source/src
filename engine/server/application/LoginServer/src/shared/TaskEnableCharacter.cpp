@@ -33,7 +33,7 @@ TaskEnableCharacter::TaskEnableCharacter(StationId &stationId, const NetworkId &
 bool TaskEnableCharacter::process(DB::Session *session)
 {
 	EnableCharacterQuery qry;
-	qry.station_id = static_cast<long>(m_stationId);
+	qry.station_id = m_stationId;
 	qry.character_id = m_characterId;
 	qry.enabled.setValue(m_enabled);
 

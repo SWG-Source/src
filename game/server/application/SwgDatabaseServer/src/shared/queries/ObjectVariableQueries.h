@@ -47,7 +47,7 @@ namespace DBQuery
 		DB::BindableVarrayNumber m_nameIds;
 		DB::BindableVarrayNumber m_types;
 		DB::BindableVarrayString m_values;
-		DB::BindableLong         m_numItems;
+		DB::BindableInt32         m_numItems;
 	};
 
 	class AddObjectVariableQuery : public GenericObjectVariableQuery
@@ -93,7 +93,7 @@ namespace DBQuery
 	  private:
 		DB::BindableVarrayString m_objectIds;
 		DB::BindableVarrayNumber m_nameIds;
-		DB::BindableLong         m_numItems;
+		DB::BindableInt32         m_numItems;
 	};
 
 	/** 

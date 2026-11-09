@@ -122,13 +122,13 @@ std::string const &GameNetworkMessage::getCmdName() const
 
 // ----------------------------------------------------------------------
 
-std::string const &GameNetworkMessage::getCmdName(unsigned long cmdCrc) // static
+std::string const &GameNetworkMessage::getCmdName(uint32_t cmdCrc) // static
 {
 	std::string &val = s_messageTypes[cmdCrc];
 	if (val.empty())
 	{
 		char buf[32];
-		snprintf(buf, sizeof(buf)-1, "unknown(%08lx)", cmdCrc);
+		snprintf(buf, sizeof(buf)-1, "unknown(%08x)", cmdCrc);
 		buf[sizeof(buf)-1] = '\0';
 		val = buf;
 	}

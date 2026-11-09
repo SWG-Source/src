@@ -130,7 +130,7 @@ PlanetObject *ServerUniverse::getPlanetByName(const std::string &sceneId) const
 	else
 	{
 		if (!m_loaded)
-			WARNING(true,("getPlanetByName() was called for (%s), but there is no such PlanetObject. m_loaded=(%s), m_authoritative=(%s), m_universeProcess=(%lu), m_thisPlanet=(%p), m_tatooinePlanet=(%p), m_masterGuildObject=(%p), m_masterCityObject=(%p), m_planetNameMap->size()=(%d), m_universeObjectList->size()=(%d), m_pendingUniverseObjects->size()=(%d), m_resourceTypeNameMap->size()=(%d), NameManager::getTotalPlayerCount()=(%d)", sceneId.c_str(), (m_loaded ? "true" : "false"), (m_authoritative ? "true" : "false"), m_universeProcess, m_thisPlanet, m_tatooinePlanet, m_masterGuildObject, m_masterCityObject, m_planetNameMap->size(), m_universeObjectList->size(), m_pendingUniverseObjects->size(), m_resourceTypeNameMap->size(), NameManager::getInstance().getTotalPlayerCount()));
+			WARNING(true,("getPlanetByName() was called for (%s), but there is no such PlanetObject. m_loaded=(%s), m_authoritative=(%s), m_universeProcess=(%u), m_thisPlanet=(%p), m_tatooinePlanet=(%p), m_masterGuildObject=(%p), m_masterCityObject=(%p), m_planetNameMap->size()=(%zu), m_universeObjectList->size()=(%zu), m_pendingUniverseObjects->size()=(%zu), m_resourceTypeNameMap->size()=(%zu), NameManager::getTotalPlayerCount()=(%d)", sceneId.c_str(), (m_loaded ? "true" : "false"), (m_authoritative ? "true" : "false"), m_universeProcess, m_thisPlanet, m_tatooinePlanet, m_masterGuildObject, m_masterCityObject, m_planetNameMap->size(), m_universeObjectList->size(), m_pendingUniverseObjects->size(), m_resourceTypeNameMap->size(), NameManager::getInstance().getTotalPlayerCount()));
 
 		return 0;
 	}
@@ -322,11 +322,11 @@ void ServerUniverse::createProxiesOnServer(std::vector<uint32> const & remotePro
 
 				if (i!=remoteProcesses.begin())
 					serverListAsString+=", ";
-				snprintf(oneServer,sizeof(oneServer)-1,"%lu",*i);
+				snprintf(oneServer,sizeof(oneServer)-1,"%u",*i);
 				oneServer[sizeof(oneServer)-1] = '\0';
 				serverListAsString+=oneServer;
 			}
-			LOG("UniverseLoading", ("Game Server %lu sent UniverseComplete to Game Servers %s.", GameServer::getInstance().getProcessId(), serverListAsString.c_str()));
+			LOG("UniverseLoading", ("Game Server %u sent UniverseComplete to Game Servers %s.", GameServer::getInstance().getProcessId(), serverListAsString.c_str()));
 
 			if (ConfigServerGame::getTimeoutToAckUniverseDataReceived() > 0)
 				m_timeUniverseDataSent = ::time(nullptr);
@@ -439,7 +439,7 @@ void ServerUniverse::universeComplete(uint32 sourceServer)
 	if (m_universeProcess==0)
 		m_universeProcess=sourceServer;
 	
-	LOG("UniverseLoading",("Game Server %lu got UniverseComplete message.",GameServer::getInstance().getProcessId()));
+	LOG("UniverseLoading",("Game Server %u got UniverseComplete message.",GameServer::getInstance().getProcessId()));
 
 	m_loaded=true;
 	{
@@ -477,7 +477,7 @@ void ServerUniverse::universeComplete(uint32 sourceServer)
 
 void ServerUniverse::universeLoadedAck(uint32 sourceProcess)
 {
-	LOG("UniverseLoading", ("Game Server %lu got GameServerUniverseLoadedMessage from Game Server %lu.", GameServer::getInstance().getProcessId(), sourceProcess));
+	LOG("UniverseLoading", ("Game Server %u got GameServerUniverseLoadedMessage from Game Server %u.", GameServer::getInstance().getProcessId(), sourceProcess));
 	IGNORE_RETURN(m_pendingUniverseLoadedAckList.erase(sourceProcess));
 }
 
@@ -738,12 +738,12 @@ void ServerUniverse::update(float frameTime)
 			{
 				if (i!=m_pendingUniverseLoadedAckList.begin())
 					serverListAsString+=", ";
-				snprintf(oneServer,sizeof(oneServer)-1,"%lu",*i);
+				snprintf(oneServer,sizeof(oneServer)-1,"%u",*i);
 				oneServer[sizeof(oneServer)-1] = '\0';
 				serverListAsString+=oneServer;
 			}
 
-			LOG("UniverseLoading", ("Game Server %lu hasn't received (and will stop waiting for) GameServerUniverseLoadedMessage in %d seconds from Game Servers %s.", GameServer::getInstance().getProcessId(), secondsSinceUniverseDataSent, serverListAsString.c_str()));
+			LOG("UniverseLoading", ("Game Server %u hasn't received (and will stop waiting for) GameServerUniverseLoadedMessage in %d seconds from Game Servers %s.", GameServer::getInstance().getProcessId(), secondsSinceUniverseDataSent, serverListAsString.c_str()));
 			m_pendingUniverseLoadedAckList.clear();
 		}
 		else // periodically log which game servers we are waiting on for GameServerUniverseLoadedMessage
@@ -759,12 +759,12 @@ void ServerUniverse::update(float frameTime)
 				{
 					if (i!=m_pendingUniverseLoadedAckList.begin())
 						serverListAsString+=", ";
-					snprintf(oneServer,sizeof(oneServer)-1,"%lu",*i);
+					snprintf(oneServer,sizeof(oneServer)-1,"%u",*i);
 					oneServer[sizeof(oneServer)-1] = '\0';
 					serverListAsString+=oneServer;
 				}
 
-				LOG("UniverseLoading", ("Game Server %lu hasn't received (and will keep waiting for) GameServerUniverseLoadedMessage in %d seconds from Game Servers %s.", GameServer::getInstance().getProcessId(), secondsSinceUniverseDataSent, serverListAsString.c_str()));
+				LOG("UniverseLoading", ("Game Server %u hasn't received (and will keep waiting for) GameServerUniverseLoadedMessage in %d seconds from Game Servers %s.", GameServer::getInstance().getProcessId(), secondsSinceUniverseDataSent, serverListAsString.c_str()));
 				lastLogTime = nowTime;
 			}
 		}

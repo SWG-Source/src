@@ -642,7 +642,7 @@ FloorEdgeIdVec const & FloorMesh::getEdgeList(FloorEdgeType edgeType) const
 	case FET_WallBase:    return *m_wallBaseEdges;
 	case FET_WallTop:     return *m_wallTopEdges;
 	default: {
-		DEBUG_FATAL(true, ("FloorMesh::getEdgeList - requesting invalid list $d\n", edgeType));
+		DEBUG_FATAL(true, ("FloorMesh::getEdgeList - requesting invalid list %d\n", static_cast<int>(edgeType)));
 		static FloorEdgeIdVec dummy;
 		return dummy;
 	}

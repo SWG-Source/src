@@ -14,6 +14,7 @@
 #include "ConnectionServerConnection.h"
 
 #include "sharedFoundation/Clock.h"
+#include "sharedFoundation/FixedWidthParse.h"
 #include "sharedFoundation/FormattedString.h"
 #include "sharedLog/Log.h"
 #include "sharedNetworkMessages/AppendCommentResponseMessage.h"
@@ -132,10 +133,12 @@ void CustomerServiceInterface::parseIssueChild(CategoryList & categoryList, xmlN
 		categoryName = Unicode::utf8ToWide(val);
 	}
 
+	// a category whose id is not exactly one int32 is skipped as invalid
+	bool validId = true;
 	val = reinterpret_cast<char *>(xmlGetProp(childPtr, (const unsigned char *)"id")); 
 	if (val)
 	{
-		categoryId = atoi(val);
+		validId = FixedWidthParse::parseInt32(val, 10, categoryId);
 	}
 
 	// Check for bug type
@@ -154,7 +157,7 @@ void CustomerServiceInterface::parseIssueChild(CategoryList & categoryList, xmlN
 
 	val = reinterpret_cast<char *>(xmlGetProp(childPtr, (const unsigned char *)"invalid")); 
 
-	bool const invalid = (val != nullptr) && (strcmp(val, "true") == 0);
+	bool const invalid = !validId || ((val != nullptr) && (strcmp(val, "true") == 0));
 
 	if (!invalid)
 	{
@@ -179,11 +182,11 @@ void CustomerServiceInterface::parseIssueChild(CategoryList & categoryList, xmlN
 
 		if (strcmp(tagName, "category") == 0)
 		{
-			LOG("CSServer", ("parseIssueChild() Skipping invalid category(%s) id(%d)", categoryName.c_str(), categoryId));
+			LOG("CSServer", ("parseIssueChild() Skipping invalid category(%s) id(%d)", Unicode::wideToUTF8(categoryName).c_str(), categoryId));
 		}
 		else if (strcmp(tagName, "subCategory") == 0)
 		{
-			LOG("CSServer", ("parseIssueChild() Skipping invalid sub-category(%s) id(%d)", categoryName.c_str(), categoryId));
+			LOG("CSServer", ("parseIssueChild() Skipping invalid sub-category(%s) id(%d)", Unicode::wideToUTF8(categoryName).c_str(), categoryId));
 		}
 	}
 
@@ -266,7 +269,7 @@ void CustomerServiceInterface::OnGetIssueHierarchy(
 	}
 	else
 	{
-		LOG("CSServer", ("ERROR: nullptr hierarchy returned from platform...why did this happen?", track, modifyData, result, getErrorString(result)));
+		LOG("CSServer", ("ERROR: nullptr hierarchy returned from platform...why did this happen? track(%i) modifyData(%u) result(%i:%s)", track, modifyData, result, getErrorString(result)));
 	}
 }
 
@@ -614,7 +617,7 @@ void CustomerServiceInterface::OnUnRegisterCharacter(const CSAssistGameAPITrack 
 
 void CustomerServiceInterface::addPlayer(NetworkId const &networkId, ConnectionServerConnection *connection, const unsigned int suid)
 {
-	LOG("CSServer", ("addPlayer() networkId(%s) suid(%i)", networkId.getValueString().c_str(), suid));
+	LOG("CSServer", ("addPlayer() networkId(%s) suid(%u)", networkId.getValueString().c_str(), suid));
 
 	ClientConnectionMap::iterator iterClientConnectionMap = m_clientConnectionMap->find(networkId);
 
@@ -776,7 +779,7 @@ void CustomerServiceInterface::requestUnRegisterCharacter(const NetworkId &reque
 
 	if (getSuid(requester, suid))
 	{
-		LOG("CSServer", ("requestUnRegisterCharacter() networkId(%s) suid(%i)", requester.getValueString().c_str(), suid));
+		LOG("CSServer", ("requestUnRegisterCharacter() networkId(%s) suid(%u)", requester.getValueString().c_str(), suid));
 
 		NetworkId *tmpNetworkId = new NetworkId(requester);
 		CSAssistGameAPI::requestUnRegisterCharacter(reinterpret_cast<const void *>(tmpNetworkId), suid, nullptr);

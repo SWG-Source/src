@@ -386,7 +386,7 @@ DatabaseSaveStart::~DatabaseSaveStart()
 
 //----------------------------------------------------------------------
 
-DatabaseCreateCharacterSuccess::DatabaseCreateCharacterSuccess(const NetworkId &objectId, StationId stationId, const Unicode::String &characterName, int templateId, bool jedi) :
+DatabaseCreateCharacterSuccess::DatabaseCreateCharacterSuccess(const NetworkId &objectId, StationId stationId, const Unicode::String &characterName, uint32 templateId, bool jedi) :
 		GameNetworkMessage("DatabaseCreateCharacterSuccess"),
 		m_objectId(objectId),
 		m_stationId(stationId),

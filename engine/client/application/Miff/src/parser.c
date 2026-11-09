@@ -134,11 +134,11 @@ void	checkPragmas(void);
 
 void	includeBinary(char *fname);
 
-void	write32(long i32);
-void	write16(short i16);
+void	write32(int32_t i32);
+void	write16(int16_t i16);
 void	write8(char i8);
-void	writeU32(unsigned long ui32);
-void	writeU16(unsigned short ui16);
+void	writeU32(uint32_t ui32);
+void	writeU16(uint16_t ui16);
 void	writeU8(unsigned char u8);
 void	writeDouble(double d);
 void	writeFloat(float f);
@@ -2829,14 +2829,14 @@ void checkArgs(void)
 /*----------------------------**
 ** Write to FILE functions... **
 **----------------------------*/
-void write32(long i32)
+void write32(int32_t i32)
 {
-	MIFFinsertChunkData(&i32, sizeof(long));
+	MIFFinsertChunkData(&i32, sizeof(int32_t));
 }
 
-void write16(short i16)
+void write16(int16_t i16)
 {
-	MIFFinsertChunkData(&i16, sizeof(short));
+	MIFFinsertChunkData(&i16, sizeof(int16_t));
 }
 
 void write8(char i8)
@@ -2844,14 +2844,14 @@ void write8(char i8)
 	MIFFinsertChunkData(&i8, sizeof(char));
 }
 
-void writeU32(unsigned long ui32)
+void writeU32(uint32_t ui32)
 {
-	MIFFinsertChunkData(&ui32, sizeof(long));
+	MIFFinsertChunkData(&ui32, sizeof(uint32_t));
 }
 
-void writeU16(unsigned short ui16)
+void writeU16(uint16_t ui16)
 {
-	MIFFinsertChunkData(&ui16, sizeof(short));
+	MIFFinsertChunkData(&ui16, sizeof(uint16_t));
 }
 
 void writeU8(unsigned char ui8)

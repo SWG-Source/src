@@ -39,12 +39,12 @@ public:
 
 	                        StringId       ();
 	                        StringId       (const std::string & table, const std::string & text);
-	                        StringId       (const std::string & table, unsigned long textIndex);
+	                        StringId       (const std::string & table, uint32_t textIndex);
 	explicit                StringId       (const std::string & canonicalRepresentation);
 
 	const std::string &     getTable       () const;
 	const std::string &     getText        () const;
-	unsigned long           getTextIndex   () const;
+	uint32_t                getTextIndex   () const;
 
 	bool                    isInvalid      () const;
 	bool                    isValid        () const;
@@ -60,7 +60,7 @@ public:
 	//-- text index is a mutable property of the StringId
 	//-- it is set the first time a StringId is localized, to speed up future lookups
 
-	void                    setTextIndex   (unsigned long textIndex) const;
+	void                    setTextIndex   (uint32_t textIndex) const;
 
 	bool                    localize       (LocUnicodeString & result, bool forceEnglish = false) const;
 	LocUnicodeString        localize       (bool forceEnglish = false) const;
@@ -79,7 +79,7 @@ private:
 
 	std::string                 m_table;
 	std::string                 m_text;
-	mutable unsigned long       m_textIndex; //if this number is nonzero, assume it is valid
+	mutable uint32_t            m_textIndex; //if this number is nonzero, assume it is valid
 };
 
 //----------------------------------------------------------------------
@@ -98,7 +98,7 @@ inline const std::string & StringId::getText() const
 
 //----------------------------------------------------------------------
 
-inline unsigned long StringId::getTextIndex() const
+inline uint32_t StringId::getTextIndex() const
 {
 	return m_textIndex;
 }

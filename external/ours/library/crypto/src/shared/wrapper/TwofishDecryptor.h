@@ -7,13 +7,14 @@
 
 //-----------------------------------------------------------------------
 
+#include "twofish.h"
 #include "TwofishCrypt.h"
 
 namespace Crypto {
 
 //-----------------------------------------------------------------------
 
-	class TwofishDecryptor : public TwofishCrypt
+	class TwofishDecryptor : public TwofishCrypt<CryptoPP::TwofishDecryption>
 {
 public:
 	TwofishDecryptor();

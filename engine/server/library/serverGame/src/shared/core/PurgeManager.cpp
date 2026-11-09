@@ -43,7 +43,7 @@ void PurgeManager::handleStructuresAndVendorsForPurge(StationId stationId, std::
 		}
 		vendorsString+="]";
 	
-		LOG("CustomerService",("Purge:  account %li, structures for %s are %s, vendors for purge are %s",stationId, warnOnly ? "warning emails" : "purge", structuresString.c_str(), vendorsString.c_str()));
+		LOG("CustomerService",("Purge:  account %u, structures for %s are %s, vendors for purge are %s",stationId, warnOnly ? "warning emails" : "purge", structuresString.c_str(), vendorsString.c_str()));
 	}
 	
 	if (warnOnly)

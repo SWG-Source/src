@@ -178,7 +178,7 @@ TransferServer::~TransferServer()
 void TransferServer::authorizeDownload(unsigned int stationId)
 {
 	IGNORE_RETURN(s_authorizedDownloads.insert(stationId));
-	REPORT_LOG(true, ("Received download authorization for station id %d\n", stationId));
+	REPORT_LOG(true, ("Received download authorization for station id %u\n", stationId));
 }
 
 //-----------------------------------------------------------------------
@@ -189,7 +189,7 @@ void TransferServer::unauthorizeDownload(unsigned int stationId)
 	if(f != s_authorizedDownloads.end())
 	{
 		s_authorizedDownloads.erase(f);
-		REPORT_LOG(true, ("Received request to remove download authorization for station id %d\n", stationId));
+		REPORT_LOG(true, ("Received request to remove download authorization for station id %u\n", stationId));
 	}
 }
 
@@ -250,7 +250,7 @@ const CharacterTransferData * TransferServer::getCharacterTransferData(unsigned 
 	}
 	else
 	{
-		REPORT_LOG(true, ("Download failed: Transfer data for SUID %d was not found.\n", stationId));
+		REPORT_LOG(true, ("Download failed: Transfer data for SUID %u was not found.\n", stationId));
 	}
 	return result;
 }
@@ -425,7 +425,7 @@ void TransferServer::requestTransferAccount(unsigned int track, unsigned int sou
 
 	if (firstGalaxy == galaxies.end())
 	{
-		LOG("CustomerService", ("CharacterTransfer: Account to account move request made, but no central server connections are available in transfer server source station id: %lu destination station id: %lu\n", sourceStationId, destinationStationId));
+		LOG("CustomerService", ("CharacterTransfer: Account to account move request made, but no central server connections are available in transfer server source station id: %u destination station id: %u\n", sourceStationId, destinationStationId));
 
 		if(s_apiClient)
 		{
@@ -442,7 +442,7 @@ void TransferServer::requestTransferAccount(unsigned int track, unsigned int sou
 
 	if(destinationStationId == 0 || sourceStationId == 0)
 	{
-		LOG("CustomerService", ("CharacterTransfer: Account move request made with a nullptr destination station id: or source station id: %lu\n", sourceStationId));
+		LOG("CustomerService", ("CharacterTransfer: Account move request made with a nullptr destination station id: or source station id: %u\n", sourceStationId));
 
 		if(s_apiClient)
 		{
@@ -613,7 +613,7 @@ bool TransferServer::uploadCharacterTransferData(const CharacterTransferData & d
 	if(f != s_serversAllowedToUpload.end() || authorized)
 	{
 		s_transferData[data.stationId] = data;
-		REPORT_LOG(true, ("%d bytes of data for SUID %d uploaded\n", data.packedData.length(), data.stationId));
+		REPORT_LOG(true, ("%zu bytes of data for SUID %u uploaded\n", data.packedData.length(), data.stationId));
 		result = true;
 	}
 	else
@@ -651,7 +651,7 @@ void TransferServer::replyCharacterList(const TransferReplyCharacterList & reply
 			result = static_cast<unsigned int>(CTService::CT_RESULT_FAILURE);
 			s_apiClient->moveComplete(reply.getStationId(), reply.getTrack(), result);
 		}
-		LOG("CTSAPI", ("invoking CTServiceAPI::replyCharacterList(%d, %d, %d, characters, nullptr)", reply.getTrack(), result, chars.size()));
+		LOG("CTSAPI", ("invoking CTServiceAPI::replyCharacterList(%d, %d, %zu, characters, nullptr)", reply.getTrack(), result, chars.size()));
 		IGNORE_RETURN(s_apiClient->replyCharacterList(reply.getTrack(), result, reply.getAvatarList().size(), characters, nullptr));
 	}
 	// else use another interface if available
@@ -713,7 +713,7 @@ void TransferServer::replyTransferAccountSuccess(const TransferAccountData & rep
 		const std::vector<AvatarData> avatarData(reply.getSourceAvatarData());
 		for (std::vector<AvatarData>::const_iterator i = avatarData.begin(); i != avatarData.end(); ++i)
 		{
-			LOG("CustomerService", ("CharacterTransfer: Sending request to update chat server (cluster: %s) for account transfer from %lu to %lu\n", (i->first).c_str(), reply.getSourceStationId(), reply.getDestinationStationId()));
+			LOG("CustomerService", ("CharacterTransfer: Sending request to update chat server (cluster: %s) for account transfer from %u to %u\n", (i->first).c_str(), reply.getSourceStationId(), reply.getDestinationStationId()));
 
 			// need to make a small transferCharacterData object to send with the message
 			TransferCharacterData chatRequest(TransferRequestMoveValidation::TRS_transfer_server);
@@ -733,7 +733,7 @@ void TransferServer::replyTransferAccountSuccess(const TransferAccountData & rep
 			}
 			else
 			{
-				LOG("CustomerService", ("CharacterTransfer: Could not transfer chat avatars for character %s on cluster %s from %lu to %lu: central connection does not exist in transferserver", i->second.c_str(), i->first.c_str(), reply.getSourceStationId(), reply.getDestinationStationId()));
+				LOG("CustomerService", ("CharacterTransfer: Could not transfer chat avatars for character %s on cluster %s from %u to %u: central connection does not exist in transferserver", i->second.c_str(), i->first.c_str(), reply.getSourceStationId(), reply.getDestinationStationId()));
 				const unsigned int result = static_cast<unsigned int>(CTService::CT_GAMERESULT_HARDERROR);
 				s_apiClient->moveComplete(reply.getSourceStationId(), reply.getTrack(), result);
 				IGNORE_RETURN(s_apiClient->replyTransferAccount(reply.getTrack(), result, nullptr, nullptr));
@@ -843,7 +843,7 @@ void TransferServer::failedToTransferCharacterConnectionServerConnectionClosed(u
 {
 	if(s_apiClient)
 	{
-		LOG("CustomerService", ("CharacterTransfer: Transfer failed: ConnectionServer connection closed with CentralServer while transfer was in progress for station id %d", stationId));
+		LOG("CustomerService", ("CharacterTransfer: Transfer failed: ConnectionServer connection closed with CentralServer while transfer was in progress for station id %u", stationId));
 		const unsigned int result = static_cast<unsigned int>(CTService::CT_GAMERESULT_SOFTERROR);
 		s_apiClient->moveComplete(stationId, 0, result);
 		// tracking information is not availalable in this case, so an

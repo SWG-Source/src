@@ -61,9 +61,9 @@ namespace ChatSystem
 		const ChatUnicodeString &getForwardingEmail() const;
         const ChatUnicodeString& getStatusMessage() const;
 
-		void setAttributes(unsigned long attributes);
+		void setAttributes(uint32_t attributes);
 		void setLoginPriority(int loginPriority);
-		void setInboxLimit(unsigned inboxLimit);
+		void setInboxLimit(uint32_t inboxLimit);
 		void setForwardingEmail(const ChatUnicodeString &forwardingEmail);
         void setStatusMessage(const ChatUnicodeString& statusMessage);
 

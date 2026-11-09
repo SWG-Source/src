@@ -42,7 +42,7 @@ class TaskUndeleteItem:public DB::TaskRequest
 		DB::BindableNetworkId   item_id;
 		
 		//output:
-		DB::BindableLong        result;
+		DB::BindableInt32        result;
 		
 	  private:
 		UndeleteItemQuery(const UndeleteItemQuery&);

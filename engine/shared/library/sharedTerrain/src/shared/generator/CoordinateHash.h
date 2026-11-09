@@ -19,8 +19,8 @@
 class CoordinateHash
 {
 public:
-	static unsigned long hashTuple(float x, float z);
-	static float makeFloat(unsigned long hash);
+	static uint32 hashTuple(float x, float z);
+	static float makeFloat(uint32 hash);
 };
 
 //===================================================================

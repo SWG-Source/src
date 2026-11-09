@@ -1,18 +1,18 @@
 CREATE TABLE character_profile
 (
     cluster_name                     VARCHAR2 (50)                   NOT NULL
-  , character_id                     NUMBER   (20)                   NOT NULL
+  , character_id                     NUMBER   (20)                   NOT NULL -- BIND_AS(DB::BindableNetworkId)
   , character_name                   VARCHAR2 (127)                  
   , object_name                      VARCHAR2 (127)                  
   , x                                FLOAT                           
   , y                                FLOAT                           
   , z                                FLOAT                           
   , scene_id                         VARCHAR2 (50)                   
-  , cash_balance                     INTEGER                         
-  , bank_balance                     INTEGER                         
+  , cash_balance                     INTEGER                          -- BIND_AS(DB::BindableDouble)
+  , bank_balance                     INTEGER                          -- BIND_AS(DB::BindableDouble)
   , object_template_name             VARCHAR2 (500)                  
-  , station_id                       NUMBER   (20)                   
-  , contained_by                     NUMBER   (20)                   
+  , station_id                       NUMBER   (20)                    -- BIND_AS(DB::BindableUint32)
+  , contained_by                     NUMBER   (20)                    -- BIND_AS(DB::BindableNetworkId)
   , create_time                      DATE                            
   , played_time                      DATE                            
   , num_lots                         NUMBER   (20)                   

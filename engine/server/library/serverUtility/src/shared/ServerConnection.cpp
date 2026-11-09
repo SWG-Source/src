@@ -283,14 +283,14 @@ void ServerConnection::send(const GameNetworkMessage & message, const bool relia
 
 // ----------------------------------------------------------------------
 
-void ServerConnection::onConnectionStalled(const unsigned long stallTimeMs)
+void ServerConnection::onConnectionStalled(const uint32_t stallTimeMs)
 {
-	LOG("Network", ("Connection to %s, pid %d stalled with %d bytes pending for %d milliseconds", getRemoteAddress().c_str(), getOsProcessId(), getPendingBytes(), stallTimeMs));
+	LOG("Network", ("Connection to %s, pid %d stalled with %d bytes pending for %u milliseconds", getRemoteAddress().c_str(), getOsProcessId(), getPendingBytes(), stallTimeMs));
 }
 
 // ----------------------------------------------------------------------
 
-void ServerConnection::setProcessId(const uint32 newProcessId)
+void ServerConnection::setProcessId(const uint32_t newProcessId)
 {
 	processId = newProcessId;
 }

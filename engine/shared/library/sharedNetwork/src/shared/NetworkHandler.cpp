@@ -141,7 +141,7 @@ void NetworkHandler::dispatch()
 	if (!services.inputQueue.empty())
 	{
 		size_t const startQueueSize = services.inputQueue.size();
-		unsigned long const startTime = Clock::timeMs();
+		uint64_t const startTime = Clock::timeMs();
 		bool const throttle =  ConfigSharedNetwork::getNetworkHandlerDispatchThrottle();
 		unsigned int const processTimeMilliseconds = static_cast<unsigned int>(ConfigSharedNetwork::getNetworkHandlerDispatchThrottleTimeMilliseconds());
 		unsigned int const queueSize = static_cast<unsigned int>(ConfigSharedNetwork::getNetworkHandlerDispatchQueueSize());
@@ -175,7 +175,7 @@ void NetworkHandler::dispatch()
 			services.inputQueue.pop_front();
 		}
 
-		REPORT_LOG(ms_logThrottle && throttle && !services.inputQueue.empty(), ("NetworkHandler::dispatch: services.inputQueue has %d/%d messages remaining\n", services.inputQueue.size(), startQueueSize));
+		REPORT_LOG(ms_logThrottle && throttle && !services.inputQueue.empty(), ("NetworkHandler::dispatch: services.inputQueue has %zu/%zu messages remaining\n", services.inputQueue.size(), startQueueSize));
 	}
 }
 

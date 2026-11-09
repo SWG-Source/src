@@ -102,7 +102,7 @@ PersistentCrcString const & AiCreatureWeaponActions::getCombatAction()
 		{
 			unsigned int expiredCount = 0;
 
-			for (unsigned int i = 0; i < m_singleUseActionList.size(); ++i)
+			for (uint32_t i = 0; i < m_singleUseActionList.size(); ++i)
 			{
 				if (m_singleUseActionList[i] != 0)
 				{
@@ -133,7 +133,7 @@ PersistentCrcString const & AiCreatureWeaponActions::getCombatAction()
 
 		// Delayed repeat actions
 		{
-			for (unsigned int i = 0; i < m_delayRepeatActionList.size(); ++i)
+			for (uint32_t i = 0; i < m_delayRepeatActionList.size(); ++i)
 			{
 				if (osTime > time_t(m_delayRepeatActionList[i]))
 				{
@@ -160,7 +160,7 @@ PersistentCrcString const & AiCreatureWeaponActions::getCombatAction()
 			time_t nextActionTime = 0;
 			unsigned int nextActionIndex = 0;
 
-			for (unsigned int i = 0; i < m_instantRepeatActionList.size(); ++i)
+			for (uint32_t i = 0; i < m_instantRepeatActionList.size(); ++i)
 			{
 				if (osTime >= time_t(m_instantRepeatActionList[i]))
 				{

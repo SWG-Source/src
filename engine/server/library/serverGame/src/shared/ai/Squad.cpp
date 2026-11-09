@@ -176,7 +176,7 @@ void Squad::addUnit(NetworkId const & unit)
 	{
 		bool const leader = m_unitMap->empty();
 
-		LOGC(ConfigServerGame::isSpaceAiLoggingEnabled(), "space_debug_ai", ("Squad::addUnit() className(%s) squadId(%d) unit(%s) leader(%s) squadSize(%d+1)", getClassName(), m_id, unit.getValueString().c_str(), leader ? "yes" : "no", m_unitMap->size()));
+		LOGC(ConfigServerGame::isSpaceAiLoggingEnabled(), "space_debug_ai", ("Squad::addUnit() className(%s) squadId(%d) unit(%s) leader(%s) squadSize(%zu+1)", getClassName(), m_id, unit.getValueString().c_str(), leader ? "yes" : "no", m_unitMap->size()));
 
 		//-- Add the unit to the new squad
 
@@ -225,7 +225,7 @@ void Squad::removeUnit(NetworkId const & unit)
 
 	if (iterUnitMap != m_unitMap->end())
 	{
-		LOGC(ConfigServerGame::isSpaceAiLoggingEnabled(), "space_debug_ai", ("Squad::removeUnit() className(%s) squadId(%d) unit(%s) squadSize(%d-1) leader(%s)", getClassName(), m_id, unit.getValueString().c_str(),  m_unitMap->size(), m_leader.getValueString().c_str()));
+		LOGC(ConfigServerGame::isSpaceAiLoggingEnabled(), "space_debug_ai", ("Squad::removeUnit() className(%s) squadId(%d) unit(%s) squadSize(%zu-1) leader(%s)", getClassName(), m_id, unit.getValueString().c_str(),  m_unitMap->size(), m_leader.getValueString().c_str()));
 
 		bool const wasLeader = (iterUnitMap->first == m_leader);
 

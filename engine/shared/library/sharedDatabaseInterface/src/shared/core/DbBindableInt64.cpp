@@ -29,6 +29,11 @@ BindableInt64::BindableInt64(int64 value)
 
 int64 BindableInt64::getValue() const
 {
+	// A NULL column holds no number; it reads as 0 (for a BindableNetworkId,
+	// NetworkId::cms_invalid) rather than as an unparsed, uninitialised value.
+	if (isNull())
+		return 0;
+
 	int64 temp;
 	char buffer[BindableInt64BufferSize+1];
 	BindableString<BindableInt64BufferSize>::getValue(buffer,BindableInt64BufferSize+1);

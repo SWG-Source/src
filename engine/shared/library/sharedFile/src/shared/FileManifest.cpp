@@ -32,7 +32,7 @@ namespace FileManifestNamespace
 		std::string    scene;
 	};
 
-	typedef std::map<const uint32, FileManifestEntry*>  ManifestMap;
+	typedef std::map<uint32, FileManifestEntry>        ManifestMap; // owns its entries
 	typedef std::pair<std::string, int>                               TransitionVectorEntry;
 	typedef std::vector<TransitionVectorEntry>                        TransitionVector;
 
@@ -40,10 +40,13 @@ namespace FileManifestNamespace
 	static TransitionVector s_transitionVector;
 	static bool s_installed                               = false;
 	static bool s_updateManifest                          = false;
+	static std::string s_currentSceneId                   = "none";
+
+#if PRODUCTION == 0
 	static int s_accessThreshold                          = -1;
-	static std::string s_currentSceneId                   = "none"; 
 	static bool s_isValidScene                            = false;
 	static bool s_isTransitionScene                       = true;
+#endif
 
 	const static std::string s_manifestDataTable          = "datatables/manifest/skufree.iff";
 
@@ -122,7 +125,7 @@ void FileManifest::install()
 				delimeter = strstr(currentPos, "\t");
 				if (!delimeter)
 				{
-					DEBUG_WARNING(true, ("FileManifest::install(): Couldn't find a tab at position %i in file manfiest table, stopped iterating on elements!\n", currentPos - fileBuffer));
+					DEBUG_WARNING(true, ("FileManifest::install(): Couldn't find a tab at position %td in file manfiest table, stopped iterating on elements!\n", currentPos - fileBuffer));
 					break;
 				}
 				int numCharacters = delimeter - currentPos;
@@ -134,7 +137,7 @@ void FileManifest::install()
 				delimeter = strstr(currentPos, "\t");
 				if (!delimeter)
 				{
-					DEBUG_WARNING(true, ("FileManifest::install(): Couldn't find a tab at position %i in file manfiest table, stopped iterating on elements!\n", currentPos - fileBuffer));
+					DEBUG_WARNING(true, ("FileManifest::install(): Couldn't find a tab at position %td in file manfiest table, stopped iterating on elements!\n", currentPos - fileBuffer));
 					break;
 				}
 
@@ -147,7 +150,7 @@ void FileManifest::install()
 				delimeter = strstr(currentPos, "\n");
 				if (!delimeter)
 				{
-					DEBUG_WARNING(true, ("FileManifest::install(): Couldn't find a newline at position %i in file manfiest table, stopped iterating on elements!\n", currentPos - fileBuffer));
+					DEBUG_WARNING(true, ("FileManifest::install(): Couldn't find a newline at position %td in file manfiest table, stopped iterating on elements!\n", currentPos - fileBuffer));
 					break;
 				}
 				numCharacters = delimeter - currentPos;
@@ -199,22 +202,12 @@ void FileManifest::remove()
 		DEBUG_REPORT_LOG_PRINT(s_accessThreshold >= 0, ("FileManifestAccessReport:\tFile:\tScene:\tSize:\tAccesses:\n"));
 		for (ManifestMap::iterator i = s_manifest.begin(); i != s_manifest.end(); ++i)
 		{
-			if (!i->second)
-			{
-				DEBUG_WARNING(true, ("FileManifest::remove(): Found a nullptr pointer in the fileManifest map!\n"));
-				continue;
-			}
-
 			// output the entry in the file
-			sprintf(buffer, "%s\t%s\t%i\n", ((i->second)->name).c_str(), ((i->second)->scene).c_str(), (i->second)->size);
+			sprintf(buffer, "%s\t%s\t%i\n", i->second.name.c_str(), i->second.scene.c_str(), i->second.size);
 			manifestEntries.push_back(buffer);
 
 			// print and log the entry if it is in the access threshold
-			DEBUG_REPORT_LOG_PRINT((i->second)->accesses <= s_accessThreshold, ("FileManifestAccessReport:\t%s\t%s\t%i\t%i\n", ((i->second)->name).c_str(), ((i->second)->scene).c_str(), (i->second)->size, (i->second)->accesses));
-
-			// delete the actual entry
-			delete i->second;
-			i->second = 0;
+			DEBUG_REPORT_LOG_PRINT(i->second.accesses <= s_accessThreshold, ("FileManifestAccessReport:\t%s\t%s\t%i\t%i\n", i->second.name.c_str(), i->second.scene.c_str(), i->second.size, i->second.accesses));
 		}
 
 		std::sort(manifestEntries.begin(), manifestEntries.end());
@@ -223,18 +216,10 @@ void FileManifest::remove()
 
 		delete [] buffer;
 		outputFile.close();
-
-		return;
 	}
 #endif
 
-	for (ManifestMap::iterator i = s_manifest.begin(); i != s_manifest.end(); ++i)
-	{
-		// delete the actual entry
-		delete i->second;
-		i->second = 0;
-	}
-
+	s_manifest.clear();
 	s_transitionVector.clear();
 }
 
@@ -260,26 +245,24 @@ void FileManifest::addNewManifestEntry(const char *fileName, int fileSize)
 		return;
 
 	const uint32 crc = Crc::calculate(fileName);
-	FileManifestEntry * entry = new FileManifestEntry();
-	entry->name     = fileName;
-	entry->scene    = s_currentSceneId;
-	entry->size     = fileSize;
-	entry->accesses = 0;
+	FileManifestEntry entry;
+	entry.name     = fileName;
+	entry.scene    = s_currentSceneId;
+	entry.size     = fileSize;
+	entry.accesses = 0;
 
-	std::pair<ManifestMap::iterator, bool> insertReturn = s_manifest.insert(std::pair<const uint32, FileManifestEntry*>(crc, entry));
+	std::pair<ManifestMap::iterator, bool> insertReturn = s_manifest.insert(ManifestMap::value_type(crc, entry));
 
-	// increment the accesses 
-	++(((insertReturn.first)->second)->accesses);
+	// increment the accesses
+	++insertReturn.first->second.accesses;
 
-	// if the insert failed
+	// if the entry already existed
 	if (!insertReturn.second)
 	{
 		// make sure the file is using the new fileSize - fileSize is 0 if this is entered due to a TreeFile::exists call
 		if (fileSize)
-			((insertReturn.first)->second)->size = fileSize;
-
+			insertReturn.first->second.size = fileSize;
 	}
-	delete entry;
 #else
 	return;
 #endif
@@ -290,15 +273,13 @@ void FileManifest::addNewManifestEntry(const char *fileName, int fileSize)
 void FileManifest::addStoredManifestEntry(const char *fileName, const char * sceneId, int fileSize)
 {
 	const uint32 crc = Crc::calculate(fileName);
-	FileManifestEntry * entry = new FileManifestEntry();
-	entry->name     = fileName;
-	entry->scene    = sceneId;
-	entry->size     = fileSize;
-	entry->accesses = 0;
+	FileManifestEntry entry;
+	entry.name     = fileName;
+	entry.scene    = sceneId;
+	entry.size     = fileSize;
+	entry.accesses = 0;
 
-	s_manifest.insert(std::pair<const uint32, FileManifestEntry*>(crc, entry));
-
-	delete entry;
+	s_manifest.insert(ManifestMap::value_type(crc, entry));
 }
 
 // -----------------------------------------------------------------------

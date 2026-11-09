@@ -21,6 +21,8 @@
 #include "sharedFoundation/FormattedString.h"
 #include "sharedFoundation/NetworkId.h"
 
+#include <limits>
+
 // ======================================================================
  
 static const CommandParser::CmdInfo cmds[] =
@@ -167,10 +169,10 @@ bool ConsoleCommandParserCollection::performParsing (const NetworkId & userId, c
 				}
 			}
 
-			unsigned long currentValue;
+			uint32_t currentValue;
 			IGNORE_RETURN(p->getCollectionSlotValue(*slot, currentValue));
 
-			result += Unicode::narrowToWide(FormattedString<512>().sprintf("modifying collection slot %s/%s/%s/%s value of %lu by %s for character object %s (%s)\n", slot->collection.page.book.name.c_str(), slot->collection.page.name.c_str(), slot->collection.name.c_str(), Unicode::wideToNarrow(argv[2]).c_str(), currentValue, adjustment.getValueString().c_str(), oid.getValueString().c_str(), Unicode::wideToNarrow(o->getAssignedObjectName()).c_str()));
+			result += Unicode::narrowToWide(FormattedString<512>().sprintf("modifying collection slot %s/%s/%s/%s value of %u by %s for character object %s (%s)\n", slot->collection.page.book.name.c_str(), slot->collection.page.name.c_str(), slot->collection.name.c_str(), Unicode::wideToNarrow(argv[2]).c_str(), currentValue, adjustment.getValueString().c_str(), oid.getValueString().c_str(), Unicode::wideToNarrow(o->getAssignedObjectName()).c_str()));
 			p->modifyCollectionSlotValue(Unicode::wideToNarrow(argv[2]), adjustment.getValue());
 		}
 
@@ -239,13 +241,13 @@ bool ConsoleCommandParserCollection::performParsing (const NetworkId & userId, c
 				else
 				{
 					// grant counter-type slot
-					unsigned long currentValue;
+					uint32_t currentValue;
 					IGNORE_RETURN(p->getCollectionSlotValue(**iter, currentValue));
 
 					// quickie way to convert to an int64
 					NetworkId const adjustment(static_cast<int64>((*iter)->maxSlotValue) - static_cast<int64>(currentValue));
 
-					result += Unicode::narrowToWide(FormattedString<512>().sprintf("modifying collection slot %s/%s/%s/%s value of %lu by %s\n", (*iter)->collection.page.book.name.c_str(), (*iter)->collection.page.name.c_str(), (*iter)->collection.name.c_str(), (*iter)->name.c_str(), currentValue, adjustment.getValueString().c_str()));
+					result += Unicode::narrowToWide(FormattedString<512>().sprintf("modifying collection slot %s/%s/%s/%s value of %u by %s\n", (*iter)->collection.page.book.name.c_str(), (*iter)->collection.page.name.c_str(), (*iter)->collection.name.c_str(), (*iter)->name.c_str(), currentValue, adjustment.getValueString().c_str()));
 					p->modifyCollectionSlotValue((*iter)->name, adjustment.getValue());
 				}
 			}
@@ -316,13 +318,13 @@ bool ConsoleCommandParserCollection::performParsing (const NetworkId & userId, c
 				else
 				{
 					// grant counter-type slot
-					unsigned long currentValue;
+					uint32_t currentValue;
 					IGNORE_RETURN(p->getCollectionSlotValue(**iter, currentValue));
 
 					// quickie way to convert to an int64
 					NetworkId const adjustment(static_cast<int64>((*iter)->maxSlotValue) - static_cast<int64>(currentValue));
 
-					result += Unicode::narrowToWide(FormattedString<512>().sprintf("modifying collection slot %s/%s/%s/%s value of %lu by %s\n", (*iter)->collection.page.book.name.c_str(), (*iter)->collection.page.name.c_str(), (*iter)->collection.name.c_str(), (*iter)->name.c_str(), currentValue, adjustment.getValueString().c_str()));
+					result += Unicode::narrowToWide(FormattedString<512>().sprintf("modifying collection slot %s/%s/%s/%s value of %u by %s\n", (*iter)->collection.page.book.name.c_str(), (*iter)->collection.page.name.c_str(), (*iter)->collection.name.c_str(), (*iter)->name.c_str(), currentValue, adjustment.getValueString().c_str()));
 					p->modifyCollectionSlotValue((*iter)->name, adjustment.getValue());
 				}
 			}
@@ -393,13 +395,13 @@ bool ConsoleCommandParserCollection::performParsing (const NetworkId & userId, c
 				else
 				{
 					// grant counter-type slot
-					unsigned long currentValue;
+					uint32_t currentValue;
 					IGNORE_RETURN(p->getCollectionSlotValue(**iter, currentValue));
 
 					// quickie way to convert to an int64
 					NetworkId const adjustment(static_cast<int64>((*iter)->maxSlotValue) - static_cast<int64>(currentValue));
 
-					result += Unicode::narrowToWide(FormattedString<512>().sprintf("modifying collection slot %s/%s/%s/%s value of %lu by %s\n", (*iter)->collection.page.book.name.c_str(), (*iter)->collection.page.name.c_str(), (*iter)->collection.name.c_str(), (*iter)->name.c_str(), currentValue, adjustment.getValueString().c_str()));
+					result += Unicode::narrowToWide(FormattedString<512>().sprintf("modifying collection slot %s/%s/%s/%s value of %u by %s\n", (*iter)->collection.page.book.name.c_str(), (*iter)->collection.page.name.c_str(), (*iter)->collection.name.c_str(), (*iter)->name.c_str(), currentValue, adjustment.getValueString().c_str()));
 					p->modifyCollectionSlotValue((*iter)->name, adjustment.getValue());
 				}
 			}
@@ -456,13 +458,13 @@ bool ConsoleCommandParserCollection::performParsing (const NetworkId & userId, c
 				else
 				{
 					// revoke counter-type slot
-					unsigned long currentValue;
+					uint32_t currentValue;
 					IGNORE_RETURN(p->getCollectionSlotValue(**iter, currentValue));
 
 					// quickie way to convert to an int64
 					NetworkId const adjustment(-(static_cast<int64>(currentValue)));
 
-					result += Unicode::narrowToWide(FormattedString<512>().sprintf("modifying collection slot %s/%s/%s/%s value of %lu by %s\n", (*iter)->collection.page.book.name.c_str(), (*iter)->collection.page.name.c_str(), (*iter)->collection.name.c_str(), (*iter)->name.c_str(), currentValue, adjustment.getValueString().c_str()));
+					result += Unicode::narrowToWide(FormattedString<512>().sprintf("modifying collection slot %s/%s/%s/%s value of %u by %s\n", (*iter)->collection.page.book.name.c_str(), (*iter)->collection.page.name.c_str(), (*iter)->collection.name.c_str(), (*iter)->name.c_str(), currentValue, adjustment.getValueString().c_str()));
 					p->modifyCollectionSlotValue((*iter)->name, adjustment.getValue());
 				}
 			}
@@ -519,13 +521,13 @@ bool ConsoleCommandParserCollection::performParsing (const NetworkId & userId, c
 				else
 				{
 					// revoke counter-type slot
-					unsigned long currentValue;
+					uint32_t currentValue;
 					IGNORE_RETURN(p->getCollectionSlotValue(**iter, currentValue));
 
 					// quickie way to convert to an int64
 					NetworkId const adjustment(-(static_cast<int64>(currentValue)));
 
-					result += Unicode::narrowToWide(FormattedString<512>().sprintf("modifying collection slot %s/%s/%s/%s value of %lu by %s\n", (*iter)->collection.page.book.name.c_str(), (*iter)->collection.page.name.c_str(), (*iter)->collection.name.c_str(), (*iter)->name.c_str(), currentValue, adjustment.getValueString().c_str()));
+					result += Unicode::narrowToWide(FormattedString<512>().sprintf("modifying collection slot %s/%s/%s/%s value of %u by %s\n", (*iter)->collection.page.book.name.c_str(), (*iter)->collection.page.name.c_str(), (*iter)->collection.name.c_str(), (*iter)->name.c_str(), currentValue, adjustment.getValueString().c_str()));
 					p->modifyCollectionSlotValue((*iter)->name, adjustment.getValue());
 				}
 			}
@@ -582,13 +584,13 @@ bool ConsoleCommandParserCollection::performParsing (const NetworkId & userId, c
 				else
 				{
 					// revoke counter-type slot
-					unsigned long currentValue;
+					uint32_t currentValue;
 					IGNORE_RETURN(p->getCollectionSlotValue(**iter, currentValue));
 
 					// quickie way to convert to an int64
 					NetworkId const adjustment(-(static_cast<int64>(currentValue)));
 
-					result += Unicode::narrowToWide(FormattedString<512>().sprintf("modifying collection slot %s/%s/%s/%s value of %lu by %s\n", (*iter)->collection.page.book.name.c_str(), (*iter)->collection.page.name.c_str(), (*iter)->collection.name.c_str(), (*iter)->name.c_str(), currentValue, adjustment.getValueString().c_str()));
+					result += Unicode::narrowToWide(FormattedString<512>().sprintf("modifying collection slot %s/%s/%s/%s value of %u by %s\n", (*iter)->collection.page.book.name.c_str(), (*iter)->collection.page.name.c_str(), (*iter)->collection.name.c_str(), (*iter)->name.c_str(), currentValue, adjustment.getValueString().c_str()));
 					p->modifyCollectionSlotValue((*iter)->name, adjustment.getValue());
 				}
 			}
@@ -651,15 +653,15 @@ bool ConsoleCommandParserCollection::performParsing (const NetworkId & userId, c
 						}
 						else
 						{
-							unsigned long value;
+							uint32_t value;
 							IGNORE_RETURN(p->getCollectionSlotValue(**iterSlot, value));
 							if (value == 0)
 								continue;
 
 							if ((*iterSlot)->maxSlotValue == 0)
-								slotInfo += FormattedString<512>().sprintf("            %s (%lu)\n", (*iterSlot)->name.c_str(), value);
+								slotInfo += FormattedString<512>().sprintf("            %s (%u)\n", (*iterSlot)->name.c_str(), value);
 							else
-								slotInfo += FormattedString<512>().sprintf("            %s (%lu/%lu)\n", (*iterSlot)->name.c_str(), value, (*iterSlot)->maxSlotValue);
+								slotInfo += FormattedString<512>().sprintf("            %s (%u/%lu)\n", (*iterSlot)->name.c_str(), value, (*iterSlot)->maxSlotValue);
 						}
 					}
 
@@ -789,15 +791,15 @@ bool ConsoleCommandParserCollection::performParsing (const NetworkId & userId, c
 	{
 		time_t const rawtime = ::time(nullptr);
 		struct tm * timeinfo = ::localtime(&rawtime);
-		timeinfo->tm_year = atoi(Unicode::wideToNarrow(argv[2]).c_str()) - 1900;
-		timeinfo->tm_mon = atoi(Unicode::wideToNarrow(argv[3]).c_str()) - 1;
-		timeinfo->tm_mday = atoi(Unicode::wideToNarrow(argv[4]).c_str());
-		timeinfo->tm_hour = atoi(Unicode::wideToNarrow(argv[5]).c_str());
-		timeinfo->tm_min = atoi(Unicode::wideToNarrow(argv[6]).c_str());
-		timeinfo->tm_sec = atoi(Unicode::wideToNarrow(argv[7]).c_str());
+		if (!parseDateTimeArgs(argv, 2, *timeinfo))
+		{
+			result += getErrorMessage(argv[0], ERR_INVALID_ARGUMENTS);
+			return true;
+		}
 		time_t const specifiedTime = ::mktime(timeinfo);
 
-		if (specifiedTime <= 0)
+		// The "server first" time is stored as an int32 claim time.
+		if (specifiedTime <= 0 || specifiedTime > std::numeric_limits<int32>::max())
 		{
 			result += Unicode::narrowToWide("specified time is invalid\n");
 			return true;

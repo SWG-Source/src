@@ -90,8 +90,8 @@ private:
 	Archive::AutoDeltaMap<CachedNetworkId, float> m_hateList;
 	Archive::AutoDeltaVariable<CachedNetworkId> m_target;
 	Archive::AutoDeltaVariable<float> m_maxHate;
-	Archive::AutoDeltaVariable<time_t> m_lastUpdateTime;
-	Archive::AutoDeltaVariable<time_t> m_autoExpireTargetDuration;
+	Archive::AutoDeltaVariable<uint32_t> m_lastUpdateTime;
+	Archive::AutoDeltaVariable<uint32_t> m_autoExpireTargetDuration;
 	std::set<CachedNetworkId> m_recentHateList; // This is used for assist logic
 };
 

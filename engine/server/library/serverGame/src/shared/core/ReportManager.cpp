@@ -54,12 +54,12 @@ namespace ReportManagerNamespace
 	typedef std::map<unsigned int, ReportData> ReportList;
 	ReportList s_reportList;
 
-	typedef std::map<NetworkId, time_t> ReportThrottle;
+	typedef std::map<NetworkId, uint32_t> ReportThrottle;
 	ReportThrottle s_reportThrottle;
 
-	time_t const s_throttleTime = 10; // seconds
-	time_t const s_throttleCleanupTime = 60; // seconds
-	time_t s_throttleCleanupTimer = 0; // seconds
+	uint32_t const s_throttleTime = 10; // seconds
+	uint32_t const s_throttleCleanupTime = 60; // seconds
+	uint32_t s_throttleCleanupTimer = 0; // seconds
 }
 
 using namespace ReportManagerNamespace;
@@ -114,7 +114,7 @@ void ReportManager::addReport(Unicode::String const &reportingName, NetworkId co
 {
 	// Remove any expired throttling
 
-	time_t const systemTime = Os::getRealSystemTime();
+	uint32_t const systemTime = Os::getRealSystemTime();
 
 	if ((systemTime - s_throttleCleanupTimer) > s_throttleCleanupTime)
 	{

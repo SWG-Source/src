@@ -89,6 +89,7 @@
 #include "sharedFoundation/Clock.h"
 #include "sharedFoundation/ConstCharCrcString.h"
 #include "sharedFoundation/DynamicVariableLocationData.h"
+#include "sharedFoundation/FixedWidthParse.h"
 #include "sharedFoundation/FormattedString.h"
 #include "sharedFoundation/GameControllerMessage.h"
 #include "sharedFoundation/Os.h"
@@ -241,7 +242,7 @@ namespace ServerObjectNamespace
 
 	const std::string OBJVAR_OPEN_BANK_TERMINAL_ID("open_bank_location");
 
-	unsigned long gs_objectCount = 0;
+	uint32_t gs_objectCount = 0;
 
 	const char * const portalPropertyCrcObjectVariableName = "portalProperty.crc";
 
@@ -262,7 +263,7 @@ namespace ServerObjectNamespace
 
 	// sentinel to keep the messageTo current being
 	// handled from getting removed from m_messageTos
-	std::pair<std::pair<unsigned long, uint64>, MessageToId> s_currentMessageToBeingHandled = std::make_pair(std::make_pair(0, 0), MessageToId::cms_invalid);
+	std::pair<std::pair<uint32_t, uint64>, MessageToId> s_currentMessageToBeingHandled = std::make_pair(std::make_pair(0, 0), MessageToId::cms_invalid);
 
 	// ----------------------------------------------------------------------
 
@@ -468,11 +469,14 @@ namespace ServerObjectNamespace
 
 	// ----------------------------------------------------------------------
 
-	unsigned int getPackedObjVarField(std::string const &buf, unsigned int offset, int &result)
+	// An int field. Packed objvar strings reach setPackedObjVars() from
+	// scripts as well as from buildout data, so the field must be exactly
+	// one int32; valid is false otherwise.
+	unsigned int getPackedObjVarField(std::string const &buf, unsigned int offset, int32 &result, bool &valid)
 	{
 		std::string s;
 		offset = getPackedObjVarField(buf, offset, s);
-		result = atoi(s.c_str());
+		valid = FixedWidthParse::parseInt32(s, 10, result);
 		return offset;
 	}
 
@@ -1295,7 +1299,7 @@ static const ConstCharCrcLowerString templateName("object/object/base/shared_obj
 
 //-----------------------------------------------------------------------
 
-const unsigned long ServerObject::getObjectCount()
+const uint32_t ServerObject::getObjectCount()
 {
 	return gs_objectCount;
 }
@@ -2350,9 +2354,9 @@ bool ServerObject::handleContentsSetup()
 
 //-----------------------------------------------------------------------
 
-unsigned long ServerObject::getAndIncrementMoveSequenceNumber()
+uint32_t ServerObject::getAndIncrementMoveSequenceNumber()
 {
-	unsigned long newValue = m_transformSequence.get();
+	uint32_t newValue = m_transformSequence.get();
 	newValue++;
 	m_transformSequence = newValue;
 	return newValue;
@@ -3143,7 +3147,7 @@ void ServerObject::createFarNetworkUpdateVolume(float const overrideVal)
 	Object const *const containedByObject = ContainerInterface::getContainedByObject(*this);
 	if (containedByObject)
 	{
-		DEBUG_REPORT_LOG(true, ("SO::createFarNetworkUpdateVolume(): server id=[%lu],object id=[%s],container id=[%s]: skipping creation of far network update volume because item is contained.\n",
+		DEBUG_REPORT_LOG(true, ("SO::createFarNetworkUpdateVolume(): server id=[%u],object id=[%s],container id=[%s]: skipping creation of far network update volume because item is contained.\n",
 								GameServer::getInstance().getProcessId(),
 								getNetworkId().getValueString().c_str(),
 								containedByObject->getNetworkId().getValueString().c_str()));
@@ -3431,7 +3435,7 @@ void ServerObject::sendToClientsInUpdateRange(const GameNetworkMessage & message
 	Vector combatSpamAttackerPosition_w, combatSpamDefenderPosition_w;
 	if (!clients.empty())
 	{
-		static unsigned long int const controllerMessageCrc = MessageDispatch::MessageBase::makeMessageTypeFromString("ObjControllerMessage");
+		static uint32_t const controllerMessageCrc = MessageDispatch::MessageBase::makeMessageTypeFromString("ObjControllerMessage");
 		if (controllerMessageCrc == message.getType())
 		{
 			ObjControllerMessage const & ocm = static_cast<ObjControllerMessage const &>(message);
@@ -5092,8 +5096,11 @@ bool ServerObject::setPackedObjVars(std::string const &packedVarString)
 		offset = getPackedObjVarField(packedVarString, offset, name);
 		if (name == "$")
 	return true;
-		int typeId;
-		offset = getPackedObjVarField(packedVarString, offset, typeId);
+		int32 typeId = 0;
+		bool typeIdValid = false;
+		offset = getPackedObjVarField(packedVarString, offset, typeId, typeIdValid);
+		if (!typeIdValid)
+			return false;
 		std::string valueString;
 		offset = getPackedObjVarField(packedVarString, offset, valueString);
 		DynamicVariable value;
@@ -5113,10 +5120,10 @@ bool ServerObject::setPackedObjVars(std::string const &packedVarString)
 
 std::string ServerObject::debugGetMessageToList() const
 {
-	unsigned long const now = ServerClock::getInstance().getGameTimeSeconds();
+	uint32_t const now = ServerClock::getInstance().getGameTimeSeconds();
 	std::string result;
-	time_t const timeNow = ::time(nullptr);
-	for (Archive::AutoDeltaMap<std::pair<std::pair<unsigned long, uint64>, MessageToId>, MessageToPayload>::const_iterator i=m_messageTos.begin(); i!=m_messageTos.end(); ++i)
+	uint32_t const timeNow = ::time(nullptr);
+	for (Archive::AutoDeltaMap<std::pair<std::pair<uint32_t, uint64>, MessageToId>, MessageToPayload>::const_iterator i=m_messageTos.begin(); i!=m_messageTos.end(); ++i)
 	{
 		char temp[256];
 
@@ -5144,14 +5151,14 @@ std::string ServerObject::debugGetMessageToList() const
  * @return The delivery time of the next message, or 0 if there are no more messages
  */
 
-unsigned long ServerObject::processQueuedMessageTos(unsigned long effectiveMessageToTime)
+uint32_t ServerObject::processQueuedMessageTos(uint32_t effectiveMessageToTime)
 {
 	PROFILER_AUTO_BLOCK_DEFINE("ServerObject::processQueuedMessageTos");
 
 	if (isAuthoritative())
 	{
 		int handledMessageCount = 0;
-		unsigned long startTime = Clock::timeMs();
+		uint64_t const startTime = Clock::timeMs();
 		while (!m_messageTos.empty() && m_messageTos.begin()->second.getCallTime() <= effectiveMessageToTime)
 		{
 			++handledMessageCount;
@@ -5161,7 +5168,7 @@ unsigned long ServerObject::processQueuedMessageTos(unsigned long effectiveMessa
 				std::string nextTenMessages;
 				{
 					int count = 1;
-					for (Archive::AutoDeltaMap<std::pair<std::pair<unsigned long, uint64>, MessageToId>, MessageToPayload>::const_iterator iter = m_messageTos.begin(); ((iter != m_messageTos.end()) && (count <= 10)); ++iter, ++count)
+					for (Archive::AutoDeltaMap<std::pair<std::pair<uint32_t, uint64>, MessageToId>, MessageToPayload>::const_iterator iter = m_messageTos.begin(); ((iter != m_messageTos.end()) && (count <= 10)); ++iter, ++count)
 					{
 						nextTenMessages += iter->second.getMethod();
 						nextTenMessages += ", ";
@@ -5173,14 +5180,14 @@ unsigned long ServerObject::processQueuedMessageTos(unsigned long effectiveMessa
 				break;
 			}
 			if ((ConfigServerGame::getMaxMessageToTimePerObjectPerFrame() != 0) &&
-				(static_cast<int>(Clock::timeMs() - startTime) > ConfigServerGame::getMaxMessageToTimePerObjectPerFrame()))
+				(Clock::durationMs<int>(startTime, Clock::timeMs()) > ConfigServerGame::getMaxMessageToTimePerObjectPerFrame()))
 			{
 				WARNING(true,("MessageTo Backlog:  object %s spent more than %i ms processing messages.  Remaining %d messages will be delayed until next frame.", getNetworkId().getValueString().c_str(), ConfigServerGame::getMaxMessageToTimePerObjectPerFrame(), m_messageTos.size()));
 				MessageToQueue::getInstance().incrementBackloggedObjectCount();
 				break;
 			}
 
-			Archive::AutoDeltaMap<std::pair<std::pair<unsigned long, uint64>, MessageToId>, MessageToPayload>::const_iterator message = m_messageTos.begin();
+			Archive::AutoDeltaMap<std::pair<std::pair<uint32_t, uint64>, MessageToId>, MessageToPayload>::const_iterator message = m_messageTos.begin();
 
 			// if the message is going to be recurring, create a
 			// new messageTo to reschedule the recurring message
@@ -5192,7 +5199,7 @@ unsigned long ServerObject::processQueuedMessageTos(unsigned long effectiveMessa
 					message->second.getMessageId(), 
 					message->second.getMethod(), 
 					message->second.getPackedDataVector(), 
-					ServerClock::getInstance().getGameTimeSeconds() + static_cast<unsigned long>(message->second.getRecurringTime()), 
+					ServerClock::getInstance().getGameTimeSeconds() + static_cast<uint32_t>(message->second.getRecurringTime()),
 					false, 
 					message->second.getDeliveryType(), 
 					NetworkId::cms_invalid, 
@@ -5294,9 +5301,16 @@ void ServerObject::handleCMessageTo(const MessageToPayload &message)
 	else if (message.getMethod() == "C++FinishBankTransfer")
 	{
 		std::string packedDataString(packedData.begin(), packedData.end());
-		int m_amount=strtoul(packedDataString.c_str(), 0, 10);
-		DEBUG_FATAL(m_amount < 0,("C++FinishBankTransaction had a negative amount.  This message should always have a positive amount.\n"));
-		internalAdjustBankBalance(m_amount, true);
+		int32 m_amount = 0;
+		if (!FixedWidthParse::parseInt32(packedDataString, 10, m_amount))
+		{
+			WARNING(true, ("C++FinishBankTransfer for %s: the amount is not a 32-bit integer", getNetworkId().getValueString().c_str()));
+		}
+		else
+		{
+			DEBUG_FATAL(m_amount < 0,("C++FinishBankTransaction had a negative amount.  This message should always have a positive amount.\n"));
+			internalAdjustBankBalance(m_amount, true);
+		}
 	}
 	// transfers money from a named account to the bank
 	else if( message.getMethod() == "C++FromNamedAccountToBank")
@@ -5310,18 +5324,32 @@ void ServerObject::handleCMessageTo(const MessageToPayload &message)
 		{
 			*splitPos = 0;
 			std::string const named_account(params);
-			int const amount = atoi(splitPos+1);
-			DEBUG_FATAL(amount < 0,("C++FromNamedAccountToBank had a negative amount.  This message should always have a positive amount.\n"));
-			transferBankCreditsFrom(named_account,  amount);
+			int32 amount = 0;
+			if (!FixedWidthParse::parseInt32(std::string(splitPos + 1, params + packedData.size()), 10, amount))
+			{
+				WARNING(true, ("C++FromNamedAccountToBank for %s: the amount is not a 32-bit integer", getNetworkId().getValueString().c_str()));
+			}
+			else
+			{
+				DEBUG_FATAL(amount < 0,("C++FromNamedAccountToBank had a negative amount.  This message should always have a positive amount.\n"));
+				transferBankCreditsFrom(named_account,  amount);
+			}
 		}
 		delete [] params;
 	}
 	else if (message.getMethod() == "C++FinishCashTransfer")
 	{
 		std::string packedDataString(packedData.begin(), packedData.end());
-		int m_amount=strtoul(packedDataString.c_str(), 0, 10);
-		DEBUG_FATAL(m_amount < 0,("C++FinishCashTransaction had a negative amount.  This message should always have a positive amount.\n"));
-		internalAdjustCashBalance(m_amount, true);
+		int32 m_amount = 0;
+		if (!FixedWidthParse::parseInt32(packedDataString, 10, m_amount))
+		{
+			WARNING(true, ("C++FinishCashTransfer for %s: the amount is not a 32-bit integer", getNetworkId().getValueString().c_str()));
+		}
+		else
+		{
+			DEBUG_FATAL(m_amount < 0,("C++FinishCashTransaction had a negative amount.  This message should always have a positive amount.\n"));
+			internalAdjustCashBalance(m_amount, true);
+		}
 	}
 	else if (message.getMethod() == "C++ModifyCash")
 	{
@@ -5333,8 +5361,11 @@ void ServerObject::handleCMessageTo(const MessageToPayload &message)
 		{
 			*splitPos = 0;
 			NetworkId recipient(atoll(params));
-			int amount = atoi(splitPos+1);
-			transferCashTo(recipient, amount);
+			int32 amount = 0;
+			if (FixedWidthParse::parseInt32(std::string(splitPos + 1, params + packedData.size()), 10, amount))
+				transferCashTo(recipient, amount);
+			else
+				WARNING(true, ("C++ModifyCash for %s: the amount is not a 32-bit integer", getNetworkId().getValueString().c_str()));
 		}
 		delete [] params;
 	}
@@ -5348,8 +5379,11 @@ void ServerObject::handleCMessageTo(const MessageToPayload &message)
 		{
 			*splitPos = 0;
 			NetworkId recipient(atoll(params));
-			int amount = atoi(splitPos+1);
-			transferBankCreditsTo(recipient, amount);
+			int32 amount = 0;
+			if (FixedWidthParse::parseInt32(std::string(splitPos + 1, params + packedData.size()), 10, amount))
+				transferBankCreditsTo(recipient, amount);
+			else
+				WARNING(true, ("C++ModifyBank for %s: the amount is not a 32-bit integer", getNetworkId().getValueString().c_str()));
 		}
 		delete [] params;
 	}
@@ -5362,8 +5396,11 @@ void ServerObject::handleCMessageTo(const MessageToPayload &message)
 		char *params = new char[packedData.size()+1];
 		memcpy(params, &(*packedData.begin()), packedData.size());
 		params[packedData.size()] = 0;
-		int status =  atoi(params);
-		CommoditiesMarket::vendorStatusChange(getNetworkId(), status);
+		int32 status = 0;
+		if (FixedWidthParse::parseInt32(std::string(params, params + packedData.size()), 10, status))
+			CommoditiesMarket::vendorStatusChange(getNetworkId(), status);
+		else
+			WARNING(true, ("C++VendorStatusChange for %s: the status is not a 32-bit integer", getNetworkId().getValueString().c_str()));
 		delete [] params;
 	}
 	else if (message.getMethod() == "C++Unstick")
@@ -5408,7 +5445,7 @@ void ServerObject::handleCMessageTo(const MessageToPayload &message)
 	else if (message.getMethod() == "CancelRecurringMessageTo")
 	{
 		std::string const & methodName = message.getDataAsString();
-		for (Archive::AutoDeltaMap<std::pair<std::pair<unsigned long, uint64>, MessageToId>, MessageToPayload>::const_iterator i=m_messageTos.begin(); i!=m_messageTos.end(); ++i)
+		for (Archive::AutoDeltaMap<std::pair<std::pair<uint32_t, uint64>, MessageToId>, MessageToPayload>::const_iterator i=m_messageTos.begin(); i!=m_messageTos.end(); ++i)
 		{
 			if ((i->second.getRecurringTime() != 0) && (i->second.getMethod() == methodName) && (i->first != s_currentMessageToBeingHandled))
 			{
@@ -5422,8 +5459,11 @@ void ServerObject::handleCMessageTo(const MessageToPayload &message)
 		std::string const & buffer = message.getDataAsString();
 		if (!buffer.empty())
 		{
-			int count = atoi(buffer.c_str());
-			updateObserversCount(count);
+			int32 count = 0;
+			if (FixedWidthParse::parseInt32(buffer, 10, count))
+				updateObserversCount(count);
+			else
+				WARNING(true, ("C++updateObserversCount for %s: the count is not a 32-bit integer", getNetworkId().getValueString().c_str()));
 		}
 	}
 	else if (message.getMethod() == "C++addBroadcastListener")
@@ -5549,16 +5589,16 @@ void ServerObject::handleCMessageTo(const MessageToPayload &message)
 				if (msg.getResultCode() == RESULT_SUCCESS)
 				{
 					if (msg.getResultCameFromSession())
-						ConsoleMgr::broadcastString(FormattedString<1024>().sprintf("feature Id (%lu) on account (%lu) has been adjusted from (%d) to (%d); session/Platform reported successful result code (%u, %s:%s)", msg.getFeatureId(), msg.getTargetStationId(), msg.getOldValue(), msg.getNewValue(), msg.getResultCode(), msg.getSessionResultString().c_str(), msg.getSessionResultText().c_str()), getClient());
+						ConsoleMgr::broadcastString(FormattedString<1024>().sprintf("feature Id (%u) on account (%u) has been adjusted from (%d) to (%d); session/Platform reported successful result code (%u, %s:%s)", msg.getFeatureId(), msg.getTargetStationId(), msg.getOldValue(), msg.getNewValue(), msg.getResultCode(), msg.getSessionResultString().c_str(), msg.getSessionResultText().c_str()), getClient());
 					else
-						ConsoleMgr::broadcastString(FormattedString<1024>().sprintf("feature Id (%lu) on account (%lu) has been adjusted from (%d) to (%d)", msg.getFeatureId(), msg.getTargetStationId(), msg.getOldValue(), msg.getNewValue()), getClient());
+						ConsoleMgr::broadcastString(FormattedString<1024>().sprintf("feature Id (%u) on account (%u) has been adjusted from (%d) to (%d)", msg.getFeatureId(), msg.getTargetStationId(), msg.getOldValue(), msg.getNewValue()), getClient());
 				}
 				else
 				{
 					if (msg.getResultCameFromSession())
-						ConsoleMgr::broadcastString(FormattedString<1024>().sprintf("request to adjust feature Id for account (%lu) failed with error code (%u, %s:%s)", msg.getTargetStationId(), msg.getResultCode(), msg.getSessionResultString().c_str(), msg.getSessionResultText().c_str()), getClient());
+						ConsoleMgr::broadcastString(FormattedString<1024>().sprintf("request to adjust feature Id for account (%u) failed with error code (%u, %s:%s)", msg.getTargetStationId(), msg.getResultCode(), msg.getSessionResultString().c_str(), msg.getSessionResultText().c_str()), getClient());
 					else
-						ConsoleMgr::broadcastString(FormattedString<1024>().sprintf("request to adjust feature Id for account (%lu) failed", msg.getTargetStationId()), getClient());
+						ConsoleMgr::broadcastString(FormattedString<1024>().sprintf("request to adjust feature Id for account (%u) failed", msg.getTargetStationId()), getClient());
 				}
 			}
 
@@ -6691,7 +6731,7 @@ void ServerObject::handleDisconnect(bool immediate)
 				logText += "|";
 
 				// station id
-				snprintf(buffer, sizeof(buffer)-1, "%lu", playerObject->getStationId());
+				snprintf(buffer, sizeof(buffer)-1, "%u", playerObject->getStationId());
 				buffer[sizeof(buffer)-1] = '\0';
 				logText += buffer;
 				logText += "|";
@@ -6705,7 +6745,7 @@ void ServerObject::handleDisconnect(bool immediate)
 				logText += "|";
 
 				// session activity
-				snprintf(buffer, sizeof(buffer)-1, "%lu", playerObject->getSessionActivity());
+				snprintf(buffer, sizeof(buffer)-1, "%u", playerObject->getSessionActivity());
 				buffer[sizeof(buffer)-1] = '\0';
 				logText += buffer;
 				logText += "|";
@@ -6746,7 +6786,7 @@ void ServerObject::handleDisconnect(bool immediate)
 				logText += "|";
 
 				// current quest id
-				snprintf(buffer, sizeof(buffer)-1, "%lu", playerObject->getCurrentQuest());
+				snprintf(buffer, sizeof(buffer)-1, "%u", playerObject->getCurrentQuest());
 				buffer[sizeof(buffer)-1] = '\0';
 				logText += buffer;
 				logText += "|";
@@ -7748,7 +7788,7 @@ void ServerObject::deliverMessageTo(MessageToPayload & message)
 	{
 		// Recurring messages can have only one instance each.  Ignore
 		// this message if there is already a recurring one with the same method name.
-		for (Archive::AutoDeltaMap<std::pair<std::pair<unsigned long, uint64>, MessageToId>, MessageToPayload>::const_iterator i=m_messageTos.begin(); i!=m_messageTos.end(); ++i)
+		for (Archive::AutoDeltaMap<std::pair<std::pair<uint32_t, uint64>, MessageToId>, MessageToPayload>::const_iterator i=m_messageTos.begin(); i!=m_messageTos.end(); ++i)
 		{
 			if ((i->second.getRecurringTime() != 0) && (i->second.getMethod() == message.getMethod()))
 				return;
@@ -7808,7 +7848,7 @@ int ServerObject::cancelMessageTo(std::string const & messageName)
 	{
 		removeCount = 0;
 
-		for (Archive::AutoDeltaMap<std::pair<std::pair<unsigned long, uint64>, MessageToId>, MessageToPayload>::const_iterator i=m_messageTos.begin(); i!=m_messageTos.end();)
+		for (Archive::AutoDeltaMap<std::pair<std::pair<uint32_t, uint64>, MessageToId>, MessageToPayload>::const_iterator i=m_messageTos.begin(); i!=m_messageTos.end();)
 		{
 			if ((i->second.getMethod() == messageName) && (i->first != s_currentMessageToBeingHandled))
 			{
@@ -7842,7 +7882,7 @@ int ServerObject::cancelMessageToByMessageId(NetworkId const & messageId)
 	{
 		removeCount = 0;
 
-		for (Archive::AutoDeltaMap<std::pair<std::pair<unsigned long, uint64>, MessageToId>, MessageToPayload>::const_iterator i=m_messageTos.begin(); i!=m_messageTos.end();)
+		for (Archive::AutoDeltaMap<std::pair<std::pair<uint32_t, uint64>, MessageToId>, MessageToPayload>::const_iterator i=m_messageTos.begin(); i!=m_messageTos.end();)
 		{
 			if ((i->second.getMessageId() == messageId) && (i->first != s_currentMessageToBeingHandled))
 			{
@@ -7872,14 +7912,14 @@ int ServerObject::cancelMessageToByMessageId(NetworkId const & messageId)
 // returns -1 if object doesn't have the messageTo
 int ServerObject::timeUntilMessageTo(std::string const & messageName) const
 {
-	for (Archive::AutoDeltaMap<std::pair<std::pair<unsigned long, uint64>, MessageToId>, MessageToPayload>::const_iterator i=m_messageTos.begin(); i!=m_messageTos.end(); ++i)
+	for (Archive::AutoDeltaMap<std::pair<std::pair<uint32_t, uint64>, MessageToId>, MessageToPayload>::const_iterator i=m_messageTos.begin(); i!=m_messageTos.end(); ++i)
 	{
 		if (i->second.getMethod() == messageName)
 		{
 			if ((i->first != s_currentMessageToBeingHandled) || (i->second.getRecurringTime() > 0))
 			{
-				unsigned long const now = ServerClock::getInstance().getGameTimeSeconds();
-				unsigned long const callTime = i->second.getCallTime();
+				uint32_t const now = ServerClock::getInstance().getGameTimeSeconds();
+				uint32_t const callTime = i->second.getCallTime();
 				if (callTime > now)
 					return static_cast<int>(callTime - now);
 

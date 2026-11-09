@@ -1,10 +1,10 @@
 create table temp_characters -- NO_IMPORT
 (
 TRANSACTION_TYPE                                            NUMBER,
-STATION_ID                                                  NUMBER,
+STATION_ID                                                  NUMBER, -- BIND_AS(DB::BindableUint32)
 CLUSTER_NAME                                                VARCHAR2(120),
 CHARACTER_NAME                                              VARCHAR2(30),
-OBJECT_ID                                                   NUMBER,
+OBJECT_ID                                                   NUMBER, -- BIND_AS(DB::BindableNetworkId)
 TEMPLATE_NAME                                               VARCHAR2(120)
 );
 grant select on temp_characters to public;

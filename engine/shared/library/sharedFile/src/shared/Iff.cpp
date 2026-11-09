@@ -618,9 +618,9 @@ void Iff::adjustDataAsNeeded(int size)
 	const int offset = stack[stackDepth].start + stack[stackDepth].used;
 	const int lengthToEnd  = stack[0].length - offset;
 	if (size > 0)
-		memmove(data+offset+size, data+offset, lengthToEnd);
+		imemmove(data+offset+size, data+offset, lengthToEnd);
 	else
-		memmove(data+offset, data+offset-size, lengthToEnd+size);
+		imemmove(data+offset, data+offset-size, lengthToEnd+size);
 
 	// make sure all the enclosing stack entries know about the changed size
 	for (int i = 0; i <= stackDepth; ++i)
@@ -744,10 +744,10 @@ void Iff::insertForm(Tag name, bool shouldEnterForm)
 
 void Iff::insertChunk(Tag name, bool shouldEnterChunk)
 {
-	const int CHUNK_OVERHEAD = sizeof(Tag) + sizeof(uint32);
+	const int32_t CHUNK_OVERHEAD = sizeof(Tag) + sizeof(uint32);
 
 	Tag    t;
-	int    offset;
+	int32    offset;
 
 	NOT_NULL(data);
 	IFF_DEBUG_FATAL(inChunk, "inside chunk");

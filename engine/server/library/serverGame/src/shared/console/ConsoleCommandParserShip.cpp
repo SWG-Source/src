@@ -150,7 +150,7 @@ bool ConsoleCommandParserShip::performParsing (const NetworkId & userId, const S
 		const size_t buf_size = sizeof (buf);
 
 		snprintf (buf, buf_size, 
-			"Chassis type [%s] (%lu)\n"
+			"Chassis type [%s] (%u)\n"
 			"       Slot count [%d], Hitpoints [%5.2f/%5.2f], Mass [%5.2f/%5.2f]\n",
 			shipChassis->getName ().getString (), shipChassis->getCrc (),
 			static_cast<int>(slotVector.size ()),
@@ -522,7 +522,7 @@ bool ConsoleCommandParserShip::performParsing (const NetworkId & userId, const S
 			++displayCount;
 		}
 
-		snprintf(buf, buf_size, "%d/%d displayed", displayCount, idotVector.size());
+		snprintf(buf, buf_size, "%d/%zu displayed", displayCount, idotVector.size());
 		buf[buf_size-1] = 0;
 		result += Unicode::narrowToWide(buf);
 		return true;

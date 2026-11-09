@@ -137,13 +137,13 @@ void UdpLibraryMT::networkThreadUpdate()
 {
 	// update from network thread - process outgoing events, then give time to the UdpManagers
 #ifdef _DEBUG
-	unsigned long const lockStart = Clock::timeMs();
+	uint64_t const lockStart = Clock::timeMs();
 #endif
 
 	Guard lock(getMutex());
 
 #ifdef _DEBUG
-	unsigned long const lockStop = Clock::timeMs();
+	uint64_t const lockStop = Clock::timeMs();
 #endif
 
 	Events::processOutgoing();
@@ -167,12 +167,12 @@ void UdpLibraryMT::networkThreadUpdate()
 	}
 
 #ifdef _DEBUG
-	unsigned long const updateStop = Clock::timeMs();
+	uint64_t const updateStop = Clock::timeMs();
 
 	if (updateStop - lockStart > 500)
 	{
 		static const Os::OsPID_t id = Os::getProcessId();
-		fprintf(stderr, "Network:PID %d:ThreadUpdate:guard lock time=%lu, processing time = %lu\n", id, lockStop - lockStart, updateStop - lockStop);
+		fprintf(stderr, "Network:PID %d:ThreadUpdate:guard lock time=%u, processing time = %u\n", id, Clock::durationMs<uint32>(lockStart, lockStop), Clock::durationMs<uint32>(lockStop, updateStop));
 	}
 #endif
 }

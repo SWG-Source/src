@@ -570,7 +570,8 @@ TangibleObject::~TangibleObject()
 				// look up the caller's file and line
 				if (callStack[callStackOffset])
 				{
-					char lib[4 * 1024] = { '\0' };
+					// unused.
+					// char lib[4 * 1024] = { '\0' };
 					char file[4 * 1024] = { '\0' };
 					int line = 0;
 					REPORT_LOG(true, ("\tCall stack:"));
@@ -2341,8 +2342,8 @@ void TangibleObject::addHateOverTime(NetworkId const & target, float const hate,
 
 	if (isAuthoritative())
 	{
-		unsigned long const currentGameTime =  ServerClock::getInstance().getGameTimeSeconds();
-		unsigned long const endGameTime = currentGameTime + seconds;
+		uint32_t const currentGameTime =  ServerClock::getInstance().getGameTimeSeconds();
+		uint32_t const endGameTime = currentGameTime + seconds;
 
 		IGNORE_RETURN(addHate(target, hate));
 
@@ -5149,9 +5150,9 @@ void TangibleObject::handleCMessageTo(const MessageToPayload &message)
 		if (!m_hateOverTime.empty())
 		{
 			std::list<NetworkId> expired;
-			unsigned long const currentGameTime =  ServerClock::getInstance().getGameTimeSeconds();
+			uint32_t const currentGameTime =  ServerClock::getInstance().getGameTimeSeconds();
 
-			for (std::map<NetworkId, std::pair<float, std::pair<unsigned long, unsigned long> > >::const_iterator iter = m_hateOverTime.begin(); iter != m_hateOverTime.end(); ++iter)
+			for (std::map<NetworkId, std::pair<float, std::pair<uint32_t, uint32_t> > >::const_iterator iter = m_hateOverTime.begin(); iter != m_hateOverTime.end(); ++iter)
 			{
 				if (iter->second.second.first < currentGameTime)
 				{
@@ -5361,15 +5362,16 @@ bool TangibleObject::isOnAdminList(const CreatureObject& player) const
 	if(player.getClient() && player.getClient()->isGod())
 		return true;
 
-	if(getObjVars().hasItem("player_structure.admin_all_characters"))
-    {
-	    static int suid;
-	    getObjVars().getItem("player_structure.admin_all_characters", suid);
-	    if(NameManager::getInstance().getPlayerStationId(player.getNetworkId()) == suid)
-        {
-	        return true;
-        }
-    }
+	// Grants admin to every character of one account. The objvar is an int
+	// holding the station id's 32 bits. (This used a function-level static,
+	// so a structure whose objvar could not be read as an int reused the
+	// previous structure's account.)
+	int suid = 0;
+	if (getObjVars().getItem("player_structure.admin_all_characters", suid)
+		&& NameManager::getInstance().getPlayerStationId(player.getNetworkId()) == static_cast<StationId>(suid))
+	{
+		return true;
+	}
 
 	// In script, the admin list is stored as a list of strings.
 	// The format of the list is:

@@ -127,6 +127,7 @@
 #include "unicodeArchive/UnicodeArchive.h"
 
 #include "sharedFoundation/CrcConstexpr.hpp"
+#include <cinttypes>
 
 namespace ClientNamespace {
     // list of object types, radial menu action permission
@@ -180,7 +181,7 @@ Client::ClientMessage::~ClientMessage() {
 
 std::map <std::string, uint32> Client::sm_outgoingBytesMap_Working;  // working stats that will rotate after 1 minute
 std::map <std::string, uint32> Client::sm_outgoingBytesMap_Stats;    // computed stats from the last minute
-uint32                          Client::sm_outgoingBytesMap_Worktime = 0; // time we started filling in the working map
+uint64_t                        Client::sm_outgoingBytesMap_Worktime = 0; // time we started filling in the working map
 
 
 // ======================================================================
@@ -1338,7 +1339,7 @@ void Client::receiveClientMessage(const GameNetworkMessage &message) {
                             }
                         }
                     } else {
-                        LOG("CustomerService", ("Auction:Player %s attempted to retrieve an auction for container %Ld but failed.", PlayerObject::getAccountDescription(playerObject).c_str(), m.getContainerId().getValue()));
+                        LOG("CustomerService", ("Auction:Player %s attempted to retrieve an auction for container %" PRId64 " but failed.", PlayerObject::getAccountDescription(playerObject).c_str(), m.getContainerId().getValue()));
 
                         RetrieveAuctionItemResponseMessage const msg(itemId, ar_INVALID_CONTAINER_ID);;
                         Client *client = playerObject->getClient();
@@ -1585,7 +1586,7 @@ void Client::receiveClientMessage(const GameNetworkMessage &message) {
                         }
 
                         if (playerCreature->getObjVars().hasItem("cheater")) {
-                            LOGU("CustomerService", ("SuspectedCheaterChannel: %s is broadcasting a %s message that says '%s'", PlayerObject::getAccountDescription(playerCreature).c_str(), toName.c_str()), chat.getMessage());
+                            LOGU("CustomerService", ("SuspectedCheaterChannel: %s is broadcasting a %s message that says '%s'", PlayerObject::getAccountDescription(playerCreature).c_str(), toName.c_str(), Unicode::wideToNarrow(chat.getMessage()).c_str()), chat.getMessage());
                         }
                     }
                 }
@@ -1614,8 +1615,7 @@ void Client::receiveClientMessage(const GameNetworkMessage &message) {
             }
             case constcrc("UpdateSessionPlayTimeInfo") : {
                 Archive::ReadIterator readIterator = static_cast<const GameNetworkMessage &> (message).getByteStream().begin();
-                GenericValueTypeMessage < std::pair < int32, std::pair < int32, unsigned
-                long > > >
+                GenericValueTypeMessage < std::pair < int32, std::pair < int32, uint32_t > > >
                 const msgPlayTimeInfo(readIterator);
 
                 PlayerObject *playerObject = PlayerCreatureController::getPlayerObject(safe_cast<CreatureObject *>(getCharacterObject()));
@@ -1860,7 +1860,7 @@ void Client::send(GameNetworkMessage const &outgoingMessage, bool reliable) cons
         GameClientMessage const msg(v, reliable, outgoingMessage);
 
 
-        uint32 now = Clock::timeMs();
+        uint64_t const now = Clock::timeMs();
         if (sm_outgoingBytesMap_Worktime == 0) {
             sm_outgoingBytesMap_Worktime = now;
         } else if ((now - sm_outgoingBytesMap_Worktime) > 60000)   // 60 seconds
@@ -1885,7 +1885,7 @@ void Client::send(GameNetworkMessage const &outgoingMessage, bool reliable) cons
 //-----------------------------------------------------------------------
 
 std::map <std::string, uint32> &Client::getPacketBytesPerMinStats() {
-    uint32 now = Clock::timeMs();
+    uint64_t const now = Clock::timeMs();
     if (sm_outgoingBytesMap_Worktime == 0) {
         sm_outgoingBytesMap_Worktime = now;
     } else if ((now - sm_outgoingBytesMap_Worktime) > 60000)   // 60 seconds
@@ -1965,7 +1965,7 @@ bool Client::setGodMode(bool value) {
     if(!creatureObject)
     {
         LOG("GodMode", ("[%s : %s : %s : %s] /setGodMode failed because we couldn't get the CreatureObject.",
-                getAccountName().c_str(), getCharacterName().c_str(), getCharacterObjectId().getValueString().c_str(), getIpAddress().c_str()));
+                getAccountName().c_str(), Unicode::wideToNarrow(getCharacterName()).c_str(), getCharacterObjectId().getValueString().c_str(), getIpAddress().c_str()));
         return false;
     }
 
@@ -1981,13 +1981,13 @@ bool Client::setGodMode(bool value) {
             if(creatureObject->getScriptObject()->trigAllScripts(Scripting::TRIG_ON_SET_GOD_MODE_OFF, params) != SCRIPT_CONTINUE)
             {
                 LOG("GodMode", ("[%s : %s : %s : %s] /setGodMode off failed because OnSetGodModeOff did not return SCRIPT_CONTINUE.",
-                        getAccountName().c_str(), getCharacterName().c_str(), getCharacterObjectId().getValueString().c_str(), getIpAddress().c_str()));
+                        getAccountName().c_str(), Unicode::wideToNarrow(getCharacterName()).c_str(), getCharacterObjectId().getValueString().c_str(), getIpAddress().c_str()));
                 return false;
             }
             else
             {
                 LOG("GodMode", ("[%s : %s : %s : %s] /setGodMode off success.",
-                        getAccountName().c_str(), getCharacterName().c_str(), getCharacterObjectId().getValueString().c_str(), getIpAddress().c_str()));
+                        getAccountName().c_str(), Unicode::wideToNarrow(getCharacterName()).c_str(), getCharacterObjectId().getValueString().c_str(), getIpAddress().c_str()));
             }
         }
         m_godLevel = 0;
@@ -2008,7 +2008,7 @@ bool Client::setGodMode(bool value) {
         if(!AdminAccountManager::isInternalIp(getIpAddress()))
         {
             LOG("GodMode", ("[%s : %s : %s : %s] /setGodMode on failed because secure login was required and the connection IP was not approved.",
-                    getAccountName().c_str(), getCharacterName().c_str(), getCharacterObjectId().getValueString().c_str(), getIpAddress().c_str()));
+                    getAccountName().c_str(), Unicode::wideToNarrow(getCharacterName()).c_str(), getCharacterObjectId().getValueString().c_str(), getIpAddress().c_str()));
             return false;
         }
     }
@@ -2042,7 +2042,7 @@ bool Client::setGodMode(bool value) {
         if(creatureObject->getScriptObject()->trigAllScripts(Scripting::TRIG_ON_SET_GOD_MODE_ON, params) != SCRIPT_CONTINUE)
         {
             LOG("GodMode", ("[%s : %s : %s : %s] /setGodMode on failed because OnSetGodModeOn did not return SCRIPT_CONTINUE.",
-                    getAccountName().c_str(), getCharacterName().c_str(), getCharacterObjectId().getValueString().c_str(), getIpAddress().c_str()));
+                    getAccountName().c_str(), Unicode::wideToNarrow(getCharacterName()).c_str(), getCharacterObjectId().getValueString().c_str(), getIpAddress().c_str()));
             return false;
         }
         else
@@ -2060,7 +2060,7 @@ bool Client::setGodMode(bool value) {
             ObserveTracker::onGodModeChanged(*this);
 
             LOG("GodMode", ("[%s : %s : %s : %s] /setGodMode on success.",
-                    getAccountName().c_str(), getCharacterName().c_str(), getCharacterObjectId().getValueString().c_str(), getIpAddress().c_str()));
+                    getAccountName().c_str(), Unicode::wideToNarrow(getCharacterName()).c_str(), getCharacterObjectId().getValueString().c_str(), getIpAddress().c_str()));
             return true;
         }
     }
@@ -2068,7 +2068,7 @@ bool Client::setGodMode(bool value) {
     else
     {
         LOG("GodMode", ("[%s : %s : %s : %s] /setGodMode on failed because the requesting account does not have permissions.",
-                getAccountName().c_str(), getCharacterName().c_str(), getCharacterObjectId().getValueString().c_str(), getIpAddress().c_str()));
+                getAccountName().c_str(), Unicode::wideToNarrow(getCharacterName()).c_str(), getCharacterObjectId().getValueString().c_str(), getIpAddress().c_str()));
         return false;
     }
 

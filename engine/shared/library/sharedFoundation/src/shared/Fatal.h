@@ -9,24 +9,26 @@
 #ifndef INCLUDED_Fatal_H
 #define INCLUDED_Fatal_H
 
+
+#include "sharedFoundation/FormatAttribute.h"
 // ======================================================================
 
 void           FatalInstall();
 
 void           FatalSetVersionString(const char *string);
 void           FatalSetThrowExceptions(bool throwExceptions);
-DLLEXPORT void Fatal(const char *format, ...);
+DLLEXPORT void Fatal(const char *format, ...) SWG_FORMAT_PRINTF(1, 2);
 
-DLLEXPORT void DebugFatal(const char *format, ...);
+DLLEXPORT void DebugFatal(const char *format, ...) SWG_FORMAT_PRINTF(1, 2);
 
 int            GetNumberOfWarnings(void);
-DLLEXPORT void Warning(const char *format, ...);
+DLLEXPORT void Warning(const char *format, ...) SWG_FORMAT_PRINTF(1, 2);
 DLLEXPORT void WarningStackDepth(int stackDepth, const char *format, ...);
-DLLEXPORT void ConsoleWarning(const char *format, ...);
+DLLEXPORT void ConsoleWarning(const char *format, ...) SWG_FORMAT_PRINTF(1, 2);
 
 void           SetWarningStrictFatal(bool fatal);
 bool           GetWarningStrictFatal();
-DLLEXPORT void WarningStrictFatal(const char *format, ...);
+DLLEXPORT void WarningStrictFatal(const char *format, ...) SWG_FORMAT_PRINTF(1, 2);
 
 typedef void (*WarningCallback) (char const * const);
 void SetWarningCallback(WarningCallback);

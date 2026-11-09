@@ -55,7 +55,7 @@ public:
 	void getObjvarsForObject(const NetworkId &objectId, std::vector<DynamicVariableList::MapType::Command> &commands) const;
 	bool getMoneyFromOfflineObject(uint32 replyServer,NetworkId const & sourceObject, int amount, NetworkId const & replyTo, std::string const & successCallback, std::string const & failCallback, std::vector<int8> const & packedDictionary);
 		
-	void newObject(const NetworkId &objectId, int templateId, Tag typeId);
+	void newObject(const NetworkId &objectId, uint32 templateId, Tag typeId);
 
 //	std::vector<NetworkId> queueForLoadWithContents(const std::vector<NetworkId> &oidList, DB::Session *session);
 

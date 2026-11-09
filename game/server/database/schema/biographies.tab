@@ -1,6 +1,6 @@
 create table biographies -- NO_IMPORT
 (
-	object_id number(20),
+	object_id number(20), -- BIND_AS(DB::BindableNetworkId)
 	biography varchar2(1024),
 	constraint pk_biographies primary key (object_id)
 );

@@ -1385,12 +1385,11 @@ void CommandLine::absorbString(const char *newString)
 	DEBUG_FATAL(!newString, ("nullptr newString arg"));
 
 	const int stringLength   = static_cast<int>(strlen(newString));
-	int requiredBufferSpace;
+
 	if (absorbedStringCount)
-		requiredBufferSpace = stringLength + 2;
+	    DEBUG_FATAL(bufferSize + stringLength + 2 >= STATIC_BUFFER_SIZE, ("newString too large by %d bytes", bufferSize + stringLength + 2 - STATIC_BUFFER_SIZE));
 	else
-		requiredBufferSpace = stringLength + 1;
-	DEBUG_FATAL(bufferSize + requiredBufferSpace >= STATIC_BUFFER_SIZE, ("newString too large by %d bytes", bufferSize + requiredBufferSpace - STATIC_BUFFER_SIZE));
+    	DEBUG_FATAL(bufferSize + stringLength + 1 >= STATIC_BUFFER_SIZE, ("newString too large by %d bytes", bufferSize + stringLength + 1 - STATIC_BUFFER_SIZE));
 
 	if (absorbedStringCount)
 	{

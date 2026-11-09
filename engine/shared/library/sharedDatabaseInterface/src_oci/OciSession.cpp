@@ -10,6 +10,7 @@
 
 #include "OciQueryImplementation.h"
 #include "OciServer.h"
+#include "sharedDatabaseInterface/DbCheckedConversion.h"
 #include "sharedDatabaseInterface/DbException.h"
 #include "sharedFoundation/Os.h"
 #include "sharedLog/Log.h"
@@ -29,28 +30,6 @@ namespace DB
 }
 
 using namespace DB::OCISessionNamespace;
-
-// ======================================================================
-
-static dvoid *mallocHook(dvoid *, size_t size)
-{
-	return reinterpret_cast<dvoid *>(new char[size]);
-}
-
-// ----------------------------------------------------------------------
-
-static dvoid *reallocHook(dvoid *, dvoid *memptr, size_t newsize)
-{
-	return reinterpret_cast<dvoid *>(realloc(memptr, newsize));
-}
-
-// ----------------------------------------------------------------------
-
-static void freeHook(dvoid *, dvoid *memptr)
-{
-	if (memptr)
-		delete [] reinterpret_cast<char *>(memptr);
-}
 
 // ======================================================================
 
@@ -107,18 +86,33 @@ bool DB::OCISession::connect()
 	OCIHandleAlloc( (dvoid *) envhp, (dvoid **) &srvhp, OCI_HTYPE_SERVER,
 						   (size_t) 0, (dvoid **) 0);
 
+	// OCI takes the connect string length as an sb4 and the credential
+	// lengths as ub4s.
+	sb4 dsnLength = 0;
+	ub4 uidLength = 0;
+	ub4 pwdLength = 0;
+	if (!DB::checkedNarrow(strlen(m_server->getDSN()), dsnLength, "OCIServerAttach connect string length", "OCISession::connect")
+		|| !DB::checkedNarrow(strlen(m_server->uid), uidLength, "OCI_ATTR_USERNAME length", "OCISession::connect")
+		|| !DB::checkedNarrow(strlen(m_server->pwd), pwdLength, "OCI_ATTR_PASSWORD length", "OCISession::connect"))
+	{
+		disconnect(); // cleanup
+		connectLock.leave();
+		return false;
+	}
+
 	int retryCount = 0;
 	connected = false;
 	while (!connected && retryCount < 5)
 	{
-		LOG("DatabaseConnect", ("calling OCIServerAttach() for OCISession=[%p] with dsn=[%s], uid=[%s], pwd=[%s]", this, m_server->getDSN(), m_server->uid, m_server->pwd));
+		LOG("DatabaseConnect", ("calling OCIServerAttach() for OCISession=[%p] with dsn=[%s], uid=[%s]", this, m_server->getDSN(), m_server->uid));
 
 		connected = DB::OCIServer::checkerr(*this,
-									OCIServerAttach( srvhp, errhp, reinterpret_cast<OraText*>(const_cast<char*>(m_server->getDSN())), strlen(m_server->getDSN()), 0));
+									OCIServerAttach( srvhp, errhp, reinterpret_cast<OraText*>(const_cast<char*>(m_server->getDSN())), dsnLength, 0));
 			
 		if (! connected)
 		{
 			++retryCount;
+			LOG("DatabaseError", ("Could not connect to the database (DSN=%s) after %d attempts.", m_server->getDSN(), retryCount));
 			DEBUG_REPORT_LOG(retryCount<5,("Retrying database connection\n"));
 			Os::sleep(1000);
 		}	
@@ -136,11 +130,11 @@ bool DB::OCISession::connect()
 				   (ub4) OCI_HTYPE_SESSION, (size_t) 0, (dvoid **) 0);
 
 	OCIAttrSet((dvoid *) sesp, (ub4) OCI_HTYPE_SESSION,
-			   (dvoid *) m_server->uid, strlen(m_server->uid),
+			   (dvoid *) m_server->uid, uidLength,
 			   (ub4) OCI_ATTR_USERNAME, errhp);
 
 	OCIAttrSet((dvoid *) sesp, (ub4) OCI_HTYPE_SESSION,
-			   (dvoid *) m_server->pwd, strlen(m_server->pwd),
+			   (dvoid *) m_server->pwd, pwdLength,
 			   (ub4) OCI_ATTR_PASSWORD, errhp);
 
 	// create service context (Wtf is a service context?  Don't know, but you gotta have one.)
@@ -162,6 +156,7 @@ bool DB::OCISession::connect()
 	}
 	else
 	{
+	    LOG("DatabaseError", ("Invalid password provided when connecting to the database - disconnecting."));
 		disconnect(); // cleanup
 		connected=false;
 	}
@@ -233,12 +228,20 @@ bool DB::OCISession::setAutoCommitMode(bool autocommit)
 bool DB::OCISession::commitTransaction()
 {
 	m_okToFetch = false;
-	return m_server->checkerr(*this, OCITransCommit(svchp, errhp, 0));
+	if(!(m_server->checkerr(*this, OCITransCommit(svchp, errhp, 0)))) {
+	    LOG("DatabaseError", ("Unable to commit transaction."));
+	    return false;
+	}
+	return true;
 }
 
 bool DB::OCISession::rollbackTransaction()
 {
-	return m_server->checkerr(*this, OCITransRollback(svchp, errhp, 0));
+	if(!(m_server->checkerr(*this, OCITransRollback(svchp, errhp, 0)))) {
+	    LOG("DatabaseError", ("Unable to rollback transaction."));
+	    return false;
+	}
+	return true;
 }
 
 bool DB::OCISession::reset()

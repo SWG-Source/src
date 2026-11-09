@@ -7,6 +7,7 @@
 
 #include "sharedNetworkMessages/FirstSharedNetworkMessages.h"
 #include "sharedNetworkMessages/CustomerServiceCategoryArchive.h"
+#include "Archive/ArchiveCount.h"
 
 #include "sharedNetworkMessages/CustomerServiceCategory.h"
 
@@ -34,10 +35,10 @@ namespace Archive
 
 	void put (ByteStream & target, const CustomerServiceCategory & source)
 	{
+		int const size = ArchiveCount::fromSize<int>(source.m_subCategories.size());
+
 		put (target, source.m_categoryName);
 		put (target, source.m_categoryId);
-
-		int size = source.m_subCategories.size();
 		put (target, size);
 
 		std::vector<CustomerServiceCategory>::const_iterator i = source.m_subCategories.begin();

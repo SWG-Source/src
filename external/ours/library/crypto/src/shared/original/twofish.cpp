@@ -1,8 +1,10 @@
 // twofish.cpp - modified by Wei Dai from Matthew Skala's twofish.c
 // The original code and all modifications are in the public domain.
 
-#include "FirstCrypto.h"
+#include "pch.h"
 #include "twofish.h"
+#include "secblock.h"
+#include "misc.h"
 
 NAMESPACE_BEGIN(CryptoPP)
 
@@ -28,42 +30,43 @@ static word32 ReedSolomon(word32 high, word32 low)
 	return high;
 }
 
-inline word32 Twofish::h0(word32 x, const word32 *key, unsigned int kLen)
+inline word32 Twofish::Base::h0(word32 x, const word32 *key, unsigned int kLen)
 {
 	x = x | (x<<8) | (x<<16) | (x<<24);
 	switch(kLen)
 	{
 #define Q(a, b, c, d, t) q[a][GETBYTE(t,0)] ^ (q[b][GETBYTE(t,1)] << 8) ^ (q[c][GETBYTE(t,2)] << 16) ^ (q[d][GETBYTE(t,3)] << 24)
 	case 4: x = Q(1, 0, 0, 1, x) ^ key[6];
+	// fall through
 	case 3: x = Q(1, 1, 0, 0, x) ^ key[4];
+	// fall through
 	case 2: x = Q(0, 1, 0, 1, x) ^ key[2];
 			x = Q(0, 0, 1, 1, x) ^ key[0];
 	}
 	return x;
 }
 
-inline word32 Twofish::h(word32 x, const word32 *key, unsigned int kLen)
+inline word32 Twofish::Base::h(word32 x, const word32 *key, unsigned int kLen)
 {
 	x = h0(x, key, kLen);
 	return mds[0][GETBYTE(x,0)] ^ mds[1][GETBYTE(x,1)] ^ mds[2][GETBYTE(x,2)] ^ mds[3][GETBYTE(x,3)];
 }
 
-Twofish::Twofish(const byte *userKey, unsigned int keylength)
-	: m_k(40), m_s(4)
+void Twofish::Base::UncheckedSetKey(const byte *userKey, unsigned int keylength, const NameValuePairs &)
 {
-	assert(keylength == KeyLength(keylength));
+	AssertValidKeyLength(keylength);
 
 	unsigned int len = (keylength <= 16 ? 2 : (keylength <= 24 ? 3 : 4));
 	SecBlock<word32> key(len*2);
-	GetUserKeyLittleEndian(key.ptr, len*2, userKey, keylength);
+	GetUserKey(LITTLE_ENDIAN_ORDER, key.begin(), len*2, userKey, keylength);
 
 	unsigned int i;
 	for (i=0; i<40; i+=2)
 	{
 		word32 a = h(i, key, len);
-		word32 b = rotlFixed(h(i+1, key+1u, len), 8);
+		word32 b = rotlConstant<8>(h(i + 1, key + 1, len));
 		m_k[i] = a+b;
-		m_k[i+1] = rotlFixed(a+2*b, 9);
+		m_k[i + 1] = rotlConstant<9>(a + 2 * b);
 	}
 
 	SecBlock<word32> svec(2*len);
@@ -72,22 +75,22 @@ Twofish::Twofish(const byte *userKey, unsigned int keylength)
 	for (i=0; i<256; i++)
 	{
 		word32 t = h0(i, svec, len);
-		m_s[0u][i] = mds[0][GETBYTE(t, 0)];
-		m_s[1u][i] = mds[1][GETBYTE(t, 1)];
-		m_s[2u][i] = mds[2][GETBYTE(t, 2)];
-		m_s[3u][i] = mds[3][GETBYTE(t, 3)];
+		m_s[0*256+i] = mds[0][GETBYTE(t, 0)];
+		m_s[1*256+i] = mds[1][GETBYTE(t, 1)];
+		m_s[2*256+i] = mds[2][GETBYTE(t, 2)];
+		m_s[3*256+i] = mds[3][GETBYTE(t, 3)];
 	}
 }
 
-#define G1(x) (m_s[0u][GETBYTE(x,0)] ^ m_s[1u][GETBYTE(x,1)] ^ m_s[2u][GETBYTE(x,2)] ^ m_s[3u][GETBYTE(x,3)])
-#define G2(x) (m_s[0u][GETBYTE(x,3)] ^ m_s[1u][GETBYTE(x,0)] ^ m_s[2u][GETBYTE(x,1)] ^ m_s[3u][GETBYTE(x,2)])
+#define G1(x) (m_s[0*256+GETBYTE(x,0)] ^ m_s[1*256+GETBYTE(x,1)] ^ m_s[2*256+GETBYTE(x,2)] ^ m_s[3*256+GETBYTE(x,3)])
+#define G2(x) (m_s[0*256+GETBYTE(x,3)] ^ m_s[1*256+GETBYTE(x,0)] ^ m_s[2*256+GETBYTE(x,1)] ^ m_s[3*256+GETBYTE(x,2)])
 
 #define ENCROUND(n, a, b, c, d) \
 	x = G1 (a); y = G2 (b); \
 	x += y; y += x + k[2 * (n) + 1]; \
 	(c) ^= x + k[2 * (n)]; \
-	(c) = rotrFixed(c, 1); \
-	(d) = rotlFixed(d, 1) ^ y
+	(c) = rotrConstant<1>(c); \
+	(d) = rotlConstant<1>(d) ^ y
 
 #define ENCCYCLE(n) \
 	ENCROUND (2 * (n), a, b, c, d); \
@@ -97,26 +100,28 @@ Twofish::Twofish(const byte *userKey, unsigned int keylength)
 	x = G1 (a); y = G2 (b); \
 	x += y; y += x; \
 	(d) ^= y + k[2 * (n) + 1]; \
-	(d) = rotrFixed(d, 1); \
-	(c) = rotlFixed(c, 1); \
+	(d) = rotrConstant<1>(d); \
+	(c) = rotlConstant<1>(c); \
 	(c) ^= (x + k[2 * (n)])
 
 #define DECCYCLE(n) \
 	DECROUND (2 * (n) + 1, c, d, a, b); \
 	DECROUND (2 * (n), a, b, c, d)
 
-void TwofishEncryption::ProcessBlock(const byte *inBlock, byte *outBlock) const
+typedef BlockGetAndPut<word32, LittleEndian> Block;
+
+void Twofish::Enc::ProcessAndXorBlock(const byte *inBlock, const byte *xorBlock, byte *outBlock) const
 {
 	word32 x, y, a, b, c, d;
 
-	GetBlockLittleEndian(inBlock, a, b, c, d);
+	Block::Get(inBlock)(a)(b)(c)(d);
 
-	a ^= m_k[0u];
-	b ^= m_k[1u];
-	c ^= m_k[2u];
-	d ^= m_k[3u];
+	a ^= m_k[0];
+	b ^= m_k[1];
+	c ^= m_k[2];
+	d ^= m_k[3];
 
-	const word32 *k = m_k+8u;
+	const word32 *k = m_k+8;
 	ENCCYCLE (0);
 	ENCCYCLE (1);
 	ENCCYCLE (2);
@@ -126,26 +131,26 @@ void TwofishEncryption::ProcessBlock(const byte *inBlock, byte *outBlock) const
 	ENCCYCLE (6);
 	ENCCYCLE (7);
 
-	c ^= m_k[4u];
-	d ^= m_k[5u];
-	a ^= m_k[6u];
-	b ^= m_k[7u]; 
+	c ^= m_k[4];
+	d ^= m_k[5];
+	a ^= m_k[6];
+	b ^= m_k[7];
 
-	PutBlockLittleEndian(outBlock, c, d, a, b);
+	Block::Put(xorBlock, outBlock)(c)(d)(a)(b);
 }
 
-void TwofishDecryption::ProcessBlock(const byte *inBlock, byte *outBlock) const
+void Twofish::Dec::ProcessAndXorBlock(const byte *inBlock, const byte *xorBlock, byte *outBlock) const
 {
 	word32 x, y, a, b, c, d;
 
-	GetBlockLittleEndian(inBlock, c, d, a, b);
+	Block::Get(inBlock)(c)(d)(a)(b);
 
-	c ^= m_k[4u];
-	d ^= m_k[5u];
-	a ^= m_k[6u];
-	b ^= m_k[7u];
+	c ^= m_k[4];
+	d ^= m_k[5];
+	a ^= m_k[6];
+	b ^= m_k[7];
 
-	const word32 *k = m_k+8u;
+	const word32 *k = m_k+8;
 	DECCYCLE (7);
 	DECCYCLE (6);
 	DECCYCLE (5);
@@ -155,12 +160,12 @@ void TwofishDecryption::ProcessBlock(const byte *inBlock, byte *outBlock) const
 	DECCYCLE (1);
 	DECCYCLE (0);
 
-	a ^= m_k[0u];
-	b ^= m_k[1u];
-	c ^= m_k[2u];
-	d ^= m_k[3u];
+	a ^= m_k[0];
+	b ^= m_k[1];
+	c ^= m_k[2];
+	d ^= m_k[3];
 
-	PutBlockLittleEndian(outBlock, a, b, c, d);
+	Block::Put(xorBlock, outBlock)(a)(b)(c)(d);
 }
 
 NAMESPACE_END

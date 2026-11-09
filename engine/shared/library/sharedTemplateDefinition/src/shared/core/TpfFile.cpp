@@ -20,6 +20,7 @@
 
 #ifdef WIN32
 #include <direct.h>
+#include "sharedFoundation/FixedWidthParse.h"
 #endif // WIN32
 
 
@@ -615,7 +616,12 @@ int TpfFile::parseTemplateCommand(const char *line)
 				m_fp.printError("no version given for template definition class");
 				return -1;
 			}
-			int version = static_cast<int>(atol(m_token));
+			int32_t version = 0;
+			if (!FixedWidthParse::toInt32(m_token, nullptr, 10, version))
+			{
+				m_fp.printError("template definition version out of range");
+				return -1;
+			}
 
 			m_templateData = m_currTemplateDef->getTemplateData(version);
 			if (m_templateData == nullptr)

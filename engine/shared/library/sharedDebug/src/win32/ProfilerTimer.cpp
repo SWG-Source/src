@@ -26,6 +26,14 @@ using namespace ProfilerTimerNamespace;
 
 // ======================================================================
 
+#if defined(_M_X64)
+#include <intrin.h>
+
+static __int64 readTimeStampCounter()
+{
+	return static_cast<__int64>(__rdtsc());
+}
+#else
 static __int64 __declspec(naked) __stdcall readTimeStampCounter()
 {
     __asm
@@ -36,6 +44,8 @@ static __int64 __declspec(naked) __stdcall readTimeStampCounter()
 }
 
 // ======================================================================
+
+#endif
 
 void ProfilerTimer::install()
 {

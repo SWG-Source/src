@@ -115,9 +115,9 @@ namespace Archive
 {
 	void get(ReadIterator & source, PopulationList & target)
 	{
-		size_t numEntries;
+		int32_t numEntries;
 		get(source,numEntries);
-		for (size_t count=0; count < numEntries; ++count)
+		for (int32_t count=0; count < numEntries; ++count)
 		{
 			std::string scene;
 			int x;
@@ -133,7 +133,7 @@ namespace Archive
 	
 	void put(ByteStream & target, const PopulationList & source)
 	{
-		put(target,source.m_populationMap.size());
+		put(target, static_cast<int32_t> (source.m_populationMap.size()));
 		for (PopulationList::PopulationMapType::const_iterator i=source.m_populationMap.begin(); i!=source.m_populationMap.end(); ++i)
 		{
 			put(target,i->first.getScene());

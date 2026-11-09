@@ -520,12 +520,12 @@ void TcpClient::update()
 	OVERLAPPED * overlapped = 0;
 	OverlappedTcp * op = 0;
 	unsigned long int bytesTransferred = 0;
-	unsigned long int completionKey = 0;
+	ULONG_PTR completionKey = 0;
 	bool success = false;
 
 	if (m_connected)
 	{
-		unsigned long timeNow = Clock::getFrameStartTimeMs();
+		uint64_t const timeNow = Clock::getFrameStartTimeMs();
 		if (timeNow-m_lastSendTime > KEEPALIVE_MS)
 		{
 			m_lastSendTime = timeNow;
@@ -618,7 +618,7 @@ void TcpClient::remove()
 
 void TcpClient::checkKeepalive()
 {
-	unsigned long const timeNow = Clock::getFrameStartTimeMs();
+	uint64_t const timeNow = Clock::getFrameStartTimeMs();
 	if (timeNow-m_lastSendTime > KEEPALIVE_MS)
 	{
 		m_lastSendTime = timeNow;

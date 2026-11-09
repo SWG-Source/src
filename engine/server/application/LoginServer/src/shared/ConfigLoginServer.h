@@ -72,6 +72,7 @@ class ConfigLoginServer
 		bool            useJsonWebApi;
 		const char *	externalAuthURL;
     const char *  externalAuthSecretKey;
+		const char *    stationIdScheme;
 	};
 
 	static const uint16 getCentralServicePort();
@@ -140,6 +141,10 @@ class ConfigLoginServer
 	static const char * getExternalAuthUrl();
   static const char * getExternalAuthSecretKey();
 	static bool	        getUseOldSuidGenerator();
+
+	// The station id scheme this server expects the login database to
+	// record, or "" for no assertion. The database is authoritative.
+	static const char * getStationIdScheme();
 
 	// has character creation for this cluster been disabled through config option
 	static bool         isCharacterCreationDisabled(std::string const & cluster);
@@ -507,6 +512,11 @@ inline const char * ConfigLoginServer::getExternalAuthUrl()
 inline const char * ConfigLoginServer::getExternalAuthSecretKey()
 {
 	return data->externalAuthSecretKey;
+}
+
+inline const char * ConfigLoginServer::getStationIdScheme()
+{
+	return data->stationIdScheme;
 }
 
 inline bool ConfigLoginServer::getUseOldSuidGenerator()

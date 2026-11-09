@@ -154,16 +154,16 @@ void RenameCharacterCustomPersistStep::onComplete()
 	if (m_success)
 	{
 		if (m_requestedBy.isValid())
-			LOG("CustomerService", ("Player:rename character request SUCCESS for %s (%s -> %s) for stationId %lu by %s", m_characterId.getValueString().c_str(), Unicode::wideToNarrow(*m_characterOldName).c_str(), Unicode::wideToNarrow(*m_characterName).c_str(), m_stationId, m_requestedBy.getValueString().c_str()));
+			LOG("CustomerService", ("Player:rename character request SUCCESS for %s (%s -> %s) for stationId %u by %s", m_characterId.getValueString().c_str(), Unicode::wideToNarrow(*m_characterOldName).c_str(), Unicode::wideToNarrow(*m_characterName).c_str(), m_stationId, m_requestedBy.getValueString().c_str()));
 		else
-			LOG("CustomerService", ("Player:rename character request SUCCESS for %s (%s -> %s) for stationId %lu", m_characterId.getValueString().c_str(), Unicode::wideToNarrow(*m_characterOldName).c_str(), Unicode::wideToNarrow(*m_characterName).c_str(), m_stationId));
+			LOG("CustomerService", ("Player:rename character request SUCCESS for %s (%s -> %s) for stationId %u", m_characterId.getValueString().c_str(), Unicode::wideToNarrow(*m_characterOldName).c_str(), Unicode::wideToNarrow(*m_characterName).c_str(), m_stationId));
 	}
 	else
 	{
 		if (m_requestedBy.isValid())
-			LOG("CustomerService", ("Player:rename character request FAILED for %s (%s -> %s) for stationId %lu by %s", m_characterId.getValueString().c_str(), Unicode::wideToNarrow(*m_characterOldName).c_str(), Unicode::wideToNarrow(*m_characterName).c_str(), m_stationId, m_requestedBy.getValueString().c_str()));
+			LOG("CustomerService", ("Player:rename character request FAILED for %s (%s -> %s) for stationId %u by %s", m_characterId.getValueString().c_str(), Unicode::wideToNarrow(*m_characterOldName).c_str(), Unicode::wideToNarrow(*m_characterName).c_str(), m_stationId, m_requestedBy.getValueString().c_str()));
 		else
-			LOG("CustomerService", ("Player:rename character request FAILED for %s (%s -> %s) for stationId %lu", m_characterId.getValueString().c_str(), Unicode::wideToNarrow(*m_characterOldName).c_str(), Unicode::wideToNarrow(*m_characterName).c_str(), m_stationId));
+			LOG("CustomerService", ("Player:rename character request FAILED for %s (%s -> %s) for stationId %u", m_characterId.getValueString().c_str(), Unicode::wideToNarrow(*m_characterOldName).c_str(), Unicode::wideToNarrow(*m_characterName).c_str(), m_stationId));
 	}
 }
 

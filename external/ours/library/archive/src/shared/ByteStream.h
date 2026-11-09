@@ -9,6 +9,8 @@
 
 #include <exception>
 #include <vector>
+#include <limits>
+#include <cstdint>
 
 //---------------------------------------------------------------------
 
@@ -82,7 +84,7 @@ public:
 	bool                        operator ==     (const ReadIterator & other) const;
 	bool                        operator !=     (const ReadIterator & other) const;
 	void                        advance         (const unsigned int distance);
-	void                        get             (void * target, const unsigned long int readSize);
+	void                        get             (void * target, const uint32_t readSize);
 	const unsigned int          getSize         () const;
 	const unsigned char * const getBuffer       () const;
 	const unsigned int          getReadPosition () const;
@@ -136,8 +138,8 @@ public:
 	void                        setAllocatedSizeLimit(unsigned int limit);
 
 private:
-	void                        get(void * target, ReadIterator & readIterator, const unsigned long int readSize) const;
-	void                        growToAtLeast(const unsigned int targetSize);
+	void                        get(void * target, ReadIterator & readIterator, const uint32_t readSize) const;
+	unsigned int                getAllocationSize(const unsigned int targetSize) const;
 	void                        reAllocate(const unsigned int newSize);
 
 private: // inner classes
@@ -155,7 +157,7 @@ private: // inner classes
 		friend class ByteStream;
 		friend class Archive::ReadIterator;
 		unsigned char * buffer;
-		unsigned long   size;
+		uint32_t        size;
 	private:
 		struct DataFreeList
 		{
@@ -252,7 +254,7 @@ inline ReadIterator & ReadIterator::operator = (const ReadIterator & rhs)
 
 //---------------------------------------------------------------------
 
-inline void ReadIterator::get(void * target, const unsigned long int readSize)
+inline void ReadIterator::get(void * target, const uint32_t readSize)
 {
 	if(stream)
 	{
@@ -272,7 +274,11 @@ inline void ReadIterator::get(void * target, const unsigned long int readSize)
 inline const unsigned int ReadIterator::getSize() const
 {
 	if(stream)
+	{
+		if (readPtr > stream->getSize())
+			throw ReadException("Archive::ReadIterator - position beyond end of buffer");
 		return stream->getSize() - readPtr;
+	}
 	return 0;
 }
 
@@ -296,6 +302,8 @@ inline const ReadIterator ByteStream::end() const
 
 inline void ReadIterator::advance(const unsigned int distance)
 {
+	if ((!stream && distance) || (stream && distance > getSize()))
+		throw ReadException("Archive::ReadIterator - advance beyond end of buffer");
 	readPtr += distance;
 }
 
@@ -310,8 +318,12 @@ inline const unsigned int ReadIterator::getReadPosition() const
 
 inline const unsigned char * const ReadIterator::getBuffer() const
 {
-	if(stream && stream->data)
-		return &stream->data->buffer[readPtr];
+	if (stream)
+	{
+		getSize(); // Validate an iterator whose stream may have been cleared.
+		if (stream->data && stream->data->buffer)
+			return &stream->data->buffer[readPtr];
+	}
 
 	return 0;
 }
@@ -378,29 +390,22 @@ inline const unsigned int ByteStream::getSize() const
 	@author Justin Randall
 */
 
-inline void ByteStream::growToAtLeast(const unsigned int targetSize)
+inline unsigned int ByteStream::getAllocationSize(const unsigned int targetSize) const
 {
-	if(allocatedSize < targetSize)
-	{
-		if(allocatedSize < 4096)
-		{
-			reAllocate(allocatedSize + allocatedSize + targetSize);
-		}
-		else
-		{
-			reAllocate(allocatedSize + targetSize);
-		}
-	}
+	if (allocatedSize >= targetSize)
+		return allocatedSize;
+	unsigned int const extra = allocatedSize < 4096 ? allocatedSize * 2 : allocatedSize;
+	return extra > (std::numeric_limits<unsigned int>::max)() - targetSize
+		? targetSize : targetSize + extra;
 }
 
 //---------------------------------------------------------------------
 
 inline void ByteStream::setAllocatedSizeLimit(const unsigned int limit)
 {
+	if (limit && allocatedSize < limit)
+		reAllocate(limit);
 	allocatedSizeLimit = limit;
-
-	if ((allocatedSizeLimit) && (allocatedSize < allocatedSizeLimit))
-		reAllocate(allocatedSizeLimit);
 }
 
 } // namespace Archive

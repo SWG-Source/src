@@ -47,7 +47,7 @@ public:
 	static void          removeFromLeaderMap     (NetworkId const &leaderId, NetworkId const &groupId);
 	static NetworkId     getGroupIdForLeader     (NetworkId const &leaderId);
 	static void          createAllGroupChatRooms ();
-	static int           maximumMembersInGroup();
+	static uint32_t      maximumMembersInGroup();
 
 	typedef std::pair<NetworkId, std::string> GroupMember;
 	typedef std::vector<GroupMember> GroupMemberVector;
@@ -61,7 +61,7 @@ public:
 	bool                      isGroupFull        () const;
 	int                       getPCMemberCount   () const;
 	bool isMemberPC(NetworkId const & memberId) const;
-	bool doesGroupHaveRoomFor(int additionalMembers) const;
+	bool doesGroupHaveRoomFor(uint32_t additionalMembers) const;
 	GroupMemberVector const & getGroupMembers    () const;
 	int                       getGroupLevel () const;
 	uint32                    getFormationNameCrc() const;

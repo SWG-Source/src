@@ -91,7 +91,7 @@ void CentralServerConnection::onReceive(const Archive::ByteStream & message)
 		{
 			const GenericValueTypeMessage<TransferAccountData> request(ri);
 			const TransferAccountData & requestData = request.getValue();
-			LOG("CustomerService", ("CharacterTransfer: Received TransferAccountRequestCentralDatabase, starting game database change from station ID %d to station ID %d", request.getValue().getSourceStationId(), request.getValue().getDestinationStationId()));
+			LOG("CustomerService", ("CharacterTransfer: Received TransferAccountRequestCentralDatabase, starting game database change from station ID %u to station ID %u", request.getValue().getSourceStationId(), request.getValue().getDestinationStationId()));
 			Persister::getInstance().changeStationId(&requestData);
 			break;
 		}

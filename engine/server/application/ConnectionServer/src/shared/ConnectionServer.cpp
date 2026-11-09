@@ -52,9 +52,10 @@
 #include "sharedNetworkMessages/ClientCentralMessages.h"
 #include "sharedNetworkMessages/GenericValueTypeMessage.h"
 #include "sharedUtility/DataTableManager.h"
-#include <vector>
 
 #include "sharedFoundation/CrcConstexpr.hpp"
+
+#include <vector>
 
 // ======================================================================
 namespace ConnectionServerNamespace {
@@ -164,50 +165,43 @@ bool
 ConnectionServer::decryptToken(const KeyShare::Token &token, uint32 &stationUserId, bool &secure, std::string &accountName) {
     static ConnectionServer &cs = instance();
 
-    //Also the sizeof(int) is likewise magic from the session api
-    uint32 len = sizeof(uint32) + sizeof(bool) + MAX_ACCOUNT_NAME_LENGTH + 1;
-    unsigned char *keyBuffer = new unsigned char[len];
-    unsigned char *keyBufferPointer = keyBuffer;
-    memset(keyBuffer, 0, len);
+    // The account token holds the station id, the security flag and the
+    // account name (MAX_ACCOUNT_NAME_LENGTH bytes, zero-padded).
+    uint32 len = sizeof(uint32) + sizeof(bool) + MAX_ACCOUNT_NAME_LENGTH + 1; // in: buffer size; out: bytes deciphered
+    std::vector<unsigned char> keyBuffer(len, 0);
 
-    bool retval = cs.loginServerKeys->decipherToken(token, keyBuffer, len);
+    bool const retval = cs.loginServerKeys->decipherToken(token, keyBuffer.data(), len);
 
     if (!retval) {
         return retval;
     }
 
-    char *tmpBuffer = new char[MAX_ACCOUNT_NAME_LENGTH + 1];
-    memset(tmpBuffer, 0, MAX_ACCOUNT_NAME_LENGTH + 1);
-
+    unsigned char const *keyBufferPointer = keyBuffer.data();
     memcpy(&stationUserId, keyBufferPointer, sizeof(uint32));
     keyBufferPointer += sizeof(uint32);
     memcpy(&secure, keyBufferPointer, sizeof(bool));
     keyBufferPointer += sizeof(bool);
-    memcpy(tmpBuffer, keyBufferPointer, MAX_ACCOUNT_NAME_LENGTH);
-    accountName = tmpBuffer;
-    delete[] tmpBuffer;
-    delete[] keyBuffer;
+    char const * const name = reinterpret_cast<char const *>(keyBufferPointer);
+    accountName.assign(name, strnlen(name, MAX_ACCOUNT_NAME_LENGTH));
     return retval;
 }
 
 bool ConnectionServer::decryptToken(const KeyShare::Token &token, char *sessionKey, StationId &stationId) {
     static ConnectionServer &cs = instance();
 
-    uint32 len = apiSessionIdWidth + sizeof(StationId);
-    unsigned char *keyBuffer = new unsigned char[len + 1];
-    unsigned char *keyBufferPointer = keyBuffer;
-    memset(keyBuffer, 0, sizeof(*keyBuffer));
+    // The token holds the session id (apiSessionIdWidth bytes) followed by
+    // the station id; sessionKey receives only the session id.
+    uint32 len = apiSessionIdWidth + sizeof(StationId); // in: buffer size; out: bytes deciphered
+    std::vector<unsigned char> keyBuffer(len + 1, 0);
 
-    bool retval = cs.loginServerKeys->decipherToken(token, keyBuffer, len);
+    bool const retval = cs.loginServerKeys->decipherToken(token, keyBuffer.data(), len);
 
     if (!retval) {
         return retval;
     }
 
-    memcpy(sessionKey, keyBufferPointer, len);
-    keyBufferPointer += apiSessionIdWidth;
-    memcpy(&stationId, keyBufferPointer, sizeof(StationId));
-    delete[] keyBuffer;
+    memcpy(sessionKey, keyBuffer.data(), apiSessionIdWidth);
+    memcpy(&stationId, keyBuffer.data() + apiSessionIdWidth, sizeof(StationId));
     return retval;
 }
 
@@ -583,13 +577,13 @@ ConnectionServer::receiveMessage(const MessageDispatch::Emitter &source, const M
         case constcrc("ConnectionCreateCharacterSuccess") : {
             Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
             const ConnectionCreateCharacterSuccess msg(ri);
-            LOG("TraceCharacterCreation", ("Received ConnectionCreateCharacterSuccess for %d", msg.getStationId()));
+            LOG("TraceCharacterCreation", ("Received ConnectionCreateCharacterSuccess for %u", msg.getStationId()));
             ClientConnection *const client = getClientConnection(msg.getStationId());
             if (client) {
                 const ClientCreateCharacterSuccess m(msg.getNetworkId());
                 client->send(m, true);
             } else {
-                LOG("CustomerService", ("CharacterTransfer: Trying to deliver ConnectionCreateCharacterSuccess to PsuedoClientConnection(%d)", msg.getStationId()));
+                LOG("CustomerService", ("CharacterTransfer: Trying to deliver ConnectionCreateCharacterSuccess to PsuedoClientConnection(%u)", msg.getStationId()));
                 PseudoClientConnection::tryToDeliverMessageTo(static_cast<unsigned int>(msg.getStationId()), static_cast<const GameNetworkMessage &>(message).getByteStream());
             }
             break;
@@ -750,7 +744,7 @@ ConnectionServer::receiveMessage(const MessageDispatch::Emitter &source, const M
                     bool result;
                     result = PseudoClientConnection::tryToDeliverMessageTo(msg.getStationId(), static_cast<const GameNetworkMessage &>(message).getByteStream());
                     UNREF(result);
-                    DEBUG_REPORT_LOG(!result, ("Received GameServerForLoginMessage for %lu, who was not connected.\n", msg.getStationId()));
+                    DEBUG_REPORT_LOG(!result, ("Received GameServerForLoginMessage for %u, who was not connected.\n", msg.getStationId()));
                 }
             }
 
@@ -767,7 +761,7 @@ ConnectionServer::receiveMessage(const MessageDispatch::Emitter &source, const M
 
             ClientConnection *cconn = getClientConnection(msg.getSuid());
             if (!cconn) {
-                DEBUG_REPORT_LOG(true, ("Received ValidateCharacterForLoginReplyMessage for account %lu, which is no longer connected.\n", msg.getSuid()));
+                DEBUG_REPORT_LOG(true, ("Received ValidateCharacterForLoginReplyMessage for account %u, which is no longer connected.\n", msg.getSuid()));
             } else {
                 cconn->onCharacterValidated(msg.getApproved(), msg.getCharacterId(), Unicode::wideToNarrow(msg.getCharacterName()), msg.getContainerId(), msg.getScene(), msg.getCoordinates());
             }
@@ -779,7 +773,7 @@ ConnectionServer::receiveMessage(const MessageDispatch::Emitter &source, const M
 
             ClientConnection *cconn = getClientConnection(msg.getStationId());
             if (!cconn) {
-                DEBUG_REPORT_LOG(true, ("Received ValidateAccountReplyMessage for account %lu, which is no longer connected.\n", msg.getStationId()));
+                DEBUG_REPORT_LOG(true, ("Received ValidateAccountReplyMessage for account %u, which is no longer connected.\n", msg.getStationId()));
             } else {
                 cconn->onIdValidated(msg.getCanLogin(), msg.getCanCreateRegular(), msg.getCanCreateJedi(), msg.getCanSkipTutorial(), msg.getConsumedRewardEvents(), msg.getClaimedRewardItems());
             }
@@ -833,7 +827,7 @@ ConnectionServer::receiveMessage(const MessageDispatch::Emitter &source, const M
             Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
             ExcommunicateGameServerMessage msg(ri);
 
-            LOG("GameGameConnect", ("Told to drop connection to %lu by Central", msg.getServerId()));
+            LOG("GameGameConnect", ("Told to drop connection to %u by Central", msg.getServerId()));
 
             GameConnection *conn = getGameConnection(msg.getServerId());
             if (conn) {
@@ -898,7 +892,7 @@ void ConnectionServer::run(void) {
     static ConnectionServer &cserver = instance();
     DEBUG_FATAL(!cserver.m_metricsData, ("Connection server not installed properly"));
 
-    unsigned long startTime = Clock::timeMs();
+    uint64_t startTime = Clock::timeMs();
     Clock::setFrameRateLimit(50.0f);
 
     LOG("ServerStartup", ("ConnectionServer starting on %s", NetworkHandler::getHostName().c_str()));
@@ -945,7 +939,7 @@ void ConnectionServer::run(void) {
 
             {
                 PROFILER_AUTO_BLOCK_DEFINE("MetricsManager::update");
-                unsigned long curTime = Clock::timeMs();
+                uint64_t curTime = Clock::timeMs();
                 MetricsManager::update(static_cast<float>(curTime - startTime));
                 startTime = curTime;
             }

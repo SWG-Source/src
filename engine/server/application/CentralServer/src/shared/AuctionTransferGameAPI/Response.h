@@ -22,10 +22,10 @@ namespace AuctionTransfer
 	public:
 		GetIDResponse(RequestTypes type, void *user);
 		virtual ~GetIDResponse() {}
-		long long getNewID() { return m_transactionID; }
+		int64_t getNewID() { return m_transactionID; }
 		virtual void unpack(Base::ByteStream::ReadIterator &iter);
 	private:
-		long long m_transactionID;
+		int64_t m_transactionID;
 	};
 
 

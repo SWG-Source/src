@@ -55,7 +55,7 @@ namespace GroupObjectNamespace
 {
 	// ----------------------------------------------------------------------
 
-	unsigned int const cs_maximumNumberInGroup = 8;
+	const uint32_t cs_maximumNumberInGroup = 8;
 	char const * const DEFAULT_GROUP_TEMPLATE = "object/group/group.iff";
 	std::map<NetworkId, NetworkId> s_leaderMap;
 	static const std::string cs_emptyString;
@@ -226,7 +226,7 @@ void GroupObject::createAllGroupChatRooms() // static
 
 // ----------------------------------------------------------------------
 
-int GroupObject::maximumMembersInGroup()
+uint32_t GroupObject::maximumMembersInGroup()
 {
 	return cs_maximumNumberInGroup;
 }
@@ -327,9 +327,8 @@ bool GroupObject::isMemberPC(NetworkId const & memberId) const
 
 // ----------------------------------------------------------------------
 
-bool GroupObject::doesGroupHaveRoomFor(int additionalMembers) const
+bool GroupObject::doesGroupHaveRoomFor(uint32_t additionalMembers) const
 {
-	additionalMembers = std::max(0, additionalMembers);
 	return (m_groupMembers.size() + additionalMembers) <= cs_maximumNumberInGroup;
 }
 
@@ -519,7 +518,7 @@ void GroupObject::removeGroupMember(NetworkId const &memberId)
 	else
 	{
 		GroupUpdateObserver updater(this, Archive::ADOO_generic);
-		for (unsigned int i = 0; i < m_groupMembers.size(); ++i)
+		for (uint32_t i = 0; i < m_groupMembers.size(); ++i)
 		{
 			GroupMember const & member = m_groupMembers.get(i);
 			if (member.first == memberId)
@@ -535,7 +534,7 @@ void GroupObject::removeGroupMember(NetworkId const &memberId)
 				m_groupMemberProfessions.erase(i);
 				calcGroupLevel();
 
-				for (unsigned int j = 0; j < m_groupPOBShipAndOwners.size(); ++j)
+				for (uint32_t j = 0; j < m_groupPOBShipAndOwners.size(); ++j)
 				{
 					if (m_groupPOBShipAndOwners.get(j).second == memberId)
 					{
@@ -603,7 +602,7 @@ void GroupObject::disbandGroup()
 	}
 	else if (!getKill())
 	{
-		for (unsigned int i = 0; i < m_groupMembers.size(); ++i)
+		for (uint32_t i = 0; i < m_groupMembers.size(); ++i)
 		{
 			GroupMember const & member = m_groupMembers.get(i);
 			removeFromGroupVoiceChatRoom(member.first, member.second);

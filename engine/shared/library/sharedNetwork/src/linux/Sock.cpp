@@ -1,6 +1,12 @@
 //---------------------------------------------------------------------
 #pragma warning(disable : 4127)
 
+#ifdef NDEBUG
+#define SWG_ASSERT(exp) ((void) (exp))
+#else
+#define SWG_ASSERT assert
+#endif
+
 #include "FirstSharedNetwork.h"
 #include <cassert>
 #include "Sock.h"
@@ -28,9 +34,8 @@ Sock::~Sock()
 {
 	// ensure we don't block, and that pending
 	// data is sent with a graceful shutdown
-	int err;
-	err = close(handle);
-	assert(err == 0);
+	int err = close(handle);
+	SWG_ASSERT(err == 0);
 	handle = INVALID_SOCKET;
 }
 
@@ -55,7 +60,7 @@ bool Sock::bind(const Address & newBindAddress)
 		struct sockaddr_in a;
 		int r;
 		r = getsockname(handle, reinterpret_cast<struct sockaddr *>(&a), &namelen);
-		assert(r == 0);
+		SWG_ASSERT(r == 0);
 		bindAddress = a;
 	}
 	else
@@ -83,9 +88,8 @@ bool Sock::bind()
 	if(err == 0)
 	{
 		result = true;
-		int r;
-		r = getsockname(handle, reinterpret_cast<struct sockaddr *>(&a), &namelen);
-		assert(r == 0);
+		int r = getsockname(handle, reinterpret_cast<struct sockaddr *>(&a), &namelen);
+		SWG_ASSERT(r == 0);
 		bindAddress = a;
 	}
 	assert(err == 0);
@@ -144,9 +148,8 @@ bool Sock::canSend() const
 const unsigned int Sock::getInputBytesPending() const
 {
 	unsigned long int bytes = 0;
-	int err;
-	err = ioctl(handle, FIONREAD, &bytes); //lint !e1924 (I don't know WHAT Microsoft is doing here!)
-	assert(err == 0);
+	int err = ioctl(handle, FIONREAD, &bytes); //lint !e1924 (I don't know WHAT Microsoft is doing here!)
+	SWG_ASSERT(err == 0);
 	return bytes;
 }
 
@@ -199,9 +202,8 @@ const std::string Sock::getLastError() const
 void Sock::getPeerName(struct sockaddr_in & target, int s)
 {
 	socklen_t namelen = sizeof(struct sockaddr_in);
-	int err;
-	err = getpeername(s, reinterpret_cast<sockaddr *>(&(target)), &namelen);
-	assert(err != -1);
+	int err = getpeername(s, reinterpret_cast<sockaddr *>(&(target)), &namelen);
+	SWG_ASSERT(err != -1);
 }
 
 //-----------------------------------------------------------------------
@@ -227,9 +229,8 @@ void Sock::setNonBlocking() const
 {
 	assert(handle != INVALID_SOCKET);
 	unsigned long int nb = 1;
-	int err;
-	err = ioctl(handle, FIONBIO, &nb); //lint !e569 // loss of precision in the FIONBIO macro, beyond my control
-	assert(err == 0);
+	int err = ioctl(handle, FIONBIO, &nb); //lint !e569 // loss of precision in the FIONBIO macro, beyond my control
+	SWG_ASSERT(err == 0);
 }
 
 //---------------------------------------------------------------------

@@ -128,7 +128,7 @@ void PurgeManager::onGetAccountForPurge(StationId account, int purgePhase)
 
 void PurgeManager::onCheckStatusForPurge(StationId account, bool isActive)
 {
-	DEBUG_REPORT_LOG(true,("onCheckStatusForPurge(%li, %s)\n",account, isActive ? "true" : "false"));
+	DEBUG_REPORT_LOG(true,("onCheckStatusForPurge(%u, %s)\n",account, isActive ? "true" : "false"));
 	PurgeRecordsType::iterator i=m_purgeRecords.find(account);
 	if (i==m_purgeRecords.end())
 	{
@@ -250,7 +250,7 @@ void PurgeManager::handlePurgeCompleteOnCluster(StationId account, uint32 cluste
 	PurgeRecordsType::iterator i=m_purgeRecords.find(account);
 	if (i==m_purgeRecords.end())
 	{
-		DEBUG_REPORT_LOG(true,("Purge record could not be found in handlePurgeCompleteOnCluster(%li, %li).  Probably indicates the cluster and/or the login server were restarted while a purge was in progress.  The purge will be retried later.\n",account,clusterId));
+		DEBUG_REPORT_LOG(true,("Purge record could not be found in handlePurgeCompleteOnCluster(%u, %u).  Probably indicates the cluster and/or the login server were restarted while a purge was in progress.  The purge will be retried later.\n",account,clusterId));
 		return;
 	}
 
@@ -271,14 +271,14 @@ void PurgeManager::onAllCharactersDeleted(StationId account, bool success)
 	PurgeRecordsType::iterator i=m_purgeRecords.find(account);
 	if (i==m_purgeRecords.end())
 	{
-		WARNING_DEBUG_FATAL(true,("Programmer bug:  onAllCharactersDeleted(%li) called with an account that wasn't in m_purgeRecords",account));
+		WARNING_DEBUG_FATAL(true,("Programmer bug:  onAllCharactersDeleted(%u) called with an account that wasn't in m_purgeRecords",account));
 		return;
 	}
 
 	PurgeRecord & record = i->second;
 	if (record.getPurgePhase()!=ppCharacterWarningSent)
 	{
-		WARNING_DEBUG_FATAL(true,("Programmer bug:  onAllCharactersDeleted(%li) called with an account that wasn't in the ppCharacterWarningSent phase",account));
+		WARNING_DEBUG_FATAL(true,("Programmer bug:  onAllCharactersDeleted(%u) called with an account that wasn't in the ppCharacterWarningSent phase",account));
 		releaseAccount(record.getStationId());
 		return;
 	}

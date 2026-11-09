@@ -389,57 +389,45 @@ namespace soe
 	{
 		if (size < sizeof(int64))
 			return 0;
-#if (defined(WIN32) || defined(linux))
-		uint32 low = *(uint32_t *) &data;
-		uint32 high = *((uint32_t *)&data+1);
-#elif defined(sparc)
-		uint32 low = *((uint32 *)&data+1);
-		uint32 high = *(uint32 *)(&data);
-#endif		
-		stream[BYTE1] = (unsigned char)low&0xff;
-		stream[BYTE2] = (unsigned char)(low>>8)&0xff;
-		stream[BYTE3] = (unsigned char)(low>>16)&0xff;
-		stream[BYTE4] = (unsigned char)(low>>24)&0xff;
-		stream[BYTE5] = (unsigned char)high&0xff;
-		stream[BYTE6] = (unsigned char)(high>>8)&0xff;
-		stream[BYTE7] = (unsigned char)(high>>16)&0xff;
-		stream[BYTE8] = (unsigned char)(high>>24)&0xff;
+		stream[BYTE1] = data&0xff;
+		stream[BYTE2] = (data>>8)&0xff;
+		stream[BYTE3] = (data>>16)&0xff;
+		stream[BYTE4] = (data>>24)&0xff;
+		stream[BYTE5] = (data>>32)&0xff;
+		stream[BYTE6] = (data>>40)&0xff;
+		stream[BYTE7] = (data>>48)&0xff;
+		stream[BYTE8] = (data>>56)&0xff;
 		return sizeof(int64);
 	}
 
 	//	370 ns
 	inline unsigned Write(unsigned char * stream, unsigned size, uint64 data, unsigned version = 0)
 	{
-		if (size < sizeof(uint64))
+		if (size < sizeof(int64))
 			return 0;
-#if (defined(WIN32) || defined(linux))
-	uint32 low = *(uint32_t *) &data;		
-	uint32 high = *((uint32_t *)&data+1);
-#elif defined(sparc)
-		uint32 low = *((uint32 *)&data+1);
-		uint32 high = *(uint32 *)(&data);
-#endif		
-		stream[BYTE1] = (unsigned char)low&0xff;
-		stream[BYTE2] = (unsigned char)(low>>8)&0xff;
-		stream[BYTE3] = (unsigned char)(low>>16)&0xff;
-		stream[BYTE4] = (unsigned char)(low>>24)&0xff;
-		stream[BYTE5] = (unsigned char)high&0xff;
-		stream[BYTE6] = (unsigned char)(high>>8)&0xff;
-		stream[BYTE7] = (unsigned char)(high>>16)&0xff;
-		stream[BYTE8] = (unsigned char)(high>>24)&0xff;
-		return sizeof(uint64);
+		stream[BYTE1] = data&0xff;
+		stream[BYTE2] = (data>>8)&0xff;
+		stream[BYTE3] = (data>>16)&0xff;
+		stream[BYTE4] = (data>>24)&0xff;
+		stream[BYTE5] = (data>>32)&0xff;
+		stream[BYTE6] = (data>>40)&0xff;
+		stream[BYTE7] = (data>>48)&0xff;
+		stream[BYTE8] = (data>>56)&0xff;
+		return sizeof(int64);
 	}
 
 	//	360 ns
 	inline unsigned Write(unsigned char * stream, unsigned size, float data, unsigned version = 0)
 	{
-		uint32 & dataRef = *(uint32_t *)(&data);
 		if (size < sizeof(float))
 			return 0;
-		stream[BYTE1] = dataRef&0xff;
-		stream[BYTE2] = (dataRef>>8)&0xff;
-		stream[BYTE3] = (dataRef>>16)&0xff;
-		stream[BYTE4] = (dataRef>>24)&0xff;
+		unsigned char dataArr[sizeof(float)];
+		memcpy(&dataArr, &data, sizeof(float));
+
+		stream[BYTE1] = dataArr[0]&0xff;
+		stream[BYTE2] = dataArr[1]&0xff;
+		stream[BYTE3] = dataArr[2]&0xff;
+		stream[BYTE4] = dataArr[3]&0xff;
 		return sizeof(float);
 	}
 
@@ -448,21 +436,17 @@ namespace soe
 	{
 		if (size < sizeof(double))
 			return 0;
-#if (defined(WIN32) || defined(linux))
-		uint32 low = *(uint32_t *)(&data);
-		uint32 high = *((uint32_t *)&data+1);
-#elif defined(sparc)
-		uint32 low = *((uint32 *)&data+1);
-		uint32 high = *(uint32 *)(&data);
-#endif		
-		stream[BYTE1] = (unsigned char)low&0xff;
-		stream[BYTE2] = (unsigned char)(low>>8)&0xff;
-		stream[BYTE3] = (unsigned char)(low>>16)&0xff;
-		stream[BYTE4] = (unsigned char)(low>>24)&0xff;
-		stream[BYTE5] = (unsigned char)high&0xff;
-		stream[BYTE6] = (unsigned char)(high>>8)&0xff;
-		stream[BYTE7] = (unsigned char)(high>>16)&0xff;
-		stream[BYTE8] = (unsigned char)(high>>24)&0xff;
+		unsigned char dataArr[sizeof(double)];
+		memcpy(&dataArr, &data, sizeof(double));
+
+		stream[BYTE1] = dataArr[0]&0xff;
+		stream[BYTE2] = dataArr[1]&0xff;
+		stream[BYTE3] = dataArr[2]&0xff;
+		stream[BYTE4] = dataArr[3]&0xff;
+		stream[BYTE5] = dataArr[4]&0xff;
+		stream[BYTE6] = dataArr[5]&0xff;
+		stream[BYTE7] = dataArr[6]&0xff;
+		stream[BYTE8] = dataArr[7]&0xff;
 		return sizeof(double);
 	}
 

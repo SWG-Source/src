@@ -31,10 +31,10 @@ public:
 	DataTableColumnType const &getDataTypeForColumn(const std::string& column) const;
 	DataTableColumnType const &getDataTypeForColumn(int column) const;
 
-	int                 getIntValue(const std::string & column, int row) const;
-	int                 getIntValue(int column, int row) const;
-	int                 getIntDefaultForColumn(const std::string & column) const;
-	int                 getIntDefaultForColumn(int column) const;
+	int32                 getIntValue(const std::string & column, int row) const;
+	int32                 getIntValue(int column, int row) const;
+	int32                 getIntDefaultForColumn(const std::string & column) const;
+	int32                 getIntDefaultForColumn(int column) const;
 	float               getFloatValue(const std::string & column, int row) const;
 	float               getFloatValue(int column, int row) const;
 	float               getFloatDefaultForColumn(const std::string & column) const;
@@ -63,7 +63,7 @@ public:
 
 	int                 searchColumnString(int column, const std::string & searchValue) const;
 	int                 searchColumnFloat(int column, float searchValue) const;
-	int                 searchColumnInt(int column, int searchValue) const;
+	int                 searchColumnInt(int column, int32 searchValue) const;
 
 	std::string const & getName() const;
 

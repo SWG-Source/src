@@ -43,12 +43,12 @@ namespace AuctionTransfer
 	class CommonRequest: public GenericRequest
 	{
 	public:
-		CommonRequest(RequestTypes type, unsigned serverTrack, long long transactionID);
+		CommonRequest(RequestTypes type, unsigned serverTrack, int64_t transactionID);
 		virtual ~CommonRequest()	{};
 
 		void pack(Base::ByteStream &msg);
 	private:
-		long long m_transactionID;
+		int64_t m_transactionID;
 	};
 
 	//////////////////////////////////////////////////////////////////////////////////////
@@ -66,15 +66,15 @@ namespace AuctionTransfer
 	class SendPrepareRequest: public GenericRequest
 	{
 	public:
-		SendPrepareRequest(RequestTypes type, unsigned serverTrack, const char *serverID, long long transactionID, unsigned stationID, unsigned characterID, long long assetID, const char *xmlAsset);
+		SendPrepareRequest(RequestTypes type, unsigned serverTrack, const char *serverID, int64_t transactionID, unsigned stationID, unsigned characterID, int64_t assetID, const char *xmlAsset);
 		virtual ~SendPrepareRequest()	{};
 
 		void pack(Base::ByteStream &msg);
 	private:
-		long long m_transactionID;
+		int64_t m_transactionID;
 		unsigned m_stationID;
 		unsigned m_characterID;
-		long long m_assetID;
+		int64_t m_assetID;
 		std::string m_xml;
 		std::string m_serverID;
 	};
@@ -83,15 +83,15 @@ namespace AuctionTransfer
 	class SendPrepareCompressedRequest: public GenericRequest
 	{
 	public:
-		SendPrepareCompressedRequest(RequestTypes type, unsigned serverTrack, const char *serverID, long long transactionID, unsigned stationID, unsigned characterID, long long assetID, const unsigned char *xmlAsset, unsigned length);
+		SendPrepareCompressedRequest(RequestTypes type, unsigned serverTrack, const char *serverID, int64_t transactionID, unsigned stationID, unsigned characterID, int64_t assetID, const unsigned char *xmlAsset, unsigned length);
 		virtual ~SendPrepareCompressedRequest()	{};
 
 		void pack(Base::ByteStream &msg);
 	private:
-		long long m_transactionID;
+		int64_t m_transactionID;
 		unsigned m_stationID;
 		unsigned m_characterID;
-		long long m_assetID;
+		int64_t m_assetID;
 		//std::string m_xml;
 		std::string m_serverID;
 		Blob m_data;
@@ -127,13 +127,13 @@ namespace AuctionTransfer
 	{
 	public:
 		SendAuditRequest(	RequestTypes type, unsigned serverTrack, const char *gameCode, const char *serverCode, 
-							long long inGameAssetID, unsigned stationID, const char *event, const char *message);
+							int64_t inGameAssetID, unsigned stationID, const char *event, const char *message);
 		~SendAuditRequest() {};
 		void pack(Base::ByteStream &msg);
 	private:
 		std::string m_gameCode;
 		std::string m_serverCode;
-		long long m_assetID;
+		int64_t m_assetID;
 		unsigned m_userID;
 		std::string m_event;
 		std::string m_message;

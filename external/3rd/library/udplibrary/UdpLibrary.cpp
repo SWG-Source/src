@@ -1,3 +1,9 @@
+#ifdef NDEBUG
+#define SWG_ASSERT(exp) ((void) (exp))
+#else
+#define SWG_ASSERT assert
+#endif
+
 #include <assert.h>
 #include <time.h>
 #include <stdlib.h>
@@ -438,36 +444,36 @@ void UdpManager::CreateAndBindSocket(int usePort)
 #elif defined(sparc)
 		ulong nb = 1;
 		int err = ioctl(mUdpSocket, FIONBIO, &nb);
-		assert(err != -1);
+		SWG_ASSERT(err != -1);
 		nb = udpMin(256 * 1024, mParams.outgoingBufferSize);
 		err = setsockopt(mUdpSocket, SOL_SOCKET, SO_SNDBUF, &nb, sizeof(nb));
-		assert(err == 0);
+		SWG_ASSERT(err == 0);
 		nb = udpMin(256 * 1024, mParams.incomingBufferSize);
 		err = setsockopt(mUdpSocket, SOL_SOCKET, SO_RCVBUF, &nb, sizeof(nb));
-		assert(err == 0);
+		SWG_ASSERT(err == 0);
 
 		int optLen = sizeof(mStartTtl);
 		getsockopt(mUdpSocket, IPPROTO_IP, IP_TTL, &mStartTtl, (socklen_t *)&optLen);
 
 		nb = 1;
 		err = setsockopt(mUdpSocket, SOL_SOCKET, SO_DGRAM_ERRIND, &nb, sizeof(nb));
-		assert(err == 0);
+		SWG_ASSERT(err == 0);
 #else	// linux is to remain the default compile mode
 		unsigned long nb = 1;
 		int err = ioctl(mUdpSocket, FIONBIO, &nb);
-		assert(err != -1);
+		SWG_ASSERT(err != -1);
 		nb = mParams.outgoingBufferSize;
 		err = setsockopt(mUdpSocket, SOL_SOCKET, SO_SNDBUF, &nb, sizeof(nb));
-		assert(err == 0);
+		SWG_ASSERT(err == 0);
 		nb = mParams.incomingBufferSize;
 		err = setsockopt(mUdpSocket, SOL_SOCKET, SO_RCVBUF, &nb, sizeof(nb));
-		assert(err == 0);
+		SWG_ASSERT(err == 0);
 		nb = 0;
 		err = setsockopt(mUdpSocket, SOL_SOCKET, SO_BSDCOMPAT, &nb, sizeof(nb));
-		assert(err == 0);
+		SWG_ASSERT(err == 0);
 		nb = 1;
 		err = setsockopt(mUdpSocket, SOL_IP, IP_RECVERR, &nb, sizeof(nb));
-		assert(err == 0);
+		SWG_ASSERT(err == 0);
 
 		int optLen = sizeof(mStartTtl);
 		getsockopt(mUdpSocket, IPPROTO_IP, IP_TTL, &mStartTtl, (socklen_t *)&optLen);
@@ -560,7 +566,8 @@ void UdpManager::RemoveConnection(UdpConnection *con)
 
 	mAddressHashTable->Remove(con, AddressHashValue(con->mIp, con->mPort));
 
-	unsigned int addy = con->mIp.GetAddress();
+    // addy is unused
+	// unsigned int addy = con->mIp.GetAddress();
 
 	mConnectCodeHashTable->Remove(con, con->mConnectCode);
 }
@@ -2896,21 +2903,21 @@ const char *UdpConnection::DisconnectReasonText(DisconnectReason reason)
 	{
 		sInitialized = true;
 		memset(sDisconnectReason, 0, sizeof(sDisconnectReason));
-		sDisconnectReason[cDisconnectReasonNone] = "DisconnectReasonNone";
-		sDisconnectReason[cDisconnectReasonIcmpError] = "DisconnectReasonIcmpError";
-		sDisconnectReason[cDisconnectReasonTimeout] = "DisconnectReasonTimeout";
-		sDisconnectReason[cDisconnectReasonOtherSideTerminated] = "DisconnectReasonOtherSideTerminated";
-		sDisconnectReason[cDisconnectReasonManagerDeleted] = "DisconnectReasonManagerDeleted";
-		sDisconnectReason[cDisconnectReasonConnectFail] = "DisconnectReasonConnectFail";
-		sDisconnectReason[cDisconnectReasonApplication] = "DisconnectReasonApplication";
-		sDisconnectReason[cDisconnectReasonUnreachableConnection] = "DisconnectReasonUnreachableConnection";
-		sDisconnectReason[cDisconnectReasonUnacknowledgedTimeout] = "DisconnectReasonUnacknowledgedTimeout";
-		sDisconnectReason[cDisconnectReasonNewConnectionAttempt] = "DisconnectReasonNewConnectionAttempt";
-		sDisconnectReason[cDisconnectReasonConnectionRefused] = "DisconnectReasonConnectionRefused";
-		sDisconnectReason[cDisconnectReasonMutualConnectError] = "DisconnectReasonConnectError";
-		sDisconnectReason[cDisconnectReasonConnectingToSelf] = "DisconnectReasonConnectingToSelf";
-		sDisconnectReason[cDisconnectReasonReliableOverflow] = "DisconnectReasonReliableOverflow";
-		sDisconnectReason[cDisconnectReasonDosAttack] = "DisconnectReasonDoSAttack";
+		sDisconnectReason[cDisconnectReasonNone] = (char *) "DisconnectReasonNone";
+		sDisconnectReason[cDisconnectReasonIcmpError] = (char *) "DisconnectReasonIcmpError";
+		sDisconnectReason[cDisconnectReasonTimeout] = (char *) "DisconnectReasonTimeout";
+		sDisconnectReason[cDisconnectReasonOtherSideTerminated] = (char *) "DisconnectReasonOtherSideTerminated";
+		sDisconnectReason[cDisconnectReasonManagerDeleted] = (char *) "DisconnectReasonManagerDeleted";
+		sDisconnectReason[cDisconnectReasonConnectFail] = (char *) "DisconnectReasonConnectFail";
+		sDisconnectReason[cDisconnectReasonApplication] = (char *) "DisconnectReasonApplication";
+		sDisconnectReason[cDisconnectReasonUnreachableConnection] = (char *) "DisconnectReasonUnreachableConnection";
+		sDisconnectReason[cDisconnectReasonUnacknowledgedTimeout] = (char *) "DisconnectReasonUnacknowledgedTimeout";
+		sDisconnectReason[cDisconnectReasonNewConnectionAttempt] = (char *) "DisconnectReasonNewConnectionAttempt";
+		sDisconnectReason[cDisconnectReasonConnectionRefused] = (char *) "DisconnectReasonConnectionRefused";
+		sDisconnectReason[cDisconnectReasonMutualConnectError] = (char *) "DisconnectReasonConnectError";
+		sDisconnectReason[cDisconnectReasonConnectingToSelf] = (char *) "DisconnectReasonConnectingToSelf";
+		sDisconnectReason[cDisconnectReasonReliableOverflow] = (char *) "DisconnectReasonReliableOverflow";
+		sDisconnectReason[cDisconnectReasonDosAttack] = (char *) "DisconnectReasonDoSAttack";
 	}
 
 	return(sDisconnectReason[reason]);

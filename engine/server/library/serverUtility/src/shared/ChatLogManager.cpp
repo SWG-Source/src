@@ -130,7 +130,7 @@ void ChatLogManagerNamespace::addChatLogEntry(Unicode::String const &fromPlayer,
 
 		++s_cacheHits;
 
-		LOGC(ConfigServerUtility::isChatLogManagerLoggingEnabled(), "ChatLogManager", ("INSERT-HIT s_chatLog.size(%u) messageIndex(%d) time(%u) fromPlayer(%s) toPlayer(%s) channel(%s) text(%s)\n", s_chatLog.size(), messageIndex, iterChatLog->second.getTime(), Unicode::wideToNarrow(fromPlayer).c_str(), Unicode::wideToNarrow(toPlayer).c_str(), Unicode::wideToNarrow(channel).c_str(), Unicode::wideToNarrow(message).c_str()));
+		LOGC(ConfigServerUtility::isChatLogManagerLoggingEnabled(), "ChatLogManager", ("INSERT-HIT s_chatLog.size(%zu) messageIndex(%d) time(%lld) fromPlayer(%s) toPlayer(%s) channel(%s) text(%s)\n", s_chatLog.size(), messageIndex, static_cast<long long>(iterChatLog->second.getTime()), Unicode::wideToNarrow(fromPlayer).c_str(), Unicode::wideToNarrow(toPlayer).c_str(), Unicode::wideToNarrow(channel).c_str(), Unicode::wideToNarrow(message).c_str()));
 	}
 	else
 	{
@@ -176,7 +176,7 @@ void ChatLogManagerNamespace::addChatLogEntry(Unicode::String const &fromPlayer,
 			s_playerLog.insert(std::make_pair(lowerFromPlayer, 1));
 		}
 
-		LOGC(ConfigServerUtility::isChatLogManagerLoggingEnabled(), "ChatLogManager", ("INSERT-MISS s_chatLog.size(%u) messageIndex(%d) time(%u) fromPlayer(%s) toPlayer(%s) channel(%s) text(%s)\n", s_chatLog.size(), messageIndex, time, Unicode::wideToNarrow(lowerFromPlayer).c_str(), Unicode::wideToNarrow(toPlayer).c_str(), Unicode::wideToNarrow(channel).c_str(), Unicode::wideToNarrow(message).c_str()));
+		LOGC(ConfigServerUtility::isChatLogManagerLoggingEnabled(), "ChatLogManager", ("INSERT-MISS s_chatLog.size(%zu) messageIndex(%d) time(%lld) fromPlayer(%s) toPlayer(%s) channel(%s) text(%s)\n", s_chatLog.size(), messageIndex, static_cast<long long>(time), Unicode::wideToNarrow(lowerFromPlayer).c_str(), Unicode::wideToNarrow(toPlayer).c_str(), Unicode::wideToNarrow(channel).c_str(), Unicode::wideToNarrow(message).c_str()));
 	}
 }
 
@@ -244,7 +244,7 @@ void ChatLogManagerNamespace::purgeChatLog()
 	{
 		s_purgeTime = systemTime;
 
-		time_t const chatLogPurgeTime = static_cast<time_t>(ConfigServerUtility::getChatLogMinutes() * 60);
+		time_t const chatLogPurgeTime = static_cast<time_t>(ConfigServerUtility::getChatLogMinutes()) * 60;
 		TimeLog::iterator iterTimeLog = s_timeLog.begin();
 		int chatLogCount = static_cast<int>(s_timeLog.size());
 		int purgedMessages = 0;
@@ -263,7 +263,7 @@ void ChatLogManagerNamespace::purgeChatLog()
 					--chatLogCount;
 					++purgedMessages;
 
-					LOGC(ConfigServerUtility::isChatLogManagerLoggingEnabled(), "ChatLogManager", ("REMOVE index(%d) s_chatLog.size(%u) s_chatMessageList.size(%u)\n", messageIndex, s_chatLog.size(), s_chatMessageList.size()));
+					LOGC(ConfigServerUtility::isChatLogManagerLoggingEnabled(), "ChatLogManager", ("REMOVE index(%d) s_chatLog.size(%zu) s_chatMessageList.size(%zu)\n", messageIndex, s_chatLog.size(), s_chatMessageList.size()));
 				}
 				else
 				{
@@ -456,7 +456,7 @@ void ChatLogManager::getReportHeader(Unicode::String & header, std::string const
 		if (!reportingPlayerStationName.empty())
 			header.append(Unicode::narrowToWide(fs.sprintf(" %s", reportingPlayerStationName.c_str())));
 		if (reportingPlayerStationId > 0)
-			header.append(Unicode::narrowToWide(fs.sprintf(" (%lu)", reportingPlayerStationId)));
+			header.append(Unicode::narrowToWide(fs.sprintf(" (%u)", reportingPlayerStationId)));
 	}
 
 	header.append(Unicode::narrowToWide("\n"));
@@ -471,7 +471,7 @@ void ChatLogManager::getReportHeader(Unicode::String & header, std::string const
 		if (!harassingPlayerStationName.empty())
 			header.append(Unicode::narrowToWide(fs.sprintf(" %s", harassingPlayerStationName.c_str())));
 		if (harassingPlayerStationId > 0)
-			header.append(Unicode::narrowToWide(fs.sprintf(" (%lu)", harassingPlayerStationId)));
+			header.append(Unicode::narrowToWide(fs.sprintf(" (%u)", harassingPlayerStationId)));
 	}
 
 	header.append(Unicode::narrowToWide("\n"));

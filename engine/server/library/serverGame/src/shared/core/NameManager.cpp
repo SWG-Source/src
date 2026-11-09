@@ -514,9 +514,9 @@ std::string NameManager::debugGetNameList() const
 	std::string result;
 	
 	for (IdToCharacterDataMapType::const_iterator i=m_idToCharacterDataMap->begin(); i!=m_idToCharacterDataMap->end(); ++i)
-		result += i->first.getValueString() + " : " + FormattedString<16>().sprintf("%lu", i->second.stationId) + " : " + i->second.characterName + " : " + i->second.characterFullName + " : " + CalendarTime::convertEpochToTimeStringLocal(i->second.createTime) + " : " + CalendarTime::convertEpochToTimeStringLocal(i->second.lastLoginTime) + '\n';
+		result += i->first.getValueString() + " : " + FormattedString<16>().sprintf("%u", i->second.stationId) + " : " + i->second.characterName + " : " + i->second.characterFullName + " : " + CalendarTime::convertEpochToTimeStringLocal(i->second.createTime) + " : " + CalendarTime::convertEpochToTimeStringLocal(i->second.lastLoginTime) + '\n';
 
-	result += FormattedString<128>().sprintf("(%d total characters)\n", m_idToCharacterDataMap->size());
+	result += FormattedString<128>().sprintf("(%zu total characters)\n", m_idToCharacterDataMap->size());
 
 	return result;
 }
