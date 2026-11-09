@@ -17,6 +17,7 @@
 #include "serverGame/ServerWorld.h"
 #include "serverScript/GameScriptObject.h"
 #include "serverScript/ScriptMessage.h"
+#include "serverUtility/EpochTime.h"
 #include "serverUtility/ServerClock.h"
 #include "sharedFoundation/CalendarTime.h"
 #include "sharedFoundation/Crc.h"
@@ -33,6 +34,14 @@ using namespace JNIWrappersNamespace;
 
 namespace ScriptMethodsScriptNamespace
 {
+	// A script's wrapped 32-bit calendar time as full epoch seconds; 0 stays 0.
+	time_t scriptCalendarTime(jint calendarTimeSeconds)
+	{
+		if (calendarTimeSeconds == 0)
+			return 0;
+		return static_cast<time_t>(EpochTime::fromWire32(calendarTimeSeconds, EpochTime::now()));
+	}
+
 	bool install();
 
 	jint         JNICALL attachScript(JNIEnv *env, jobject self, jlong objId, jstring scriptName);
@@ -603,12 +612,19 @@ jint JNICALL ScriptMethodsScriptNamespace::getGameTimeSeconds(JNIEnv * env, jobj
 
 //-----------------------------------------------------------------------
 
+// Scripts hold calendar time as a Java int: the epoch seconds wrapped to
+// signed 32 bits, exactly what a 32-bit server returned. After
+// 2038-01-19 03:14:07 UTC the value is negative. Scripts therefore compare
+// calendar times by subtraction ((now - then) >= 0), which wraps correctly
+// for intervals under 68 years, and never by sign. The server keeps 64-bit
+// time internally and wraps only here, at the script boundary.
+
 jint JNICALL ScriptMethodsScriptNamespace::getCalendarTimeSeconds(JNIEnv * env, jobject self)
 {
 	if(env == 0)
 		return 0;
 
-	return ::time(nullptr);
+	return static_cast<jint>(EpochTime::toWire32(EpochTime::now()));
 }
 
 //-----------------------------------------------------------------------
@@ -650,7 +666,7 @@ jstring JNICALL ScriptMethodsScriptNamespace::getCalendarTimeStringGMT(JNIEnv *e
 	if(env == 0)
 		return 0;
 
-	return JavaString(CalendarTime::convertEpochToTimeStringGMT(calendarTimeSeconds)).getReturnValue();
+	return JavaString(CalendarTime::convertEpochToTimeStringGMT(scriptCalendarTime(calendarTimeSeconds))).getReturnValue();
 }
 
 //-----------------------------------------------------------------------
@@ -660,7 +676,7 @@ jstring JNICALL ScriptMethodsScriptNamespace::getCalendarTimeStringGMT_YYYYMMDDH
 	if(env == 0)
 		return 0;
 
-	return JavaString(CalendarTime::convertEpochToTimeStringGMT_YYYYMMDDHHMMSS(calendarTimeSeconds)).getReturnValue();
+	return JavaString(CalendarTime::convertEpochToTimeStringGMT_YYYYMMDDHHMMSS(scriptCalendarTime(calendarTimeSeconds))).getReturnValue();
 }
 
 //-----------------------------------------------------------------------
@@ -670,7 +686,7 @@ jstring JNICALL ScriptMethodsScriptNamespace::getCalendarTimeStringLocal(JNIEnv 
 	if(env == 0)
 		return 0;
 
-	return JavaString(CalendarTime::convertEpochToTimeStringLocal(calendarTimeSeconds)).getReturnValue();
+	return JavaString(CalendarTime::convertEpochToTimeStringLocal(scriptCalendarTime(calendarTimeSeconds))).getReturnValue();
 }
 
 //-----------------------------------------------------------------------
@@ -680,7 +696,7 @@ jstring JNICALL ScriptMethodsScriptNamespace::getCalendarTimeStringLocal_YYYYMMD
 	if(env == 0)
 		return 0;
 
-	return JavaString(CalendarTime::convertEpochToTimeStringLocal_YYYYMMDDHHMMSS(calendarTimeSeconds)).getReturnValue();
+	return JavaString(CalendarTime::convertEpochToTimeStringLocal_YYYYMMDDHHMMSS(scriptCalendarTime(calendarTimeSeconds))).getReturnValue();
 }
 
 //-----------------------------------------------------------------------
