@@ -7561,7 +7561,7 @@ void CreatureObject::onClientReady(Client *c)
 	CommandQueue const * commandQueue = getCommandQueue();
 	if (commandQueue && getClient())
 	{
-		double const currentTime = Clock::getCurrentTime();
+		double const currentTime = CommandQueue::getCurrentTime();
 		uint32 currentCooldownTimeSecond = 0;
 		uint32 maxCooldownTimeSecond = 0;
 		std::map<uint32, std::pair<double, double> > const & cooldowns = commandQueue->getCooldowns().getMap();

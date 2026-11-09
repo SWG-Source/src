@@ -36,6 +36,8 @@
 #include "sharedNetworkMessages/MessageQueueGenericValueType.h"
 #include "sharedObject/NetworkIdManager.h"
 
+#include <chrono>
+
 // --------------------------------------------------------------------------
 
 namespace CommandQueueNamespace
@@ -64,17 +66,31 @@ namespace CommandQueueNamespace
 	/**
 	 * @brief the current time is cached in this class variable.
 	 *
-	 * this is used to reduce the number of calls to Clock::getCurrentTime().
+	 * this is used to reduce the number of calls to CommandQueue::getCurrentTime().
 	 * note it may not be appropriate to use this value in every
 	 * place in the code since there's guarantee that it's accurate from
 	 * every entry point in script.  
 	 *
-	 * @see Clock::getCurrentTime
+	 * @see CommandQueue::getCurrentTime
 	 */
 	double             s_currentTime             = 0.f;
 	
 }
 using namespace CommandQueueNamespace;
+
+// --------------------------------------------------------------------------
+
+// Cooldowns, m_nextEventTime and m_eventStartTime are absolute times. They are
+// replicated to proxies and move with authority to game servers on other hosts,
+// so they need a time base that agrees between hosts. Clock::getCurrentTime()
+// counts from this host's boot; offset it by the wall-clock time (NTP-synced
+// across the cluster) sampled once, so a later wall-clock step on this host
+// does not move the times either.
+double CommandQueue::getCurrentTime()
+{
+	static double const s_offset = std::chrono::duration<double>(std::chrono::system_clock::now().time_since_epoch()).count() - Clock::getCurrentTime();
+	return Clock::getCurrentTime() + s_offset;
+}
 
 // --------------------------------------------------------------------------
 
@@ -137,7 +153,7 @@ bool CommandQueue::isFull() const
 void CommandQueue::enqueue(Command const &command, NetworkId const &targetId, Unicode::String const &params, uint32 sequenceId, bool clearable, Command::Priority priority)
 {
 	DEBUG_REPORT_LOG( cs_debug, ( "%f: CommandQueue::enqueue(%s, %s, %s, %d, %d, %d)\n",
-		Clock::getCurrentTime(),
+		CommandQueue::getCurrentTime(),
 		command.m_commandName.c_str(),
 		targetId.getValueString().c_str(),
 		Unicode::wideToNarrow(params).c_str(),
@@ -296,7 +312,7 @@ void CommandQueue::update(float time)
 void CommandQueue::executeCommandQueue()
 {
 	// cache the current time, so that we don't have to hit the getCurrentTime() method every time
-	s_currentTime = Clock::getCurrentTime();
+	s_currentTime = CommandQueue::getCurrentTime();
 	
 	//
 	// iterate through each command in the queue
@@ -1058,7 +1074,7 @@ void CommandQueue::depersistCooldown()
 
 	char buffer[256];
 	int const currentGameTime = static_cast<int>(ServerClock::getInstance().getGameTimeSeconds());
-	double const currentTime = Clock::getCurrentTime();
+	double const currentTime = CommandQueue::getCurrentTime();
 	for (std::map<uint32, std::pair<int, int> >::const_iterator iterCooldown = commandCooldownTimers.begin(); iterCooldown != commandCooldownTimers.end(); ++iterCooldown)
 	{
 		// update the command queue with any unexpired cooldowns
@@ -1268,7 +1284,7 @@ float CommandQueue::getCooldownTimeLeft( uint32 cooldownId ) const
 		
 	if ( it != m_cooldowns.end() )
 	{
-		result = static_cast< float > ( (*it).second.second - Clock::getCurrentTime() );
+		result = static_cast< float > ( (*it).second.second - CommandQueue::getCurrentTime() );
 	}
 	
 	return result;
@@ -1286,7 +1302,7 @@ float CommandQueue::getCooldownTimeLeft( const std::string &name ) const
 void CommandQueue::executeCommand(Command const &command, NetworkId const &targetId, Unicode::String const &params, Command::ErrorCode &status, int &statusDetail, bool commandIsFromCommandQueue)
 {
 	DEBUG_REPORT_LOG( cs_debug, ( "%f: CommandQueue::executeCommand(%s, %s, %s, %d, %d)\n",
-		Clock::getCurrentTime(),
+		CommandQueue::getCurrentTime(),
 		command.m_commandName.c_str(),
 		targetId.getValueString().c_str(),
 		Unicode::wideToNarrow(params).c_str(),
@@ -1478,10 +1494,10 @@ void CommandQueue::resetCooldowns()
 	for (CooldownMapType::const_iterator iterCooldown = m_cooldowns.begin(); iterCooldown != m_cooldowns.end(); ++iterCooldown)
 	{
 		//has not expired
-		if((*iterCooldown).second.second > (Clock::getCurrentTime() + FLT_EPSILON))
+		if((*iterCooldown).second.second > (CommandQueue::getCurrentTime() + FLT_EPSILON))
 		{
 			//Reset the end of the cooldown to be right now
-			m_cooldowns.set( (*iterCooldown).first, std::make_pair( (*iterCooldown).second.first, Clock::getCurrentTime() ) );
+			m_cooldowns.set( (*iterCooldown).first, std::make_pair( (*iterCooldown).second.first, CommandQueue::getCurrentTime() ) );
 
 			//notify client
 			MessageQueueCommandTimer *msg = new MessageQueueCommandTimer(
@@ -1518,7 +1534,7 @@ void CommandQueue::spew(std::string * output)
 	{
 		FormattedString<1024> fsOutput;
 		char const * fsSprintfOutput;
-		double const currentTime = Clock::getCurrentTime();
+		double const currentTime = CommandQueue::getCurrentTime();
 
 		fsSprintfOutput = fsOutput.sprintf("%s current time [%.10f], m_queue size [%d], m_cooldowns size [%d], m_combatCount [%u]", creature->getNetworkId().getValueString().c_str(), currentTime, m_queue.size(), m_cooldowns.size(), m_combatCount.get());
 		if (output)
