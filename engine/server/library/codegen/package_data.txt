@@ -282,8 +282,8 @@ PlayerObject                m_matchMakingPersonalProfileId  shared        MatchM
 PlayerObject                m_skillTitle                    shared         NullEncodedStandardString
 PlayerObject                m_bornDate                      shared        int
 PlayerObject                m_playedTime                    shared        int
-PlayerObject                m_sessionStartPlayTime          server_np      int32
-PlayerObject                m_sessionLastActiveTime         server_np      int32
+PlayerObject                m_sessionStartPlayTime          server_np      int64
+PlayerObject                m_sessionLastActiveTime         server_np      int64
 PlayerObject                m_sessionActivePlayTimeDuration server_np      uint32
 PlayerObject                m_privledgedTitle               shared_np      int8
 PlayerObject                m_roleIconChoice                shared         int

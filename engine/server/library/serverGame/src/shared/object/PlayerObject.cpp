@@ -6343,12 +6343,12 @@ void PlayerObject::setPlayedTimeAccumOnly(float playedTimeAccum)
 
 int32_t PlayerObject::getSessionPlayTimeDuration() const
 {
-	int32_t const sessionStartPlayTime = m_sessionStartPlayTime.get();
+	int64_t const sessionStartPlayTime = m_sessionStartPlayTime.get();
 	if (sessionStartPlayTime > 0)
 	{
-		int32_t const now = ::time(nullptr);
+		int64_t const now = EpochTime::now();
 		if (now > sessionStartPlayTime)
-			return (now - sessionStartPlayTime);
+			return EpochTime::clampedDifference(now, sessionStartPlayTime);
 	}
 
 	return 0;
@@ -6360,12 +6360,12 @@ int32_t PlayerObject::getSessionActivePlayTimeDuration() const
 {
 	int32_t activePlayTimeDuration = m_sessionActivePlayTimeDuration.get();
 
-	int32_t const sessionLastActiveTime = m_sessionLastActiveTime.get();
+	int64_t const sessionLastActiveTime = m_sessionLastActiveTime.get();
 	if (sessionLastActiveTime > 0)
 	{
-		int32_t const now = ::time(nullptr);
+		int64_t const now = EpochTime::now();
 		if (now > sessionLastActiveTime)
-			activePlayTimeDuration += (now - sessionLastActiveTime);
+			activePlayTimeDuration += EpochTime::clampedDifference(now, sessionLastActiveTime);
 	}
 
 	return activePlayTimeDuration;
@@ -6373,14 +6373,14 @@ int32_t PlayerObject::getSessionActivePlayTimeDuration() const
 
 // ----------------------------------------------------------------------
 
-void PlayerObject::setSessionPlayTimeInfo(int32 sessionStartPlayTime, int32 sessionLastActiveTime, uint32_t sessionActivePlayTimeDuration)
+void PlayerObject::setSessionPlayTimeInfo(int64 sessionStartPlayTime, int64 sessionLastActiveTime, uint32_t sessionActivePlayTimeDuration)
 {
 	// shouldn't be calling this on a non-auth object
 	if (!isAuthoritative())
 		return;
 
-	int32 const previousSessionStartPlayTime = m_sessionStartPlayTime.get();
-	int32 const previousSessionLastActiveTime = m_sessionLastActiveTime.get();
+	int64 const previousSessionStartPlayTime = m_sessionStartPlayTime.get();
+	int64 const previousSessionLastActiveTime = m_sessionLastActiveTime.get();
 
 	m_sessionStartPlayTime = sessionStartPlayTime;
 	m_sessionLastActiveTime = sessionLastActiveTime;

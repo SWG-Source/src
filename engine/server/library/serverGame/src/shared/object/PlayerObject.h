@@ -107,9 +107,9 @@ public:
 
 	int32_t              getSessionPlayTimeDuration() const;
 	int32_t              getSessionActivePlayTimeDuration() const;
-	int32                getSessionStartPlayTime() const;
-	int32                getSessionLastActiveTime() const;
-	void                 setSessionPlayTimeInfo(int32 sessionStartPlayTime, int32 sessionLastActiveTime, uint32_t sessionActivePlayTimeDuration);
+	int64                getSessionStartPlayTime() const;
+	int64                getSessionLastActiveTime() const;
+	void                 setSessionPlayTimeInfo(int64 sessionStartPlayTime, int64 sessionLastActiveTime, uint32_t sessionActivePlayTimeDuration);
 
 	void                 setStationId(StationId account);
 	void                 setCheaterLevel(float level);
@@ -553,8 +553,8 @@ private:
 	// information to track player's play time during this particular session
 	// this information is kept and tracked in the connection server, but is
 	// cached here for use by the game server
-	Archive::AutoDeltaVariable<int32>                         m_sessionStartPlayTime;          // time when the player started playing the character
-	Archive::AutoDeltaVariable<int32>                         m_sessionLastActiveTime;         // the client will detect when the player is "active" or "inactive"; this keeps track of the last time that the client said the player was "active"; if 0, it means the client is currently "inactive"
+	Archive::AutoDeltaVariable<int64>                         m_sessionStartPlayTime;          // time when the player started playing the character
+	Archive::AutoDeltaVariable<int64>                         m_sessionLastActiveTime;         // the client will detect when the player is "active" or "inactive"; this keeps track of the last time that the client said the player was "active"; if 0, it means the client is currently "inactive"
 	Archive::AutoDeltaVariable<uint32_t>                      m_sessionActivePlayTimeDuration; // total amount of play time player was active (i.e. at the mouse/keyboard/joystick)
 
 	Archive::AutoDeltaVariable<int>                           m_food;
@@ -732,14 +732,14 @@ inline int PlayerObject::getBornDate() const
 
 // ----------------------------------------------------------------------
 
-inline int32 PlayerObject::getSessionStartPlayTime() const
+inline int64 PlayerObject::getSessionStartPlayTime() const
 {
 	return m_sessionStartPlayTime.get();
 }
 
 // ----------------------------------------------------------------------
 
-inline int32 PlayerObject::getSessionLastActiveTime() const
+inline int64 PlayerObject::getSessionLastActiveTime() const
 {
 	return m_sessionLastActiveTime.get();
 }
