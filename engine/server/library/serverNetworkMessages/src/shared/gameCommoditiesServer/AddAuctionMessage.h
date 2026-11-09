@@ -16,13 +16,13 @@ public:
 		const NetworkId & ownerId,
 		const std::string & ownerName,
 		int minimumBid,
-		int auctionTimer,
+		int64_t auctionTimer,
 		const NetworkId & itemId,
 		int itemNameLength,
 		const Unicode::String & itemName,
 		int itemType,
 		int itemTemplateId,
-		int expireTimer,
+		int64_t expireTimer,
 		const NetworkId & locationId,
 		const std::string & location,
 		int flags,
@@ -39,13 +39,13 @@ public:
 	const NetworkId &          GetOwnerId() const {return m_ownerId.get();}
 	const std::string &        GetOwnerName() const {return m_ownerName.get();}
 	int                        GetMinimumBid() const {return m_minimumBid.get();}
-	int                        GetAuctionTimer() const {return m_auctionTimer.get();}
+	int64_t                    GetAuctionTimer() const {return m_auctionTimer.get();}
 	const NetworkId &          GetItemId() const {return m_itemId.get();}
 	int                        GetItemNameLength() const {return m_itemNameLength.get();}
 	const Unicode::String &    GetItemName() const {return m_itemName.get();}
 	int                        GetItemType() const {return m_itemType.get();}
 	int                        GetItemTemplateId() const {return m_itemTemplateId.get();}
-	int                        GetExpireTimer() const {return m_expireTimer.get();}
+	int64_t                    GetExpireTimer() const {return m_expireTimer.get();}
 	const NetworkId &          GetLocationId() const {return m_locationId.get();}
 	const std::string &        GetLocation() const {return m_location.get();}
 	int                        GetFlags() const {return m_flags.get();}
@@ -70,13 +70,13 @@ private:
 	Archive::AutoVariable<NetworkId>        m_ownerId;
 	Archive::AutoVariable<std::string>      m_ownerName;
 	Archive::AutoVariable<int>              m_minimumBid;
-	Archive::AutoVariable<int>              m_auctionTimer;
+	Archive::AutoVariable<int64_t>              m_auctionTimer;
 	Archive::AutoVariable<NetworkId>        m_itemId;
 	Archive::AutoVariable<int>              m_itemNameLength;
 	Archive::AutoVariable<Unicode::String>  m_itemName;
 	Archive::AutoVariable<int>              m_itemType;
 	Archive::AutoVariable<int>              m_itemTemplateId;
-	Archive::AutoVariable<int>              m_expireTimer;
+	Archive::AutoVariable<int64_t>              m_expireTimer;
 	Archive::AutoVariable<NetworkId>        m_locationId;
 	Archive::AutoVariable<std::string>      m_location;
 	Archive::AutoVariable<int>              m_flags;

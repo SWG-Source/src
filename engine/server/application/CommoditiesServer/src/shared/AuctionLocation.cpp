@@ -86,9 +86,9 @@ AuctionLocation::AuctionLocation(
 	const NetworkId & ownerId,
 	int salesTax,
 	const NetworkId & salesTaxBankId,
-	int emptyDate,
-	int lastAccessDate,
-	int inactiveDate,
+	int64_t emptyDate,
+	int64_t lastAccessDate,
+	int64_t inactiveDate,
 	int status,
 	bool searchEnabled,
 	int entranceCharge
@@ -382,7 +382,7 @@ void AuctionLocation::SetSalesTax( int salesTax, const NetworkId & bankId )
 
 // ----------------------------------------------------------------------
 
-void AuctionLocation::SetNextUpdateTime(int nextUpdateTime)
+void AuctionLocation::SetNextUpdateTime(int64_t nextUpdateTime)
 {
 	if (nextUpdateTime != m_nextUpdateTime)
 	{
@@ -395,21 +395,21 @@ void AuctionLocation::SetNextUpdateTime(int nextUpdateTime)
 
 // ----------------------------------------------------------------------
 
-void AuctionLocation::Update(int emptyDate, int lastAccessDate, int inactiveDate, int status)
+void AuctionLocation::Update(int64_t emptyDate, int64_t lastAccessDate, int64_t inactiveDate, int status)
 {
 	int oldStatus = GetStatus();
-	if (emptyDate >= 0)
+	if (emptyDate != cms_noChange)
 	{
 		m_emptyDate = emptyDate;
 		SetNextUpdateTime(0); // force an immediate update on the auction location
 	}
-	if (lastAccessDate >= 0)
+	if (lastAccessDate != cms_noChange)
 	{
 		m_lastAccessDate = lastAccessDate;
 		m_vendorFirstTimerExpiredAuctionDate = 0;
 		SetNextUpdateTime(0); // force an immediate update on the auction location
 	}
-	if (inactiveDate >= 0)
+	if (inactiveDate != cms_noChange)
 	{
 		m_inactiveDate = inactiveDate;
 		SetNextUpdateTime(0); // force an immediate update on the auction location

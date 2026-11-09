@@ -621,7 +621,7 @@ int CommoditiesServerConnection::GiveTime()
 int CommoditiesServerConnection::SetGameTime(time_t gameTime)
 {
     ++m_nextRequest;
-	SetGameTimeMessage message(m_nextRequest, int(gameTime));
+	SetGameTimeMessage message(m_nextRequest, static_cast<int64_t>(gameTime));
 	DEBUG_REPORT_LOG(m_commoditiesShowAllDebugInfo, ("[Commodities API] : Sending SetGameTimeMessage.\n"));
 	send(message, true);
 	return m_nextRequest;
@@ -670,13 +670,13 @@ int CommoditiesServerConnection::AddAuction(
 		ownerId,
 		ownerName,
 		minBid,
-		(int)timer,
+		static_cast<int64_t>(timer),
 		itemId,
 		itemNameLength,
 		itemName,
 		itemType,
 		itemTemplateId,
-		(int)itemTimer,
+		static_cast<int64_t>(itemTimer),
 		locationId,
 		location,
 		flags,
@@ -720,13 +720,13 @@ int CommoditiesServerConnection::AddImmediateAuction(
 		ownerId,
 		ownerName,
 		price,
-		int(timer),
+		static_cast<int64_t>(timer),
 		itemId,
 		itemNameLength,
 		itemName,
 		itemType,
 		itemTemplateId,
-		(int)itemTimer,
+		static_cast<int64_t>(itemTimer),
 		locationId,
 		location,
 		flags,

@@ -48,6 +48,7 @@
 #include "serverNetworkMessages/QueryVendorItemCountMessage.h"
 #include "serverNetworkMessages/OnQueryVendorItemCountReplyMessage.h"
 #include "serverNetworkMessages/UpdateVendorStatusMessage.h"
+#include "serverUtility/EpochTime.h"
 #include "serverNetworkMessages/VendorStatusChangeMessage.h"
 #include "sharedFoundation/CalendarTime.h"
 #include "sharedGame/CommoditiesAdvancedSearchAttribute.h"
@@ -135,7 +136,8 @@ namespace AuctionMarketNamespace
 		header->minBid = auction->GetMinBid();
 		header->entranceCharge = entranceCharge;
 
-		time_t currentTime = time(0);
+		// remaining seconds; the field sent on to the client stays 32-bit
+		int64_t const currentTime = EpochTime::now();
 		if (auction->IsActive())
 		{
 			if (auction->GetAuctionTimer() < currentTime)
@@ -144,7 +146,7 @@ namespace AuctionMarketNamespace
 			}
 			else
 			{
-				header->timer = auction->GetAuctionTimer() - currentTime;
+				header->timer = EpochTime::clampedDifference(auction->GetAuctionTimer(), currentTime);
 			}
 		}
 		else
@@ -155,7 +157,7 @@ namespace AuctionMarketNamespace
 			}
 			else
 			{
-				header->timer = auction->GetItem().GetItemTimer() - currentTime;
+				header->timer = EpochTime::clampedDifference(auction->GetItem().GetItemTimer(), currentTime);
 			}
 		}
 		header->buyNowPrice = auction->GetBuyNowPrice();
@@ -1027,7 +1029,7 @@ void AuctionMarket::DestroyAuction(std::map<NetworkId, Auction *>::iterator &i)
 
 // ----------------------------------------------------------------------
 
-void AuctionMarket::UpdateLiveAuctions(int gameTime)
+void AuctionMarket::UpdateLiveAuctions(int64_t gameTime)
 {
 	if (getItemAttributeDataRequest)
 		processItemAttributeData(m_auctions);
@@ -1042,7 +1044,7 @@ void AuctionMarket::UpdateLiveAuctions(int gameTime)
 	m_completedAuctions.clear();
 
 	// auctions whose auction timer has expired
-	for (std::set<std::pair<int, NetworkId> >::iterator iterAuctionTimer = m_priorityQueueAuctionTimer.begin(); iterAuctionTimer != m_priorityQueueAuctionTimer.end();)
+	for (std::set<std::pair<int64_t, NetworkId> >::iterator iterAuctionTimer = m_priorityQueueAuctionTimer.begin(); iterAuctionTimer != m_priorityQueueAuctionTimer.end();)
 	{
 		if (gameTime >= (*iterAuctionTimer).first)
 		{
@@ -1056,7 +1058,7 @@ void AuctionMarket::UpdateLiveAuctions(int gameTime)
 	}
 
 	// auctions whose item timer has expired
-	for (std::set<std::pair<int, NetworkId> >::iterator iterItemTimer = m_priorityQueueItemTimer.begin(); iterItemTimer != m_priorityQueueItemTimer.end();)
+	for (std::set<std::pair<int64_t, NetworkId> >::iterator iterItemTimer = m_priorityQueueItemTimer.begin(); iterItemTimer != m_priorityQueueItemTimer.end();)
 	{
 		if (gameTime > (*iterItemTimer).first)
 		{
@@ -1097,15 +1099,15 @@ void AuctionMarket::UpdateLiveAuctions(int gameTime)
 	while (ri != completedAuctions.end())
 	{
 		auctionsIterator = (*ri);
-		LOG("CommoditiesServer", ("Auction: Auction for item %s being deleted by the Commodities Server because auction has expired (gametime: %d, itemTimer: %d).", (*auctionsIterator).second->GetItem().GetItemId().getValueString().c_str(), gameTime, (*auctionsIterator).second->GetItem().GetItemTimer()));
-		LOG("CustomerService", ("Auction: Auction for item %s being deleted by the Commodities Server because auction has expired (gametime: %d, itemTimer: %d).", (*auctionsIterator).second->GetItem().GetItemId().getValueString().c_str(), gameTime, (*auctionsIterator).second->GetItem().GetItemTimer()));
+		LOG("CommoditiesServer", ("Auction: Auction for item %s being deleted by the Commodities Server because auction has expired (gametime: %lld, itemTimer: %lld).", (*auctionsIterator).second->GetItem().GetItemId().getValueString().c_str(), static_cast<long long>(gameTime), static_cast<long long>((*auctionsIterator).second->GetItem().GetItemTimer())));
+		LOG("CustomerService", ("Auction: Auction for item %s being deleted by the Commodities Server because auction has expired (gametime: %lld, itemTimer: %lld).", (*auctionsIterator).second->GetItem().GetItemId().getValueString().c_str(), static_cast<long long>(gameTime), static_cast<long long>((*auctionsIterator).second->GetItem().GetItemTimer())));
 		DestroyAuction(auctionsIterator);
 		++ri;
 	}
 
 	std::list<AuctionLocation *> auctionLocationsToBeProcessed;
 	{
-		for (std::set<std::pair<int, NetworkId> >::iterator iterAuctionLocationToBeProcessed = m_priorityQueueAuctionLocation.begin(); iterAuctionLocationToBeProcessed != m_priorityQueueAuctionLocation.end();)
+		for (std::set<std::pair<int64_t, NetworkId> >::iterator iterAuctionLocationToBeProcessed = m_priorityQueueAuctionLocation.begin(); iterAuctionLocationToBeProcessed != m_priorityQueueAuctionLocation.end();)
 		{
 			if (gameTime > (*iterAuctionLocationToBeProcessed).first)
 			{
@@ -1130,10 +1132,10 @@ void AuctionMarket::UpdateLiveAuctions(int gameTime)
 		{
 			VendorStatusCode status = (VendorStatusCode) (*locationIterator)->GetStatus();
 			VendorStatusCode newStatus = status;
-			int emptyDate = (*locationIterator)->GetEmptyDate();
-			int lastAccessDate = (*locationIterator)->GetLastAccessDate();
-			int inactiveDate = (*locationIterator)->GetInactiveDate();
-			int newEmptyDate = -1, newLastAccessDate = -1, newInactiveDate = -1;
+			int64_t emptyDate = (*locationIterator)->GetEmptyDate();
+			int64_t lastAccessDate = (*locationIterator)->GetLastAccessDate();
+			int64_t inactiveDate = (*locationIterator)->GetInactiveDate();
+			int64_t newEmptyDate = AuctionLocation::cms_noChange, newLastAccessDate = AuctionLocation::cms_noChange, newInactiveDate = AuctionLocation::cms_noChange;
 			switch (status) {
 				case ACTIVE:
 					if ((*locationIterator)->GetAuctionItemCount() == 0)
@@ -1143,7 +1145,7 @@ void AuctionMarket::UpdateLiveAuctions(int gameTime)
 					}
 					else
 					{
-						int const unaccessedTime = lastAccessDate + (ConfigCommodityServer::getMinutesActiveToUnaccessed() * 60);
+						int64_t const unaccessedTime = lastAccessDate + (ConfigCommodityServer::getMinutesActiveToUnaccessed() * 60);
 						if (m_gameTime >= unaccessedTime)
 						{
 							newStatus = UNACCESSED;
@@ -1156,8 +1158,8 @@ void AuctionMarket::UpdateLiveAuctions(int gameTime)
 					break;
 				case EMPTY:
 					{
-						int const endangeredTime = emptyDate + (ConfigCommodityServer::getMinutesEmptyToEndangered() * 60);
-						int const emptyAndUnaccessedTime = lastAccessDate + (ConfigCommodityServer::getMinutesUnaccessedToEndangered() * 60);
+						int64_t const endangeredTime = emptyDate + (ConfigCommodityServer::getMinutesEmptyToEndangered() * 60);
+						int64_t const emptyAndUnaccessedTime = lastAccessDate + (ConfigCommodityServer::getMinutesUnaccessedToEndangered() * 60);
 						if (m_gameTime >= endangeredTime)
 						{
 							newStatus = ENDANGERED;
@@ -1175,7 +1177,7 @@ void AuctionMarket::UpdateLiveAuctions(int gameTime)
 					break;
 				case UNACCESSED:
 					{
-						int const endangeredTime = lastAccessDate + ((ConfigCommodityServer::getMinutesActiveToUnaccessed() + ConfigCommodityServer::getMinutesUnaccessedToEndangered()) * 60);
+						int64_t const endangeredTime = lastAccessDate + ((ConfigCommodityServer::getMinutesActiveToUnaccessed() + ConfigCommodityServer::getMinutesUnaccessedToEndangered()) * 60);
 						if (m_gameTime >= endangeredTime)
 						{
 							newStatus = ENDANGERED;
@@ -1183,7 +1185,7 @@ void AuctionMarket::UpdateLiveAuctions(int gameTime)
 						}
 						else if (emptyDate > 0)
 						{
-							int const emptyAndUnaccessedTime = emptyDate + (ConfigCommodityServer::getMinutesEmptyToEndangered() * 60);
+							int64_t const emptyAndUnaccessedTime = emptyDate + (ConfigCommodityServer::getMinutesEmptyToEndangered() * 60);
 							if (m_gameTime >= emptyAndUnaccessedTime)
 							{
 								newStatus = EMPTY_AND_UNACCESSED;
@@ -1201,8 +1203,8 @@ void AuctionMarket::UpdateLiveAuctions(int gameTime)
 					break;
 				case EMPTY_AND_UNACCESSED:
 					{
-						int const endangeredTime1 = emptyDate + (ConfigCommodityServer::getMinutesEmptyToEndangered() * 60);
-						int const endangeredTime2 = lastAccessDate + ((ConfigCommodityServer::getMinutesActiveToUnaccessed() + ConfigCommodityServer::getMinutesUnaccessedToEndangered()) * 60);
+						int64_t const endangeredTime1 = emptyDate + (ConfigCommodityServer::getMinutesEmptyToEndangered() * 60);
+						int64_t const endangeredTime2 = lastAccessDate + ((ConfigCommodityServer::getMinutesActiveToUnaccessed() + ConfigCommodityServer::getMinutesUnaccessedToEndangered()) * 60);
 						if ((m_gameTime >= endangeredTime1) || (m_gameTime >= endangeredTime2))
 						{
 							newStatus = ENDANGERED;
@@ -1216,7 +1218,7 @@ void AuctionMarket::UpdateLiveAuctions(int gameTime)
 					break;
 				case ENDANGERED:
 					{
-						int const removedTime = inactiveDate + (ConfigCommodityServer::getMinutesEndangeredToRemoved() * 60);
+						int64_t const removedTime = inactiveDate + (ConfigCommodityServer::getMinutesEndangeredToRemoved() * 60);
 						if (m_gameTime >= removedTime)
 						{
 							newStatus = REMOVED;
@@ -1292,15 +1294,15 @@ void AuctionMarket::UpdateLiveAuctions(int gameTime)
 
 // ----------------------------------------------------------------------
 
-void AuctionMarket::DestroyExpiredItems(int gameTime)
+void AuctionMarket::DestroyExpiredItems(int64_t gameTime)
 {
 }
 
 // ----------------------------------------------------------------------
 
-void AuctionMarket::Update(int gameTime)
+void AuctionMarket::Update(int64_t gameTime)
 {
-	m_gameTime = time(0);
+	m_gameTime = EpochTime::now();
 	DestroyExpiredItems(gameTime);
 	UpdateLiveAuctions(gameTime);
 }
@@ -1316,13 +1318,13 @@ void AuctionMarket::AddAuction(const AddAuctionMessage &message)
 	DEBUG_REPORT_LOG(m_showAllDebugInfo, ("[Commodities Server AddAuctionMessage] : OwnerId : %s.\n", message.GetOwnerId().getValueString().c_str()));
 	DEBUG_REPORT_LOG(m_showAllDebugInfo, ("[Commodities Server AddAuctionMessage] : OwnerName : %s.\n", message.GetOwnerName().c_str()));
 	DEBUG_REPORT_LOG(m_showAllDebugInfo, ("[Commodities Server AddAuctionMessage] : MinimumBid : %d.\n", message.GetMinimumBid()));
-	DEBUG_REPORT_LOG(m_showAllDebugInfo, ("[Commodities Server AddAuctionMessage] : AuctionTimer : %d.\n", message.GetAuctionTimer()));
+	DEBUG_REPORT_LOG(m_showAllDebugInfo, ("[Commodities Server AddAuctionMessage] : AuctionTimer : %lld.\n", static_cast<long long>(message.GetAuctionTimer())));
 	DEBUG_REPORT_LOG(m_showAllDebugInfo, ("[Commodities Server AddAuctionMessage] : ItemId : %s.\n", message.GetItemId().getValueString().c_str()));
 	DEBUG_REPORT_LOG(m_showAllDebugInfo, ("[Commodities Server AddAuctionMessage] : ItemNameLength : %d.\n", message.GetItemNameLength()));
 	DEBUG_REPORT_LOG(m_showAllDebugInfo, ("[Commodities Server AddAuctionMessage] : ItemName : %s.\n", Unicode::wideToNarrow(message.GetItemName()).c_str()));
 	DEBUG_REPORT_LOG(m_showAllDebugInfo, ("[Commodities Server AddAuctionMessage] : ItemType : %d.\n", message.GetItemType()));
 	DEBUG_REPORT_LOG(m_showAllDebugInfo, ("[Commodities Server AddAuctionMessage] : ItemTemplateId : %d.\n", message.GetItemTemplateId()));
-	DEBUG_REPORT_LOG(m_showAllDebugInfo, ("[Commodities Server AddAuctionMessage] : ExpireTimer : %d.\n", message.GetExpireTimer()));
+	DEBUG_REPORT_LOG(m_showAllDebugInfo, ("[Commodities Server AddAuctionMessage] : ExpireTimer : %lld.\n", static_cast<long long>(message.GetExpireTimer())));
 	DEBUG_REPORT_LOG(m_showAllDebugInfo, ("[Commodities Server AddAuctionMessage] : LocationId : %s.\n", message.GetLocationId().getValueString().c_str()));
 	DEBUG_REPORT_LOG(m_showAllDebugInfo, ("[Commodities Server AddAuctionMessage] : Location : %s.\n", message.GetLocation().c_str()));
 	DEBUG_REPORT_LOG(m_showAllDebugInfo, ("[Commodities Server AddAuctionMessage] : Flags : %d.\n", message.GetFlags()));
@@ -1406,14 +1408,14 @@ void AuctionMarket::AddImmediateAuction(const AddImmediateAuctionMessage &messag
 {
 	DEBUG_REPORT_LOG(m_showAllDebugInfo, ("[Commodities Server AddImmediateAuctionMessage] : OwnerId : %s.\n", message.GetOwnerId().getValueString().c_str()));
 	DEBUG_REPORT_LOG(m_showAllDebugInfo, ("[Commodities Server AddImmediateAuctionMessage] : OwnerName : %s.\n", message.GetOwnerName().c_str()));
-	DEBUG_REPORT_LOG(m_showAllDebugInfo, ("[Commodities Server AddImmediateAuctionMessage] : AuctionTimer : %d.\n", message.GetAuctionTimer()));
+	DEBUG_REPORT_LOG(m_showAllDebugInfo, ("[Commodities Server AddImmediateAuctionMessage] : AuctionTimer : %lld.\n", static_cast<long long>(message.GetAuctionTimer())));
 	DEBUG_REPORT_LOG(m_showAllDebugInfo, ("[Commodities Server AddImmediateAuctionMessage] : GetPrice : %d.\n", message.GetPrice()));
 	DEBUG_REPORT_LOG(m_showAllDebugInfo, ("[Commodities Server AddImmediateAuctionMessage] : ItemId : %s.\n", message.GetItemId().getValueString().c_str()));
 	DEBUG_REPORT_LOG(m_showAllDebugInfo, ("[Commodities Server AddImmediateAuctionMessage] : ItemNameLength : %d.\n", message.GetItemNameLength()));
 	DEBUG_REPORT_LOG(m_showAllDebugInfo, ("[Commodities Server AddImmediateAuctionMessage] : ItemName : %s.\n", Unicode::wideToNarrow(message.GetItemName()).c_str()));
 	DEBUG_REPORT_LOG(m_showAllDebugInfo, ("[Commodities Server AddImmediateAuctionMessage] : ItemType : %d.\n", message.GetItemType()));
 	DEBUG_REPORT_LOG(m_showAllDebugInfo, ("[Commodities Server AddImmediateAuctionMessage] : ItemTemplateId : %d.\n", message.GetItemTemplateId()));
-	DEBUG_REPORT_LOG(m_showAllDebugInfo, ("[Commodities Server AddImmediateAuctionMessage] : ExpireTimer : %d.\n", message.GetExpireTimer()));
+	DEBUG_REPORT_LOG(m_showAllDebugInfo, ("[Commodities Server AddImmediateAuctionMessage] : ExpireTimer : %lld.\n", static_cast<long long>(message.GetExpireTimer())));
 	DEBUG_REPORT_LOG(m_showAllDebugInfo, ("[Commodities Server AddImmediateAuctionMessage] : LocationId : %s.\n", message.GetLocationId().getValueString().c_str()));
 	DEBUG_REPORT_LOG(m_showAllDebugInfo, ("[Commodities Server AddImmediateAuctionMessage] : Location : %s.\n", message.GetLocation().c_str()));
 	DEBUG_REPORT_LOG(m_showAllDebugInfo, ("[Commodities Server AddImmediateAuctionMessage] : Flags : %d.\n", message.GetFlags()));
@@ -1432,13 +1434,13 @@ void AuctionMarket::AddImmediateAuction(const AddImmediateAuctionMessage &messag
 		message.GetItemId());
 
 	// force a 30 day stock/restock timer for player vendors.
-	int auctionTimer = (ConfigCommodityServer::getMinutesVendorAuctionTimer() * 60) + time(0);
+	int64_t auctionTimer = EpochTime::now() + (static_cast<int64_t>(ConfigCommodityServer::getMinutesVendorAuctionTimer()) * 60);
 	// force the expire timer to be 30 days after the auction timer has finished
 	// The expire timer should be large to allow for time to sit in the stockroom before it is deleted.
-	int expireTimer = auctionTimer + (ConfigCommodityServer::getMinutesVendorItemTimer() * 60);
+	int64_t expireTimer = auctionTimer + (static_cast<int64_t>(ConfigCommodityServer::getMinutesVendorItemTimer()) * 60);
 	// bazaar timers
-    int bazaarAuctionTimer = (ConfigCommodityServer::getMinutesBazaarAuctionTimer() * 60) + time(0);
-    int bazaarItemTimer = bazaarAuctionTimer + (ConfigCommodityServer::getMinutesBazaarItemTimer() * 60);
+    int64_t bazaarAuctionTimer = EpochTime::now() + (static_cast<int64_t>(ConfigCommodityServer::getMinutesBazaarAuctionTimer()) * 60);
+    int64_t bazaarItemTimer = bazaarAuctionTimer + (static_cast<int64_t>(ConfigCommodityServer::getMinutesBazaarItemTimer()) * 60);
 
 	if (message.GetFlags() & AUCTION_VENDOR_TRANSFER)
 	{
@@ -2856,7 +2858,7 @@ void AuctionMarket::QueryAuctionHeaders(
 
 void AuctionMarket::SetGameTime(const SetGameTimeMessage &message)
 {
-	DEBUG_REPORT_LOG(m_showAllDebugInfo, ("[Commodities Server SetGameTimeMessage] : GameTime : %d.\n", message.GetGameTime()));
+	DEBUG_REPORT_LOG(m_showAllDebugInfo, ("[Commodities Server SetGameTimeMessage] : GameTime : %lld.\n", static_cast<long long>(message.GetGameTime())));
 	DEBUG_REPORT_LOG(m_showAllDebugInfo, ("[Commodities Server SetGameTimeMessage] : ResponseId : %d.\n", message.GetResponseId()));
 	DEBUG_REPORT_LOG(m_showAllDebugInfo, ("[Commodities Server SetGameTimeMessage] : TrackId : %d.\n", message.GetTrackId()));
 
@@ -3773,7 +3775,7 @@ void AuctionMarket::SendResourceTypeMap(GameServerConnection &gameServerConnecti
 
 // ----------------------------------------------------------------------
 
-void AuctionMarket::RemoveFromAuctionTimerPriorityQueue(int timer, const NetworkId & item)
+void AuctionMarket::RemoveFromAuctionTimerPriorityQueue(int64_t timer, const NetworkId & item)
 {
 	m_priorityQueueAuctionTimer.erase(std::make_pair(timer, item));
 }
@@ -4360,7 +4362,7 @@ void static decodeOOB(const std::string & UTF8String, Unicode::String & UniStrin
 	}
 }
 
-void	AuctionMarket::onReceiveAuctionLocations     (const NetworkId &locationId, const std::string &locationName, const NetworkId &ownerId, const int salesTax, const NetworkId &salesTaxBankId, const int emptyDate, const int lastAccessDate, const int inactiveDate, const int status, const bool searchEnabled, const int entranceCharge)
+void	AuctionMarket::onReceiveAuctionLocations     (const NetworkId &locationId, const std::string &locationName, const NetworkId &ownerId, const int salesTax, const NetworkId &salesTaxBankId, const int64_t emptyDate, const int64_t lastAccessDate, const int64_t inactiveDate, const int status, const bool searchEnabled, const int entranceCharge)
 {
 
     	AuctionLocation *auctionLocation = new AuctionLocation(locationId, locationName, ownerId, salesTax, salesTaxBankId, emptyDate, lastAccessDate, inactiveDate, status, searchEnabled, entranceCharge);
@@ -4372,7 +4374,7 @@ void	AuctionMarket::onReceiveAuctionLocations     (const NetworkId &locationId, 
 	}
 }
 
-void AuctionMarket::onReceiveMarketAuctions (const NetworkId &itemId, const NetworkId &ownerId, const NetworkId &creatorId, const NetworkId &locationId, const int minBid, const int buyNowPrice, const int auctionTimer, const std::string &oob, const Unicode::String &userDescription, const int category, const int itemTemplateId, const Unicode::String &itemName, const int itemTimer, const int active, const int itemSize)
+void AuctionMarket::onReceiveMarketAuctions (const NetworkId &itemId, const NetworkId &ownerId, const NetworkId &creatorId, const NetworkId &locationId, const int minBid, const int buyNowPrice, const int64_t auctionTimer, const std::string &oob, const Unicode::String &userDescription, const int category, const int itemTemplateId, const Unicode::String &itemName, const int64_t itemTimer, const int active, const int itemSize)
 {
 	AuctionLocation &location = GetLocation(locationId);
 
@@ -4498,14 +4500,14 @@ void	AuctionMarket::printAuctionTables()
 	{
 		Auction *auction = marketAuctionsIterator->second;
 		UNREF(auction);
-		DEBUG_REPORT_LOG(true, ("    ItemId = %s, OwnerId = %s, CreatorId = %s, LocId = %s\n      MinBid = %d, BuyNowPrice = %d, AuctionTimer = %d, Category = %d\n",
+		DEBUG_REPORT_LOG(true, ("    ItemId = %s, OwnerId = %s, CreatorId = %s, LocId = %s\n      MinBid = %d, BuyNowPrice = %d, AuctionTimer = %lld, Category = %d\n",
 		auction->GetItem().GetItemId().getValueString().c_str(),
 		auction->GetItem().GetOwnerId().getValueString().c_str(),
 		auction->GetCreatorId().getValueString().c_str(),
 		auction->GetLocation().GetLocationId().getValueString().c_str(),
 		auction->GetMinBid(),
 		auction->GetBuyNowPrice(),
-		auction->GetAuctionTimer(),
+		static_cast<long long>(auction->GetAuctionTimer()),
 		auction->GetFlags()));
 		++marketAuctionsIterator;
 	}
@@ -4990,8 +4992,8 @@ void AuctionMarket::getAuctionLocationPriorityQueue(int requestingGameServerId, 
 {
 	std::string output;
 	char buffer[2048];
-	int const timeNow = static_cast<int>(::time(nullptr));
-	for (std::set<std::pair<int, NetworkId> >::const_iterator iterPQ = m_priorityQueueAuctionLocation.begin(); iterPQ != m_priorityQueueAuctionLocation.end(); ++iterPQ)
+	int64_t const timeNow = EpochTime::now();
+	for (std::set<std::pair<int64_t, NetworkId> >::const_iterator iterPQ = m_priorityQueueAuctionLocation.begin(); iterPQ != m_priorityQueueAuctionLocation.end(); ++iterPQ)
 	{
 		if (count <= 0)
 			break;
@@ -5001,12 +5003,12 @@ void AuctionMarket::getAuctionLocationPriorityQueue(int requestingGameServerId, 
 		{
 			if ((*iterPQ).first >= timeNow)
 			{
-				snprintf(buffer, sizeof(buffer)-1, "next update in (%d, %s) for auction location (%s, %s)", (*iterPQ).first, CalendarTime::convertSecondsToDHMS(static_cast<unsigned int>((*iterPQ).first - timeNow)).c_str(), (*iterPQ).second.getValueString().c_str(), iterAuctionLocation->second->GetLocationString().c_str());
+				snprintf(buffer, sizeof(buffer)-1, "next update in (%lld, %s) for auction location (%s, %s)", static_cast<long long>((*iterPQ).first), CalendarTime::convertSecondsToDHMS(static_cast<unsigned int>((*iterPQ).first - timeNow)).c_str(), (*iterPQ).second.getValueString().c_str(), iterAuctionLocation->second->GetLocationString().c_str());
 				buffer[sizeof(buffer)-1] = '\0';
 			}
 			else
 			{
-				snprintf(buffer, sizeof(buffer)-1, "next update in (%d, -%s) for auction location (%s, %s)", (*iterPQ).first, CalendarTime::convertSecondsToDHMS(static_cast<unsigned int>(timeNow - (*iterPQ).first)).c_str(), (*iterPQ).second.getValueString().c_str(), iterAuctionLocation->second->GetLocationString().c_str());
+				snprintf(buffer, sizeof(buffer)-1, "next update in (%lld, -%s) for auction location (%s, %s)", static_cast<long long>((*iterPQ).first), CalendarTime::convertSecondsToDHMS(static_cast<unsigned int>(timeNow - (*iterPQ).first)).c_str(), (*iterPQ).second.getValueString().c_str(), iterAuctionLocation->second->GetLocationString().c_str());
 				buffer[sizeof(buffer)-1] = '\0';
 			}
 		}

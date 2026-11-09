@@ -13,7 +13,7 @@ public:
 	explicit CMCreateAuctionMessage(
 		const NetworkId &      creatorId,
 		int                     minimumBid,
-		int                     auctionTimer,
+		int64_t                 auctionTimer,
 		int                     buyNowPrice,
 		int                     userDescriptionLength,
 		const Unicode::String & userDescription,
@@ -22,7 +22,7 @@ public:
 		const NetworkId &       itemId,
 		int                     itemType,
 		int                     itemTemplateId,
-		int                     expireTimer,
+		int64_t                 expireTimer,
 		int                     itemNameLength,
 		const Unicode::String & itemName,
 		const NetworkId &       ownerId,
@@ -35,7 +35,7 @@ public:
 
 	const NetworkId &      GetCreatorId()       const {return m_creatorId.get();}
 	int                    GetMinimumBid()      const {return m_minimumBid.get();}
-	int                    GetAuctionTimer()    const {return m_auctionTimer.get();}
+	int64_t                GetAuctionTimer()    const {return m_auctionTimer.get();}
 	int                    GetBuyNowPrice()     const {return m_buyNowPrice.get();}
 	int                    GetUserDescLength()  const {return m_userDescriptionLength.get();}
 	const Unicode::String &GetUserDescription() const {return m_userDescription.get();}
@@ -44,7 +44,7 @@ public:
 	const NetworkId &      GetItemId()          const {return m_itemId.get();}
 	int                    GetItemType()        const {return m_itemType.get();}
 	int                    GetItemTemplateId()  const {return m_itemTemplateId.get();}
-	int                    GetExpireTimer()     const {return m_expireTimer.get();}
+	int64_t                GetExpireTimer()     const {return m_expireTimer.get();}
 	int                    GetItemNameLength()  const {return m_itemNameLength.get();}
 	const Unicode::String &GetItemName()        const {return m_itemName.get();}
 	const NetworkId &      GetOwnerId()         const {return m_ownerId.get();}
@@ -56,7 +56,7 @@ protected:
 private:
 	Archive::AutoVariable<NetworkId>       m_creatorId;
 	Archive::AutoVariable<int>             m_minimumBid;
-	Archive::AutoVariable<int>             m_auctionTimer;
+	Archive::AutoVariable<int64_t>             m_auctionTimer;
 	Archive::AutoVariable<int>             m_buyNowPrice;
 	Archive::AutoVariable<int>             m_userDescriptionLength;
 	Archive::AutoVariable<Unicode::String> m_userDescription;
@@ -65,7 +65,7 @@ private:
 	Archive::AutoVariable<NetworkId>       m_itemId;
 	Archive::AutoVariable<int>             m_itemType;
 	Archive::AutoVariable<int>             m_itemTemplateId;
-	Archive::AutoVariable<int>             m_expireTimer;
+	Archive::AutoVariable<int64_t>             m_expireTimer;
 	Archive::AutoVariable<int>             m_itemNameLength;
 	Archive::AutoVariable<Unicode::String> m_itemName;
 	Archive::AutoVariable<NetworkId>       m_ownerId;

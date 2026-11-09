@@ -26,14 +26,14 @@ struct AuctionRecord
 {
 	NetworkId               m_creatorId;
 	int                     m_minBid;
-	int                     m_auctionTimer;
+	int64_t                 m_auctionTimer;
 	int                     m_buyNowPrice;
 	Unicode::String         m_userDescription;
 	std::string             m_oob;
 	NetworkId               m_locationId;
 	NetworkId               m_itemId;
 	int                     m_category;
-	int                     m_itemTimer;
+	int64_t                 m_itemTimer;
 	Unicode::String         m_itemName;
 	NetworkId               m_ownerId;
 	int                     m_active;

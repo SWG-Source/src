@@ -17,6 +17,7 @@
 #include "serverNetworkMessages/AuctionBase.h"
 #include "Auction.h"
 
+#include <cstdint>
 #include <map>
 #include <string>
 #include "sharedFoundation/NetworkId.h"
@@ -40,11 +41,11 @@ protected:
 	std::string                     m_locationRegion;
 	int                             m_salesTax;
 	NetworkId                       m_salesTaxBankId;
-	int                             m_emptyDate;
-	int                             m_lastAccessDate;
-	int                             m_vendorFirstTimerExpiredAuctionDate; // time that first unsold auction expired by timer since vendor was last accessed
-	int                             m_inactiveDate;
-	int                             m_nextUpdateTime;
+	int64_t                     m_emptyDate;
+	int64_t                     m_lastAccessDate;
+	int64_t                     m_vendorFirstTimerExpiredAuctionDate; // time that first unsold auction expired by timer since vendor was last accessed
+	int64_t                     m_inactiveDate;
+	int64_t                     m_nextUpdateTime;
 	int                             m_status;
 	bool                            m_searchEnabled;
 	int                             m_entranceCharge;
@@ -57,7 +58,10 @@ protected:
 	std::map<NetworkId, Auction *>  m_vendorOffers;
 
 public:
-	AuctionLocation(const NetworkId & locationId, const std::string & location, const NetworkId & ownerId, int salesTax, const NetworkId & salesTaxBankId, int emptyDate, int lastAccessDate, int inactiveDate, int status, bool searchEnabled, int entranceCharge);
+	// passed to Update() for a date that should keep its current value
+	static const int64_t cms_noChange = INT64_MIN;
+
+	AuctionLocation(const NetworkId & locationId, const std::string & location, const NetworkId & ownerId, int salesTax, const NetworkId & salesTaxBankId, int64_t emptyDate, int64_t lastAccessDate, int64_t inactiveDate, int status, bool searchEnabled, int entranceCharge);
 	~AuctionLocation();
 
 	void                            CancelVendorSale(Auction *auction);
@@ -74,16 +78,16 @@ public:
 
 	const NetworkId &               GetLocationId() const {return m_locationId;}
 	const NetworkId &               GetOwnerId() const {return m_ownerId;}
-	int                             GetEmptyDate() const {return m_emptyDate;}
-	int                             GetLastAccessDate() const {return m_lastAccessDate;}
-	int                             GetVendorFirstTimerExpiredAuctionDate() const {return m_vendorFirstTimerExpiredAuctionDate;}
-	void                            SetVendorFirstTimerExpiredAuctionDate(int vendorFirstTimerExpiredAuctionDate) {m_vendorFirstTimerExpiredAuctionDate = vendorFirstTimerExpiredAuctionDate;}
-	int                             GetInactiveDate() const {return m_inactiveDate;}
-	int                             GetNextUpdateTime() const {return m_nextUpdateTime;}
-	void                            SetNextUpdateTime(int nextUpdateTime);
+	int64_t                     GetEmptyDate() const {return m_emptyDate;}
+	int64_t                     GetLastAccessDate() const {return m_lastAccessDate;}
+	int64_t                     GetVendorFirstTimerExpiredAuctionDate() const {return m_vendorFirstTimerExpiredAuctionDate;}
+	void                            SetVendorFirstTimerExpiredAuctionDate(int64_t vendorFirstTimerExpiredAuctionDate) {m_vendorFirstTimerExpiredAuctionDate = vendorFirstTimerExpiredAuctionDate;}
+	int64_t                     GetInactiveDate() const {return m_inactiveDate;}
+	int64_t                     GetNextUpdateTime() const {return m_nextUpdateTime;}
+	void                            SetNextUpdateTime(int64_t nextUpdateTime);
 	bool                            GetSearchEnabled() const {return m_searchEnabled;}
 	int                             GetEntranceCharge() const {return m_entranceCharge;}
-	void                            Update(int emptyDate, int lastAccessDate, int inactiveDate, int status);
+	void                            Update(int64_t emptyDate, int64_t lastAccessDate, int64_t inactiveDate, int status);
 
 	int                             GetValue() const;
 

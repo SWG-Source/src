@@ -15,7 +15,7 @@ m_gameTime()
 
 SetGameTimeMessage::SetGameTimeMessage(
 	int requestId,
-	int gameTime
+	int64_t gameTime
 ) : 
 GameNetworkMessage("SetGameTimeMessage"),
 m_responseId(requestId),

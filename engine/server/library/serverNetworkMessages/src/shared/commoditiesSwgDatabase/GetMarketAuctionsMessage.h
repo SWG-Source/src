@@ -16,7 +16,7 @@ public:
 		NetworkId       locationId;
 		int             minBid;
 		int             buyNowPrice;
-		int             auctionTimer;
+		int64_t         auctionTimer;
 		int             oobLength;
 		std::string     oob;
 		int             userDescriptionLength;
@@ -25,7 +25,7 @@ public:
 		int             itemTemplateId;
 		int             itemNameLength;
 		Unicode::String itemName;
-		int             itemTimer;
+		int64_t         itemTimer;
 		int             active;
 		int             itemSize;
 	};
@@ -41,7 +41,7 @@ public:
 		const NetworkId &    locationId,
 		int                  minBid,
 		int                  buyNowPrice,
-		int                  auctionTimer,
+		int64_t              auctionTimer,
 		int                  oobLength,
 		const std::string &  oob,
 		int                  userDescriptionLength,
@@ -50,7 +50,7 @@ public:
 		int                  itemTemplateId,
 		int                  itemNameLength,
 		const Unicode::String &itemName,
-		int                  itemTimer,
+		int64_t              itemTimer,
 		int                  active,
 		int                  itemSize
 	);

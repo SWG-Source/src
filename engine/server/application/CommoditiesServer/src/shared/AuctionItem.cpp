@@ -20,7 +20,7 @@ AuctionItem::AuctionItem(
 	const NetworkId & itemId,
 	const int category,
 	const int itemTemplateId,
-	const int itemTimer,
+	const int64_t itemTimer,
 	const int nameLength,
 	const Unicode::String & name,
 	const NetworkId & ownerId,
@@ -48,7 +48,7 @@ AuctionItem::~AuctionItem()
 
 // ----------------------------------------------------------------------
 
-bool AuctionItem::IsExpired(int gameTime) const
+bool AuctionItem::IsExpired(int64_t gameTime) const
 {
 	return (gameTime > m_itemTimer);
 }

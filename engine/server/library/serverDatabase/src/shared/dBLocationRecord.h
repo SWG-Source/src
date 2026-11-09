@@ -26,9 +26,9 @@ struct LocationRecord
   std::string                m_locationString;
   int                        m_salesTax;
   NetworkId                  m_salesTaxBankId;
-  int                        m_emptyDate;
-  int                        m_lastAccessDate;
-  int                        m_inactiveDate;
+  int64_t                    m_emptyDate;
+  int64_t                    m_lastAccessDate;
+  int64_t                    m_inactiveDate;
   int                        m_status;
   bool			     m_searchEnabled;
   int                        m_entranceCharge;

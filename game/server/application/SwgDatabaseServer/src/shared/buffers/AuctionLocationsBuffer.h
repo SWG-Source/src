@@ -39,8 +39,8 @@ public:
 	DBSchema::AuctionLocationsRow * findRowByIndex   (const NetworkId &locationId);
 
 	void                      setAuctionLocations    (const NetworkId &locationId);
-	void                      setAuctionLocations    (const NetworkId &locationId, const std::string &locationName, const int salesTax, const NetworkId &salesTaxBankId, const int emptyDate, const int lastAccessDate, const int inactiveDate, const int status, const bool searchEnabled, const int entranceCharge);
-	void                      setAuctionLocations    (const NetworkId &locationId, const std::string &locationName, const NetworkId &ownerId, const int salesTax, const NetworkId &salesTaxBankId, const int emptyDate, const int lastAccessDate, const int inactiveDate, const int status, const bool searchEnabled, const int entranceCharge);
+	void                      setAuctionLocations    (const NetworkId &locationId, const std::string &locationName, const int salesTax, const NetworkId &salesTaxBankId, const int64_t emptyDate, const int64_t lastAccessDate, const int64_t inactiveDate, const int status, const bool searchEnabled, const int entranceCharge);
+	void                      setAuctionLocations    (const NetworkId &locationId, const std::string &locationName, const NetworkId &ownerId, const int salesTax, const NetworkId &salesTaxBankId, const int64_t emptyDate, const int64_t lastAccessDate, const int64_t inactiveDate, const int status, const bool searchEnabled, const int entranceCharge);
 	void                      removeAuctionLocations (const NetworkId &locationId);
 	virtual void             removeObject           (const NetworkId &object);
 	

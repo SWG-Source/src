@@ -25,9 +25,9 @@ struct AuctionLocationsRow : public DB::Row
 	DB::BindableNetworkId owner_id;
 	DB::BindableInt32 sales_tax;
 	DB::BindableNetworkId sales_tax_bank_id;
-	DB::BindableInt32 empty_date;
-	DB::BindableInt32 last_access_date;
-	DB::BindableInt32 inactive_date;
+	DB::BindableInt64 empty_date;
+	DB::BindableInt64 last_access_date;
+	DB::BindableInt64 inactive_date;
 	DB::BindableInt32 status;
 	DB::BindableBool search_enabled;
 	DB::BindableInt32 entrance_charge;
@@ -73,12 +73,12 @@ struct MarketAuctionsRow : public DB::Row
 	DB::BindableNetworkId    location_id;
 	DB::BindableInt32         min_bid;
 	DB::BindableInt32         buy_now_price;
-	DB::BindableInt32         auction_timer;
+	DB::BindableInt64         auction_timer;
 	DB::BindableString<4000> oob;
 	DB::BindableUnicode<1024>user_description;
 	DB::BindableInt32         category;
 	DB::BindableUnicode<1024>item_name;
-	DB::BindableInt32         item_timer;
+	DB::BindableInt64         item_timer;
 	DB::BindableInt32         active;
 	DB::BindableInt32         item_size;
 	DB::BindableUint32        object_template_id;

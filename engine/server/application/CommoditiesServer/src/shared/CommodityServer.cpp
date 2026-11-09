@@ -29,6 +29,7 @@
 #include "sharedNetworkMessages/GenericValueTypeMessage.h"
 #include "sharedLog/Log.h"
 #include "sharedLog/SetupSharedLog.h"
+#include "serverUtility/EpochTime.h"
 
 #include "sharedFoundation/CrcConstexpr.hpp"
 
@@ -285,7 +286,7 @@ void CommodityServer::run()
 				}
 			}
 
-			AuctionMarket::getInstance().Update(time(0));
+			AuctionMarket::getInstance().Update(EpochTime::now());
 		}
 		NetworkHandler::clearBytesThisFrame();
 		Os::sleep(sleepTimePerFrameMs);

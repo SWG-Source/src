@@ -33,14 +33,14 @@ protected:
 	int                   m_resourceContainerClassCrc; // for resource container, this contains the crc of the resource class
 	std::string           m_resourceName; // for resource container, this is the name of the resource (like Iblovris)
 	int                   m_resourceNameCrc; // crc for m_resourceName
-	const int             m_itemTimer;
+	const int64_t     m_itemTimer;
 	const int             m_nameLength;
 	const Unicode::String m_name;
 	NetworkId             m_ownerId;
 	const int             m_size;
 
 public:
-	AuctionItem(const NetworkId & itemId, int category, int itemTemplateId, int itemTimer, int nameLength, const Unicode::String & name, const NetworkId & ownerId, int size);
+	AuctionItem(const NetworkId & itemId, int category, int itemTemplateId, int64_t itemTimer, int nameLength, const Unicode::String & name, const NetworkId & ownerId, int size);
 	~AuctionItem();
 
 	const NetworkId &         GetItemId() const {return m_itemId;}
@@ -52,7 +52,7 @@ public:
 	void                      SetResourceContainerClassCrc(int resourceContainerClassCrc) {m_resourceContainerClassCrc = resourceContainerClassCrc;}
 	void                      SetResourceName(const std::string & resourceName) {m_resourceName = resourceName;}
 	void                      SetResourceNameCrc(int resourceNameCrc) {m_resourceNameCrc = resourceNameCrc;}
-	int                       GetItemTimer() const {return m_itemTimer;}
+	int64_t               GetItemTimer() const {return m_itemTimer;}
 	int                       GetNameLength() const {return m_nameLength;}
 	const Unicode::String &   GetName() const {return m_name;}
 	const NetworkId &         GetOwnerId() const {return m_ownerId;}
@@ -60,7 +60,7 @@ public:
 
 	void                      SetOwnerId(const NetworkId & ownerId) {m_ownerId = ownerId;}
 
-	bool                      IsExpired(int gameTime) const;
+	bool                      IsExpired(int64_t gameTime) const;
 
 	static bool               IsCategoryResourceContainer(int category) {return ((category & 0xffffff00) == 0x00400000);} // SharedObjectTemplate::GOT_resource_container is 0x00400000
 };

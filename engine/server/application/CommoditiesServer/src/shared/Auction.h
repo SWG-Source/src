@@ -39,7 +39,7 @@ private:
 protected:
 	const NetworkId             m_creatorId;
 	const int                   m_minBid;
-	int                         m_auctionTimer;
+	int64_t                 m_auctionTimer;
 	const int                   m_buyNowPrice;
 	const int                   m_userDescriptionLength;
 	const Unicode::String       m_userDescription;
@@ -66,13 +66,13 @@ public:
 	Auction(
 		const NetworkId &        creatorId,
 		int                      minBid,
-		int                      auctionTimer,
+		int64_t              auctionTimer,
 		const NetworkId &        itemId,
 		int                      itemNameLength,
 		const Unicode::String &  itemName,
 		int                      itemType,
 		int                      itemTemplateId,
-		int                      itemTimer,
+		int64_t              itemTimer,
 		int                      itemSize,
 		const AuctionLocation &  location,
 		int                      flags,
@@ -87,13 +87,13 @@ public:
 	Auction(
 		const NetworkId &        creatorId,
 		int                      minBid,
-		int                      auctionTimer,
+		int64_t              auctionTimer,
 		const NetworkId &        itemId,
 		int                      itemNameLength,
 		const Unicode::String &  itemName,
 		int                      itemType,
 		int                      itemTemplateId,
-		int                      itemTimer,
+		int64_t              itemTimer,
 		int                      itemSize,
 		const AuctionLocation &  location,
 		int                      flags,
@@ -113,7 +113,7 @@ public:
 
 	const NetworkId &          GetCreatorId() const {return m_creatorId;}
 	int                        GetMinBid() const {return m_minBid;}
-	int                        GetAuctionTimer() const {return m_auctionTimer;}
+	int64_t                GetAuctionTimer() const {return m_auctionTimer;}
 	int                        GetBuyNowPrice() const {return m_buyNowPrice;}
 	int                        GetBuyNowPriceWithSalesTax() const;
 	int                        GetUserDescriptionLength() const {return m_userDescriptionLength;}
@@ -136,7 +136,7 @@ public:
 	AuctionResultCode          AddBid(const NetworkId & bidderId, int bid, int maxProxyBid);
 	void                       AddLoadedBid(const NetworkId & bidderId, int bid, int maxProxyBid);
 
-	bool                       Update(int gameTime);
+	bool                       Update(int64_t gameTime);
 	void                       Expire(bool sold, bool expiredBasedOnTimer, int track_id = -1);
 
 	AuctionLocation &          GetLocation() const {return m_location;}
