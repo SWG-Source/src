@@ -993,7 +993,9 @@ void PlanetObject::buildAvailableResourceList() const
 		for (std::vector<ResourceTypeObject const *>::const_iterator i=typeList.begin(); i!=typeList.end(); ++i)
 		{
 			NOT_NULL(*i);
-			m_availableResourceListExpirationTime = std::min(m_availableResourceListExpirationTime, (*i)->getDepletedTimestamp());
+			// already-depleted types would pin the expiry in the past and force a rebuild on every call
+			if (!(*i)->isDepleted())
+				m_availableResourceListExpirationTime = std::min(m_availableResourceListExpirationTime, (*i)->getDepletedTimestamp());
 			if ((*i)->hasPoolForPlanet(getNetworkId()))
 			{
 				m_availableResourceList.push_back(*i);

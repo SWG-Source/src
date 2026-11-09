@@ -263,7 +263,7 @@ if ((t3 - t2) > (1000 * 5))
 
 	// Clear the chat log every once in a while
 
-	if ((chatMessageCleanTimer + chatMessageCleanTime) > Os::getRealSystemTime())
+	if (Os::getRealSystemTime() >= (chatMessageCleanTimer + chatMessageCleanTime))
 	{
 		chatMessageCleanTimer = Os::getRealSystemTime();
 		cleanChatLog();

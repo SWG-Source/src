@@ -4996,6 +4996,7 @@ void CreatureObject::decayAttributes(float time)
 		{
 			DEBUG_WARNING(true, ("CreatureObject::decayAttributes has direct "
 				"damage mod in its list"));
+			++i;
 			continue;
 		}
 
@@ -13860,14 +13861,25 @@ void CreatureObject::decrementBuff(uint32 const buffNameCrc, uint32 const stacks
 
 		if (static_cast<int32>(b.stackCount) > 0)
 		{
-			uint32 currentTime = internalGetPlayedTime();
+			// a negative time tells addBuff to keep the buff permanent
+			float endTime = -1.0f;
 
-			if (BuffManager::getBuffIsCelestial(buffNameCrc))
+			if (b.endtime != 0xFFFFFFFF)
 			{
-				currentTime = ServerClock::getInstance().getGameTimeSeconds();
+				uint32 currentTime = internalGetPlayedTime();
+
+				if (BuffManager::getBuffIsCelestial(buffNameCrc))
+				{
+					currentTime = ServerClock::getInstance().getGameTimeSeconds();
+				}
+
+				// subtract as integers; float cannot hold whole seconds once a clock passes 2^24
+				int64 const remaining = static_cast<int64>(b.endtime) - static_cast<int64>(currentTime);
+				if (remaining <= 0)
+					return;
+				endTime = static_cast<float>(remaining);
 			}
 
-			float endTime = static_cast<float> (b.endtime) - static_cast<float> (currentTime); 
 			addBuff( buffNameCrc, endTime , b.value, static_cast<float> (b.duration), b.caster, b.stackCount);	
 		}
 	}
@@ -13886,9 +13898,21 @@ void CreatureObject::decayBuff(uint32 buffNameCrc, float decayPercentage)
 		
 		removeBuff(buffNameCrc);
 		
+		if (b.endtime == 0xFFFFFFFF)
+		{
+			// a permanent buff has no end time to decay; keep it permanent
+			addBuff( buffNameCrc, -1.0f, b.value, static_cast<float> (b.duration), b.caster, b.stackCount);
+			return;
+		}
+
 		uint32 currentTime = internalGetPlayedTime();
 
-		float endTime = (static_cast<float> (b.endtime) - decayValue) - static_cast<float> (currentTime);
+		if (BuffManager::getBuffIsCelestial(buffNameCrc))
+		{
+			currentTime = ServerClock::getInstance().getGameTimeSeconds();
+		}
+
+		float endTime = static_cast<float>(static_cast<int64>(b.endtime) - static_cast<int64>(currentTime)) - decayValue;
 		
 		if(endTime > 0.0f)
 			addBuff( buffNameCrc, endTime , b.value, static_cast<float> (b.duration), b.caster, b.stackCount);	
