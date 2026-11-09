@@ -137,7 +137,7 @@ void Clock::install(bool newUseSleep, bool useRecalibrationThread)
 	{
 		ms_timeZone = -ms_timeZone;
 	}
-	ms_realTimeMilliseconds = static_cast<double>(ms_lastPoll / ms_frameFrequency * 1000.f);
+	ms_realTimeMilliseconds = static_cast<double>(ms_lastPoll) / static_cast<double>(ms_frameFrequency) * 1000.0;
 	ms_applicationStartTime = timeSeconds();
 
 	if (useRecalibrationThread)
