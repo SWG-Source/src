@@ -4996,6 +4996,7 @@ void CreatureObject::decayAttributes(float time)
 		{
 			DEBUG_WARNING(true, ("CreatureObject::decayAttributes has direct "
 				"damage mod in its list"));
+			++i;
 			continue;
 		}
 
