@@ -84,6 +84,7 @@
 #include "serverScript/ScriptDictionary.h"
 #include "serverScript/ScriptParameters.h"
 #include "serverUtility/AdminAccountManager.h"
+#include "serverUtility/EpochTime.h"
 #include "serverUtility/ServerClock.h"
 #include "Session/CommonAPI/CommonAPI.h"
 #include "sharedCollision/BaseExtent.h"
@@ -14740,7 +14741,7 @@ void CreatureObject::getLfgCharacterData(LfgCharacterData & lfgCharacterData) co
 	}
 
 	if (lfgCharacterData.characterCreateTime <= 0)
-		lfgCharacterData.characterCreateTime = static_cast<int32>(NameManager::getInstance().getPlayerCreateTime(getNetworkId()));
+		lfgCharacterData.characterCreateTime = EpochTime::toWire32(NameManager::getInstance().getPlayerCreateTime(getNetworkId()));
 
 	PlayerObject const * const playerObject = PlayerCreatureController::getPlayerObject(this);
 	if (playerObject)

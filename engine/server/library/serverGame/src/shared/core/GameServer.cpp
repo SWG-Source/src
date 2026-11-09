@@ -163,6 +163,7 @@
 #include "serverScript/ScriptDictionary.h"
 #include "serverScript/ScriptParameters.h"
 #include "serverUtility/AdminAccountManager.h"
+#include "serverUtility/EpochTime.h"
 #include "serverUtility/ServerClock.h"
 #include "Session/CommonAPI/CommonAPI.h"
 #include "sharedCollision/CollisionProperty.h"
@@ -2656,7 +2657,7 @@ void GameServer::receiveMessage2(const MessageDispatch::Emitter & source, const 
 						// if necessary, add as citizen those that have a declared structure inside the city limits
 						std::string cityName;
 						std::string citizenName;
-						int citizenLastLoginTime = 0;
+						int64_t citizenLastLoginTime = 0;
 						NetworkId currentCityMayor;
 						CitizenInfo const *currentCityMayorCitizenInfo;
 						std::string currentCityMayorName;
@@ -2670,7 +2671,7 @@ void GameServer::receiveMessage2(const MessageDispatch::Emitter & source, const 
 						bool removeCurrentCitizenDeleted;
 						bool removeCurrentCitizenInactive;
 						bool hasDeclaredResidence;
-						int const timeNow = static_cast<int>(::time(nullptr));
+						int64_t const timeNow = EpochTime::now();
 						bool const citizenInactivePackupActive = (
 								ConfigServerGame::getCityCitizenshipInactivePackupStartTimeEpoch() <= timeNow);
 						std::map <std::pair<int, NetworkId>, CitizenInfo> const &allCitizens = CityInterface::getAllCitizensInfo();

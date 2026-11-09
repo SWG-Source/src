@@ -12,7 +12,6 @@
 #include "serverDatabase/DatabaseProcess.h"
 #include "serverDatabase/GameServerConnection.h"
 #include "serverNetworkMessages/CharacterNamesMessage.h"
-#include "sharedDatabaseInterface/DbCheckedConversion.h"
 #include "sharedDatabaseInterface/DbSession.h"
 
 // ======================================================================
@@ -39,19 +38,11 @@ bool CharacterNameLocator::locateObjects(DB::Session *session, const std::string
 			if (++count > numRows)
 				break;
 
-			// The times are shifted by 7 hours before they are sent as int. The
-			// sum is formed at 64 bits and must still fit an int.
+			// The times are shifted by 7 hours, as they always have been, and
+			// sent on as 64-bit epoch seconds.
 			int64_t const shift = 7 * 60 * 60;
-			int createTime = 0;
-			int lastLoginTime = 0;
-			auto const where = [&i]() { return "CharacterNameLocator::locateObjects, character " + i->character_id.getValue().getValueString(); };
-			if (!DB::checkedNarrow(static_cast<int64_t>(i->character_create_time.getValue()) + shift, createTime, "character create time + 7 hours", where)
-				|| !DB::checkedNarrow(static_cast<int64_t>(i->character_last_login_time.getValue()) + shift, lastLoginTime, "character last login time + 7 hours", where))
-			{
-				qry.done();
-				objectsLocated = 0;
-				return false;
-			}
+			int64_t const createTime = static_cast<int64_t>(i->character_create_time.getValue()) + shift;
+			int64_t const lastLoginTime = static_cast<int64_t>(i->character_last_login_time.getValue()) + shift;
 
 			m_characterIds.push_back(i->character_id.getValue());
 			m_stationIds.push_back(i->character_station_id.getValue());

@@ -14,6 +14,7 @@
 #include "serverGame/RegexList.h"
 #include "serverGame/ServerMessageForwarding.h"
 #include "serverNetworkMessages/CharacterNamesMessage.h"
+#include "serverUtility/EpochTime.h"
 #include "sharedFoundation/CalendarTime.h"
 #include "sharedFoundation/ExitChain.h"
 #include "sharedFoundation/FormattedString.h"
@@ -224,15 +225,15 @@ void NameManager::addPlayer(const NetworkId &id, uint32 stationId, const std::st
 		std::vector<int> stationIds;
 		std::vector<std::string> characterNames;
 		std::vector<std::string> characterFullNames;
-		std::vector<int> characterCreateTimes;
-		std::vector<int> characterLastLoginTimes;
+		std::vector<int64_t> characterCreateTimes;
+		std::vector<int64_t> characterLastLoginTimes;
 
 		ids.push_back(id);
 		stationIds.push_back(static_cast<int>(stationId));
 		characterNames.push_back(normalizedName);
 		characterFullNames.push_back(fullName);
-		characterCreateTimes.push_back(static_cast<int>(createTime));
-		characterLastLoginTimes.push_back(static_cast<int>(lastLoginTime));
+		characterCreateTimes.push_back(static_cast<int64_t>(createTime));
+		characterLastLoginTimes.push_back(static_cast<int64_t>(lastLoginTime));
 
 		ServerMessageForwarding::beginBroadcast();
 
@@ -316,24 +317,24 @@ const std::string & NameManager::getPlayerFullName(const NetworkId &id) const
 
 // ----------------------------------------------------------------------
 
-int NameManager::getPlayerCreateTime(const NetworkId &id) const
+int64_t NameManager::getPlayerCreateTime(const NetworkId &id) const
 {
 	IdToCharacterDataMapType::const_iterator i=m_idToCharacterDataMap->find(id);
 	if (i==m_idToCharacterDataMap->end())
 		return -1;
 	else
-		return static_cast<int>(i->second.createTime);
+		return static_cast<int64_t>(i->second.createTime);
 }
 
 // ----------------------------------------------------------------------
 
-int NameManager::getPlayerLastLoginTime(const NetworkId &id) const
+int64_t NameManager::getPlayerLastLoginTime(const NetworkId &id) const
 {
 	IdToCharacterDataMapType::const_iterator i=m_idToCharacterDataMap->find(id);
 	if (i==m_idToCharacterDataMap->end())
 		return -1;
 	else
-		return static_cast<int>(i->second.lastLoginTime);
+		return static_cast<int64_t>(i->second.lastLoginTime);
 }
 
 // ----------------------------------------------------------------------
@@ -382,10 +383,10 @@ void NameManager::getPlayerWithLastLoginTimeAfterDistribution(std::map<int, std:
 	for (std::map<int, std::pair<std::string, int> >::iterator iter = result.begin(); iter != result.end(); ++iter)
 		iter->second.second = 0;
 
-	int const timeNow = static_cast<int>(::time(nullptr));
+	int64_t const timeNow = EpochTime::now();
 	for (IdToCharacterDataMapType::const_iterator i = m_idToCharacterDataMap->begin(); i != m_idToCharacterDataMap->end(); ++i)
 	{
-		int const lastLoginTimeSecondsAgo = std::max(static_cast<int>(0), static_cast<int>(timeNow - static_cast<int>(i->second.lastLoginTime)));
+		int const lastLoginTimeSecondsAgo = std::max(0, EpochTime::clampedDifference(timeNow, i->second.lastLoginTime));
 
 		std::map<int, std::pair<std::string, int> >::iterator iterFind = result.lower_bound(lastLoginTimeSecondsAgo);
 		if (iterFind != result.end())
@@ -439,10 +440,10 @@ void NameManager::getPlayerWithCreateTimeAfterDistribution(std::map<int, std::pa
 	for (std::map<int, std::pair<std::string, int> >::iterator iter = result.begin(); iter != result.end(); ++iter)
 		iter->second.second = 0;
 
-	int const timeNow = static_cast<int>(::time(nullptr));
+	int64_t const timeNow = EpochTime::now();
 	for (IdToCharacterDataMapType::const_iterator i = m_idToCharacterDataMap->begin(); i != m_idToCharacterDataMap->end(); ++i)
 	{
-		int const createTimeSecondsAgo = std::max(static_cast<int>(0), static_cast<int>(timeNow - static_cast<int>(i->second.createTime)));
+		int const createTimeSecondsAgo = std::max(0, EpochTime::clampedDifference(timeNow, i->second.createTime));
 
 		std::map<int, std::pair<std::string, int> >::iterator iterFind = result.lower_bound(createTimeSecondsAgo);
 		if (iterFind != result.end())
@@ -464,7 +465,7 @@ void NameManager::releasePlayerName(const NetworkId &id)
 
 // ----------------------------------------------------------------------
 
-void NameManager::addPlayers(const std::vector<NetworkId> &ids, const std::vector<int> &stationIds, const std::vector<std::string> &names, const std::vector<std::string> &fullNames, const std::vector<int> &createTimes, const std::vector<int> &lastLoginTimes)
+void NameManager::addPlayers(const std::vector<NetworkId> &ids, const std::vector<int> &stationIds, const std::vector<std::string> &names, const std::vector<std::string> &fullNames, const std::vector<int64_t> &createTimes, const std::vector<int64_t> &lastLoginTimes)
 {
 	DEBUG_FATAL(ids.size() != stationIds.size(),("Programmer bug:  Vectors ids and stationIds must be the same size.\n"));
 	DEBUG_FATAL(ids.size() != names.size(),("Programmer bug:  Vectors ids and names must be the same size.\n"));
@@ -486,8 +487,8 @@ void NameManager::sendAllNamesToServer (std::vector<uint32> const & servers) con
 	std::vector<int> stationIds;
 	std::vector<std::string> characterNames;
 	std::vector<std::string> characterFullNames;
-	std::vector<int> characterCreateTimes;
-	std::vector<int> characterLastLoginTimes;
+	std::vector<int64_t> characterCreateTimes;
+	std::vector<int64_t> characterLastLoginTimes;
 
 	for (IdToCharacterDataMapType::const_iterator i=m_idToCharacterDataMap->begin(); i!=m_idToCharacterDataMap->end(); ++i)
 	{
@@ -495,8 +496,8 @@ void NameManager::sendAllNamesToServer (std::vector<uint32> const & servers) con
 		stationIds.push_back(static_cast<int>(i->second.stationId));
 		characterNames.push_back(i->second.characterName);
 		characterFullNames.push_back(i->second.characterFullName);
-		characterCreateTimes.push_back(static_cast<int>(i->second.createTime));
-		characterLastLoginTimes.push_back(static_cast<int>(i->second.lastLoginTime));
+		characterCreateTimes.push_back(static_cast<int64_t>(i->second.createTime));
+		characterLastLoginTimes.push_back(static_cast<int64_t>(i->second.lastLoginTime));
 	}
 
 	ServerMessageForwarding::begin(servers);
