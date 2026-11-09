@@ -27,6 +27,7 @@
 #include "serverGame/ServerWorld.h"
 #include "serverGame/TangibleObject.h"
 #include "sharedFoundation/CalendarTime.h"
+#include "sharedFoundation/Clock.h"
 #include "sharedFoundation/ConfigFile.h"
 #include "sharedFoundation/Scheduler.h"
 #include "sharedGame/PvpData.h"
@@ -43,6 +44,7 @@ namespace PvpNamespace
 {
 	bool s_installed;
 	Scheduler *s_pvpScheduler;
+	uint64_t s_lastTimedFlagUpdateMs;
 
 	std::string const s_gcwRankTableName("datatables/gcw/gcw_rank.iff");
 	std::string const s_gcwRankDecayExclusionTableName("datatables/gcw/gcw_rank_decay_exclusion.iff");
@@ -612,7 +614,16 @@ void Pvp::updateTimedFlags(const void *context)
 	UNREF(context);
 
 	unsigned long const updateTimeMs = static_cast<unsigned long>(ConfigServerGame::getPvpUpdateTimeMs());
-	PvpInternal::updateTimedFlags(updateTimeMs);
+
+	// Tick temporary flags by the real time since the last update, not the nominal interval,
+	// so a late callback (server lag) does not extend their duration.
+	uint64_t const nowMs = Clock::timeMs();
+	unsigned long elapsedMs = updateTimeMs;
+	if (s_lastTimedFlagUpdateMs != 0)
+		elapsedMs = static_cast<unsigned long>(Clock::durationMs<int>(s_lastTimedFlagUpdateMs, nowMs));
+	s_lastTimedFlagUpdateMs = nowMs;
+
+	PvpInternal::updateTimedFlags(elapsedMs);
 	getScheduler().setCallback(Pvp::updateTimedFlags, nullptr, updateTimeMs);
 }
 
