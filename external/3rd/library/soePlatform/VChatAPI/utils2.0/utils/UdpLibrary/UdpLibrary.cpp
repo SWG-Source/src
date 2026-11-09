@@ -4109,26 +4109,14 @@ UdpMisc::ClockStamp UdpMisc::Clock()
 	sGlobalLow = low;
 	return(((ClockStamp)sGlobalHigh << 32) | sGlobalLow);
 #else
-		// this implementation has the same sort of threading issues the windows version used to have
-		// before I started using thread-local-storage to solve them.  The worst thing that can happen
-		// is the time-correction will occur more than once from seperate threads, which would result
-		// in time appearing to jump forward, which isn't that big of a deal.
-	static ClockStamp sLastStamp = 0;
-	static ClockStamp sCurrentCorrection = 0;
-	struct timeval tv;
-	gettimeofday(&tv, nullptr);
-	UdpMisc::ClockStamp cs = static_cast<UdpMisc::ClockStamp>(tv.tv_sec) * 1000 + static_cast<UdpMisc::ClockStamp>(tv.tv_usec / 1000);
-	cs += sCurrentCorrection;
-	if (cs < sLastStamp)
-	{
-			// clock moved backwards (somebody changed it), don't ever let this happen
-			// if clock moves forward, there is no way we can recognize it, code will just
-			// have to deal with it.  In the case of the UdpLibrary, it will likely result
-			// in a ton of pending packets thinking they have gotten lost and being sent, fairly harmless.
-		sCurrentCorrection += (sLastStamp - cs);
-		cs = sLastStamp;
-	}
-	sLastStamp = cs;
+		// CLOCK_MONOTONIC cannot be stepped by NTP or an administrator, so timeouts do not fire
+		// when the wall clock jumps forward.  It counts from host boot; the 2^32 offset keeps
+		// stamps far from 0 (code initializes stamps to 0 to mean "long ago") without changing
+		// the low 32 bits the sync stamps are taken from.
+	struct timespec ts;
+	clock_gettime(CLOCK_MONOTONIC, &ts);
+	UdpMisc::ClockStamp cs = static_cast<UdpMisc::ClockStamp>(ts.tv_sec) * 1000 + static_cast<UdpMisc::ClockStamp>(ts.tv_nsec / 1000000);
+	cs += static_cast<UdpMisc::ClockStamp>(1) << 32;
 	return(cs);
 #endif	
 }
