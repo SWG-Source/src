@@ -12,6 +12,7 @@
 #include "serverGame/Chat.h"
 #include "serverGame/ServerBuffBuilderManager.h"
 #include "serverGame/ServerObject.h"
+#include "serverUtility/EpochTime.h"
 #include "sharedFoundation/Os.h"
 #include "sharedGame/SharedBuffBuilderManager.h"
 #include "sharedGame/SharedStringIds.h"
@@ -126,7 +127,8 @@ jboolean JNICALL ScriptMethodsBuffBuilderNamespace::buffBuilderValidated(JNIEnv 
 
 	session.bufferId = bufferObj->getNetworkId();
 	session.recipientId = recipientObj->getNetworkId();
-	session.startingTime = jstartingTime;
+	// scripts carry the wrapped 32-bit calendar time; recover the full value
+	session.startingTime = static_cast<time_t>(EpochTime::fromWire32(jstartingTime, EpochTime::now()));
 	session.bufferRequiredCredits = jbufferRequiredCredits;
 	session.accepted = jaccepted;
 

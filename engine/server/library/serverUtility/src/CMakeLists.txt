@@ -9,6 +9,7 @@ set(SHARED_SOURCES
 	shared/ClusterWideDataManager.h
 	shared/ClusterWideDataManagerList.cpp
 	shared/ClusterWideDataManagerList.h
+	shared/EpochTime.h
 	shared/FirstServerUtility.h
 	shared/FreeCtsDataTable.cpp
 	shared/FreeCtsDataTable.h
