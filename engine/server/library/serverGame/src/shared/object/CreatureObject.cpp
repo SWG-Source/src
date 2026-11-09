@@ -7588,11 +7588,9 @@ void CreatureObject::onClientReady(Client *c)
 	PlayerObject * const player = PlayerCreatureController::getPlayerObject(this);
 	if (player && (player->getChatSpamTimeEndInterval() > 0))
 	{
-		time_t timeUnsquelch = static_cast<time_t>(player->getSecondsUntilUnsquelched());
-		if (timeUnsquelch > 0)
-			timeUnsquelch += ::time(nullptr);
+		int64_t const timeUnsquelch = player->getUnsquelchEpochTime();
 
-		GenericValueTypeMessage<std::pair<std::pair<std::pair<NetworkId, int>, int>, std::pair<int, int> > > chatStatistics("ChatStatisticsGS", std::make_pair(std::make_pair(std::make_pair(getNetworkId(), static_cast<int>(timeUnsquelch)), player->getChatSpamTimeEndInterval()), std::make_pair(player->getChatSpamSpatialNumCharacters(), player->getChatSpamNonSpatialNumCharacters())));
+		GenericValueTypeMessage<std::pair<std::pair<std::pair<NetworkId, int64_t>, int64_t>, std::pair<int, int> > > chatStatistics("ChatStatisticsGS", std::make_pair(std::make_pair(std::make_pair(getNetworkId(), timeUnsquelch), player->getChatSpamTimeEndInterval()), std::make_pair(player->getChatSpamSpatialNumCharacters(), player->getChatSpamNonSpatialNumCharacters())));
 		Chat::sendToChatServer(chatStatistics);
 	}
 

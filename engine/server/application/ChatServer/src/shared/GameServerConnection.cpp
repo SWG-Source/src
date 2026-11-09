@@ -340,7 +340,7 @@ void GameServerConnection::onReceive(const Archive::ByteStream & message)
 		{
 			PROFILER_AUTO_BLOCK_DEFINE("GameServerConnection - SetUnsquelchTime");
 			//printf("GameServerConnection -- SetUnsquelchTime\n");
-			GenericValueTypeMessage<std::pair<NetworkId, int> > setUnsquelchTime(ri);
+			GenericValueTypeMessage<std::pair<NetworkId, int64_t> > setUnsquelchTime(ri);
 
 			ChatServer::setUnsquelchTime(setUnsquelchTime.getValue().first, static_cast<time_t>(setUnsquelchTime.getValue().second));
 			break;
@@ -349,7 +349,7 @@ void GameServerConnection::onReceive(const Archive::ByteStream & message)
 		{
 			PROFILER_AUTO_BLOCK_DEFINE("GameServerConnection - ChatStatisticsGS");
 			//printf("GameServerConnection -- ChatStatisticsGS\n");
-			GenericValueTypeMessage<std::pair<std::pair<std::pair<NetworkId, int>, int>, std::pair<int, int> > > chatStatistics(ri);
+			GenericValueTypeMessage<std::pair<std::pair<std::pair<NetworkId, int64_t>, int64_t>, std::pair<int, int> > > chatStatistics(ri);
 
 			ChatServer::handleChatStatisticsFromGameServer(chatStatistics.getValue().first.first.first, static_cast<time_t>(chatStatistics.getValue().first.first.second), static_cast<time_t>(chatStatistics.getValue().first.second), chatStatistics.getValue().second.first, chatStatistics.getValue().second.second);
 			break;

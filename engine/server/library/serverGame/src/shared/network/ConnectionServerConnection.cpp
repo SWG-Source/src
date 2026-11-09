@@ -165,7 +165,7 @@ void ConnectionServerConnection::onReceive (const Archive::ByteStream & message)
 		}
 		case constcrc("ChatStatisticsCS") :
 		{
-			GenericValueTypeMessage<std::pair<std::pair<NetworkId, int>, std::pair<int, int> > > chatStatistics(ri);
+			GenericValueTypeMessage<std::pair<std::pair<NetworkId, int64_t>, std::pair<int, int> > > chatStatistics(ri);
 			ServerObject * const so = ServerWorld::findObjectByNetworkId(chatStatistics.getValue().first.first);
 			if (so)
 			{

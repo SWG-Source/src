@@ -28,7 +28,7 @@ create table player_objects  -- NO_IMPORT
 	max_gcw_imperial_rating int,
 	max_gcw_rebel_rating int,
 	lifetime_pvp_kills int,
-	next_gcw_rating_calc_time int,
+	next_gcw_rating_calc_time int, -- BIND_AS(DB::BindableInt64)
 	collections varchar2(4000),  -- BIND_AS(DB::BindableBitArray<16000>)
 	show_backpack char(1),
 	show_helmet char(1),

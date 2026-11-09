@@ -27,6 +27,7 @@
 #include "serverScript/ScriptParameters.h"
 #include "sharedFoundation/CalendarTime.h"
 #include "sharedFoundation/FormattedString.h"
+#include "serverUtility/EpochTime.h"
 
 using namespace JNIWrappersNamespace;
 
@@ -1685,7 +1686,8 @@ jint JNICALL ScriptMethodsPvpNamespace::pvpGetNextGcwRatingCalcTime(JNIEnv *env,
 	if (!player)
 		return 0;
 
-	return static_cast<jint>(player->getNextGcwRatingCalcTime());
+	// scripts use the wrapped 32-bit calendar time
+	return static_cast<jint>(EpochTime::toWire32(player->getNextGcwRatingCalcTime()));
 }
 
 // ----------------------------------------------------------------------
@@ -1702,7 +1704,7 @@ void JNICALL ScriptMethodsPvpNamespace::ctsUseOnlySetGcwInfo(JNIEnv *env, jobjec
 	if (!player)
 		return;
 
-	player->ctsUseOnlySetGcwInfo(static_cast<int32>(currentGcwPoints), static_cast<int32>(currentGcwRating), static_cast<int32>(currentPvpKills), static_cast<int64>(lifetimeGcwPoints), static_cast<int32>(maxGcwImperialRating), static_cast<int32>(maxGcwRebelRating), static_cast<int32>(lifetimePvpKills), static_cast<int32>(nextGcwRatingCalcTime));
+	player->ctsUseOnlySetGcwInfo(static_cast<int32>(currentGcwPoints), static_cast<int32>(currentGcwRating), static_cast<int32>(currentPvpKills), static_cast<int64>(lifetimeGcwPoints), static_cast<int32>(maxGcwImperialRating), static_cast<int32>(maxGcwRebelRating), static_cast<int32>(lifetimePvpKills), (nextGcwRatingCalcTime == 0) ? static_cast<int64>(0) : static_cast<int64>(EpochTime::fromWire32(nextGcwRatingCalcTime, EpochTime::now())));
 }
 
 // ----------------------------------------------------------------------

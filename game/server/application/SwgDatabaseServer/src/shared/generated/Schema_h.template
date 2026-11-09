@@ -54,7 +54,7 @@ struct PlayerObjectRow : public DB::Row
 	DB::BindableInt32 max_gcw_imperial_rating;
 	DB::BindableInt32 max_gcw_rebel_rating;
 	DB::BindableInt32 lifetime_pvp_kills;
-	DB::BindableInt32 next_gcw_rating_calc_time;
+	DB::BindableInt64 next_gcw_rating_calc_time;
 	DB::BindableBitArray<16000> collections;
 	DB::BindableBool show_backpack;
 	DB::BindableBool show_helmet;
@@ -111,7 +111,7 @@ struct PlayerObjectBufferRow : public DB::Row
 	DB::BindableInt32 max_gcw_imperial_rating;
 	DB::BindableInt32 max_gcw_rebel_rating;
 	DB::BindableInt32 lifetime_pvp_kills;
-	DB::BindableInt32 next_gcw_rating_calc_time;
+	DB::BindableInt64 next_gcw_rating_calc_time;
 	DB::BindableBitArray<16000> collections;
 	DB::BindableBool show_backpack;
 	DB::BindableBool show_helmet;

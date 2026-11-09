@@ -1362,7 +1362,7 @@ bool SwgSnapshot::encodeServerPlayerObject(NetworkId const & objectId, Archive::
 		Archive::put(data,temp);
 	}
 	{
-		int32 temp;
+		int64 temp;
 		row->next_gcw_rating_calc_time.getValue(temp);
 		Archive::put(data,temp);
 	}

@@ -138,6 +138,7 @@
 #include "sharedSkillSystem/SkillManager.h"
 #include "sharedSkillSystem/SkillObject.h"
 #include "sharedTerrain/TerrainObject.h"
+#include "serverUtility/EpochTime.h"
 
 #include <cstdlib>
 
@@ -1892,11 +1893,11 @@ static void commandFuncSpatialChatInternal(Command const &, NetworkId const &act
 				else if (!squelched && (ConfigServerGame::getChatSpamNotifyPlayerWhenLimitedIntervalSeconds() > 0) && obj->getClient())
 				{
 					// send message telling character he can no longer talk
-					const int32_t timeNow = static_cast<int32_t>(::time(nullptr));
-					const int32_t chatSpamTimeEndInterval = playerObject->getChatSpamTimeEndInterval();
+					const int64_t timeNow = EpochTime::now();
+					const int64_t chatSpamTimeEndInterval = playerObject->getChatSpamTimeEndInterval();
 					if ((chatSpamTimeEndInterval > timeNow) && (timeNow >= playerObject->getChatSpamNextTimeToNotifyPlayerWhenLimited()))
 					{
-						GenericValueTypeMessage<int32_t> csl("ChatSpamLimited", (chatSpamTimeEndInterval - timeNow));
+						GenericValueTypeMessage<int32_t> csl("ChatSpamLimited", EpochTime::clampedDifference(chatSpamTimeEndInterval, timeNow));
 						obj->getClient()->send(csl, true);
 
 						playerObject->setChatSpamNextTimeToNotifyPlayerWhenLimited((timeNow + ConfigServerGame::getChatSpamNotifyPlayerWhenLimitedIntervalSeconds()));
@@ -2036,11 +2037,11 @@ static void commandFuncSpatialChat(Command const &, NetworkId const &actor, Netw
 				else if (!squelched && (ConfigServerGame::getChatSpamNotifyPlayerWhenLimitedIntervalSeconds() > 0) && obj->getClient())
 				{
 					// send message telling character he can no longer talk
-					const int32_t timeNow = static_cast<int32_t>(::time(nullptr));
-					const int32_t chatSpamTimeEndInterval = playerObject->getChatSpamTimeEndInterval();
+					const int64_t timeNow = EpochTime::now();
+					const int64_t chatSpamTimeEndInterval = playerObject->getChatSpamTimeEndInterval();
 					if ((chatSpamTimeEndInterval > timeNow) && (timeNow >= playerObject->getChatSpamNextTimeToNotifyPlayerWhenLimited()))
 					{
-						GenericValueTypeMessage<int> csl("ChatSpamLimited", (chatSpamTimeEndInterval - timeNow));
+						GenericValueTypeMessage<int> csl("ChatSpamLimited", EpochTime::clampedDifference(chatSpamTimeEndInterval, timeNow));
 						obj->getClient()->send(csl, true);
 
 						playerObject->setChatSpamNextTimeToNotifyPlayerWhenLimited((timeNow + ConfigServerGame::getChatSpamNotifyPlayerWhenLimitedIntervalSeconds()));
