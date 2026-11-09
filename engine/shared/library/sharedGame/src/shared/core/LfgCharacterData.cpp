@@ -18,6 +18,7 @@
 #include "UnicodeUtils.h"
 
 #include <algorithm>
+#include <limits>
 
 // ======================================================================
 
@@ -1127,7 +1128,9 @@ std::map<std::string, int> const & LfgCharacterData::calculateStatistics(std::ma
 		}
 	}
 
-	int32 const timeNow = static_cast<int32>(::time(nullptr));
+	// characterCreateTime is the wrapped 32-bit calendar time (-1 or 0 when
+	// unknown); differences are taken modulo 2^32 so they stay right after 2038
+	uint32 const timeNow = static_cast<uint32>(static_cast<uint64>(::time(nullptr)));
 	for (std::map<NetworkId, LfgCharacterData>::const_iterator iterLfgData = connectedCharacterLfgData.begin(); iterLfgData != connectedCharacterLfgData.end(); ++iterLfgData)
 	{
 		// searchable/anonymous
@@ -1526,9 +1529,10 @@ std::map<std::string, int> const & LfgCharacterData::calculateStatistics(std::ma
 		}
 
 		// character create time
-		if (iterLfgData->second.characterCreateTime > 0)
+		if ((iterLfgData->second.characterCreateTime != -1) && (iterLfgData->second.characterCreateTime != 0))
 		{
-			int32 const createTimeSecondsAgo = std::max(static_cast<int32>(0), (timeNow - iterLfgData->second.characterCreateTime));
+			uint32 const secondsAgo = timeNow - static_cast<uint32>(iterLfgData->second.characterCreateTime);
+			int32 const createTimeSecondsAgo = (secondsAgo > static_cast<uint32>(std::numeric_limits<int32>::max())) ? 0 : static_cast<int32>(secondsAgo);
 
 			std::map<int, std::pair<std::string, int> >::iterator iterFind = createTimeStatistics.lower_bound(createTimeSecondsAgo);
 			if (iterFind != createTimeStatistics.end())

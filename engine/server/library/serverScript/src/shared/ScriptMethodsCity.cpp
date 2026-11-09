@@ -15,6 +15,7 @@
 #include "serverGame/CityObject.h"
 #include "serverGame/ServerUniverse.h"
 #include "sharedGame/CitizenRankDataTable.h"
+#include "serverUtility/EpochTime.h"
 
 using namespace JNIWrappersNamespace;
 
@@ -920,7 +921,7 @@ void JNICALL ScriptMethodsCityNamespace::cityRemoveStructure(JNIEnv *env, jobjec
 
 jboolean JNICALL ScriptMethodsCityNamespace::cityIsInactivePackupActive(JNIEnv *env, jobject self)
 {
-	return (ConfigServerGame::getCityCitizenshipInactivePackupStartTimeEpoch() <= static_cast<int>(::time(nullptr)));
+	return (static_cast<int64_t>(ConfigServerGame::getCityCitizenshipInactivePackupStartTimeEpoch()) <= EpochTime::now());
 }
 
 // ----------------------------------------------------------------------

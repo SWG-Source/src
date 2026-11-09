@@ -1615,7 +1615,7 @@ void Client::receiveClientMessage(const GameNetworkMessage &message) {
             }
             case constcrc("UpdateSessionPlayTimeInfo") : {
                 Archive::ReadIterator readIterator = static_cast<const GameNetworkMessage &> (message).getByteStream().begin();
-                GenericValueTypeMessage < std::pair < int32, std::pair < int32, uint32_t > > >
+                GenericValueTypeMessage < std::pair < int64_t, std::pair < int64_t, uint32_t > > >
                 const msgPlayTimeInfo(readIterator);
 
                 PlayerObject *playerObject = PlayerCreatureController::getPlayerObject(safe_cast<CreatureObject *>(getCharacterObject()));

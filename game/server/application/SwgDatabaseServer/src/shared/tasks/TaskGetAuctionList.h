@@ -29,14 +29,14 @@ namespace DBSchema
 	{
 		DB::BindableNetworkId      creatorId;
 		DB::BindableInt32           minBid;
-		DB::BindableInt32           auctionTimer;
+		DB::BindableInt64           auctionTimer;
 		DB::BindableInt32           buyNowPrice;
 		DB::BindableUnicode<1024>  userDescription;
 		DB::BindableString<4000>   oob;
 		DB::BindableNetworkId      locationId;
 		DB::BindableNetworkId      itemId;
 		DB::BindableInt32           category;
-		DB::BindableInt32           itemTimer;
+		DB::BindableInt64           itemTimer;
 		DB::BindableUnicode<1024>  itemName;
 		DB::BindableNetworkId      ownerId;
 		DB::BindableInt32           active;

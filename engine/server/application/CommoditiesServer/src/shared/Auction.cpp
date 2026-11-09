@@ -26,6 +26,7 @@
 #include "sharedGame/SharedObjectTemplate.h"
 #include "sharedLog/Log.h"
 #include "sharedUtility/DataTable.h"
+#include "serverUtility/EpochTime.h"
 #include "sharedUtility/DataTableManager.h"
 
 #include "sharedFoundation/CrcConstexpr.hpp"
@@ -283,13 +284,13 @@ using namespace AuctionNamespace;
 Auction::Auction(
 		const NetworkId &        creatorId,
 		int                      minBid,
-		int                      auctionTimer,
+		int64_t              auctionTimer,
 		const NetworkId &        itemId,
 		int                      itemNameLength,
 		const Unicode::String &  itemName,
 		int                      itemType,
 		int                      itemTemplateId,
-		int                      itemTimer,
+		int64_t              itemTimer,
 		int                      itemSize,
 		const AuctionLocation &  location,
 		int                      flags,
@@ -383,13 +384,13 @@ m_trackId(-1)
 Auction::Auction(
 		const NetworkId &        creatorId,
 		int                      minBid,
-		int                      auctionTimer,
+		int64_t              auctionTimer,
 		const NetworkId &        itemId,
 		int                      itemNameLength,
 		const Unicode::String &  itemName,
 		int                      itemType,
 		int                      itemTemplateId,
-		int                      itemTimer,
+		int64_t              itemTimer,
 		int                      itemSize,
 		const AuctionLocation &  location,
 		int                      flags,
@@ -831,7 +832,7 @@ const AuctionBid *Auction::GetPlayerBid(const NetworkId & playerId) const
 
 // ----------------------------------------------------------------------
 
-bool Auction::Update(int gameTime)
+bool Auction::Update(int64_t gameTime)
 {
 	if (GetFlags() & AUCTION_ALWAYS_PRESENT)
 	{
@@ -947,7 +948,7 @@ void Auction::Expire(bool sold, bool expiredBasedOnTimer, int track_id)
 				else if (m_location.GetVendorFirstTimerExpiredAuctionDate() > 0)
 					sendSellerMail = false;
 				else
-					m_location.SetVendorFirstTimerExpiredAuctionDate(time(0));
+					m_location.SetVendorFirstTimerExpiredAuctionDate(EpochTime::now());
 			}
 
 			DEBUG_REPORT_LOG(true, ("[Commodities Server Auction::Expire] : Sending OnAuctionExpired for non-sold auction and nullptr high bid obj .\n"));

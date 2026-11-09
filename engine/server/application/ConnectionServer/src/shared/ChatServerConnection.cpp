@@ -156,7 +156,7 @@ void ChatServerConnection::onReceive(const Archive::ByteStream & message)
 						case constcrc("ChatStatisticsCS") :
 						{
 							Archive::ReadIterator cri(msg.getByteStream());
-							GenericValueTypeMessage<std::pair<std::pair<NetworkId, int>, std::pair<int, int> > > chatStatistics(cri);
+							GenericValueTypeMessage<std::pair<std::pair<NetworkId, int64_t>, std::pair<int, int> > > chatStatistics(cri);
 							gc->send(chatStatistics, true);
 							//DEBUG_REPORT_LOG(true, ("Sending a ChatStatisticsCS msg to game server\n"));
 							break;

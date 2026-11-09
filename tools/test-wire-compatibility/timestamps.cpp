@@ -62,17 +62,20 @@ int main() {
   check(chatTimeRoundTrip(t),label);
  }
  if (sizeof(time_t) > sizeof(int32_t)) {
+  // Wider host time_t wraps modulo 2^32, producing the bytes a 32-bit build sends.
   for (long long t : {-2147483649LL, 2147483648LL}) {
-   ImageDesignChangeMessage image;
-   BuffBuilderChangeMessage buff;
-   image.setStartingTime(-1); buff.setStartingTime(-1);
-   bool imageRejected=false, buffRejected=false, chatRejected=false;
-   try { image.setStartingTime(static_cast<time_t>(t)); } catch (std::out_of_range const &) { imageRejected=true; }
-   try { buff.setStartingTime(static_cast<time_t>(t)); } catch (std::out_of_range const &) { buffRejected=true; }
-   try { ChatLogEntry entry(Unicode::String(),Unicode::String(),Unicode::String(),Unicode::String(),static_cast<time_t>(t)); } catch (std::out_of_range const &) { chatRejected=true; }
-   check(imageRejected && image.getStartingTime()==-1,"image-design rejects out-of-range time without mutation");
-   check(buffRejected && buff.getStartingTime()==-1,"buff-builder rejects out-of-range time without mutation");
-   check(chatRejected,"chat-log rejects out-of-range constructor time");
+   int32_t const wrapped = static_cast<int32_t>(t < 0 ? t + 4294967296LL : t - 4294967296LL);
+   ImageDesignChangeMessage image, imageWrapped;
+   BuffBuilderChangeMessage buff, buffWrapped;
+   image.setStartingTime(static_cast<time_t>(t)); imageWrapped.setStartingTime(wrapped);
+   buff.setStartingTime(static_cast<time_t>(t)); buffWrapped.setStartingTime(wrapped);
+   Archive::ByteStream ia, ib, ba, bb;
+   ImageDesignChangeMessage::pack(&image,ia); ImageDesignChangeMessage::pack(&imageWrapped,ib);
+   BuffBuilderChangeMessage::pack(&buff,ba); BuffBuilderChangeMessage::pack(&buffWrapped,bb);
+   ChatLogEntry entry(Unicode::String(),Unicode::String(),Unicode::String(),Unicode::String(),static_cast<time_t>(t));
+   check(image.getStartingTime()==wrapped && ia.getSize()==ib.getSize() && !std::memcmp(ia.getBuffer(),ib.getBuffer(),ia.getSize()),"image-design wraps out-of-range time to legacy 32-bit bytes");
+   check(buff.getStartingTime()==wrapped && ba.getSize()==bb.getSize() && !std::memcmp(ba.getBuffer(),bb.getBuffer(),ba.getSize()),"buff-builder wraps out-of-range time to legacy 32-bit bytes");
+   check(entry.m_time==wrapped && NetworkMessageTimestamp::fromTime(static_cast<time_t>(t))==wrapped,"chat-log wraps out-of-range constructor time");
   }
  }
  // Per-message counts are checked before the first byte; the bytes themselves are unchanged.

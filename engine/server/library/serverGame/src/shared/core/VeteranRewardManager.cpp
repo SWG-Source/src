@@ -45,6 +45,7 @@
 #include "sharedObject/VolumeContainer.h"
 #include "sharedUtility/DataTable.h"
 #include "sharedUtility/DataTableManager.h"
+#include "serverUtility/EpochTime.h"
 #include <algorithm>
 #include <limits>
 
@@ -1147,7 +1148,7 @@ void VeteranRewardManager::tcgRedemption(CreatureObject const & playerCreature, 
 	// the redemption
 	int const redemptionTimeout = 300; // 5 minutes;
 	item.removeObjVarItem(ms_tcgRedemptionInProgressObjvar);
-	item.setObjVarItem(ms_tcgRedemptionInProgressObjvar, static_cast<int>(::time(nullptr) + redemptionTimeout)); // 5 minutes
+	item.setObjVarItem(ms_tcgRedemptionInProgressObjvar, EpochTime::toWire32(EpochTime::now() + redemptionTimeout)); // 5 minutes
 
 	// send off request to adjust the account feature Id
 	AdjustAccountFeatureIdRequest const msg(NetworkId::cms_invalid, GameServer::getInstance().getProcessId(), playerCreature.getNetworkId(), PlayerObject::getAccountDescription(&playerCreature), playerPlayer->getStationId(), item.getNetworkId(), ServerObject::getLogDescription(&item), PlatformGameCode::SWGTCG, static_cast<uint32>(featureId), adjustment);
@@ -1169,8 +1170,8 @@ bool VeteranRewardManager::checkForTcgRedemptionInProgress(ServerObject const & 
 		int redemptionTimeout = 0;
 		bool const hasTimeout = item.getObjVars().getItem(ms_tcgRedemptionInProgressObjvar, redemptionTimeout);
 
-		time_t const currentTime = ::time(nullptr);
-		if (hasTimeout && redemptionTimeout > currentTime)
+		int64_t const currentTime = EpochTime::now();
+		if (hasTimeout && EpochTime::fromWire32(redemptionTimeout, currentTime) > currentTime)
 		{
 			// item should be in top level inventory; get the player object the item is in
 			ServerObject const * containingPlayer = safe_cast<ServerObject const *>(ContainerInterface::getContainedByObject(item)); // this gets the player's inventory
@@ -1181,7 +1182,7 @@ bool VeteranRewardManager::checkForTcgRedemptionInProgress(ServerObject const & 
 			{
 				ProsePackage prosePackage;
 				prosePackage.stringId = StringId("veteran_new", "redeem_tcg_card_redemption_already_in_progress");
-				prosePackage.target.str = Unicode::narrowToWide(CalendarTime::convertSecondsToMS(static_cast<unsigned int>(redemptionTimeout - currentTime)));
+				prosePackage.target.str = Unicode::narrowToWide(CalendarTime::convertSecondsToMS(static_cast<unsigned int>(EpochTime::fromWire32(redemptionTimeout, currentTime) - currentTime)));
 				Chat::sendSystemMessage(*containingPlayer, prosePackage);
 			}
 
@@ -1294,15 +1295,22 @@ bool VeteranRewardManager::tradeInReward(CreatureObject const & playerCreature, 
 	{
 		std::vector<Unicode::String> rewardGrantInfo;
 		if (itemObjvar.getItem("rewardGrantInfo", rewardGrantInfo) && (rewardGrantInfo.size() == 4))
-			itemClaimTime = static_cast<time_t>(::atol(Unicode::wideToNarrow(rewardGrantInfo[0]).c_str()));
+		{
+			// scripts write the wrapped 32-bit calendar time
+			long long const claimTime = ::atoll(Unicode::wideToNarrow(rewardGrantInfo[0]).c_str());
+			if ((claimTime != 0) && (claimTime >= std::numeric_limits<int32_t>::min()) && (claimTime <= std::numeric_limits<int32_t>::max()))
+				itemClaimTime = static_cast<time_t>(EpochTime::fromWire32(static_cast<int32_t>(claimTime), EpochTime::now()));
+			else
+				itemClaimTime = static_cast<time_t>(claimTime);
+		}
 	}
 
 	// it may be the Sarlacc trash can which has its born date stored on it
 	if ((itemClaimTime <= 0) && (staticItemName == std::string("item_cts_sarlacc_mini_game")) && itemObjvar.hasItem("sarlacc_minigame.born_time") && (itemObjvar.getType("sarlacc_minigame.born_time") == DynamicVariable::INT))
 	{
 		int sarlaccBornTime = 0;
-		if (itemObjvar.getItem("sarlacc_minigame.born_time", sarlaccBornTime))
-			itemClaimTime = static_cast<time_t>(sarlaccBornTime);
+		if (itemObjvar.getItem("sarlacc_minigame.born_time", sarlaccBornTime) && (sarlaccBornTime != 0))
+			itemClaimTime = static_cast<time_t>(EpochTime::fromWire32(sarlaccBornTime, EpochTime::now()));
 	}
 
 	if (itemClaimTime > 0)
@@ -1337,7 +1345,7 @@ bool VeteranRewardManager::tradeInReward(CreatureObject const & playerCreature, 
 	// the trade in
 	int const redemptionTimeout = 300; // 5 minutes;
 	item.removeObjVarItem(ms_tradeInInProgressObjvar);
-	item.setObjVarItem(ms_tradeInInProgressObjvar, static_cast<int>(::time(nullptr) + redemptionTimeout)); // 5 minutes
+	item.setObjVarItem(ms_tradeInInProgressObjvar, EpochTime::toWire32(EpochTime::now() + redemptionTimeout)); // 5 minutes
 
 	// send off request to adjust the account feature Id
 	AdjustAccountFeatureIdRequest const msg(NetworkId::cms_invalid, GameServer::getInstance().getProcessId(), playerCreature.getNetworkId(), PlayerObject::getAccountDescription(&playerCreature), playerPlayer->getStationId(), item.getNetworkId(), ServerObject::getLogDescription(&item), PlatformGameCode::SWG, static_cast<uint32>(featureId), 1);
@@ -1361,8 +1369,8 @@ bool VeteranRewardManager::checkForTradeInInProgress(ServerObject const & item)
 		int redemptionTimeout = 0;
 		bool const hasTimeout = item.getObjVars().getItem(ms_tradeInInProgressObjvar, redemptionTimeout);
 
-		time_t const currentTime = ::time(nullptr);
-		if (hasTimeout && redemptionTimeout > currentTime)
+		int64_t const currentTime = EpochTime::now();
+		if (hasTimeout && EpochTime::fromWire32(redemptionTimeout, currentTime) > currentTime)
 		{
 			// item should be in top level inventory; get the player object the item is in
 			ServerObject const * containingPlayer = safe_cast<ServerObject const *>(ContainerInterface::getContainedByObject(item)); // this gets the player's inventory
@@ -1373,7 +1381,7 @@ bool VeteranRewardManager::checkForTradeInInProgress(ServerObject const & item)
 			{
 				ProsePackage prosePackage;
 				prosePackage.stringId = StringId("veteran_new", "trade_in_already_in_progress");
-				prosePackage.target.str = Unicode::narrowToWide(CalendarTime::convertSecondsToMS(static_cast<unsigned int>(redemptionTimeout - currentTime)));
+				prosePackage.target.str = Unicode::narrowToWide(CalendarTime::convertSecondsToMS(static_cast<unsigned int>(EpochTime::fromWire32(redemptionTimeout, currentTime) - currentTime)));
 				Chat::sendSystemMessage(*containingPlayer, prosePackage);
 			}
 

@@ -25,6 +25,7 @@
 #include "serverNetworkMessages/ValidateCharacterForLoginMessage.h"
 #include "serverNetworkMessages/VerifyAndLockName.h"
 #include "serverUtility/AdminAccountManager.h"
+#include "serverUtility/EpochTime.h"
 #include "sharedFoundation/CalendarTime.h"
 #include "sharedFoundation/Clock.h"
 #include "sharedFoundation/Crc.h"
@@ -199,9 +200,9 @@ std::string ClientConnection::getCurrentActivePlayTimeDuration() const {
 void ClientConnection::sendPlayTimeInfoToGameServer() const {
     if (m_client && m_client->getGameConnection()) {
         // update the game server with play time info
-        GenericValueTypeMessage < std::pair < int32, std::pair < int32, uint32_t > > >
+        GenericValueTypeMessage < std::pair < int64_t, std::pair < int64_t, uint32_t > > >
         const msgPlayTimeInfo(
-        "UpdateSessionPlayTimeInfo", std::make_pair(static_cast<int32>(m_startPlayTime), std::make_pair(static_cast<int32>(m_lastActiveTime), m_activePlayTimeDuration)));
+        "UpdateSessionPlayTimeInfo", std::make_pair(static_cast<int64_t>(m_startPlayTime), std::make_pair(static_cast<int64_t>(m_lastActiveTime), static_cast<uint32_t>(m_activePlayTimeDuration))));
 
         std::vector <NetworkId> v;
         v.push_back(m_client->getNetworkId());
@@ -1369,7 +1370,7 @@ ClientConnection::onValidateClient(StationId suid, const std::string &username, 
     // tell client the server-side game and subscription feature bits and which ConnectionServer we are and the current server Epoch time
     GenericValueTypeMessage < std::pair < std::pair < uint32_t, uint32_t > , std::pair < int, int32 > > >
     const msgFeatureBits(
-    "AccountFeatureBits", std::make_pair(std::make_pair(gameFeatures, subscriptionFeatures), std::make_pair(ConfigConnectionServer::getConnectionServerNumber(), static_cast<int32>(::time(nullptr)))));
+    "AccountFeatureBits", std::make_pair(std::make_pair(gameFeatures, subscriptionFeatures), std::make_pair(ConfigConnectionServer::getConnectionServerNumber(), EpochTime::toWire32(EpochTime::now()))));
     send(msgFeatureBits, true);
 
     std::string const gameFeaturesDescription = ClientGameFeature::getDescription(gameFeatures);

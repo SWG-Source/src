@@ -44,6 +44,7 @@
 #include "sharedObject/SlottedContainer.h"
 #include "sharedObject/VolumeContainer.h"
 #include "sharedNetworkMessages/MessageQueueGenericValueType.h"
+#include "serverUtility/EpochTime.h"
 
 // ======================================================================
 
@@ -1405,12 +1406,14 @@ void GroupObject::setLootRule(int const rule)
 
 unsigned int GroupObject::getSecondsLeftOnGroupPickup() const
 {
+	// shared with the client, so the times are kept in the wrapped 32-bit form
 	std::pair<int32, int32> const & groupPickupTimer = m_groupPickupTimer.get();
-	if ((groupPickupTimer.first > 0) && (groupPickupTimer.second > 0))
+	if ((groupPickupTimer.first != 0) && (groupPickupTimer.second != 0))
 	{
-		time_t const timeNow = ::time(nullptr);
-		if (groupPickupTimer.second > timeNow)
-			return (groupPickupTimer.second - (int)timeNow);
+		int64_t const timeNow = EpochTime::now();
+		int64_t const endTime = EpochTime::fromWire32(groupPickupTimer.second, timeNow);
+		if (endTime > timeNow)
+			return static_cast<unsigned int>(endTime - timeNow);
 	}
 
 	return 0;
@@ -1428,7 +1431,7 @@ void GroupObject::setGroupPickupTimer(time_t startTime, time_t endTime)
 			controller->appendMessage(
 				CM_setGroupPickupTimer,
 				0.0f,
-				new MessageQueueGenericValueType<std::pair<int32, int32> >(std::make_pair(static_cast<int32>(startTime), static_cast<int32>(endTime))),
+				new MessageQueueGenericValueType<std::pair<int32, int32> >(std::make_pair(EpochTime::toWire32(startTime), EpochTime::toWire32(endTime))),
 				GameControllerMessageFlags::SEND |
 				GameControllerMessageFlags::RELIABLE |
 				GameControllerMessageFlags::DEST_AUTH_SERVER);
@@ -1436,7 +1439,7 @@ void GroupObject::setGroupPickupTimer(time_t startTime, time_t endTime)
 	}
 	else
 	{
-		m_groupPickupTimer.set(std::make_pair(static_cast<int32>(startTime), static_cast<int32>(endTime)));
+		m_groupPickupTimer.set(std::make_pair(EpochTime::toWire32(startTime), EpochTime::toWire32(endTime)));
 	}
 }
 

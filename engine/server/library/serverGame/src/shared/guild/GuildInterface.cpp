@@ -18,6 +18,7 @@
 #include "serverGame/GuildStringParser.h"
 #include "serverGame/ServerUniverse.h"
 #include "serverScript/ScriptParameters.h"
+#include "serverUtility/EpochTime.h"
 #include "serverUtility/ServerClock.h"
 #include "sharedFoundation/CalendarTime.h"
 #include "sharedFoundation/FormattedString.h"
@@ -160,20 +161,24 @@ void GuildInterface::buildEnemies(GuildObject const &guildObject)
 	s_guildEnemiesAToBKillInfo.clear();
 	s_guildEnemiesBToA.clear();
 
+	// the enemy spec holds the last update time in its wrapped 32-bit form
+	int64_t const timeNow = EpochTime::now();
 	std::set<std::string> const &enemies = guildObject.getGuildEnemies();
 	for (std::set<std::string>::const_iterator i = enemies.begin(); i != enemies.end(); ++i)
 	{
-		int guildId, enemyId, killCount, lastUpdateTime;
-		if (GuildStringParser::parseEnemyInfo(*i, guildId, enemyId, killCount, lastUpdateTime))
+		int guildId, enemyId, killCount, lastUpdateTimeWire;
+		if (GuildStringParser::parseEnemyInfo(*i, guildId, enemyId, killCount, lastUpdateTimeWire))
 		{
+			time_t const lastUpdateTime = (lastUpdateTimeWire == 0) ? 0 : static_cast<time_t>(EpochTime::fromWire32(lastUpdateTimeWire, timeNow));
+
 			s_guildEnemiesAToB[guildId].push_back(enemyId);
 
-			std::pair<std::map<int, std::pair<int, time_t> >::iterator, bool> result = s_guildEnemiesAToBKillInfo[guildId].insert(std::make_pair(enemyId, std::make_pair(killCount, static_cast<time_t>(lastUpdateTime))));
+			std::pair<std::map<int, std::pair<int, time_t> >::iterator, bool> result = s_guildEnemiesAToBKillInfo[guildId].insert(std::make_pair(enemyId, std::make_pair(killCount, lastUpdateTime)));
 			if (!result.second)
 			{
 				// multiple A->B guild enemy entries, so consolidate into one entry
 				result.first->second.first += killCount;
-				result.first->second.second = std::max(result.first->second.second, static_cast<time_t>(lastUpdateTime));
+				result.first->second.second = std::max(result.first->second.second, lastUpdateTime);
 			}
 
 			s_guildEnemiesBToA[enemyId].push_back(guildId);
@@ -325,7 +330,7 @@ uint32 GuildInterface::getGuildCurrentFaction(int guildId)
 
 uint32 GuildInterface::getGuildCurrentFaction(GuildInfo const & gi)
 {
-	if (gi.m_timeLeftGuildFaction <= 0)
+	if (gi.m_timeLeftGuildFaction == 0)
 		return gi.m_guildFaction;
 
 	return 0;
@@ -346,7 +351,7 @@ uint32 GuildInterface::getGuildPreviousFaction(int guildId)
 
 uint32 GuildInterface::getGuildPreviousFaction(GuildInfo const & gi)
 {
-	if (gi.m_timeLeftGuildFaction > 0)
+	if (gi.m_timeLeftGuildFaction != 0)
 		return gi.m_guildFaction;
 
 	return 0;
@@ -367,7 +372,7 @@ int GuildInterface::getTimeLeftGuildPreviousFaction(int guildId)
 
 int GuildInterface::getTimeLeftGuildPreviousFaction(GuildInfo const & gi)
 {
-	if (gi.m_timeLeftGuildFaction > 0)
+	if (gi.m_timeLeftGuildFaction != 0)
 		return gi.m_timeLeftGuildFaction;
 
 	return 0;
@@ -388,7 +393,7 @@ std::string const & GuildInterface::getGuildCurrentGcwDefenderRegion(int guildId
 
 std::string const &GuildInterface::getGuildCurrentGcwDefenderRegion(GuildInfo const & gi)
 {
-	if (gi.m_timeLeftGuildGcwDefenderRegion <= 0)
+	if (gi.m_timeLeftGuildGcwDefenderRegion == 0)
 		return gi.m_guildGcwDefenderRegion;
 
 	return s_empty;
@@ -409,7 +414,7 @@ int GuildInterface::getTimeJoinedGuildCurrentGcwDefenderRegion(int guildId)
 
 int GuildInterface::getTimeJoinedGuildCurrentGcwDefenderRegion(GuildInfo const & gi)
 {
-	if (gi.m_timeLeftGuildGcwDefenderRegion <= 0)
+	if (gi.m_timeLeftGuildGcwDefenderRegion == 0)
 		return gi.m_timeJoinedGuildGcwDefenderRegion;
 
 	return 0;
@@ -430,7 +435,7 @@ std::string const & GuildInterface::getGuildPreviousGcwDefenderRegion(int guildI
 
 std::string const & GuildInterface::getGuildPreviousGcwDefenderRegion(GuildInfo const & gi)
 {
-	if (gi.m_timeLeftGuildGcwDefenderRegion > 0)
+	if (gi.m_timeLeftGuildGcwDefenderRegion != 0)
 		return gi.m_guildGcwDefenderRegion;
 
 	return s_empty;
@@ -451,7 +456,7 @@ int GuildInterface::getTimeLeftGuildPreviousGcwDefenderRegion(int guildId)
 
 int GuildInterface::getTimeLeftGuildPreviousGcwDefenderRegion(GuildInfo const & gi)
 {
-	if (gi.m_timeLeftGuildGcwDefenderRegion > 0)
+	if (gi.m_timeLeftGuildGcwDefenderRegion != 0)
 		return gi.m_timeLeftGuildGcwDefenderRegion;
 
 	return 0;
@@ -1120,7 +1125,7 @@ void GuildInterface::updateGuildWarKillTracking(CreatureObject const &killer, Cr
 	 && hasDeclaredWarAgainst(killer.getGuildId(), victim.getGuildId())
 	 && hasDeclaredWarAgainst(victim.getGuildId(), killer.getGuildId()))
 	{
-		ServerUniverse::getInstance().getMasterGuildObject()->modifyGuildWarKillTracking(killer.getGuildId(), victim.getGuildId(), 1, static_cast<int>(::time(nullptr)));
+		ServerUniverse::getInstance().getMasterGuildObject()->modifyGuildWarKillTracking(killer.getGuildId(), victim.getGuildId(), 1, EpochTime::toWire32(EpochTime::now()));
 	}
 }
 

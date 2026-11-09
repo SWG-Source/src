@@ -4,6 +4,8 @@
 
 //-----------------------------------------------------------------------
 #include "FirstTaskManager.h"
+// declares the 64-bit Archive overloads before any pair<..., int64_t> message is instantiated
+#include "sharedFoundation/NetworkIdArchive.h"
 
 #include "CentralConnection.h"
 #include "ConfigTaskManager.h"
@@ -970,7 +972,7 @@ void TaskManager::update()
 			ManagerConnection * master = Locator::getServer("node0");
 			if (master)
 			{
-				GenericValueTypeMessage<std::pair<std::string, int32_t > > msg("SystemTimeCheck", std::make_pair(getNodeLabel(), static_cast<int32_t>(timeNow)));
+				GenericValueTypeMessage<std::pair<std::string, int64_t > > msg("SystemTimeCheck", std::make_pair(getNodeLabel(), static_cast<int64_t>(timeNow)));
 				master->send(msg);
 			}
 		}

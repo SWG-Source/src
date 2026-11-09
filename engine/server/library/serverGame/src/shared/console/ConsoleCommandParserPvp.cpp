@@ -24,6 +24,7 @@
 #include "sharedFoundation/FormattedString.h"
 #include "sharedFoundation/NetworkId.h"
 #include "sharedGame/PvpData.h"
+#include "serverUtility/EpochTime.h"
 
 // ======================================================================
  
@@ -195,8 +196,8 @@ bool ConsoleCommandParserPvp::performParsing (const NetworkId & userId, const St
 				}
 
 				result += Unicode::narrowToWide(FormattedString<512>().sprintf("lifetime PvP kills:                     %d\n",p->getLifetimePvpKills()));
-				result += Unicode::narrowToWide(FormattedString<512>().sprintf("next GCW rating calculation time:       %d",p->getNextGcwRatingCalcTime()));
-				int32 const now = static_cast<int32>(::time(nullptr));
+				result += Unicode::narrowToWide(FormattedString<512>().sprintf("next GCW rating calculation time:       %lld",static_cast<long long>(p->getNextGcwRatingCalcTime())));
+				int64 const now = EpochTime::now();
 				if (p->getNextGcwRatingCalcTime() > 0)
 				{
 					if (p->getNextGcwRatingCalcTime() >= now)
@@ -211,16 +212,18 @@ bool ConsoleCommandParserPvp::performParsing (const NetworkId & userId, const St
 					result += Unicode::narrowToWide("\n");
 				}
 
-				if (p->getGcwRatingActualCalcTime() > 0)
+				if (p->getGcwRatingActualCalcTime() != 0)
 				{
-					result += Unicode::narrowToWide(FormattedString<512>().sprintf("actual GCW rating calculation time:     %d",p->getGcwRatingActualCalcTime()));
+					// the actual calculation time is kept in the client's wrapped 32-bit form
+					int64 const actualCalcTime = EpochTime::fromWire32(p->getGcwRatingActualCalcTime(), now);
+					result += Unicode::narrowToWide(FormattedString<512>().sprintf("actual GCW rating calculation time:     %lld",static_cast<long long>(actualCalcTime)));
 
-					if (p->getGcwRatingActualCalcTime() >= now)
-						result += Unicode::narrowToWide(FormattedString<512>().sprintf(" (%s)",CalendarTime::convertSecondsToDHMS(static_cast<unsigned int>(p->getGcwRatingActualCalcTime() - now)).c_str()));
+					if (actualCalcTime >= now)
+						result += Unicode::narrowToWide(FormattedString<512>().sprintf(" (%s)",CalendarTime::convertSecondsToDHMS(static_cast<unsigned int>(actualCalcTime - now)).c_str()));
 					else
-						result += Unicode::narrowToWide(FormattedString<512>().sprintf(" (-%s)",CalendarTime::convertSecondsToDHMS(static_cast<unsigned int>(now - p->getGcwRatingActualCalcTime())).c_str()));
+						result += Unicode::narrowToWide(FormattedString<512>().sprintf(" (-%s)",CalendarTime::convertSecondsToDHMS(static_cast<unsigned int>(now - actualCalcTime)).c_str()));
 
-					result += Unicode::narrowToWide(FormattedString<512>().sprintf(" (%s) (%s)\n",CalendarTime::convertEpochToTimeStringGMT(static_cast<time_t>(p->getGcwRatingActualCalcTime())).c_str(), CalendarTime::convertEpochToTimeStringLocal(static_cast<time_t>(p->getGcwRatingActualCalcTime())).c_str()));
+					result += Unicode::narrowToWide(FormattedString<512>().sprintf(" (%s) (%s)\n",CalendarTime::convertEpochToTimeStringGMT(static_cast<time_t>(actualCalcTime)).c_str(), CalendarTime::convertEpochToTimeStringLocal(static_cast<time_t>(actualCalcTime)).c_str()));
 				}
 			}
 		}
@@ -564,9 +567,9 @@ bool ConsoleCommandParserPvp::performParsing (const NetworkId & userId, const St
 		}
 
 		if (adjustment != 0)
-			result += Unicode::narrowToWide(FormattedString<512>().sprintf("character object %s (%s) adjusting next GCW rating calculation time (%d) by (%d) weeks\n", oid.getValueString().c_str(), Unicode::wideToNarrow(o->getAssignedObjectName()).c_str(), p->getNextGcwRatingCalcTime(), adjustment));
+			result += Unicode::narrowToWide(FormattedString<512>().sprintf("character object %s (%s) adjusting next GCW rating calculation time (%lld) by (%d) weeks\n", oid.getValueString().c_str(), Unicode::wideToNarrow(o->getAssignedObjectName()).c_str(), static_cast<long long>(p->getNextGcwRatingCalcTime()), adjustment));
 		else
-			result += Unicode::narrowToWide(FormattedString<512>().sprintf("character object %s (%s) adjusting next GCW rating calculation time (%d) to now\n", oid.getValueString().c_str(), Unicode::wideToNarrow(o->getAssignedObjectName()).c_str(), p->getNextGcwRatingCalcTime()));
+			result += Unicode::narrowToWide(FormattedString<512>().sprintf("character object %s (%s) adjusting next GCW rating calculation time (%lld) to now\n", oid.getValueString().c_str(), Unicode::wideToNarrow(o->getAssignedObjectName()).c_str(), static_cast<long long>(p->getNextGcwRatingCalcTime())));
 
 		p->modifyNextGcwRatingCalcTime(adjustment);
 

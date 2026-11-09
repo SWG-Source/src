@@ -12,6 +12,7 @@
 #include "serverGame/Chat.h"
 #include "serverGame/ServerImageDesignerManager.h"
 #include "serverGame/ServerObject.h"
+#include "serverUtility/EpochTime.h"
 #include "sharedFoundation/Os.h"
 #include "sharedGame/SharedImageDesignerManager.h"
 #include "sharedGame/SharedStringIds.h"
@@ -136,7 +137,8 @@ jboolean JNICALL ScriptMethodsImageDesignNamespace::imagedesignValidated(JNIEnv 
 	session.designerId = designerObj->getNetworkId();
 	session.recipientId = recipientObj->getNetworkId();
 	session.terminalId = terminalObj ? terminalObj->getNetworkId() : NetworkId::cms_invalid;
-	session.startingTime = jstartingTime;
+	// scripts carry the wrapped 32-bit calendar time; recover the full value
+	session.startingTime = static_cast<time_t>(EpochTime::fromWire32(jstartingTime, EpochTime::now()));
 	session.designType = static_cast<ImageDesignChangeMessage::DesignType>(jdesignType);
 	session.newHairSet = jnewHairSet;
 	std::string newHairAsset;

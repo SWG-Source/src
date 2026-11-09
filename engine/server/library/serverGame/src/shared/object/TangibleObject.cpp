@@ -60,6 +60,7 @@
 #include "serverScript/ScriptDictionary.h"
 #include "serverScript/ScriptFunctionTable.h"
 #include "serverScript/ScriptParameters.h"
+#include "serverUtility/EpochTime.h"
 #include "serverUtility/ServerClock.h"
 #include "sharedDebug/Profiler.h"
 #include "sharedFile/FileNameUtils.h"
@@ -1672,12 +1673,12 @@ void TangibleObject::setPvpMercenaryFaction(Pvp::FactionId factionId, Pvp::PvpTy
 	{
 		if (PvpData::isImperialFactionId(m_pvpMercenaryFaction.get()))
 		{
-			IGNORE_RETURN(setObjVarItem("factionalHelper.timeStopHelpingImperial", static_cast<int>(::time(nullptr))));
+			IGNORE_RETURN(setObjVarItem("factionalHelper.timeStopHelpingImperial", EpochTime::toWire32(EpochTime::now())));
 			removeObjVarItem("factionalHelper.timeStopHelpingRebel");
 		}
 		else if (PvpData::isRebelFactionId(m_pvpMercenaryFaction.get()))
 		{
-			IGNORE_RETURN(setObjVarItem("factionalHelper.timeStopHelpingRebel", static_cast<int>(::time(nullptr))));
+			IGNORE_RETURN(setObjVarItem("factionalHelper.timeStopHelpingRebel", EpochTime::toWire32(EpochTime::now())));
 			removeObjVarItem("factionalHelper.timeStopHelpingImperial");
 		}
 	}

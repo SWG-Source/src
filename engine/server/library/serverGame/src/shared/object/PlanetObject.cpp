@@ -30,6 +30,7 @@
 #include "serverGame/ServerWorld.h"
 #include "serverScript/GameScriptObject.h"
 #include "serverScript/ScriptParameters.h"
+#include "serverUtility/EpochTime.h"
 #include "serverUtility/ServerClock.h"
 #include "sharedFoundation/CalendarTime.h"
 #include "sharedFoundation/DynamicVariableList.h"
@@ -142,7 +143,8 @@ namespace PlanetObjectNamespace
 		return lhs;
 	}
 
-	int getNextGcwScoreDecayTime(int base);
+	int64_t getNextGcwScoreDecayTime(int64_t base);
+	int64_t getGcwScoreNextDecayTime(DynamicVariableList const & objVars, int64_t now);
 
 	// dictionary containing the table showing factional presence activity
 	ScriptParams * s_factionalPresenceSuiTable = nullptr;
@@ -1228,21 +1230,21 @@ void PlanetObject::handleCMessageTo(MessageToPayload const &message)
 	else if (message.getMethod() == "C++DoGcwDecay")
 	{
 		// start decay handling loop
-		int const now = static_cast<int>(::time(nullptr));
-		int timeNextGcwScoreDecay;
-		if (!getObjVars().getItem("gcwScore.nextDecayTime", timeNextGcwScoreDecay) || (timeNextGcwScoreDecay <= 0))
+		int64_t const now = EpochTime::now();
+		int64_t timeNextGcwScoreDecay = getGcwScoreNextDecayTime(getObjVars(), now);
+		if (timeNextGcwScoreDecay <= 0)
 		{
 			timeNextGcwScoreDecay = getNextGcwScoreDecayTime(now);				
 			if (timeNextGcwScoreDecay >= now)
 			{
-				setObjVarItem("gcwScore.nextDecayTime", timeNextGcwScoreDecay);
+				setObjVarItem("gcwScore.nextDecayTime", EpochTime::toWire32(timeNextGcwScoreDecay));
 			}
 		}
 
 		if ((timeNextGcwScoreDecay <= now) && (timeNextGcwScoreDecay > 0))
 		{
 			// decay GCW score
-			LOG("CustomerService", ("GcwScore: decaying GCW score for period ending (%s)", CalendarTime::convertEpochToTimeStringGMT(timeNextGcwScoreDecay).c_str()));
+			LOG("CustomerService", ("GcwScore: decaying GCW score for period ending (%s)", CalendarTime::convertEpochToTimeStringGMT(static_cast<time_t>(timeNextGcwScoreDecay)).c_str()));
 
 			std::vector<NetworkId> scoreObjvar(2);
 			std::map<std::string, std::pair<int64, int64> > newGcwScore;
@@ -1323,13 +1325,13 @@ void PlanetObject::handleCMessageTo(MessageToPayload const &message)
 			timeNextGcwScoreDecay = getNextGcwScoreDecayTime(now + 1);				
 			if (timeNextGcwScoreDecay > 0)
 			{
-				setObjVarItem("gcwScore.nextDecayTime", timeNextGcwScoreDecay);
+				setObjVarItem("gcwScore.nextDecayTime", EpochTime::toWire32(timeNextGcwScoreDecay));
 			}
 		}
 
 		if (timeNextGcwScoreDecay > 0)
 		{
-			MessageToQueue::sendMessageToC(getNetworkId(), "C++DoGcwDecay", std::string(), std::max(0, timeNextGcwScoreDecay - now) + 1, false);
+			MessageToQueue::sendMessageToC(getNetworkId(), "C++DoGcwDecay", std::string(), std::max(0, std::min(EpochTime::clampedDifference(timeNextGcwScoreDecay, now), std::numeric_limits<int>::max() - 1)) + 1, false);
 		}
 	}
 	else if (message.getMethod() == "C++DoGcwDecayImmediate")
@@ -1432,20 +1434,20 @@ void PlanetObject::endBaselines()
 		}
 
 		// start decay handling loop
-		int const now = static_cast<int>(::time(nullptr));
-		int timeNextGcwScoreDecay;
-		if (!getObjVars().getItem("gcwScore.nextDecayTime", timeNextGcwScoreDecay) || (timeNextGcwScoreDecay <= 0))
+		int64_t const now = EpochTime::now();
+		int64_t timeNextGcwScoreDecay = getGcwScoreNextDecayTime(getObjVars(), now);
+		if (timeNextGcwScoreDecay <= 0)
 		{
 			timeNextGcwScoreDecay = getNextGcwScoreDecayTime(now);				
 			if (timeNextGcwScoreDecay >= now)
 			{
-				setObjVarItem("gcwScore.nextDecayTime", timeNextGcwScoreDecay);
+				setObjVarItem("gcwScore.nextDecayTime", EpochTime::toWire32(timeNextGcwScoreDecay));
 			}
 		}
 
 		if (timeNextGcwScoreDecay > 0)
 		{
-			MessageToQueue::sendMessageToC(getNetworkId(), "C++DoGcwDecay", std::string(), std::max(0, timeNextGcwScoreDecay - now) + 1, false);
+			MessageToQueue::sendMessageToC(getNetworkId(), "C++DoGcwDecay", std::string(), std::max(0, std::min(EpochTime::clampedDifference(timeNextGcwScoreDecay, now), std::numeric_limits<int>::max() - 1)) + 1, false);
 		}
 	}
 }
@@ -2377,7 +2379,7 @@ void PlanetObject::adjustGcwImperialScore(std::string const & source, CreatureOb
 			PlayerObject * const playerObject = PlayerCreatureController::getPlayerObject(sourceObject);
 			if (playerObject)
 			{
-				int const timeNow = static_cast<int>(::time(nullptr));
+				int const timeNow = EpochTime::toWire32(EpochTime::now()); // objvar convention
 				IGNORE_RETURN(playerObject->setObjVarItem(std::string("gcwContributionTracking.") + gcwCategory, timeNow));
 				IGNORE_RETURN(playerObject->setObjVarItem(std::string("gcwContributionTrackingLastUpdated"), timeNow));
 
@@ -2422,7 +2424,7 @@ void PlanetObject::adjustGcwRebelScore(std::string const & source, CreatureObjec
 			PlayerObject * const playerObject = PlayerCreatureController::getPlayerObject(sourceObject);
 			if (playerObject)
 			{
-				int const timeNow = static_cast<int>(::time(nullptr));
+				int const timeNow = EpochTime::toWire32(EpochTime::now()); // objvar convention
 				IGNORE_RETURN(playerObject->setObjVarItem(std::string("gcwContributionTracking.") + gcwCategory, timeNow));
 				IGNORE_RETURN(playerObject->setObjVarItem(std::string("gcwContributionTrackingLastUpdated"), timeNow));
 
@@ -2459,15 +2461,26 @@ int PlanetObject::getGcwImperialScorePercentile(std::string const & gcwCategory)
 
 // ----------------------------------------------------------------------
 
-int PlanetObjectNamespace::getNextGcwScoreDecayTime(int base)
+// The stored next decay time (the objvar holds the wrapped 32-bit form), or 0 if unset.
+int64_t PlanetObjectNamespace::getGcwScoreNextDecayTime(DynamicVariableList const & objVars, int64_t now)
 {
-	int nextTime = -1;
-	int time;
+	int stored = 0;
+	if (!objVars.getItem("gcwScore.nextDecayTime", stored) || (stored == 0))
+		return 0;
+	return EpochTime::fromWire32(stored, now);
+}
+
+// ----------------------------------------------------------------------
+
+int64_t PlanetObjectNamespace::getNextGcwScoreDecayTime(int64_t base)
+{
+	int64_t nextTime = -1;
+	int64_t time;
 
 	std::vector<std::pair<std::pair<int, int>, std::pair<int, int> > > const & gcwScoreDecayTime = ConfigServerGame::getGcwScoreDecayTime();
 	for (std::vector<std::pair<std::pair<int, int>, std::pair<int, int> > >::const_iterator iter = gcwScoreDecayTime.begin(); iter != gcwScoreDecayTime.end(); ++iter)
 	{
-		time = static_cast<int>(CalendarTime::getNextGMTTimeOcurrence(static_cast<time_t>(base), iter->first.first, iter->first.second, iter->second.first, iter->second.second));
+		time = static_cast<int64_t>(CalendarTime::getNextGMTTimeOcurrence(static_cast<time_t>(base), iter->first.first, iter->first.second, iter->second.first, iter->second.second));
 		if (time > 0)
 		{
 			if ((nextTime < 0) || (time < nextTime))
@@ -2476,7 +2489,7 @@ int PlanetObjectNamespace::getNextGcwScoreDecayTime(int base)
 	}
 
 	if (nextTime < 0)
-		nextTime = static_cast<int>(::time(nullptr)) + (60 * 60 * 24 * 7);
+		nextTime = EpochTime::now() + (60 * 60 * 24 * 7);
 
 	return nextTime;
 }

@@ -107,9 +107,9 @@ public:
 
 	int32_t              getSessionPlayTimeDuration() const;
 	int32_t              getSessionActivePlayTimeDuration() const;
-	int32                getSessionStartPlayTime() const;
-	int32                getSessionLastActiveTime() const;
-	void                 setSessionPlayTimeInfo(int32 sessionStartPlayTime, int32 sessionLastActiveTime, uint32_t sessionActivePlayTimeDuration);
+	int64                getSessionStartPlayTime() const;
+	int64                getSessionLastActiveTime() const;
+	void                 setSessionPlayTimeInfo(int64 sessionStartPlayTime, int64 sessionLastActiveTime, uint32_t sessionActivePlayTimeDuration);
 
 	void                 setStationId(StationId account);
 	void                 setCheaterLevel(float level);
@@ -321,7 +321,7 @@ public:
 	int32 getMaxGcwImperialRating() const;
 	int32 getMaxGcwRebelRating() const;
 	int32 getLifetimePvpKills() const;
-	int32 getNextGcwRatingCalcTime() const;
+	int64 getNextGcwRatingCalcTime() const;
 	int getCurrentGcwRank() const;
 	float getCurrentGcwRankProgress() const;
 	int getMaxGcwImperialRank() const;
@@ -338,7 +338,7 @@ public:
 	void modifyLifetimePvpKills(int count);
 	void modifyNextGcwRatingCalcTime(int weekCount);
 	void setNextGcwRatingCalcTime(bool alwaysSendMessageToForRecalc);
-	void ctsUseOnlySetGcwInfo(int32 currentGcwPoints, int32 currentGcwRating, int32 currentPvpKills, int64 lifetimeGcwPoints, int32 maxGcwImperialRating, int32 maxGcwRebelRating, int32 lifetimePvpKills, int32 nextGcwRatingCalcTime);
+	void ctsUseOnlySetGcwInfo(int32 currentGcwPoints, int32 currentGcwRating, int32 currentPvpKills, int64 lifetimeGcwPoints, int32 maxGcwImperialRating, int32 maxGcwRebelRating, int32 lifetimePvpKills, int64 nextGcwRatingCalcTime);
 
 	void addToPlayerHateList(NetworkId const & id);
 	void removeFromPlayerHateList(NetworkId const & id);
@@ -391,12 +391,12 @@ public:
 	void updateChatSpamSpatialNumCharacters(NetworkId const & character, int spatialNumCharacters);
 
 	int getChatSpamNonSpatialNumCharacters() const;
-	void handleChatStatisticsFromChatServer(NetworkId const & character, int chatSpamTimeEndInterval, int spatialNumCharacters, int nonSpatialNumCharacters);
+	void handleChatStatisticsFromChatServer(NetworkId const & character, int64_t chatSpamTimeEndInterval, int spatialNumCharacters, int nonSpatialNumCharacters);
 
-	int getChatSpamTimeEndInterval() const;
+	int64_t getChatSpamTimeEndInterval() const;
 
-	int32_t getChatSpamNextTimeToNotifyPlayerWhenLimited() const;
-	void setChatSpamNextTimeToNotifyPlayerWhenLimited(int32_t chatSpamNextTimeToNotifyPlayerWhenLimited);
+	int64_t getChatSpamNextTimeToNotifyPlayerWhenLimited() const;
+	void setChatSpamNextTimeToNotifyPlayerWhenLimited(int64_t chatSpamNextTimeToNotifyPlayerWhenLimited);
 
 	// citizenship info
 	void updateCitizenshipInfo();
@@ -414,6 +414,7 @@ public:
 	void unsquelch();
 	NetworkId const & getSquelchedById() const;
 	int getSecondsUntilUnsquelched(); // returns 0 if not currently squelched; returns < 0 if indefinitely squelched
+	int64_t getUnsquelchEpochTime(); // returns 0 if not currently squelched; returns < 0 if indefinitely squelched; otherwise the epoch time the squelch ends
 
 	void modifyShowBackpack(bool b);
 	void modifyShowHelmet(bool b);
@@ -552,8 +553,8 @@ private:
 	// information to track player's play time during this particular session
 	// this information is kept and tracked in the connection server, but is
 	// cached here for use by the game server
-	Archive::AutoDeltaVariable<int32>                         m_sessionStartPlayTime;          // time when the player started playing the character
-	Archive::AutoDeltaVariable<int32>                         m_sessionLastActiveTime;         // the client will detect when the player is "active" or "inactive"; this keeps track of the last time that the client said the player was "active"; if 0, it means the client is currently "inactive"
+	Archive::AutoDeltaVariable<int64>                         m_sessionStartPlayTime;          // time when the player started playing the character
+	Archive::AutoDeltaVariable<int64>                         m_sessionLastActiveTime;         // the client will detect when the player is "active" or "inactive"; this keeps track of the last time that the client said the player was "active"; if 0, it means the client is currently "inactive"
 	Archive::AutoDeltaVariable<uint32_t>                      m_sessionActivePlayTimeDuration; // total amount of play time player was active (i.e. at the mouse/keyboard/joystick)
 
 	Archive::AutoDeltaVariable<int>                           m_food;
@@ -605,7 +606,7 @@ private:
 	Archive::AutoDeltaVariable<int32>                         m_maxGcwImperialRating;
 	Archive::AutoDeltaVariable<int32>                         m_maxGcwRebelRating;
 	Archive::AutoDeltaVariable<int32>                         m_lifetimePvpKills;
-	Archive::AutoDeltaVariable<int32>                         m_nextGcwRatingCalcTime;
+	Archive::AutoDeltaVariable<int64>                         m_nextGcwRatingCalcTime;
 	Archive::AutoDeltaVariable<int>                           m_currentGcwRank;
 	Archive::AutoDeltaVariable<float>                         m_currentGcwRankProgress;
 	Archive::AutoDeltaVariable<int>                           m_maxGcwImperialRank;
@@ -639,9 +640,9 @@ private:
 	// chat spam info
 	Archive::AutoDeltaVariable<int>                           m_chatSpamSpatialNumCharacters;
 	Archive::AutoDeltaVariable<int>                           m_chatSpamNonSpatialNumCharacters;
-	Archive::AutoDeltaVariable<int>                           m_chatSpamTimeEndInterval;
-	Archive::AutoDeltaVariable<int>                           m_chatSpamNextTimeToSyncWithChatServer;
-	int32_t                                                  m_chatSpamNextTimeToNotifyPlayerWhenLimited;
+	Archive::AutoDeltaVariable<int64_t>                       m_chatSpamTimeEndInterval;
+	Archive::AutoDeltaVariable<int64_t>                       m_chatSpamNextTimeToSyncWithChatServer;
+	int64_t                                                  m_chatSpamNextTimeToNotifyPlayerWhenLimited;
 
 	// citizenship info
 	Archive::AutoDeltaVariable<std::string>                   m_citizenshipCity;
@@ -653,10 +654,15 @@ private:
 	Archive::AutoDeltaVariable<std::pair<std::string, std::pair<bool, bool> > > m_cityGcwDefenderRegion;
 	Archive::AutoDeltaVariable<std::pair<std::string, std::pair<bool, bool> > > m_guildGcwDefenderRegion;
 
+	void setSquelchExpiry(bool indefinite, int64_t expireEpoch);
+	static int squelchExpireGameTime(int squelchDurationSeconds);
+
 	// squelch info
 	Archive::AutoDeltaVariable<NetworkId>                     m_squelchedById;   // id of the toon who squelched this toon; is NetworkId::cms_invalid if this toon is not squelched
 	Archive::AutoDeltaVariable<std::string>                   m_squelchedByName; // name of the toon who squelched this toon
-	Archive::AutoDeltaVariable<int32>                         m_squelchExpireTime; // the Epoch time when the toon will be unsquelched; is < 0 for indefinite squelch
+	Archive::AutoDeltaVariable<int32>                         m_squelchExpireTime; // sent to the client: the Epoch time when the toon will be unsquelched, wrapped to 32 bits; is < 0 for indefinite squelch (and, as on a 32-bit server, for expiries after 2038)
+	Archive::AutoDeltaVariable<int64_t>                       m_squelchExpireEpoch; // the Epoch time when the toon will be unsquelched, when not indefinite
+	Archive::AutoDeltaVariable<bool>                          m_squelchIndefinite; // squelched until explicitly unsquelched
 
 	Archive::AutoDeltaVariable<bool>						  m_showBackpack;
 	Archive::AutoDeltaVariable<bool>						  m_showHelmet;
@@ -726,14 +732,14 @@ inline int PlayerObject::getBornDate() const
 
 // ----------------------------------------------------------------------
 
-inline int32 PlayerObject::getSessionStartPlayTime() const
+inline int64 PlayerObject::getSessionStartPlayTime() const
 {
 	return m_sessionStartPlayTime.get();
 }
 
 // ----------------------------------------------------------------------
 
-inline int32 PlayerObject::getSessionLastActiveTime() const
+inline int64 PlayerObject::getSessionLastActiveTime() const
 {
 	return m_sessionLastActiveTime.get();
 }
@@ -962,7 +968,7 @@ inline int32 PlayerObject::getLifetimePvpKills() const
 
 // ----------------------------------------------------------------------
 
-inline int32 PlayerObject::getNextGcwRatingCalcTime() const
+inline int64 PlayerObject::getNextGcwRatingCalcTime() const
 {
 	return m_nextGcwRatingCalcTime.get();
 }
@@ -1046,21 +1052,21 @@ inline int PlayerObject::getChatSpamNonSpatialNumCharacters() const
 
 // ----------------------------------------------------------------------
 
-inline int PlayerObject::getChatSpamTimeEndInterval() const
+inline int64_t PlayerObject::getChatSpamTimeEndInterval() const
 {
 	return m_chatSpamTimeEndInterval.get();
 }
 
 // ----------------------------------------------------------------------
 
-inline int32_t PlayerObject::getChatSpamNextTimeToNotifyPlayerWhenLimited() const
+inline int64_t PlayerObject::getChatSpamNextTimeToNotifyPlayerWhenLimited() const
 {
 	return m_chatSpamNextTimeToNotifyPlayerWhenLimited;
 }
 
 // ----------------------------------------------------------------------
 
-inline void PlayerObject::setChatSpamNextTimeToNotifyPlayerWhenLimited(int32_t chatSpamNextTimeToNotifyPlayerWhenLimited)
+inline void PlayerObject::setChatSpamNextTimeToNotifyPlayerWhenLimited(int64_t chatSpamNextTimeToNotifyPlayerWhenLimited)
 {
 	m_chatSpamNextTimeToNotifyPlayerWhenLimited = chatSpamNextTimeToNotifyPlayerWhenLimited;
 }

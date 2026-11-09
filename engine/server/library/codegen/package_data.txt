@@ -282,8 +282,8 @@ PlayerObject                m_matchMakingPersonalProfileId  shared        MatchM
 PlayerObject                m_skillTitle                    shared         NullEncodedStandardString
 PlayerObject                m_bornDate                      shared        int
 PlayerObject                m_playedTime                    shared        int
-PlayerObject                m_sessionStartPlayTime          server_np      int32
-PlayerObject                m_sessionLastActiveTime         server_np      int32
+PlayerObject                m_sessionStartPlayTime          server_np      int64
+PlayerObject                m_sessionLastActiveTime         server_np      int64
 PlayerObject                m_sessionActivePlayTimeDuration server_np      uint32
 PlayerObject                m_privledgedTitle               shared_np      int8
 PlayerObject                m_roleIconChoice                shared         int
@@ -299,7 +299,7 @@ PlayerObject                m_lifetimeGcwPoints             shared         int64
 PlayerObject                m_maxGcwImperialRating          server         int32
 PlayerObject                m_maxGcwRebelRating             server         int32
 PlayerObject                m_lifetimePvpKills              shared         int32
-PlayerObject                m_nextGcwRatingCalcTime         server         int32
+PlayerObject                m_nextGcwRatingCalcTime         server         int64
 PlayerObject                m_currentGcwRank                shared_np      int
 PlayerObject                m_currentGcwRankProgress        shared_np      float
 PlayerObject                m_maxGcwImperialRank            shared_np      int
@@ -313,8 +313,8 @@ PlayerObject                m_collections                   shared         BitAr
 PlayerObject                m_collections2                  shared         BitArray
 PlayerObject                m_chatSpamSpatialNumCharacters  server_np      int
 PlayerObject                m_chatSpamNonSpatialNumCharacters server_np    int
-PlayerObject                m_chatSpamTimeEndInterval       server_np      int
-PlayerObject                m_chatSpamNextTimeToSyncWithChatServer server_np int
+PlayerObject                m_chatSpamTimeEndInterval       server_np      int64
+PlayerObject                m_chatSpamNextTimeToSyncWithChatServer server_np int64
 PlayerObject                m_citizenshipCity               shared_np      std::string
 PlayerObject                m_citizenshipType               shared_np      int8
 PlayerObject                m_currentGcwRegion              server_np      std::string
@@ -323,6 +323,8 @@ PlayerObject                m_guildGcwDefenderRegion        shared_np      std::
 PlayerObject                m_squelchedById                 shared_np      NetworkId
 PlayerObject                m_squelchedByName               shared_np      std::string
 PlayerObject                m_squelchExpireTime             shared_np      int32
+PlayerObject                m_squelchExpireEpoch            server_np      int64
+PlayerObject                m_squelchIndefinite             server_np      bool
 PlayerObject		    m_showBackpack	            shared         bool
 PlayerObject		    m_showHelmet		    shared         bool
 PlayerObject                m_environmentFlags              shared_np      int32

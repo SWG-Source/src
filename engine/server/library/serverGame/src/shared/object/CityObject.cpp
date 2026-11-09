@@ -29,6 +29,7 @@
 #include "sharedObject/Controller.h"
 
 #include "UnicodeUtils.h"
+#include "serverUtility/EpochTime.h"
 
 // ======================================================================
 
@@ -298,7 +299,7 @@ void CityObject::setupUniverse()
 				cities.insert(citySpec);
 
 				// see if city needs to have its creation time retroactively set
-				if (i->second <= 0)
+				if (i->second == 0)
 				{
 					time_t const retroactiveCreationTime = GameServer::getRetroactivePlayerCityCreationTime(GameServer::getInstance().getClusterName(), i->first);
 					if (retroactiveCreationTime > 0)
@@ -462,7 +463,7 @@ int CityObject::createCity(std::string const &cityName, NetworkId const &cityHal
 			incomeTax, propertyTax, salesTax,
 			travelLoc, travelCost, travelInterplanetary,
 			cloneLoc, cloneRespawn, cloneRespawnCell, cloneId);
-		ci.setCityCreationTime(static_cast<int>(::time(nullptr)));
+		ci.setCityCreationTime(EpochTime::toWire32(EpochTime::now())); // city info keeps the wrapped 32-bit form
 		m_citiesInfo.set(cityId, ci);
 
 		std::string citySpec;
@@ -2141,7 +2142,7 @@ void CityObject::adjustPgcRating(NetworkId const &chroniclerId, std::string cons
 			m_pgcRatingChroniclerId.insert(std::make_pair(NameManager::normalizeName(updatedPgcRating.m_chroniclerName), chroniclerId));
 		}
 
-		updatedPgcRating.m_lastRatingTime = static_cast<int>(::time(nullptr));
+		updatedPgcRating.m_lastRatingTime = EpochTime::toWire32(EpochTime::now());
 
 		std::string updatedPgcRatingSpec;
 		CityStringParser::buildPgcRatingSpec(chroniclerId, updatedPgcRating, updatedPgcRatingSpec);

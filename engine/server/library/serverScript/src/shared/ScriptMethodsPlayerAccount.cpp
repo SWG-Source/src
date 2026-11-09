@@ -36,6 +36,7 @@
 #include "sharedObject/SlottedContainer.h"
 #include "sharedUtility/DataTableManager.h"
 #include "sharedUtility/DataTable.h"
+#include "serverUtility/EpochTime.h"
 #include "serverUtility/FreeCtsDataTable.h"
 #include "UnicodeUtils.h"
 
@@ -331,7 +332,7 @@ jobject JNICALL ScriptMethodsPlayerAccountNamespace::getAccountTimeData(JNIEnv *
 jint JNICALL ScriptMethodsPlayerAccountNamespace::getPlayerLastLoginTime(JNIEnv *env, jobject self, jlong player)
 {
 	NetworkId playerId(player);
-        return NameManager::getInstance().getPlayerLastLoginTime(playerId);
+        return EpochTime::toWire32(NameManager::getInstance().getPlayerLastLoginTime(playerId)); // scripts use wrapped int calendar times
 }
 
 // ----------------------------------------------------------------------

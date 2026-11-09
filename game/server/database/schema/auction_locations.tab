@@ -5,9 +5,9 @@ create table auction_locations -- NO_IMPORT
     location_name varchar2(256),
     sales_tax number(20) DEFAULT 0,
     sales_tax_bank_id number(20) DEFAULT 0, -- BIND_AS(DB::BindableNetworkId)
-    empty_date number(20) not null,
-    last_access_date number(20) not null,
-    inactive_date number(20) not null,
+    empty_date number(20) not null, -- BIND_AS(DB::BindableInt64)
+    last_access_date number(20) not null, -- BIND_AS(DB::BindableInt64)
+    inactive_date number(20) not null, -- BIND_AS(DB::BindableInt64)
     status number(20) DEFAULT 0 not null,
     search_enabled char(1) default 'Y',
     entrance_charge number default 0 not null,

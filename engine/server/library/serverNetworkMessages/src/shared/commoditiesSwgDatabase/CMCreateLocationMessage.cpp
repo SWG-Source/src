@@ -36,9 +36,9 @@ CMCreateLocationMessage::CMCreateLocationMessage(
 	const NetworkId &    ownerId,
 	int                  salesTax,
 	const NetworkId &    bankId,
-	int                  emptyDate,
-	int                  lastAccessDate,
-	int                  inactiveDate,
+	int64_t              emptyDate,
+	int64_t              lastAccessDate,
+	int64_t              inactiveDate,
 	int                  status,
 	bool                 searchEnabled,
 	int                  entranceCharge

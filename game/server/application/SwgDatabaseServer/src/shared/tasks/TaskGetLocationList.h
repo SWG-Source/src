@@ -30,9 +30,9 @@ namespace DBSchema
 		DB::BindableString<256>      locationString;
 		DB::BindableInt32             salesTax;
 		DB::BindableNetworkId        salesTaxBankId;
-		DB::BindableInt32             emptyDate;
-		DB::BindableInt32             lastAccessDate;
-		DB::BindableInt32             inactiveDate;
+		DB::BindableInt64             emptyDate;
+		DB::BindableInt64             lastAccessDate;
+		DB::BindableInt64             inactiveDate;
 		DB::BindableInt32             status;
 		DB::BindableBool             searchEnabled;
 		DB::BindableInt32             entranceCharge;

@@ -2302,7 +2302,7 @@ void ChatServer::sendRoomMessage(const NetworkId & id, const unsigned int sequen
 					timeNow = ::time(nullptr);
 					if ((timeNow > aed->chatSpamNextTimeToSyncWithGameServer) || (timeNow > aed->chatSpamTimeEndInterval))
 					{
-						GenericValueTypeMessage<std::pair<std::pair<NetworkId, int>, std::pair<int, int> > > chatStatistics("ChatStatisticsCS", std::make_pair(std::make_pair(id, static_cast<int>(aed->chatSpamTimeEndInterval)), std::make_pair(aed->spatialCharCount, aed->nonSpatialCharCount)));
+						GenericValueTypeMessage<std::pair<std::pair<NetworkId, int64_t>, std::pair<int, int> > > chatStatistics("ChatStatisticsCS", std::make_pair(std::make_pair(id, static_cast<int64_t>(aed->chatSpamTimeEndInterval)), std::make_pair(aed->spatialCharCount, aed->nonSpatialCharCount)));
 						sendToClient(id, chatStatistics);
 						aed->chatSpamNextTimeToSyncWithGameServer = timeNow + ConfigChatServer::getChatStatisticsReportIntervalSeconds();
 					}
@@ -2851,7 +2851,7 @@ void ChatServer::handleChatStatisticsFromGameServer(NetworkId const & character,
 			time_t const timeNow = ::time(nullptr);
 			if (timeNow > aed->chatSpamNextTimeToSyncWithGameServer)
 			{
-				GenericValueTypeMessage<std::pair<std::pair<NetworkId, int>, std::pair<int, int> > > chatStatistics("ChatStatisticsCS", std::make_pair(std::make_pair(character, static_cast<int>(aed->chatSpamTimeEndInterval)), std::make_pair(aed->spatialCharCount, aed->nonSpatialCharCount)));
+				GenericValueTypeMessage<std::pair<std::pair<NetworkId, int64_t>, std::pair<int, int> > > chatStatistics("ChatStatisticsCS", std::make_pair(std::make_pair(character, static_cast<int64_t>(aed->chatSpamTimeEndInterval)), std::make_pair(aed->spatialCharCount, aed->nonSpatialCharCount)));
 				sendToClient(character, chatStatistics);
 				aed->chatSpamNextTimeToSyncWithGameServer = timeNow + ConfigChatServer::getChatStatisticsReportIntervalSeconds();
 			}

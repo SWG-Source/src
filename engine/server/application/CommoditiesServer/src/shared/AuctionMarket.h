@@ -83,7 +83,7 @@ protected:
 	int                                        m_itemTypeMapVersionNumber;
 	std::map<int, std::set<std::string> >      m_resourceTypeMap;
 	int                                        m_resourceTypeMapVersionNumber;
-	int                                        m_gameTime;
+	int64_t                                m_gameTime;
 	bool                                       m_showAllDebugInfo;
 
 	// auctions that are completed during this frame
@@ -93,20 +93,20 @@ protected:
 
 	// priority queue of auctions ordered by
 	// the auction expiration time
-	std::set<std::pair<int, NetworkId> >        m_priorityQueueAuctionTimer;
+	std::set<std::pair<int64_t, NetworkId> >        m_priorityQueueAuctionTimer;
 
 	// priority queue of auctions ordered by
 	// the item's expiration time
-	std::set<std::pair<int, NetworkId> >        m_priorityQueueItemTimer;
+	std::set<std::pair<int64_t, NetworkId> >        m_priorityQueueItemTimer;
 
 	// priority queue of auction locations ordered by the time
 	// the auction location needs to be checked for status change
-	std::set<std::pair<int, NetworkId> >        m_priorityQueueAuctionLocation;
+	std::set<std::pair<int64_t, NetworkId> >        m_priorityQueueAuctionLocation;
 
 	void              AddAuction(Auction *auction);
 	void              DestroyAuction(std::map<NetworkId, Auction *>::iterator & iter);
-	void              UpdateLiveAuctions(int gameTime);
-	void              DestroyExpiredItems(int gameTime);
+	void              UpdateLiveAuctions(int64_t gameTime);
+	void              DestroyExpiredItems(int64_t gameTime);
 	AuctionLocation * CreateLocation(const NetworkId & ownerId, const std::string & locationString, int entranceCharge);
 	void              InitializeFromDB();
 	bool              FixVendorLocation( const std::string& );
@@ -136,7 +136,7 @@ enum VendorStatusCode
 	REMOVED
 };
 
-	void    Update                        (int gameTime);
+	void    Update                        (int64_t gameTime);
 	void    AddAuction                    (const AddAuctionMessage &message);
 	void    AddImmediateAuction           (const AddImmediateAuctionMessage &message);
 	void    AddBid                        (const AddBidMessage &message);
@@ -166,11 +166,11 @@ enum VendorStatusCode
 	void    AddResourceType               (int resourceClassCrc, const std::string & resourceName);
 	void    SendResourceTypeMap           (GameServerConnection &gameServerConnection);
 
-	void    RemoveFromAuctionTimerPriorityQueue(int timer, const NetworkId & item);
+	void    RemoveFromAuctionTimerPriorityQueue(int64_t timer, const NetworkId & item);
 	void    AddAuctionToCompletedAuctionsList(const Auction & auction);
 
-	void    onReceiveAuctionLocations     (const NetworkId &locationId, const std::string &locationName, const NetworkId &ownerId, const int salesTax, const NetworkId &salesTaxBankId, const int emptyDate, const int lastAccessDate, const int inactiveDate, const int status, const bool searchEnabled, const int entranceCharge);
-	void    onReceiveMarketAuctions       (const NetworkId &itemId, const NetworkId &ownerId, const NetworkId &creatorId, const NetworkId &locationId, const int minBid, const int buyNowPrice, const int auctionTimer, const std::string &oob, const Unicode::String &userDescription, const int category, const int itemTemplateId, const Unicode::String &itemName, const int itemTimer, const int active, const int itemSize);
+	void    onReceiveAuctionLocations     (const NetworkId &locationId, const std::string &locationName, const NetworkId &ownerId, const int salesTax, const NetworkId &salesTaxBankId, const int64_t emptyDate, const int64_t lastAccessDate, const int64_t inactiveDate, const int status, const bool searchEnabled, const int entranceCharge);
+	void    onReceiveMarketAuctions       (const NetworkId &itemId, const NetworkId &ownerId, const NetworkId &creatorId, const NetworkId &locationId, const int minBid, const int buyNowPrice, const int64_t auctionTimer, const std::string &oob, const Unicode::String &userDescription, const int category, const int itemTemplateId, const Unicode::String &itemName, const int64_t itemTimer, const int active, const int itemSize);
 	void    onReceiveMarketAuctionAttributes(const NetworkId &itemId, const std::string &attributeName, const Unicode::String &attributeValue);
 	void    onReceiveMarketAuctionBids    (const NetworkId &itemId,  const NetworkId &bidderId, const int bid, const int maxProxyBid);
 	void    printAuctionTables();

@@ -16,6 +16,7 @@
 #include "sharedObject/Object.h"
 
 #include "serverScript/GameScriptObject.h"
+#include "serverUtility/EpochTime.h"
 #include "serverScript/ScriptFunctionTable.h"
 #include "serverScript/ScriptParameters.h"
 
@@ -118,7 +119,7 @@ void ServerBuffBuilderManager::sendSessionToScript(SharedBuffBuilderManager::Ses
 			ScriptParams params;
 			params.addParam(session.bufferId, "bufferId");
 			params.addParam(session.recipientId, "recipientId");
-			params.addParam(static_cast<int>(session.startingTime), "startingTime");
+			params.addParam(EpochTime::toWire32(session.startingTime), "startingTime");
 			params.addParam(session.bufferRequiredCredits, "bufferRequiredCredits");
 			params.addParam(session.bufferRequiredCredits, "recipientPaidCredits");
 			params.addParam(session.accepted, "accepted");

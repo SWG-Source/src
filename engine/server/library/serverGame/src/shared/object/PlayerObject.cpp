@@ -51,6 +51,7 @@
 #include "serverScript/ScriptDictionary.h"
 #include "serverScript/ScriptParameters.h"
 #include "serverUtility/ConfigServerUtility.h"
+#include "serverUtility/EpochTime.h"
 #include "serverUtility/ServerClock.h"
 #include "sharedFoundation/CalendarTime.h"
 #include "sharedFoundation/ConstCharCrcLowerString.h"
@@ -398,6 +399,8 @@ PlayerObject::PlayerObject(const ServerPlayerObjectTemplate* newTemplate) :
 		m_squelchedById(NetworkId::cms_invalid),
 		m_squelchedByName(),
 		m_squelchExpireTime(0),
+		m_squelchExpireEpoch(0),
+		m_squelchIndefinite(false),
 		m_showBackpack(true),
 		m_showHelmet(true),
 		m_environmentFlags(0),
@@ -683,7 +686,7 @@ void PlayerObject::virtualOnLogout()
 	}
 
 	// persist chat statistics
-	setObjVarItem(OBJVAR_CHAT_SPAM_TIME_END_INTERVAL, m_chatSpamTimeEndInterval.get());
+	setObjVarItem(OBJVAR_CHAT_SPAM_TIME_END_INTERVAL, static_cast<int>(EpochTime::toWire32(m_chatSpamTimeEndInterval.get())));
 	setObjVarItem(OBJVAR_CHAT_SPAM_SPATIAL, m_chatSpamSpatialNumCharacters.get());
 	setObjVarItem(OBJVAR_CHAT_SPAM_NON_SPATIAL, m_chatSpamNonSpatialNumCharacters.get());
 
@@ -702,7 +705,7 @@ void PlayerObject::virtualOnLogout()
 		if (secondsUntilUnsquelched < 0)
 			setObjVarItem(OBJVAR_SQUELCH_EXPIRE, -1);
 		else
-			setObjVarItem(OBJVAR_SQUELCH_EXPIRE, static_cast<int>(ServerClock::getInstance().getGameTimeSeconds()) + secondsUntilUnsquelched);
+			setObjVarItem(OBJVAR_SQUELCH_EXPIRE, squelchExpireGameTime(secondsUntilUnsquelched));
 	}
 	else
 	{
@@ -4310,7 +4313,8 @@ void PlayerObject::endBaselines()
 		DynamicVariableList const & objVars = getObjVars();
 		if (objVars.getItem(OBJVAR_CHAT_SPAM_TIME_END_INTERVAL, temp))
 		{
-			m_chatSpamTimeEndInterval = temp;
+			// the objvar holds the wrapped 32-bit form
+			m_chatSpamTimeEndInterval = EpochTime::fromWire32(temp, EpochTime::now());
 
 			if (objVars.getItem(OBJVAR_CHAT_SPAM_SPATIAL, temp))
 				m_chatSpamSpatialNumCharacters = temp;
@@ -4326,7 +4330,7 @@ void PlayerObject::endBaselines()
 		}
 		else
 		{
-			m_chatSpamTimeEndInterval = static_cast<int>(::time(nullptr)) + (ConfigServerGame::getChatSpamLimiterIntervalMinutes() * 60);
+			m_chatSpamTimeEndInterval = EpochTime::now() + (ConfigServerGame::getChatSpamLimiterIntervalMinutes() * 60);
 			m_chatSpamSpatialNumCharacters = 0;
 			m_chatSpamNonSpatialNumCharacters = 0;
 			m_chatSpamNextTimeToSyncWithChatServer = 0;
@@ -4341,7 +4345,7 @@ void PlayerObject::endBaselines()
 		// depersist squelch info
 		m_squelchedById = NetworkId::cms_invalid;
 		m_squelchedByName = std::string();
-		m_squelchExpireTime = 0;
+		setSquelchExpiry(false, 0);
 
 		NetworkId tempNetworkId;
 		std::string tempString;
@@ -4353,7 +4357,7 @@ void PlayerObject::endBaselines()
 				{
 					m_squelchedById = tempNetworkId;
 					m_squelchedByName = tempString;
-					m_squelchExpireTime = -1;
+					setSquelchExpiry(true, 0);
 				}
 				else if (temp > 0)
 				{
@@ -4362,7 +4366,7 @@ void PlayerObject::endBaselines()
 					{
 						m_squelchedById = tempNetworkId;
 						m_squelchedByName = tempString;
-						m_squelchExpireTime = static_cast<int32>(::time(nullptr)) + (temp - gameTimeNow);
+						setSquelchExpiry(false, EpochTime::now() + (temp - gameTimeNow));
 					}
 				}
 			}
@@ -4373,12 +4377,14 @@ void PlayerObject::endBaselines()
 			DynamicVariableList::NestedList const gcwContribution(getObjVars(), "gcwContributionTracking");
 			if (!gcwContribution.empty())
 			{
-				int const timeExpired = static_cast<int>(::time(nullptr)) - (60 * 60 * 24 * 30); // 30 days
+				int64_t const timeNow = EpochTime::now();
+				int64_t const timeExpired = timeNow - (60 * 60 * 24 * 30); // 30 days
 				std::list<std::string> gcwContributionToRemove;
 				int timeLastContributed;
 				for (DynamicVariableList::NestedList::const_iterator i = gcwContribution.begin(); i != gcwContribution.end(); ++i)
 				{
-					if (!Pvp::getGcwScoreCategory(i.getName()) || !i.getValue(timeLastContributed) || (timeLastContributed < timeExpired))
+					// the objvar holds the wrapped 32-bit form
+					if (!Pvp::getGcwScoreCategory(i.getName()) || !i.getValue(timeLastContributed) || (EpochTime::fromWire32(timeLastContributed, timeNow) < timeExpired))
 						gcwContributionToRemove.push_back(std::string("gcwContributionTracking.") + i.getName());
 				}
 
@@ -6339,12 +6345,12 @@ void PlayerObject::setPlayedTimeAccumOnly(float playedTimeAccum)
 
 int32_t PlayerObject::getSessionPlayTimeDuration() const
 {
-	int32_t const sessionStartPlayTime = m_sessionStartPlayTime.get();
+	int64_t const sessionStartPlayTime = m_sessionStartPlayTime.get();
 	if (sessionStartPlayTime > 0)
 	{
-		int32_t const now = ::time(nullptr);
+		int64_t const now = EpochTime::now();
 		if (now > sessionStartPlayTime)
-			return (now - sessionStartPlayTime);
+			return EpochTime::clampedDifference(now, sessionStartPlayTime);
 	}
 
 	return 0;
@@ -6356,12 +6362,12 @@ int32_t PlayerObject::getSessionActivePlayTimeDuration() const
 {
 	int32_t activePlayTimeDuration = m_sessionActivePlayTimeDuration.get();
 
-	int32_t const sessionLastActiveTime = m_sessionLastActiveTime.get();
+	int64_t const sessionLastActiveTime = m_sessionLastActiveTime.get();
 	if (sessionLastActiveTime > 0)
 	{
-		int32_t const now = ::time(nullptr);
+		int64_t const now = EpochTime::now();
 		if (now > sessionLastActiveTime)
-			activePlayTimeDuration += (now - sessionLastActiveTime);
+			activePlayTimeDuration += EpochTime::clampedDifference(now, sessionLastActiveTime);
 	}
 
 	return activePlayTimeDuration;
@@ -6369,14 +6375,14 @@ int32_t PlayerObject::getSessionActivePlayTimeDuration() const
 
 // ----------------------------------------------------------------------
 
-void PlayerObject::setSessionPlayTimeInfo(int32 sessionStartPlayTime, int32 sessionLastActiveTime, uint32_t sessionActivePlayTimeDuration)
+void PlayerObject::setSessionPlayTimeInfo(int64 sessionStartPlayTime, int64 sessionLastActiveTime, uint32_t sessionActivePlayTimeDuration)
 {
 	// shouldn't be calling this on a non-auth object
 	if (!isAuthoritative())
 		return;
 
-	int32 const previousSessionStartPlayTime = m_sessionStartPlayTime.get();
-	int32 const previousSessionLastActiveTime = m_sessionLastActiveTime.get();
+	int64 const previousSessionStartPlayTime = m_sessionStartPlayTime.get();
+	int64 const previousSessionLastActiveTime = m_sessionLastActiveTime.get();
 
 	m_sessionStartPlayTime = sessionStartPlayTime;
 	m_sessionLastActiveTime = sessionLastActiveTime;
@@ -7039,11 +7045,10 @@ void PlayerObject::modifyNextGcwRatingCalcTime(int const weekCount)
 		if (!needsGcwRatingRecalculated())
 			return;
 
-		static int32 const max = std::numeric_limits<int32>::max();
-		int32 const now = static_cast<int32>(::time(nullptr));
+		int64 const now = EpochTime::now();
 
 		// m_nextGcwRatingCalcTime should always be >= 0
-		int32 const currentValue = std::max(static_cast<int32>(0), m_nextGcwRatingCalcTime.get());
+		int64 const currentValue = std::max(static_cast<int64>(0), m_nextGcwRatingCalcTime.get());
 
 		// limit weekCount to -1000 to 1000 with 0 meaning "now"
 		int32 adjustedWeekCount = std::max(static_cast<int32>(-1000), static_cast<int32>(weekCount));
@@ -7058,14 +7063,12 @@ void PlayerObject::modifyNextGcwRatingCalcTime(int const weekCount)
 
 		if (adjustedWeekCount != 0)
 		{
-			int32 adjustedSeconds = 60 * 60 * 24 * 7 * adjustedWeekCount;
-
-			// limit adjustedSeconds so it doesn't cause overflow
-			adjustedSeconds = std::min(adjustedSeconds, max - currentValue);
+			// at most 1000 weeks either way, so the 64-bit sum cannot overflow
+			int64 const adjustedSeconds = static_cast<int64>(60 * 60 * 24 * 7) * adjustedWeekCount;
 
 			// don't allow the recalc time to be too far in the past
 			if (adjustedSeconds != 0)
-				m_nextGcwRatingCalcTime = std::max(static_cast<int32>(CalendarTimeNamespace::g_CalendarTimeEarliestTime), currentValue + adjustedSeconds);
+				m_nextGcwRatingCalcTime = std::max(static_cast<int64>(CalendarTimeNamespace::g_CalendarTimeEarliestTime), currentValue + adjustedSeconds);
 		}
 		else // 0 means "now"
 		{
@@ -7082,7 +7085,7 @@ void PlayerObject::modifyNextGcwRatingCalcTime(int const weekCount)
 			if (m_nextGcwRatingCalcTime.get() <= now)
 				sendRecalculateGcwRatingMessageTo(5);
 			else
-				sendRecalculateGcwRatingMessageTo(std::max(30, static_cast<int>(m_nextGcwRatingCalcTime.get() - now)) + 5 + (rand() % 60));
+				sendRecalculateGcwRatingMessageTo(std::min(std::max(30, EpochTime::clampedDifference(m_nextGcwRatingCalcTime.get(), now)), std::numeric_limits<int>::max() - 65) + 5 + (rand() % 60));
 		}
 	}
 	else
@@ -7094,7 +7097,7 @@ void PlayerObject::modifyNextGcwRatingCalcTime(int const weekCount)
 }
 
 // ----------------------------------------------------------------------
-void PlayerObject::ctsUseOnlySetGcwInfo(int32 currentGcwPoints, int32 currentGcwRating, int32 currentPvpKills, int64 lifetimeGcwPoints, int32 maxGcwImperialRating, int32 maxGcwRebelRating, int32 lifetimePvpKills, int32 nextGcwRatingCalcTime)
+void PlayerObject::ctsUseOnlySetGcwInfo(int32 currentGcwPoints, int32 currentGcwRating, int32 currentPvpKills, int64 lifetimeGcwPoints, int32 maxGcwImperialRating, int32 maxGcwRebelRating, int32 lifetimePvpKills, int64 nextGcwRatingCalcTime)
 {
 	// should only be called on authoritative object
 	if (!isAuthoritative())
@@ -7111,7 +7114,7 @@ void PlayerObject::ctsUseOnlySetGcwInfo(int32 currentGcwPoints, int32 currentGcw
 	int32 const oldMaxGcwImperialRating = m_maxGcwImperialRating.get();
 	int32 const oldMaxGcwRebelRating = m_maxGcwRebelRating.get();
 	int32 const oldLifetimePvpKills = m_lifetimePvpKills.get();
-	int32 const oldNextGcwRatingCalcTime = m_nextGcwRatingCalcTime.get();
+	int64 const oldNextGcwRatingCalcTime = m_nextGcwRatingCalcTime.get();
 
 	m_currentGcwPoints = std::max(static_cast<int32>(0), currentGcwPoints);
 	m_currentGcwRating = std::min(std::max(static_cast<int32>(-1), currentGcwRating), static_cast<int32>(Pvp::getMaxRatingForRank()));
@@ -7122,7 +7125,7 @@ void PlayerObject::ctsUseOnlySetGcwInfo(int32 currentGcwPoints, int32 currentGcw
 	m_lifetimePvpKills = std::max(static_cast<int32>(0), lifetimePvpKills);
 
 	// don't allow the recalc time to be too far in the past
-	m_nextGcwRatingCalcTime = ((nextGcwRatingCalcTime == 0) ? 0 : std::max(static_cast<int32>(CalendarTimeNamespace::g_CalendarTimeEarliestTime), nextGcwRatingCalcTime));
+	m_nextGcwRatingCalcTime = ((nextGcwRatingCalcTime == 0) ? 0 : std::max(static_cast<int64>(CalendarTimeNamespace::g_CalendarTimeEarliestTime), nextGcwRatingCalcTime));
 
 	Pvp::PvpRankInfo const & pvpRankInfo = Pvp::getRankInfo(m_currentGcwRating.get());
 	m_currentGcwRank = pvpRankInfo.rank;
@@ -7144,7 +7147,7 @@ void PlayerObject::ctsUseOnlySetGcwInfo(int32 currentGcwPoints, int32 currentGcw
 	sprintf(buffer1, INT64_FORMAT_SPECIFIER, oldLifetimeGcwPoints);
 	sprintf(buffer2, INT64_FORMAT_SPECIFIER, m_lifetimeGcwPoints.get());
 
-	LOG("CustomerService", ("PvP_Ranking:%s|applying info from CTS|point:%d -> %d|rating:%d -> %d|pvp kill:%d -> %d|lifetime point:%s -> %s|max imp rating:%d -> %d|max reb rating:%d -> %d|lifetime pvp kill:%d -> %d|calc time:%d -> %d",
+	LOG("CustomerService", ("PvP_Ranking:%s|applying info from CTS|point:%d -> %d|rating:%d -> %d|pvp kill:%d -> %d|lifetime point:%s -> %s|max imp rating:%d -> %d|max reb rating:%d -> %d|lifetime pvp kill:%d -> %d|calc time:%lld -> %lld",
 		getAccountDescription().c_str(),
 		oldCurrentGcwPoints, m_currentGcwPoints.get(),
 		oldCurrentGcwRating, m_currentGcwRating.get(),
@@ -7153,7 +7156,7 @@ void PlayerObject::ctsUseOnlySetGcwInfo(int32 currentGcwPoints, int32 currentGcw
 		oldMaxGcwImperialRating, m_maxGcwImperialRating.get(),
 		oldMaxGcwRebelRating, m_maxGcwRebelRating.get(),
 		oldLifetimePvpKills, m_lifetimePvpKills.get(),
-		oldNextGcwRatingCalcTime, m_nextGcwRatingCalcTime.get()));
+		static_cast<long long>(oldNextGcwRatingCalcTime), static_cast<long long>(m_nextGcwRatingCalcTime.get())));
 
 	// if necessary, cancel the currently pending messageTo for rating recalculation
 	if (oldNextGcwRatingCalcTime > 0)
@@ -7176,7 +7179,7 @@ void PlayerObject::setNextGcwRatingCalcTime(bool const alwaysSendMessageToForRec
 		return;
 
 	bool needToSendMessageTo = alwaysSendMessageToForRecalc;
-	int32 const now = static_cast<int32>(::time(nullptr));
+	int64 const now = EpochTime::now();
 
 	// if the player needs a rating recalculation,
 	// make sure that m_nextGcwRatingCalcTime is set so that the
@@ -7185,10 +7188,10 @@ void PlayerObject::setNextGcwRatingCalcTime(bool const alwaysSendMessageToForRec
 	{
 		if (m_nextGcwRatingCalcTime.get() <= 0)
 		{
-			uint32_t const nextCalcTime = CalendarTime::getNextGMTTimeOcurrence(static_cast<uint32_t>(now), ConfigServerGame::getGcwRecalcTimeDayOfWeek(), ConfigServerGame::getGcwRecalcTimeHour(), ConfigServerGame::getGcwRecalcTimeMinute(), ConfigServerGame::getGcwRecalcTimeSecond());
+			time_t const nextCalcTime = CalendarTime::getNextGMTTimeOcurrence(static_cast<time_t>(now), ConfigServerGame::getGcwRecalcTimeDayOfWeek(), ConfigServerGame::getGcwRecalcTimeHour(), ConfigServerGame::getGcwRecalcTimeMinute(), ConfigServerGame::getGcwRecalcTimeSecond());
 			if (nextCalcTime > 0)
 			{
-				m_nextGcwRatingCalcTime = static_cast<int32>(nextCalcTime);
+				m_nextGcwRatingCalcTime = static_cast<int64>(nextCalcTime);
 				needToSendMessageTo = true;
 			}
 		}
@@ -7215,7 +7218,7 @@ void PlayerObject::setNextGcwRatingCalcTime(bool const alwaysSendMessageToForRec
 		if (m_nextGcwRatingCalcTime.get() <= now)
 			sendRecalculateGcwRatingMessageTo(5);
 		else
-			sendRecalculateGcwRatingMessageTo(std::max(30, static_cast<int>(m_nextGcwRatingCalcTime.get() - now)) + 5 + (rand() % 60));
+			sendRecalculateGcwRatingMessageTo(std::min(std::max(30, EpochTime::clampedDifference(m_nextGcwRatingCalcTime.get(), now)), std::numeric_limits<int>::max() - 65) + 5 + (rand() % 60));
 	}
 }
 
@@ -7232,13 +7235,13 @@ void PlayerObject::handleRecalculateGcwRating()
 		return;
 
 	// is it time to recalculate?
-	int32 const now = static_cast<int32>(::time(nullptr));
+	int64 const now = EpochTime::now();
 	if ((m_nextGcwRatingCalcTime.get() > 0) && (m_nextGcwRatingCalcTime.get() <= now))
 	{
 		// is recalculation required?
 		if (needsGcwRatingRecalculated())
 		{
-			int32 nextCalcInterval = m_nextGcwRatingCalcTime.get();
+			int64 nextCalcInterval = m_nextGcwRatingCalcTime.get();
 			int32 points = std::max(static_cast<int32>(0), m_currentGcwPoints.get());
 			int32 currentRating = m_currentGcwRating.get();
 			int32 previousRating;
@@ -7250,14 +7253,14 @@ void PlayerObject::handleRecalculateGcwRating()
 				totalRatingAdjustment = Pvp::calculateRatingAdjustment(static_cast<int>(points), static_cast<int>(currentRating), totalEarnedRating, totalEarnedRatingAfterDecay, cappedRatingAdjustment);
 
 				// don't apply rating loss if we are in a "rating loss exclusion interval"
-				if ((totalRatingAdjustment < 0) && (Pvp::isInGcwRankDecayExclusionInterval(static_cast<uint32_t>(nextCalcInterval))))
+				if ((totalRatingAdjustment < 0) && (Pvp::isInGcwRankDecayExclusionInterval(static_cast<time_t>(nextCalcInterval))))
 				{
 					// CS log
-					LOG("CustomerService", ("PvP_Ranking:%s|NOT APPLYING RATING LOSS|interval %d (%s) (%s)|current rating=%d|points=%d|total earned rating=%d|total earned rating after decay=%d|capped rating adjustment=%d|final rating adjustment=%d",
+					LOG("CustomerService", ("PvP_Ranking:%s|NOT APPLYING RATING LOSS|interval %lld (%s) (%s)|current rating=%d|points=%d|total earned rating=%d|total earned rating after decay=%d|capped rating adjustment=%d|final rating adjustment=%d",
 						getAccountDescription().c_str(),
-						nextCalcInterval,
-						CalendarTime::convertEpochToTimeStringGMT(static_cast<uint32_t>(nextCalcInterval)).c_str(),
-						CalendarTime::convertEpochToTimeStringLocal(static_cast<uint32_t>(nextCalcInterval)).c_str(),
+						static_cast<long long>(nextCalcInterval),
+						CalendarTime::convertEpochToTimeStringGMT(static_cast<time_t>(nextCalcInterval)).c_str(),
+						CalendarTime::convertEpochToTimeStringLocal(static_cast<time_t>(nextCalcInterval)).c_str(),
 						currentRating,
 						points,
 						totalEarnedRating,
@@ -7276,11 +7279,11 @@ void PlayerObject::handleRecalculateGcwRating()
 					currentRating = std::min(currentRating, static_cast<int32>(Pvp::getMaxRatingForRank()));
 
 					// CS log
-					LOG("CustomerService", ("PvP_Ranking:%s|interval %d (%s) (%s)|current rating=%d|new rating=%d|points=%d|total earned rating=%d|total earned rating after decay=%d|capped rating adjustment=%d|final rating adjustment=%d",
+					LOG("CustomerService", ("PvP_Ranking:%s|interval %lld (%s) (%s)|current rating=%d|new rating=%d|points=%d|total earned rating=%d|total earned rating after decay=%d|capped rating adjustment=%d|final rating adjustment=%d",
 						getAccountDescription().c_str(),
-						nextCalcInterval,
-						CalendarTime::convertEpochToTimeStringGMT(static_cast<uint32_t>(nextCalcInterval)).c_str(),
-						CalendarTime::convertEpochToTimeStringLocal(static_cast<uint32_t>(nextCalcInterval)).c_str(),
+						static_cast<long long>(nextCalcInterval),
+						CalendarTime::convertEpochToTimeStringGMT(static_cast<time_t>(nextCalcInterval)).c_str(),
+						CalendarTime::convertEpochToTimeStringLocal(static_cast<time_t>(nextCalcInterval)).c_str(),
 						previousRating,
 						currentRating,
 						points,
@@ -7294,7 +7297,7 @@ void PlayerObject::handleRecalculateGcwRating()
 				points = 0;
 
 				// check to see if we need to do another calculation for the next interval
-				nextCalcInterval = static_cast<int32>(CalendarTime::getNextGMTTimeOcurrence(static_cast<uint32_t>(nextCalcInterval)+1, ConfigServerGame::getGcwRecalcTimeDayOfWeek(), ConfigServerGame::getGcwRecalcTimeHour(), ConfigServerGame::getGcwRecalcTimeMinute(), ConfigServerGame::getGcwRecalcTimeSecond()));
+				nextCalcInterval = static_cast<int64>(CalendarTime::getNextGMTTimeOcurrence(static_cast<time_t>(nextCalcInterval)+1, ConfigServerGame::getGcwRecalcTimeDayOfWeek(), ConfigServerGame::getGcwRecalcTimeHour(), ConfigServerGame::getGcwRecalcTimeMinute(), ConfigServerGame::getGcwRecalcTimeSecond()));
 				if (nextCalcInterval <= 0)
 					break;
 
@@ -7367,7 +7370,8 @@ void PlayerObject::sendRecalculateGcwRatingMessageTo(int delay)
 	// send new messageTo
 	int const adjustedDelay = std::max(5, delay);
 	MessageToQueue::getInstance().sendMessageToC(getNetworkId(), "C++RecalculateGcwRating", "", adjustedDelay, false);
-	m_gcwRatingActualCalcTime = static_cast<int32>(::time(nullptr) + adjustedDelay);
+	// shared with the client, which keeps the wrapped 32-bit form
+	m_gcwRatingActualCalcTime = EpochTime::toWire32(EpochTime::now() + adjustedDelay);
 }
 
 // ----------------------------------------------------------------------
@@ -8103,7 +8107,7 @@ void PlayerObject::updateChatSpamSpatialNumCharacters(NetworkId const & characte
 	if (!isAuthoritative())
 		return;
 
-	int const timeNow = static_cast<int>(::time(nullptr));
+	int64_t const timeNow = EpochTime::now();
 	bool syncChatServer = false;
 
 	// new interval, reset
@@ -8123,11 +8127,9 @@ void PlayerObject::updateChatSpamSpatialNumCharacters(NetworkId const & characte
 	// sync chat character count with chat server
 	if ((syncChatServer) || (timeNow > m_chatSpamNextTimeToSyncWithChatServer.get()))
 	{
-		uint32_t timeUnsquelch = static_cast<uint32_t>(getSecondsUntilUnsquelched());
-		if (timeUnsquelch > 0)
-			timeUnsquelch += ::time(nullptr);
+		int64_t const timeUnsquelch = getUnsquelchEpochTime();
 
-		GenericValueTypeMessage<std::pair<std::pair<std::pair<NetworkId, int>, int>, std::pair<int, int> > > chatStatistics("ChatStatisticsGS", std::make_pair(std::make_pair(std::make_pair(character, static_cast<int>(timeUnsquelch)), m_chatSpamTimeEndInterval.get()), std::make_pair(m_chatSpamSpatialNumCharacters.get(), m_chatSpamNonSpatialNumCharacters.get())));
+		GenericValueTypeMessage<std::pair<std::pair<std::pair<NetworkId, int64_t>, int64_t>, std::pair<int, int> > > chatStatistics("ChatStatisticsGS", std::make_pair(std::make_pair(std::make_pair(character, timeUnsquelch), m_chatSpamTimeEndInterval.get()), std::make_pair(m_chatSpamSpatialNumCharacters.get(), m_chatSpamNonSpatialNumCharacters.get())));
 		Chat::sendToChatServer(chatStatistics);
 		m_chatSpamNextTimeToSyncWithChatServer = timeNow + ConfigServerGame::getChatStatisticsReportIntervalSeconds();
 	}
@@ -8135,12 +8137,12 @@ void PlayerObject::updateChatSpamSpatialNumCharacters(NetworkId const & characte
 
 // ----------------------------------------------------------------------
 
-void PlayerObject::handleChatStatisticsFromChatServer(NetworkId const & character, int chatSpamTimeEndInterval, int spatialNumCharacters, int nonSpatialNumCharacters)
+void PlayerObject::handleChatStatisticsFromChatServer(NetworkId const & character, int64_t chatSpamTimeEndInterval, int spatialNumCharacters, int nonSpatialNumCharacters)
 {
 	if (!isAuthoritative())
 		return;
 
-	int const timeNow = static_cast<int>(::time(nullptr));
+	int64_t const timeNow = EpochTime::now();
 	bool syncChatServer = false;
 
 	// new interval, reset
@@ -8166,11 +8168,9 @@ void PlayerObject::handleChatStatisticsFromChatServer(NetworkId const & characte
 	// sync chat character count with chat server
 	if (syncChatServer || ((spatialNumCharacters != m_chatSpamSpatialNumCharacters.get()) && (timeNow > m_chatSpamNextTimeToSyncWithChatServer.get())))
 	{
-		uint32_t timeUnsquelch = static_cast<uint32_t>(getSecondsUntilUnsquelched());
-		if (timeUnsquelch > 0)
-			timeUnsquelch += ::time(nullptr);
+		int64_t const timeUnsquelch = getUnsquelchEpochTime();
 
-		GenericValueTypeMessage<std::pair<std::pair<std::pair<NetworkId, int>, int>, std::pair<int, int> > > chatStatistics("ChatStatisticsGS", std::make_pair(std::make_pair(std::make_pair(character, static_cast<int>(timeUnsquelch)), m_chatSpamTimeEndInterval.get()), std::make_pair(m_chatSpamSpatialNumCharacters.get(), m_chatSpamNonSpatialNumCharacters.get())));
+		GenericValueTypeMessage<std::pair<std::pair<std::pair<NetworkId, int64_t>, int64_t>, std::pair<int, int> > > chatStatistics("ChatStatisticsGS", std::make_pair(std::make_pair(std::make_pair(character, timeUnsquelch), m_chatSpamTimeEndInterval.get()), std::make_pair(m_chatSpamSpatialNumCharacters.get(), m_chatSpamNonSpatialNumCharacters.get())));
 		Chat::sendToChatServer(chatStatistics);
 		m_chatSpamNextTimeToSyncWithChatServer = timeNow + ConfigServerGame::getChatStatisticsReportIntervalSeconds();
 	}
@@ -8251,7 +8251,7 @@ void PlayerObject::updateGcwDefenderRegionInfo()
 	if (!owner)
 		return;
 
-	int timeQualifyForBonus = -1;
+	int64_t timeQualifyForBonus = -1;
 	bool qualifyForWarPlannerTitle = false;
 
 	std::string cityGcwDefenderRegion;
@@ -8274,8 +8274,9 @@ void PlayerObject::updateGcwDefenderRegionInfo()
 			cityGcwDefenderRegion = gcwDefenderRegion;
 
 			int const timeJoinedGcwDefenderRegion = cityInfo.getTimeJoinedGcwDefenderRegion();
-			timeQualifyForBonus = static_cast<int>(::time(nullptr)) - (ConfigServerGame::getGcwDaysRequiredForGcwRegionDefenderBonus() * 86400);
-			if (!PvpData::isNeutralFactionId(cityFaction) && (cityFaction == owner->getPvpFaction()) && (timeJoinedGcwDefenderRegion < timeQualifyForBonus))
+			timeQualifyForBonus = EpochTime::now() - (ConfigServerGame::getGcwDaysRequiredForGcwRegionDefenderBonus() * 86400);
+			// the join time is kept in the wrapped 32-bit form
+			if (!PvpData::isNeutralFactionId(cityFaction) && (cityFaction == owner->getPvpFaction()) && (EpochTime::fromWire32(timeJoinedGcwDefenderRegion, EpochTime::now()) < timeQualifyForBonus))
 			{				
 				cityGcwDefenderRegionHasBonus = true;
 
@@ -8316,9 +8317,10 @@ void PlayerObject::updateGcwDefenderRegionInfo()
 
 				int const timeJoinedGcwDefenderRegion = GuildInterface::getTimeJoinedGuildCurrentGcwDefenderRegion(*gi);
 				if (timeQualifyForBonus < 0)
-					timeQualifyForBonus = static_cast<int>(::time(nullptr)) - (ConfigServerGame::getGcwDaysRequiredForGcwRegionDefenderBonus() * 86400);
+					timeQualifyForBonus = EpochTime::now() - (ConfigServerGame::getGcwDaysRequiredForGcwRegionDefenderBonus() * 86400);
 
-				if (!PvpData::isNeutralFactionId(guildFaction) && (guildFaction == owner->getPvpFaction()) && (timeJoinedGcwDefenderRegion < timeQualifyForBonus))
+				// the join time is kept in the wrapped 32-bit form
+				if (!PvpData::isNeutralFactionId(guildFaction) && (guildFaction == owner->getPvpFaction()) && (EpochTime::fromWire32(timeJoinedGcwDefenderRegion, EpochTime::now()) < timeQualifyForBonus))
 				{
 					guildGcwDefenderRegionHasBonus = true;
 
@@ -8410,24 +8412,24 @@ void PlayerObject::squelch(NetworkId const & squelchedById, std::string const & 
 
 		if (squelchDurationSeconds < 0)
 		{
-			m_squelchExpireTime = -1;
+			setSquelchExpiry(true, 0);
 
 			// persist squelch info
 			setObjVarItem(OBJVAR_SQUELCH_EXPIRE, -1);
 		}
 		else
 		{
-			m_squelchExpireTime = static_cast<int32>(::time(nullptr)) + squelchDurationSeconds;
+			setSquelchExpiry(false, EpochTime::add(EpochTime::now(), squelchDurationSeconds));
 
 			// persist squelch info
-			setObjVarItem(OBJVAR_SQUELCH_EXPIRE, static_cast<int>(ServerClock::getInstance().getGameTimeSeconds()) + squelchDurationSeconds);
+			setObjVarItem(OBJVAR_SQUELCH_EXPIRE, squelchExpireGameTime(squelchDurationSeconds));
 		}
 
 		// update chat server
 		CreatureObject * const owner = getCreatureObject();
 		if (owner)
 		{
-			GenericValueTypeMessage<std::pair<NetworkId, int> > setUnsquelchTime("SetUnsquelchTime", std::make_pair(owner->getNetworkId(), static_cast<int>(m_squelchExpireTime.get())));
+			GenericValueTypeMessage<std::pair<NetworkId, int64_t> > setUnsquelchTime("SetUnsquelchTime", std::make_pair(owner->getNetworkId(), getUnsquelchEpochTime()));
 			Chat::sendToChatServer(setUnsquelchTime);
 		}
 	}
@@ -8447,7 +8449,7 @@ void PlayerObject::unsquelch()
 	{
 		m_squelchedById = NetworkId::cms_invalid;
 		m_squelchedByName = std::string();
-		m_squelchExpireTime = 0;
+		setSquelchExpiry(false, 0);
 
 		// persist squelch info
 		removeObjVarItem(OBJVAR_SQUELCH_ID);
@@ -8458,7 +8460,7 @@ void PlayerObject::unsquelch()
 		CreatureObject * const owner = getCreatureObject();
 		if (owner)
 		{
-			GenericValueTypeMessage<std::pair<NetworkId, int> > setUnsquelchTime("SetUnsquelchTime", std::make_pair(owner->getNetworkId(), 0));
+			GenericValueTypeMessage<std::pair<NetworkId, int64_t> > setUnsquelchTime("SetUnsquelchTime", std::make_pair(owner->getNetworkId(), static_cast<int64_t>(0)));
 			Chat::sendToChatServer(setUnsquelchTime);
 		}
 	}
@@ -8471,6 +8473,39 @@ void PlayerObject::unsquelch()
 }
 
 // ----------------------------------------------------------------------
+// Set the squelch expiry; the client sees the expiry wrapped to 32 bits,
+// or -1 for an indefinite squelch.
+
+void PlayerObject::setSquelchExpiry(bool indefinite, int64_t expireEpoch)
+{
+	m_squelchIndefinite = indefinite;
+	m_squelchExpireEpoch = indefinite ? 0 : expireEpoch;
+	m_squelchExpireTime = indefinite ? -1 : EpochTime::toWire32(expireEpoch);
+}
+
+// ----------------------------------------------------------------------
+// The game time a squelch of the given length ends, as persisted in the
+// squelch objvar, clamped so that the sum fits in an int.
+
+int PlayerObject::squelchExpireGameTime(int squelchDurationSeconds)
+{
+	int64_t const expire = static_cast<int64_t>(ServerClock::getInstance().getGameTimeSeconds()) + std::max(0, squelchDurationSeconds);
+	return static_cast<int>(std::min(expire, static_cast<int64_t>(std::numeric_limits<int>::max())));
+}
+
+// ----------------------------------------------------------------------
+// returns 0 if not currently squelched; returns < 0 if indefinitely squelched;
+// otherwise the epoch time the squelch ends
+
+int64_t PlayerObject::getUnsquelchEpochTime()
+{
+	int const secondsUntilUnsquelched = getSecondsUntilUnsquelched();
+	if (secondsUntilUnsquelched <= 0)
+		return secondsUntilUnsquelched;
+	return m_squelchExpireEpoch.get();
+}
+
+// ----------------------------------------------------------------------
 // returns 0 if not currently squelched; returns < 0 if indefinitely squelched
 int PlayerObject::getSecondsUntilUnsquelched()
 {
@@ -8479,19 +8514,19 @@ int PlayerObject::getSecondsUntilUnsquelched()
 		return 0;
 
 	// squelched, but need to check to see if the squelch period has already expired
-	if (m_squelchExpireTime.get() < 0) // squelched indefinitely
+	if (m_squelchIndefinite.get()) // squelched indefinitely
 		return -1;
 
-	int32 const timeNow = static_cast<int32>(::time(nullptr));
-	if (timeNow < m_squelchExpireTime.get()) // still in squelch period
-		return (m_squelchExpireTime.get() - timeNow);
+	int64_t const timeNow = EpochTime::now();
+	if (timeNow < m_squelchExpireEpoch.get()) // still in squelch period
+		return std::max(1, EpochTime::clampedDifference(m_squelchExpireEpoch.get(), timeNow));
 
 	// squelch has expired
 	if (isAuthoritative())
 	{
 		m_squelchedById = NetworkId::cms_invalid;
 		m_squelchedByName = std::string();
-		m_squelchExpireTime = 0;
+		setSquelchExpiry(false, 0);
 
 		// persist squelch info
 		removeObjVarItem(OBJVAR_SQUELCH_ID);
@@ -8570,11 +8605,12 @@ void PlayerObject::setAccountNumLotsOverLimitSpam()
 		{
 			m_accountNumLotsOverLimitSpam = m_accountNumLots.get() - owner->getMaxNumberOfLots();
 
-			int const timeNow = static_cast<int>(::time(nullptr));
+			// the objvars hold the wrapped 32-bit form
+			int64_t const timeNow = EpochTime::now();
 			int violationTime = 0;
 			if (!owner->getObjVars().getItem("lotOverlimit.violation_time", violationTime))
 			{
-				violationTime = timeNow;
+				violationTime = EpochTime::toWire32(timeNow);
 				IGNORE_RETURN(owner->setObjVarItem("lotOverlimit.violation_time", violationTime));
 			}
 
@@ -8582,14 +8618,14 @@ void PlayerObject::setAccountNumLotsOverLimitSpam()
 			{
 				// spam once every 5 minutes for 24 hours after the violation, then once every minute after that
 				bool shouldSpam = true;
-				if ((violationTime + 86400) >= timeNow)
+				if ((EpochTime::fromWire32(violationTime, timeNow) + 86400) >= timeNow)
 				{
 					int timeLastSpam = 0;
-					if (owner->getObjVars().getItem("lotOverlimit.last_spam_time", timeLastSpam) && ((timeLastSpam + 300) >= timeNow))
+					if (owner->getObjVars().getItem("lotOverlimit.last_spam_time", timeLastSpam) && ((EpochTime::fromWire32(timeLastSpam, timeNow) + 300) >= timeNow))
 						shouldSpam = false;
 
 					if (shouldSpam)
-						IGNORE_RETURN(owner->setObjVarItem("lotOverlimit.last_spam_time", timeNow));
+						IGNORE_RETURN(owner->setObjVarItem("lotOverlimit.last_spam_time", EpochTime::toWire32(timeNow)));
 				}
 				else
 				{
@@ -9154,8 +9190,12 @@ void PlayerObjectNamespace::grantGcwFactionalPresenceScore(std::string const & g
 
 			bonus += (cityRank * ConfigServerGame::getGcwFactionalPresenceAlignedCityRankBonusPct());
 
-			if (ci->getCreationTime() > 0)
-				bonus += std::max(0, (static_cast<int>(::time(nullptr)) - std::max(1041408000, ci->getCreationTime())) / 31536000 * ConfigServerGame::getGcwFactionalPresenceAlignedCityAgeBonusPct());
+			// the city creation time is kept in the wrapped 32-bit form
+			if (ci->getCreationTime() != 0)
+			{
+				int64_t const timeNow = EpochTime::now();
+				bonus += std::max(0, static_cast<int>((timeNow - std::max(static_cast<int64_t>(1041408000), EpochTime::fromWire32(ci->getCreationTime(), timeNow))) / 31536000) * ConfigServerGame::getGcwFactionalPresenceAlignedCityAgeBonusPct());
+			}
 		}
 	}
 

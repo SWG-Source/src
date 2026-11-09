@@ -33,6 +33,7 @@
 #include "sharedObject/SlotIdManager.h"
 #include "sharedObject/SlottedContainer.h"
 #include "serverScript/GameScriptObject.h"
+#include "serverUtility/EpochTime.h"
 #include "serverScript/ScriptFunctionTable.h"
 #include "serverScript/ScriptParameters.h"
 #include "sharedUtility/DataTable.h"
@@ -533,7 +534,7 @@ void ServerImageDesignerManager::sendSessionToScript(SharedImageDesignerManager:
 			params.addParam(session.designerId, "designerId");
 			params.addParam(session.recipientId, "recipientId");
 			params.addParam(session.terminalId, "terminalId");
-			params.addParam(static_cast<int>(session.startingTime), "startingTime");
+			params.addParam(EpochTime::toWire32(session.startingTime), "startingTime");
 			params.addParam(static_cast<int>(session.designType), "designType");
 			params.addParam(session.newHairSet, "newHairSet");
 			params.addParam(session.newHairAsset.c_str(), "newHairAsset");

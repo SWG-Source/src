@@ -1629,7 +1629,7 @@ void SwgSnapshot::decodeServerPlayerObject(NetworkId const & objectId, uint16 in
 		}
 		case 21:
 		{
-			int32 temp;
+			int64 temp;
 			Archive::get(data,temp);
 			row->next_gcw_rating_calc_time=temp;
 			break;

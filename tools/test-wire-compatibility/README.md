@@ -93,11 +93,12 @@ boundary encodings were also checked against stock Win32 client `94945103`
 using client fixture revision `44652cba`; they are not full-message golden files.
 
 When host time_t is wider than 32 bits, six additional checks exercise values
-one below INT32_MIN and one above INT32_MAX. Conversion throws std::out_of_range;
-the setters retain their previous values. This is exception-based rejection,
-not graceful recovery by the callers. Internal chat-log storage, sorting and
-purge arithmetic use host time_t; only the network timestamp is signed 32-bit.
-The legacy protocol still has its signed timestamp range limit.
+one below INT32_MIN and one above INT32_MAX. Conversion wraps modulo 2^32, the
+value a 32-bit build (32-bit time_t) sends, so each message must encode exactly the
+bytes of the wrapped value. Calendar times after 2038-01-19 03:14:07 UTC therefore
+reach the client as negative numbers, as they always would have. Internal chat-log
+storage, sorting and purge arithmetic use host time_t; only the network timestamp
+is signed 32-bit.
 
 Test support replaces MemoryBlockManager allocation with operator new/delete,
 MessageQueue::Data construction/destruction with empty definitions, and

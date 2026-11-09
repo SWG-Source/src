@@ -25,6 +25,7 @@
 #include "serverGame/ServerWorld.h"
 #include "serverScript/GameScriptObject.h"
 #include "serverScript/ScriptParameters.h"
+#include "serverUtility/EpochTime.h"
 #include "serverUtility/ServerClock.h"
 #include "sharedGame/GuildRankDataTable.h"
 #include "sharedGame/OutOfBandPackager.h"
@@ -32,6 +33,8 @@
 #include "sharedLog/Log.h"
 #include "sharedNetworkMessages/MessageQueueGenericValueType.h"
 #include "sharedObject/Controller.h"
+
+#include <limits>
 
 // ======================================================================
 
@@ -54,6 +57,45 @@ namespace GuildObjectNamespace
 			return "Rebel";
 
 		return "Unknown";
+	}
+
+	// Tracking of how long a side has held a GCW region at >= 70%. The start
+	// time (wrapped 32-bit calendar time, the script convention) and the
+	// controlling faction are separate objvars. The legacy objvar stored the
+	// start time for Imperial control and its negation for Rebel control,
+	// which cannot work once calendar times wrap negative in 2038.
+	std::string const s_gcwTimeControlledSince("gcwScore.timeControlledSince.");
+	std::string const s_gcwTimeControlledFaction("gcwScore.timeControlledFaction.");
+	std::string const s_gcwTimeControlledLegacy("gcwScore.timeControlled.");
+
+	void setGcwRegionControlled(ServerObject & tatooine, std::string const & region, bool imperial, int since)
+	{
+		IGNORE_RETURN(tatooine.setObjVarItem(s_gcwTimeControlledSince + region, since));
+		IGNORE_RETURN(tatooine.setObjVarItem(s_gcwTimeControlledFaction + region, static_cast<int>(imperial ? PvpData::getImperialFactionId() : PvpData::getRebelFactionId())));
+		tatooine.removeObjVarItem(s_gcwTimeControlledLegacy + region);
+	}
+
+	void clearGcwRegionControlled(ServerObject & tatooine, std::string const & region)
+	{
+		tatooine.removeObjVarItem(s_gcwTimeControlledSince + region);
+		tatooine.removeObjVarItem(s_gcwTimeControlledFaction + region);
+		tatooine.removeObjVarItem(s_gcwTimeControlledLegacy + region);
+	}
+
+	// Start tracking unless the region is already tracked; a legacy entry
+	// (written before 2038, so its sign still gives the faction) is moved to
+	// the current format unchanged.
+	void startGcwRegionControlledIfNotTracked(ServerObject & tatooine, std::string const & region, bool imperial, int timeNow)
+	{
+		DynamicVariableList const & objVars = tatooine.getObjVars();
+		if (objVars.hasItem(s_gcwTimeControlledSince + region) && objVars.hasItem(s_gcwTimeControlledFaction + region))
+			return;
+
+		int legacy = 0;
+		if (objVars.getItem(s_gcwTimeControlledLegacy + region, legacy) && (legacy != 0))
+			setGcwRegionControlled(tatooine, region, (legacy > 0), ((legacy > 0) ? legacy : -legacy));
+		else
+			setGcwRegionControlled(tatooine, region, imperial, timeNow);
 	}
 }
 using namespace GuildObjectNamespace;
@@ -172,8 +214,8 @@ void GuildObject::setupUniverse()
 
 					m_guildsInfo.set(guildId, gi);
 
-					if (!gi.m_guildGcwDefenderRegion.empty() && (gi.m_timeLeftGuildGcwDefenderRegion <= 0))
-						addGcwRegionDefenderGuild(gi.m_guildGcwDefenderRegion, guildId, (((gi.m_timeLeftGuildFaction > 0) || PvpData::isNeutralFactionId(gi.m_guildFaction)) ? PvpData::getNeutralFactionId() : gi.m_guildFaction));
+					if (!gi.m_guildGcwDefenderRegion.empty() && (gi.m_timeLeftGuildGcwDefenderRegion == 0))
+						addGcwRegionDefenderGuild(gi.m_guildGcwDefenderRegion, guildId, (((gi.m_timeLeftGuildFaction != 0) || PvpData::isNeutralFactionId(gi.m_guildFaction)) ? PvpData::getNeutralFactionId() : gi.m_guildFaction));
 				}
 			}
 		}
@@ -625,8 +667,8 @@ void GuildObject::disbandGuild(int guildId)
 				if ((iterGuildLeader != m_guildLeaders.end()) && (iterGuildLeader->second == guildId))
 					m_guildLeaders.erase(gi->m_leaderId);
 
-				if (!gi->m_guildGcwDefenderRegion.empty() && (gi->m_timeLeftGuildGcwDefenderRegion <= 0))
-					removeGcwRegionDefenderGuild(gi->m_guildGcwDefenderRegion, guildId, (((gi->m_timeLeftGuildFaction > 0) || PvpData::isNeutralFactionId(gi->m_guildFaction)) ? PvpData::getNeutralFactionId() : gi->m_guildFaction));
+				if (!gi->m_guildGcwDefenderRegion.empty() && (gi->m_timeLeftGuildGcwDefenderRegion == 0))
+					removeGcwRegionDefenderGuild(gi->m_guildGcwDefenderRegion, guildId, (((gi->m_timeLeftGuildFaction != 0) || PvpData::isNeutralFactionId(gi->m_guildFaction)) ? PvpData::getNeutralFactionId() : gi->m_guildFaction));
 
 				m_guildsInfo.erase(guildId);
 			}
@@ -672,7 +714,7 @@ void GuildObject::disbandGuild(int guildId)
 			{
 				std::pair<int, time_t> const & killInfo = GuildInterface::getGuildEnemyKillInfo(guildId, *i);
 				std::string enemySpec;
-				GuildStringParser::buildEnemySpec(guildId, *i, killInfo.first, (int)killInfo.second, enemySpec);
+				GuildStringParser::buildEnemySpec(guildId, *i, killInfo.first, EpochTime::toWire32(killInfo.second), enemySpec);
 				m_enemies.erase(enemySpec);
 
 				// remove any pending kill count updates for the 2 guilds
@@ -692,7 +734,7 @@ void GuildObject::disbandGuild(int guildId)
 			{
 				std::pair<int, time_t> const & killInfo = GuildInterface::getGuildEnemyKillInfo(*i, guildId);
 				std::string enemySpec;
-				GuildStringParser::buildEnemySpec(*i, guildId, killInfo.first, (int)killInfo.second, enemySpec);
+				GuildStringParser::buildEnemySpec(*i, guildId, killInfo.first, EpochTime::toWire32(killInfo.second), enemySpec);
 				m_enemies.erase(enemySpec);
 
 				// remove any pending kill count updates for the 2 guilds
@@ -756,7 +798,7 @@ void GuildObject::removeGuildMember(int guildId, NetworkId const &memberId)
 			m_membersInfo.erase(std::make_pair(guildId, memberId));
 
 			// cannot be a GCW region defender if doesn't meet minimum guild member count requirement
-			if (!updatedGi.m_guildGcwDefenderRegion.empty() && (updatedGi.m_timeLeftGuildGcwDefenderRegion <= 0) && (updatedGi.getCountMembersOnly() < ConfigServerGame::getGcwGuildMinMembersForGcwRegionDefender()))
+			if (!updatedGi.m_guildGcwDefenderRegion.empty() && (updatedGi.m_timeLeftGuildGcwDefenderRegion == 0) && (updatedGi.getCountMembersOnly() < ConfigServerGame::getGcwGuildMinMembersForGcwRegionDefender()))
 				setGuildGcwDefenderRegion(guildId, std::string());
 		}
 	}
@@ -1425,7 +1467,7 @@ void GuildObject::removeGuildEnemy(int guildId, int enemyId)
 		{
 			std::pair<int, time_t> const & killInfo = GuildInterface::getGuildEnemyKillInfo(guildId, enemyId);
 			std::string enemySpec;
-			GuildStringParser::buildEnemySpec(guildId, enemyId, killInfo.first, (int)killInfo.second, enemySpec);
+			GuildStringParser::buildEnemySpec(guildId, enemyId, killInfo.first, EpochTime::toWire32(killInfo.second), enemySpec);
 			m_enemies.erase(enemySpec);
 
 			// if the other build B has declared war on us, clear the
@@ -1435,7 +1477,7 @@ void GuildObject::removeGuildEnemy(int guildId, int enemyId)
 			{
 				if (killInfoBtoA->first > 0)
 				{
-					GuildStringParser::buildEnemySpec(enemyId, guildId, killInfoBtoA->first, (int)killInfoBtoA->second, enemySpec);
+					GuildStringParser::buildEnemySpec(enemyId, guildId, killInfoBtoA->first, EpochTime::toWire32(killInfoBtoA->second), enemySpec);
 					m_enemies.erase(enemySpec);
 
 					GuildStringParser::buildEnemySpec(enemyId, guildId, 0, 0, enemySpec);
@@ -1464,8 +1506,9 @@ void GuildObject::modifyGuildWarKillTracking(int killerGuildId, int victimGuildI
 		return;
 	}
 
-	if (updateTime <= 0)
-		updateTime = static_cast<int>(::time(nullptr));
+	// wrapped 32-bit calendar time; 0 means "now"
+	if (updateTime == 0)
+		updateTime = EpochTime::toWire32(EpochTime::now());
 
 	// queue up adjustments and periodically update the data
 	std::pair<std::map<std::pair<int, int>, std::pair<int, int> >::iterator, bool> result = m_guildWarKillTrackingAdjustment.insert(std::make_pair(std::make_pair(killerGuildId, victimGuildId), std::make_pair(adjustment, updateTime)));
@@ -1518,10 +1561,10 @@ void GuildObject::updateGuildWarKillTrackingData()
 				&& GuildInterface::hasDeclaredWarAgainst(iter->first.second, iter->first.first))
 			{
 				std::pair<int, time_t> const & killInfo = GuildInterface::getGuildEnemyKillInfo(iter->first.first, iter->first.second);
-				GuildStringParser::buildEnemySpec(iter->first.first, iter->first.second, killInfo.first, (int)killInfo.second, enemySpec);
+				GuildStringParser::buildEnemySpec(iter->first.first, iter->first.second, killInfo.first, EpochTime::toWire32(killInfo.second), enemySpec);
 				m_enemies.erase(enemySpec);
 
-				GuildStringParser::buildEnemySpec(iter->first.first, iter->first.second, killInfo.first + iter->second.first, (int)std::max(killInfo.second, static_cast<time_t>(iter->second.second)), enemySpec);
+				GuildStringParser::buildEnemySpec(iter->first.first, iter->first.second, killInfo.first + iter->second.first, EpochTime::toWire32(std::max(static_cast<int64_t>(killInfo.second), EpochTime::fromWire32(iter->second.second, EpochTime::now()))), enemySpec);
 				m_enemies.insert(enemySpec);
 			}
 		}
@@ -1621,7 +1664,7 @@ void GuildObject::setGuildFaction(int guildId, uint32 guildFaction)
 		else
 		{
 			bool factionChange = false;
-			bool const isCurrentlyNeutral = ((gi->m_timeLeftGuildFaction > 0) || PvpData::isNeutralFactionId(gi->m_guildFaction));
+			bool const isCurrentlyNeutral = ((gi->m_timeLeftGuildFaction != 0) || PvpData::isNeutralFactionId(gi->m_guildFaction));
 
 			if (isCurrentlyNeutral)
 			{
@@ -1635,7 +1678,7 @@ void GuildObject::setGuildFaction(int guildId, uint32 guildFaction)
 
 			if (factionChange)
 			{
-				int const timeLeftGuildFaction = static_cast<int>(::time(nullptr));
+				int const timeLeftGuildFaction = EpochTime::toWire32(EpochTime::now()); // guild info keeps the wrapped 32-bit form
 
 				std::string oldNameSpec, newNameSpec;
 				GuildStringParser::buildNameSpec(guildId, gi->m_name, gi->m_guildElectionPreviousEndTime, gi->m_guildElectionNextEndTime, gi->m_guildFaction, gi->m_timeLeftGuildFaction, gi->m_guildGcwDefenderRegion, gi->m_timeJoinedGuildGcwDefenderRegion, gi->m_timeLeftGuildGcwDefenderRegion, oldNameSpec);
@@ -1663,7 +1706,7 @@ void GuildObject::setGuildFaction(int guildId, uint32 guildFaction)
 					GuildInterface::mailToGuild(guildId, subject, Unicode::emptyString, oob);
 				}
 
-				if (!updatedGi.m_guildGcwDefenderRegion.empty() && (updatedGi.m_timeLeftGuildGcwDefenderRegion <= 0))
+				if (!updatedGi.m_guildGcwDefenderRegion.empty() && (updatedGi.m_timeLeftGuildGcwDefenderRegion == 0))
 				{
 					removeGcwRegionDefenderGuild(updatedGi.m_guildGcwDefenderRegion, guildId, (isCurrentlyNeutral ? PvpData::getNeutralFactionId() : gi->m_guildFaction));
 					addGcwRegionDefenderGuild(updatedGi.m_guildGcwDefenderRegion, guildId, guildFaction);
@@ -1710,7 +1753,7 @@ void GuildObject::setGuildGcwDefenderRegion(int guildId, std::string const &guil
 				return;
 
 			bool regionChange = false;
-			bool const isCurrentlyNoRegion = ((gi->m_timeLeftGuildGcwDefenderRegion > 0) || gi->m_guildGcwDefenderRegion.empty());
+			bool const isCurrentlyNoRegion = ((gi->m_timeLeftGuildGcwDefenderRegion != 0) || gi->m_guildGcwDefenderRegion.empty());
 
 			int timeJoinedGuildGcwDefenderRegion = 0;
 			int timeLeftGuildGcwDefenderRegion = 0;
@@ -1720,10 +1763,10 @@ void GuildObject::setGuildGcwDefenderRegion(int guildId, std::string const &guil
 				{
 					regionChange = true;
 
-					if ((gi->m_guildGcwDefenderRegion == guildGcwDefenderRegion) && (gi->m_timeJoinedGuildGcwDefenderRegion > 0))
+					if ((gi->m_guildGcwDefenderRegion == guildGcwDefenderRegion) && (gi->m_timeJoinedGuildGcwDefenderRegion != 0))
 						timeJoinedGuildGcwDefenderRegion = gi->m_timeJoinedGuildGcwDefenderRegion;
 					else
-						timeJoinedGuildGcwDefenderRegion = static_cast<int>(::time(nullptr));
+						timeJoinedGuildGcwDefenderRegion = EpochTime::toWire32(EpochTime::now());
 				}
 			}
 			else if (gi->m_guildGcwDefenderRegion != guildGcwDefenderRegion)
@@ -1732,13 +1775,13 @@ void GuildObject::setGuildGcwDefenderRegion(int guildId, std::string const &guil
 
 				if (!guildGcwDefenderRegion.empty())
 				{
-					timeJoinedGuildGcwDefenderRegion = static_cast<int>(::time(nullptr));
+					timeJoinedGuildGcwDefenderRegion = EpochTime::toWire32(EpochTime::now());
 				}
 				else
 				{
 					// stop defending
 					timeJoinedGuildGcwDefenderRegion = gi->m_timeJoinedGuildGcwDefenderRegion;
-					timeLeftGuildGcwDefenderRegion = static_cast<int>(::time(nullptr));
+					timeLeftGuildGcwDefenderRegion = EpochTime::toWire32(EpochTime::now());
 				}
 			}
 
@@ -1771,8 +1814,8 @@ void GuildObject::setGuildGcwDefenderRegion(int guildId, std::string const &guil
 					GuildInterface::mailToGuild(guildId, subject, Unicode::emptyString, oob);
 				}
 
-				removeGcwRegionDefenderGuild((isCurrentlyNoRegion ? std::string() : gi->m_guildGcwDefenderRegion), guildId, (((updatedGi.m_timeLeftGuildFaction > 0) || PvpData::isNeutralFactionId(updatedGi.m_guildFaction)) ? PvpData::getNeutralFactionId() : updatedGi.m_guildFaction));
-				addGcwRegionDefenderGuild(guildGcwDefenderRegion, guildId, (((updatedGi.m_timeLeftGuildFaction > 0) || PvpData::isNeutralFactionId(updatedGi.m_guildFaction)) ? PvpData::getNeutralFactionId() : updatedGi.m_guildFaction));
+				removeGcwRegionDefenderGuild((isCurrentlyNoRegion ? std::string() : gi->m_guildGcwDefenderRegion), guildId, (((updatedGi.m_timeLeftGuildFaction != 0) || PvpData::isNeutralFactionId(updatedGi.m_guildFaction)) ? PvpData::getNeutralFactionId() : updatedGi.m_guildFaction));
+				addGcwRegionDefenderGuild(guildGcwDefenderRegion, guildId, (((updatedGi.m_timeLeftGuildFaction != 0) || PvpData::isNeutralFactionId(updatedGi.m_guildFaction)) ? PvpData::getNeutralFactionId() : updatedGi.m_guildFaction));
 
 				m_guildsInfo.set(guildId, updatedGi);
 			}
@@ -2052,7 +2095,7 @@ void GuildObject::depersistGcwImperialScorePercentile()
 
 	// GCW category
 	{
-		int const timeNow = static_cast<int>(::time(nullptr));
+		int const timeNow = EpochTime::toWire32(EpochTime::now());
 		int gcwImperialScorePercentile;
 		std::map<std::string, Pvp::GcwScoreCategory const *> const & allGcwScoreCategory = Pvp::getAllGcwScoreCategory(); 
 		for (std::map<std::string, Pvp::GcwScoreCategory const *>::const_iterator iter = allGcwScoreCategory.begin(); iter != allGcwScoreCategory.end(); ++iter)
@@ -2068,17 +2111,15 @@ void GuildObject::depersistGcwImperialScorePercentile()
 				// tracking how long the side has held the region at at least 70%
 				if (gcwImperialScorePercentile >= 70)
 				{
-					if (!tatooine->getObjVars().hasItem(std::string("gcwScore.timeControlled.") + iter->first))
-						IGNORE_RETURN(tatooine->setObjVarItem(std::string("gcwScore.timeControlled.") + iter->first, timeNow)); // imperial controlled
+					startGcwRegionControlledIfNotTracked(*tatooine, iter->first, true, timeNow); // imperial controlled
 				}
 				else if (gcwImperialScorePercentile <= 30)
 				{
-					if (!tatooine->getObjVars().hasItem(std::string("gcwScore.timeControlled.") + iter->first))
-						IGNORE_RETURN(tatooine->setObjVarItem(std::string("gcwScore.timeControlled.") + iter->first, -timeNow)); // rebel controlled
+					startGcwRegionControlledIfNotTracked(*tatooine, iter->first, false, timeNow); // rebel controlled
 				}
 				else
 				{
-					tatooine->removeObjVarItem(std::string("gcwScore.timeControlled.") + iter->first);
+					clearGcwRegionControlled(*tatooine, iter->first);
 				}
 			}
 		}
@@ -2154,7 +2195,7 @@ void GuildObject::updateGcwImperialScorePercentile(std::set<std::string> const &
 	if (m_gcwImperialScorePercentileThisGalaxy.empty())
 		depersistGcwImperialScorePercentile();
 
-	int const timeNow = static_cast<int>(::time(nullptr));
+	int const timeNow = EpochTime::toWire32(EpochTime::now()); // objvar and script convention
 	GameScriptObject * const gameScriptObject = tatooine->getScriptObject();
 	int currentScorePercentile, newScorePercentile, newGroupCategoryScoreRaw, scoreCategoryGroupTotalPoints, deltaGroupCategoryScoreRaw;
 	std::map<std::pair<std::string, std::string>, int>::const_iterator iterGroupCategoryScoreRaw;
@@ -2181,16 +2222,16 @@ void GuildObject::updateGcwImperialScorePercentile(std::set<std::string> const &
 				if (newScorePercentile >= 70)
 				{
 					if (currentScorePercentile < 70)
-						IGNORE_RETURN(tatooine->setObjVarItem(std::string("gcwScore.timeControlled.") + *iter, timeNow)); // imperial controlled
+						setGcwRegionControlled(*tatooine, *iter, true, timeNow); // imperial controlled
 				}
 				else if (newScorePercentile <= 30)
 				{
 					if (currentScorePercentile > 30)
-						IGNORE_RETURN(tatooine->setObjVarItem(std::string("gcwScore.timeControlled.") + *iter, -timeNow)); // rebel controlled
+						setGcwRegionControlled(*tatooine, *iter, false, timeNow); // rebel controlled
 				}
 				else
 				{
-					tatooine->removeObjVarItem(std::string("gcwScore.timeControlled.") + *iter);
+					clearGcwRegionControlled(*tatooine, *iter);
 				}
 
 				// handles changes to the GCW group score for the
@@ -2596,7 +2637,9 @@ void GuildObjectNamespace::updateGcwPercentileHistory(Archive::AutoDeltaMap<std:
 	if (ConfigServerGame::getTrackGcwPercentileHistoryCount() <= 0)
 		return;
 
-	history.set(std::make_pair(scoreName, static_cast<int>(::time(nullptr))), score);
+	// keyed by the wrapped 32-bit calendar time, which goes negative in 2038
+	int64_t const timeNow = EpochTime::now();
+	history.set(std::make_pair(scoreName, EpochTime::toWire32(timeNow)), score);
 
 	int newCount = 1;
 	Archive::AutoDeltaMap<std::string, int>::const_iterator const iterHistoryCount = historyCount.find(scoreName);
@@ -2612,8 +2655,20 @@ void GuildObjectNamespace::updateGcwPercentileHistory(Archive::AutoDeltaMap<std:
 	}
 	else
 	{
-		// too many histories, purge the oldest entry
-		Archive::AutoDeltaMap<std::pair<std::string, int>, int>::const_iterator const iterOldestHistory = history.lower_bound(std::make_pair(scoreName, 0));
+		// too many histories, purge the oldest entry; the keys wrap, so
+		// compare their full times rather than their order in the map
+		Archive::AutoDeltaMap<std::pair<std::string, int>, int>::const_iterator iterOldestHistory = history.end();
+		int64_t oldestTime = 0;
+		for (Archive::AutoDeltaMap<std::pair<std::string, int>, int>::const_iterator iter = history.lower_bound(std::make_pair(scoreName, std::numeric_limits<int>::min())); (iter != history.end()) && (iter->first.first == scoreName); ++iter)
+		{
+			int64_t const entryTime = EpochTime::fromWire32(iter->first.second, timeNow);
+			if ((iterOldestHistory == history.end()) || (entryTime < oldestTime))
+			{
+				iterOldestHistory = iter;
+				oldestTime = entryTime;
+			}
+		}
+
 		if (iterOldestHistory != history.end())
 		{
 			history.erase(iterOldestHistory->first);

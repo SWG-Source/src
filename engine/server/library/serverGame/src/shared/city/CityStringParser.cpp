@@ -237,7 +237,7 @@ void CityStringParser::buildCitySpec(int cityId, std::string const &cityName, Ne
 	char buffer[501]; // 500 chars + terminating \0
 
 	// only write out newer version if there is actually new version information
-	if (creationTime > 0) // version 2
+	if (creationTime != 0) // version 2 (the wrapped 32-bit time is negative after 2038)
 	{
 		snprintf(buffer, sizeof(buffer), "v2:%d:%s:%s:%s:%d:%d:%d:%d:%s:%d:%d:%d:%.10g:%.10g:%.10g:%d:%d:%.10g:%.10g:%.10g:%.10g:%.10g:%.10g:%s:%s",
 			cityId,

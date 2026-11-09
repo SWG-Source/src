@@ -44,7 +44,7 @@ CMCreateAuctionMessage::CMCreateAuctionMessage(Archive::ReadIterator & source) :
 CMCreateAuctionMessage::CMCreateAuctionMessage(
 	const NetworkId &       creatorId,
 	int                     minimumBid,
-	int                     auctionTimer,
+	int64_t                 auctionTimer,
 	int                     buyNowPrice,
 	int                     userDescriptionLength,
 	const Unicode::String & userDescription,
@@ -53,7 +53,7 @@ CMCreateAuctionMessage::CMCreateAuctionMessage(
 	const NetworkId &       itemId,
 	int                     itemType,
 	int                     itemTemplateId,
-	int                     expireTimer,
+	int64_t                 expireTimer,
 	int                     itemNameLength,
 	const Unicode::String & itemName,
 	const NetworkId &       ownerId,
