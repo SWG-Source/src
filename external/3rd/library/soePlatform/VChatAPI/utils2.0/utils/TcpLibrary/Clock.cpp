@@ -45,8 +45,9 @@ ClockStamp Clock::getCurTime()
 
     return ret;
 #else
-    struct timeval tv;
-    return (static_cast<ClockStamp>(tv.tv_sec) * 1000 + static_cast<ClockStamp>(tv.tv_usec / 1000));
+    struct timespec ts;
+    clock_gettime(CLOCK_MONOTONIC, &ts);
+    return (static_cast<ClockStamp>(ts.tv_sec) * 1000 + static_cast<ClockStamp>(ts.tv_nsec / 1000000));
 #endif    
 }
 

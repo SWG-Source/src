@@ -96,6 +96,9 @@ public:
 	static void install();
 	static void shutdown();
 
+	// time base, in seconds, of all times held in the command queue
+	static double getCurrentTime();
+
 	CommandQueue(ServerObject & owner);
 
 	/**
