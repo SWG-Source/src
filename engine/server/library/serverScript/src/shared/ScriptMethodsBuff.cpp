@@ -309,37 +309,35 @@ jfloat JNICALL ScriptMethodsBuffNamespace::getBuffTimeRemaining(JNIEnv *env, job
 	Buff b;
 	if(!creature->getBuff(nameCrc, b))
 		return 0.0f;
-	if (creature->isPlayerControlled())
+	// use the clock CreatureObject::addBuff stamped the buff with: played time for players,
+	// game time for celestial buffs and for creatures without a player
+	uint32 currentTime = ServerClock::getInstance().getGameTimeSeconds();
+
+	if (creature->isPlayerControlled() && !BuffManager::getBuffIsCelestial(nameCrc))
 	{
 		PlayerObject const * const playerObject = PlayerCreatureController::getPlayerObject(creature);
 		if (playerObject && playerObject->isInitialized())
 		{
-			uint32 currentTime = playerObject->getPlayedTime();
-
-			if (BuffManager::getBuffIsCelestial(nameCrc))
-			{
-				currentTime = ServerClock::getInstance().getGameTimeSeconds();
-			}
-
-			jfloat timeLeft = 0.0f;
-
-			if (b.m_timestamp == 0xFFFFFFFF)
-			{
-				timeLeft = -1.0f;
-			}
-			else if (b.m_timestamp == 0)
-			{
-				timeLeft = 0.0f;
-			}
-			else
-			{
-				timeLeft = static_cast<jfloat>( static_cast<int32>(b.m_timestamp) - static_cast<int32>(currentTime));
-			}
-
-			return timeLeft;
+			currentTime = playerObject->getPlayedTime();
 		}
 	}
-	return static_cast<jfloat>(b.m_timestamp - creature->getPseudoPlayedTime());
+
+	jfloat timeLeft = 0.0f;
+
+	if (b.m_timestamp == 0xFFFFFFFF)
+	{
+		timeLeft = -1.0f;
+	}
+	else if (b.m_timestamp == 0)
+	{
+		timeLeft = 0.0f;
+	}
+	else
+	{
+		timeLeft = static_cast<jfloat>( static_cast<int32>(b.m_timestamp) - static_cast<int32>(currentTime));
+	}
+
+	return timeLeft;
 }	// JavaLibrary::getBuffTimeRemaining
 
 //--------------------------------------------------------
