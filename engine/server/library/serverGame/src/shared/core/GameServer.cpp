@@ -233,6 +233,7 @@
 
 #include "sharedFoundation/CrcConstexpr.hpp"
 
+#include <cmath>
 #include <limits>
 
 //-----------------------------------------------------------------------
@@ -2455,8 +2456,8 @@ void GameServer::receiveMessage2(const MessageDispatch::Emitter & source, const 
 			if (terrainObject) {
 				const float environmentCycleTime = terrainObject->getEnvironmentCycleTime();
 				if (environmentCycleTime > 0.f) {
-					const float day = fmodf(static_cast<float>(ServerClock::getInstance()
-							.getGameTimeSeconds()), environmentCycleTime) / environmentCycleTime;
+					const float day = static_cast<float>(std::fmod(static_cast<double>(ServerClock::getInstance()
+							.getGameTimeSeconds()), static_cast<double>(environmentCycleTime)) / environmentCycleTime);
 					int hour = 6 + static_cast<int>(day * 24.f * 60.f) / 60;
 					if (hour >= 24)
 						hour -= 24;
