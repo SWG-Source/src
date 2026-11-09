@@ -52,7 +52,6 @@ class ResourcePoolObject
 	CachedNetworkId const m_planet;
 	ResourceFractalData const & m_fractalData;
 	uint32 const m_fractalSeed;
-	uint32 m_depletedTimestamp;
 	MultiFractal mutable * m_efficiencyMap;
 };
 

@@ -29,7 +29,6 @@ ResourcePoolObject::ResourcePoolObject(ResourceTypeObject const & resourceType, 
 		m_planet(planetObject),
 		m_fractalData(resourceType.getFractalData()),
 		m_fractalSeed(fractalSeed),
-		m_depletedTimestamp(resourceType.getDepletedTimestamp()),
 		m_efficiencyMap(nullptr)
 {
 }
@@ -54,8 +53,10 @@ ResourcePoolObject::~ResourcePoolObject()
  */
 float ResourcePoolObject::harvest(float installedEfficiency, uint32 lastHarvestTime) const
 {
+	// Read the type's depletion time on every harvest, not a copy taken when the
+	// pool was created: a forced depletion moves it earlier.
 	// Signed: the pool can run out before the last harvest, which makes this negative.
-	int64 const elapsedTime = static_cast<int64>(std::min(ServerClock::getInstance().getGameTimeSeconds(), static_cast<uint32_t>(m_depletedTimestamp))) - static_cast<int64>(lastHarvestTime);
+	int64 const elapsedTime = static_cast<int64>(std::min(ServerClock::getInstance().getGameTimeSeconds(), m_resourceType.getDepletedTimestamp())) - static_cast<int64>(lastHarvestTime);
 	if (elapsedTime < 0)
 		return 0;
 	float elapsedTicks =static_cast<float>(elapsedTime) / static_cast<float>(ConfigServerGame::getSecondsPerResourceTick());
@@ -101,7 +102,7 @@ void ResourcePoolObject::debugOutput(Unicode::String &output) const
 		output+=Unicode::narrowToWide("  DEPLETED");
 	else
 	{
-		sprintf(buffer,"  %u time units left\n",(m_depletedTimestamp - ServerClock::getInstance().getGameTimeSeconds())/ConfigServerGame::getResourceTimeScale());
+		sprintf(buffer,"  %u time units left\n",(m_resourceType.getDepletedTimestamp() - ServerClock::getInstance().getGameTimeSeconds())/ConfigServerGame::getResourceTimeScale());
 		output+=Unicode::narrowToWide(buffer);
 	}
 }

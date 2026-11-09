@@ -328,6 +328,28 @@ sub makeEncodeFunction
 		print OUTFILE "\t\tArchive::AutoDeltaPackedMap<$1,$2>::pack(data, packedValue);\n";
 		print OUTFILE "\t}\n";
 	    }
+	    elsif (&isGameSecondsInFloatColumn($classname, $cName))
+	    {
+		# The member is whole game seconds (uint32) and the column is FLOAT
+		# (a double), which older servers filled from a float member. Drop a
+		# fraction; NULL, negative and NaN encode as 0 (inactive) and values
+		# past the uint32 range are clamped, with a warning. The value is
+		# never rejected, so an old row always loads.
+		my $column = &dbIze($cName);
+		print OUTFILE "\t{\n";
+		print OUTFILE "\t\tuint32 temp = 0;\n";
+		print OUTFILE "\t\tif (!row->${column}.isNull())\n";
+		print OUTFILE "\t\t{\n";
+		print OUTFILE "\t\t\tdouble const value = row->${column}.getValue();\n";
+		print OUTFILE "\t\t\tif (value >= 4294967295.0)\n";
+		print OUTFILE "\t\t\t\ttemp = 4294967295u;\n";
+		print OUTFILE "\t\t\telse if (value > 0.0)\n";
+		print OUTFILE "\t\t\t\ttemp = static_cast<uint32>(value);\n";
+		print OUTFILE "\t\t\tWARNING(!(value >= 0.0 && value < 4294967296.0), (\"DatabaseWarning: SwgSnapshot::encode\u${package}${classname}: object %s has ${rowtype}.${column} %f, outside the game-time range; encoding %u\", objectId.getValueString().c_str(), value, temp));\n";
+		print OUTFILE "\t\t}\n";
+		print OUTFILE "\t\tArchive::put(data,temp);\n";
+		print OUTFILE "\t}\n";
+	    }
 	    elsif (&isNarrowInteger($datatype))
 	    {
 		# The column is a 32-bit integer and the member is narrower: convert
@@ -384,6 +406,21 @@ sub isNarrowInteger
     my(%narrow)=("int8" => 1, "uint8" => 1, "int16" => 1, "uint16" => 1,
                  "Postures::Enumerator" => 1); # Postures::Enumerator is an int8
     return exists $narrow{$datatype};
+}
+
+# ----------------------------------------------------------------------
+
+# Members that hold whole game seconds (uint32) persisted in a FLOAT column.
+# Older servers held them as float, so existing rows can carry a fraction.
+# Decoding needs no special case: a uint32 widens exactly into a double.
+sub isGameSecondsInFloatColumn
+{
+    my($classname,$cName)=@_;
+    my(%members)=("InstallationObject.m_tickCount" => 1,
+                  "InstallationObject.m_activateStartTime" => 1);
+    my($key)="${classname}.${cName}";
+    $key =~ s/\s+$//;
+    return exists $members{$key};
 }
 
 # ----------------------------------------------------------------------

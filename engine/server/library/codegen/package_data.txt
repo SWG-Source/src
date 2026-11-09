@@ -160,8 +160,8 @@ HarvesterInstallationObject m_hopperResource         server               Networ
 HarvesterInstallationObject m_hopperAmount           server               float
 
 InstallationObject          m_installationType       server               int32
-InstallationObject          m_tickCount              server               float
-InstallationObject          m_activateStartTime      server               float
+InstallationObject          m_tickCount              server               uint32
+InstallationObject          m_activateStartTime      server               uint32
 InstallationObject          m_activated              shared               bool
 InstallationObject          m_power                  shared               float
 InstallationObject          m_powerRate              shared               float

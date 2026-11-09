@@ -66,7 +66,7 @@ protected:
 	virtual void        initializeFirstTimeObject();
 	virtual void        endBaselines();
 	
-	void setTickCount(float count);
+	void setTickCount(uint32 count);
 
 private:
   	ManufactureInstallationObject();
@@ -95,7 +95,7 @@ private:
 };
 
 
-inline void ManufactureInstallationObject::setTickCount(float count)
+inline void ManufactureInstallationObject::setTickCount(uint32 count)
 {
 	InstallationObject::setTickCount(count);
 }

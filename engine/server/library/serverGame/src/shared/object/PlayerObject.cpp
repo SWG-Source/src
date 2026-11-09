@@ -6318,7 +6318,10 @@ void PlayerObject::setGroupWaypoints(WaypointMap const &groupWaypoints)
 
 uint32 PlayerObject::getPlayedTime() const
 {
-	return static_cast<uint32>(m_playedTime.get() + m_playedTimeAccum);
+	// Add the whole seconds of the accumulator as an integer: a float sum loses
+	// whole seconds once the played time passes 2^24 seconds.
+	uint32 const accumulated = (m_playedTimeAccum > 0.0f) ? static_cast<uint32>(m_playedTimeAccum) : 0;
+	return m_playedTime.get() + accumulated;
 }
 
 // ----------------------------------------------------------------------

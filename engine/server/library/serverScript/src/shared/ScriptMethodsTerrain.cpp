@@ -39,6 +39,7 @@
 #include "sharedTerrain/TerrainObject.h"
 
 #include <algorithm>
+#include <cmath>
 #include <list>
 
 using namespace JNIWrappersNamespace;
@@ -561,7 +562,9 @@ jfloat JNICALL ScriptMethodsTerrainNamespace::getLocalTime (JNIEnv* /*env*/, job
 		return 0.f;
 	}
 
-	return fmodf (static_cast<float> (ServerClock::getInstance ().getGameTimeSeconds ()), environmentCycleTime) / environmentCycleTime;
+	// double: a game time past 2^24 seconds does not fit a float exactly
+	double const cycleTime = static_cast<double> (environmentCycleTime);
+	return static_cast<float> (std::fmod (static_cast<double> (ServerClock::getInstance ().getGameTimeSeconds ()), cycleTime) / cycleTime);
 }
 
 // ----------------------------------------------------------------------
