@@ -36,6 +36,7 @@
 #include "sharedObject/AlterResult.h"
 #include "sharedObject/NetworkIdManager.h"
 
+#include <algorithm>
 #include <limits>
 #include <map>
 
@@ -184,8 +185,9 @@ void PlayerShipController::receiveTransform(ShipUpdateTransformMessage const & s
 		return;
 
 	uint32 const syncStamp = shipUpdateTransformMessage.getSyncStampLong();
+	// signed modular difference: positive only when this packet is newer than the last one applied
 	if (   m_clientToServerLastSyncStamp == 0
-	    || syncStampLongDeltaTime(m_clientToServerLastSyncStamp, syncStamp) > 0)
+	    || static_cast<int32>(syncStamp - m_clientToServerLastSyncStamp) > 0)
 	{
 		m_clientToServerLastSyncStamp = syncStamp;
 
@@ -224,7 +226,8 @@ void PlayerShipController::receiveTransform(ShipUpdateTransformMessage const & s
 					if (serverShipObjectInterface.getMaximumRoll() > 0.f)
 						m_rollPosition = clamp(-1.f, shipUpdateTransformMessage.getRollRate() / serverShipObjectInterface.getMaximumRoll(), 1.f);
 
-					deltaTime = client->computeDeltaTimeInSeconds(syncStamp);
+					// a packet stamped in the future has no elapsed time to advance by
+					deltaTime = std::max(0.f, client->computeDeltaTimeInSeconds(syncStamp));
 				}
 			}
 

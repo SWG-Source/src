@@ -1930,16 +1930,9 @@ uint32 Client::getServerSyncStampLong() const {
 //-----------------------------------------------------------------------
 
 float Client::computeDeltaTimeInSeconds(uint32 const syncStampLong) const {
-    uint32 const deltaTimeMilliseconds = syncStampLong - getServerSyncStampLong();
-
-    float deltaTime = 0.f;
-    if (deltaTimeMilliseconds > 0x7fffffff) {
-        deltaTime = static_cast<float>(static_cast<int>(0xffffffff - deltaTimeMilliseconds)) / 1000.0f;
-    } else {
-        deltaTime = static_cast<float>(static_cast<int>(deltaTimeMilliseconds)) / 1000.0f;
-    }
-
-    return deltaTime;
+    // Signed modular difference: positive is the age of the stamp, negative means the stamp is ahead of the server.
+    int32 const deltaTimeMilliseconds = static_cast<int32>(getServerSyncStampLong() - syncStampLong);
+    return static_cast<float>(deltaTimeMilliseconds) / 1000.0f;
 }
 
 //-----------------------------------------------------------------------
