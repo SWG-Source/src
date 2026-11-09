@@ -272,7 +272,7 @@ void DatabaseConnection::toggleCompletedTutorial(StationId stationId, bool newVa
 
 void DatabaseConnection::onStationIdSchemeRetrieved(bool const queried, int const rows, std::string const & scheme, std::string const & basis)
 {
-	static char const * const howToLabel = "Apply database update 272, then label the login database with its station id scheme using game/server/database/tools/station_id_scheme (see its README)";
+	static char const * const howToLabel = "In swg-main, run ant update_database; it applies update 272 and labels the database (see src/game/server/database/tools/station_id_scheme/README.md)";
 
 	FATAL(!queried, ("LoginServer: cannot read the login database's station id scheme (table station_id_scheme). %s.", howToLabel));
 	FATAL(rows == 0, ("LoginServer: the login database has no station id scheme recorded. %s.", howToLabel));
