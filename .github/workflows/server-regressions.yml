@@ -43,6 +43,9 @@ jobs:
       - name: DebugHelp symbol and ELF regressions
         if: ${{ !cancelled() }}
         run: "{ git rev-parse HEAD; python3 tools/ci/run-debughelp.py --bits ${{ matrix.bits }}; } 2>&1 | tee ci-results/debughelp.log"
+      - name: Clock step robustness
+        if: ${{ !cancelled() }}
+        run: "{ git rev-parse HEAD; python3 tools/ci/run-clocks.py --bits ${{ matrix.bits }}; } 2>&1 | tee ci-results/clocks.log"
       - name: Calendar boundaries
         if: ${{ !cancelled() }}
         run: "{ git rev-parse HEAD; sh engine/server/library/serverScript/test/calendar-time-test.sh -m${{ matrix.bits }}; } 2>&1 | tee ci-results/calendar.log"

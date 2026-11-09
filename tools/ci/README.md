@@ -18,6 +18,7 @@ Ubuntu 22.04 with `g++-multilib` builds fresh executables on both ABIs:
 | `tools/test-wire-compatibility/run-timestamps.py` | 16 passes | 22 passes |
 | `tools/ci/run-parsing.py` | 41 oracle lines | 41 oracle lines |
 | `tools/ci/run-debughelp.py` | 7 passes | 7 passes |
+| `tools/ci/run-clocks.py` | 7 clocks pass | 7 clocks pass |
 
 Run the same commands locally with `python3 RUNNER --bits 32` (or `64`).
 No cached libraries, Oracle installation, VM or live cluster are needed.
@@ -48,6 +49,13 @@ cluster compatibility. The portable suites omit the optional mission fixtures
 that require full same-revision server libraries, full-message and persistence
 coverage, oversized containers at real call sites, nested rollback, and
 byte-buffer overflow. Native full-cluster acceptance remains a separate gate.
+
+The clock runner builds `clock_robustness_test.cpp` against each real clock
+implementation: ServerClock (with `time()` replaced in the test process, so
+it can step the host clock back and forward), both UdpLibrary copies and all
+four TcpLibrary copies. It checks that game time never goes backwards, that
+the network clocks are monotonic and keep their sync-stamp bits, and that the
+TcpLibrary clock actually reads a clock.
 
 Calendar boundaries, the string-search narrowing scan and SQL audit generation
 also run in the portable matrix. The audit test never connects to a database.
