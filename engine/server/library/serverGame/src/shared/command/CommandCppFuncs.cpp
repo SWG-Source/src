@@ -893,17 +893,17 @@ static void commandFuncLocateStructure(Command const &, NetworkId const &actor, 
 			ownerId = actor;
 	}
 
-	int const timeNow = static_cast<int>(::time(nullptr));
+	int64_t const timeNow = EpochTime::now();
 	if (!isGod && actorObj->getObjVars().hasItem("timeNextLocateStructureCommandAllowed") && (actorObj->getObjVars().getType("timeNextLocateStructureCommandAllowed") == DynamicVariable::INT))
 	{
 		int timeNextLocateStructureCommandAllowed = 0;
 		if (actorObj->getObjVars().getItem("timeNextLocateStructureCommandAllowed", timeNextLocateStructureCommandAllowed))
 		{
-			if (timeNextLocateStructureCommandAllowed > timeNow)
+			if (EpochTime::fromWire32(timeNextLocateStructureCommandAllowed, timeNow) > timeNow)
 			{
 				ProsePackage prosePackage;
 				prosePackage.stringId = StringId("player_structure", "locate_structure_command_too_fast");
-				prosePackage.target.str = Unicode::narrowToWide(CalendarTime::convertSecondsToHMS(static_cast<unsigned int>(timeNextLocateStructureCommandAllowed - timeNow)));
+				prosePackage.target.str = Unicode::narrowToWide(CalendarTime::convertSecondsToHMS(static_cast<unsigned int>(EpochTime::fromWire32(timeNextLocateStructureCommandAllowed, timeNow) - timeNow)));
 				Chat::sendSystemMessage(*actorObj, prosePackage);
 
 				return;
@@ -931,7 +931,7 @@ static void commandFuncLocateStructure(Command const &, NetworkId const &actor, 
 	GameServer::getInstance().sendToCentralServer(locateStructureByOwnerIdReq);
 
 	if (!isGod)
-		IGNORE_RETURN(actorObj->setObjVarItem("timeNextLocateStructureCommandAllowed", (timeNow + ConfigServerGame::getLocateStructureCommandIntervalSeconds())));
+		IGNORE_RETURN(actorObj->setObjVarItem("timeNextLocateStructureCommandAllowed", EpochTime::toWire32(timeNow + ConfigServerGame::getLocateStructureCommandIntervalSeconds())));
 }
 
 // ----------------------------------------------------------------------
@@ -961,17 +961,17 @@ static void commandFuncLocateVendor(Command const &, NetworkId const &actor, Net
 			ownerId = actor;
 	}
 
-	int const timeNow = static_cast<int>(::time(nullptr));
+	int64_t const timeNow = EpochTime::now();
 	if (!isGod && actorObj->getObjVars().hasItem("timeNextLocateVendorCommandAllowed") && (actorObj->getObjVars().getType("timeNextLocateVendorCommandAllowed") == DynamicVariable::INT))
 	{
 		int timeNextLocateVendorCommandAllowed = 0;
 		if (actorObj->getObjVars().getItem("timeNextLocateVendorCommandAllowed", timeNextLocateVendorCommandAllowed))
 		{
-			if (timeNextLocateVendorCommandAllowed > timeNow)
+			if (EpochTime::fromWire32(timeNextLocateVendorCommandAllowed, timeNow) > timeNow)
 			{
 				ProsePackage prosePackage;
 				prosePackage.stringId = StringId("player_vendor", "locate_vendor_command_too_fast");
-				prosePackage.target.str = Unicode::narrowToWide(CalendarTime::convertSecondsToMS(static_cast<unsigned int>(timeNextLocateVendorCommandAllowed - timeNow)));
+				prosePackage.target.str = Unicode::narrowToWide(CalendarTime::convertSecondsToMS(static_cast<unsigned int>(EpochTime::fromWire32(timeNextLocateVendorCommandAllowed, timeNow) - timeNow)));
 				Chat::sendSystemMessage(*actorObj, prosePackage);
 
 				return;
@@ -996,7 +996,7 @@ static void commandFuncLocateVendor(Command const &, NetworkId const &actor, Net
 	CommoditiesMarket::sendToCommoditiesServer(msg);
 
 	if (!isGod)
-		IGNORE_RETURN(actorObj->setObjVarItem("timeNextLocateVendorCommandAllowed", (timeNow + ConfigServerGame::getLocateVendorCommandIntervalSeconds())));
+		IGNORE_RETURN(actorObj->setObjVarItem("timeNextLocateVendorCommandAllowed", EpochTime::toWire32(timeNow + ConfigServerGame::getLocateVendorCommandIntervalSeconds())));
 }
 
 // ----------------------------------------------------------------------
@@ -4840,15 +4840,15 @@ static void commandFuncGroupPickRandomGroupMember(Command const &, NetworkId con
 	if (!client)
 		return;
 
-	int const timeNow = static_cast<int>(::time(nullptr));
+	int64_t const timeNow = EpochTime::now();
 	if (!client->isGod() && targetObj->getObjVars().hasItem("timeNextGroupPickRandomGroupMemberCommandAllowed") && (targetObj->getObjVars().getType("timeNextGroupPickRandomGroupMemberCommandAllowed") == DynamicVariable::INT))
 	{
 		int timeNextGroupPickRandomGroupMemberCommandAllowed = 0;
 		if (targetObj->getObjVars().getItem("timeNextGroupPickRandomGroupMemberCommandAllowed", timeNextGroupPickRandomGroupMemberCommandAllowed))
 		{
-			if (timeNextGroupPickRandomGroupMemberCommandAllowed > timeNow)
+			if (EpochTime::fromWire32(timeNextGroupPickRandomGroupMemberCommandAllowed, timeNow) > timeNow)
 			{
-				Chat::sendSystemMessage(*targetObj, Unicode::narrowToWide(FormattedString<1024>().sprintf("You must wait %ds before you can run this command again.", (timeNextGroupPickRandomGroupMemberCommandAllowed - timeNow))), Unicode::emptyString);
+				Chat::sendSystemMessage(*targetObj, Unicode::narrowToWide(FormattedString<1024>().sprintf("You must wait %ds before you can run this command again.", static_cast<int>(EpochTime::fromWire32(timeNextGroupPickRandomGroupMemberCommandAllowed, timeNow) - timeNow))), Unicode::emptyString);
 				return;
 			}
 		}
@@ -4936,7 +4936,7 @@ static void commandFuncGroupPickRandomGroupMember(Command const &, NetworkId con
 
 	// set cooldown
 	if (!client->isGod())
-		IGNORE_RETURN(targetObj->setObjVarItem("timeNextGroupPickRandomGroupMemberCommandAllowed", (timeNow + 30)));
+		IGNORE_RETURN(targetObj->setObjVarItem("timeNextGroupPickRandomGroupMemberCommandAllowed", EpochTime::toWire32(timeNow + 30)));
 }
 
 // ----------------------------------------------------------------------
@@ -4963,15 +4963,15 @@ static void commandFuncGroupTextChatRoomRejoin(Command const &, NetworkId const 
 	if (!client)
 		return;
 
-	int const timeNow = static_cast<int>(::time(nullptr));
+	int64_t const timeNow = EpochTime::now();
 	if (!client->isGod() && targetObj->getObjVars().hasItem("timeNextGroupTextChatRoomRejoinCommandAllowed") && (targetObj->getObjVars().getType("timeNextGroupTextChatRoomRejoinCommandAllowed") == DynamicVariable::INT))
 	{
 		int timeNextGroupTextChatRoomRejoinCommandAllowed = 0;
 		if (targetObj->getObjVars().getItem("timeNextGroupTextChatRoomRejoinCommandAllowed", timeNextGroupTextChatRoomRejoinCommandAllowed))
 		{
-			if (timeNextGroupTextChatRoomRejoinCommandAllowed > timeNow)
+			if (EpochTime::fromWire32(timeNextGroupTextChatRoomRejoinCommandAllowed, timeNow) > timeNow)
 			{
-				Chat::sendSystemMessage(*targetObj, Unicode::narrowToWide(FormattedString<1024>().sprintf("You must wait %ds before you can run this command again.", (timeNextGroupTextChatRoomRejoinCommandAllowed - timeNow))), Unicode::emptyString);
+				Chat::sendSystemMessage(*targetObj, Unicode::narrowToWide(FormattedString<1024>().sprintf("You must wait %ds before you can run this command again.", static_cast<int>(EpochTime::fromWire32(timeNextGroupTextChatRoomRejoinCommandAllowed, timeNow) - timeNow))), Unicode::emptyString);
 				return;
 			}
 		}
@@ -4982,7 +4982,7 @@ static void commandFuncGroupTextChatRoomRejoin(Command const &, NetworkId const 
 
 	// set cooldown
 	if (!client->isGod())
-		IGNORE_RETURN(targetObj->setObjVarItem("timeNextGroupTextChatRoomRejoinCommandAllowed", (timeNow + 60)));
+		IGNORE_RETURN(targetObj->setObjVarItem("timeNextGroupTextChatRoomRejoinCommandAllowed", EpochTime::toWire32(timeNow + 60)));
 }
 
 // ----------------------------------------------------------------------
@@ -5026,15 +5026,15 @@ static void commandFuncGuildTextChatRoomRejoin(Command const &, NetworkId const 
 	if (!client)
 		return;
 
-	int const timeNow = static_cast<int>(::time(nullptr));
+	int64_t const timeNow = EpochTime::now();
 	if (!client->isGod() && targetObj->getObjVars().hasItem("timeNextGuildTextChatRoomRejoinCommandAllowed") && (targetObj->getObjVars().getType("timeNextGuildTextChatRoomRejoinCommandAllowed") == DynamicVariable::INT))
 	{
 		int timeNextGuildTextChatRoomRejoinCommandAllowed = 0;
 		if (targetObj->getObjVars().getItem("timeNextGuildTextChatRoomRejoinCommandAllowed", timeNextGuildTextChatRoomRejoinCommandAllowed))
 		{
-			if (timeNextGuildTextChatRoomRejoinCommandAllowed > timeNow)
+			if (EpochTime::fromWire32(timeNextGuildTextChatRoomRejoinCommandAllowed, timeNow) > timeNow)
 			{
-				Chat::sendSystemMessage(*targetObj, Unicode::narrowToWide(FormattedString<1024>().sprintf("You must wait %ds before you can run this command again.", (timeNextGuildTextChatRoomRejoinCommandAllowed - timeNow))), Unicode::emptyString);
+				Chat::sendSystemMessage(*targetObj, Unicode::narrowToWide(FormattedString<1024>().sprintf("You must wait %ds before you can run this command again.", static_cast<int>(EpochTime::fromWire32(timeNextGuildTextChatRoomRejoinCommandAllowed, timeNow) - timeNow))), Unicode::emptyString);
 				return;
 			}
 		}
@@ -5045,7 +5045,7 @@ static void commandFuncGuildTextChatRoomRejoin(Command const &, NetworkId const 
 
 	// set cooldown
 	if (!client->isGod())
-		IGNORE_RETURN(targetObj->setObjVarItem("timeNextGuildTextChatRoomRejoinCommandAllowed", (timeNow + 60)));
+		IGNORE_RETURN(targetObj->setObjVarItem("timeNextGuildTextChatRoomRejoinCommandAllowed", EpochTime::toWire32(timeNow + 60)));
 }
 
 // ----------------------------------------------------------------------
@@ -5071,15 +5071,15 @@ static void commandFuncGuildPickRandomGuildMember(Command const &, NetworkId con
 	if (!client)
 		return;
 
-	int const timeNow = static_cast<int>(::time(nullptr));
+	int64_t const timeNow = EpochTime::now();
 	if (!client->isGod() && targetObj->getObjVars().hasItem("timeNextGuildPickRandomGuildMemberCommandAllowed") && (targetObj->getObjVars().getType("timeNextGuildPickRandomGuildMemberCommandAllowed") == DynamicVariable::INT))
 	{
 		int timeNextGuildPickRandomGuildMemberCommandAllowed = 0;
 		if (targetObj->getObjVars().getItem("timeNextGuildPickRandomGuildMemberCommandAllowed", timeNextGuildPickRandomGuildMemberCommandAllowed))
 		{
-			if (timeNextGuildPickRandomGuildMemberCommandAllowed > timeNow)
+			if (EpochTime::fromWire32(timeNextGuildPickRandomGuildMemberCommandAllowed, timeNow) > timeNow)
 			{
-				Chat::sendSystemMessage(*targetObj, Unicode::narrowToWide(FormattedString<1024>().sprintf("You must wait %ds before you can run this command again.", (timeNextGuildPickRandomGuildMemberCommandAllowed - timeNow))), Unicode::emptyString);
+				Chat::sendSystemMessage(*targetObj, Unicode::narrowToWide(FormattedString<1024>().sprintf("You must wait %ds before you can run this command again.", static_cast<int>(EpochTime::fromWire32(timeNextGuildPickRandomGuildMemberCommandAllowed, timeNow) - timeNow))), Unicode::emptyString);
 				return;
 			}
 		}
@@ -5187,7 +5187,7 @@ static void commandFuncGuildPickRandomGuildMember(Command const &, NetworkId con
 
 	// set cooldown
 	if (!client->isGod())
-		IGNORE_RETURN(targetObj->setObjVarItem("timeNextGuildPickRandomGuildMemberCommandAllowed", (timeNow + 30)));
+		IGNORE_RETURN(targetObj->setObjVarItem("timeNextGuildPickRandomGuildMemberCommandAllowed", EpochTime::toWire32(timeNow + 30)));
 }
 
 // ----------------------------------------------------------------------
@@ -5232,15 +5232,15 @@ static void commandFuncCityTextChatRoomRejoin(Command const &, NetworkId const &
 	if (!client)
 		return;
 
-	int const timeNow = static_cast<int>(::time(nullptr));
+	int64_t const timeNow = EpochTime::now();
 	if (!client->isGod() && targetObj->getObjVars().hasItem("timeNextCityTextChatRoomRejoinCommandAllowed") && (targetObj->getObjVars().getType("timeNextCityTextChatRoomRejoinCommandAllowed") == DynamicVariable::INT))
 	{
 		int timeNextCityTextChatRoomRejoinCommandAllowed = 0;
 		if (targetObj->getObjVars().getItem("timeNextCityTextChatRoomRejoinCommandAllowed", timeNextCityTextChatRoomRejoinCommandAllowed))
 		{
-			if (timeNextCityTextChatRoomRejoinCommandAllowed > timeNow)
+			if (EpochTime::fromWire32(timeNextCityTextChatRoomRejoinCommandAllowed, timeNow) > timeNow)
 			{
-				Chat::sendSystemMessage(*targetObj, Unicode::narrowToWide(FormattedString<1024>().sprintf("You must wait %ds before you can run this command again.", (timeNextCityTextChatRoomRejoinCommandAllowed - timeNow))), Unicode::emptyString);
+				Chat::sendSystemMessage(*targetObj, Unicode::narrowToWide(FormattedString<1024>().sprintf("You must wait %ds before you can run this command again.", static_cast<int>(EpochTime::fromWire32(timeNextCityTextChatRoomRejoinCommandAllowed, timeNow) - timeNow))), Unicode::emptyString);
 				return;
 			}
 		}
@@ -5251,7 +5251,7 @@ static void commandFuncCityTextChatRoomRejoin(Command const &, NetworkId const &
 
 	// set cooldown
 	if (!client->isGod())
-		IGNORE_RETURN(targetObj->setObjVarItem("timeNextCityTextChatRoomRejoinCommandAllowed", (timeNow + 60)));
+		IGNORE_RETURN(targetObj->setObjVarItem("timeNextCityTextChatRoomRejoinCommandAllowed", EpochTime::toWire32(timeNow + 60)));
 }
 
 // ----------------------------------------------------------------------
@@ -5278,15 +5278,15 @@ static void commandFuncCityPickRandomCitizen(Command const &, NetworkId const &a
 	if (!client)
 		return;
 
-	int const timeNow = static_cast<int>(::time(nullptr));
+	int64_t const timeNow = EpochTime::now();
 	if (!client->isGod() && targetObj->getObjVars().hasItem("timeNextCityPickRandomCitizenCommandAllowed") && (targetObj->getObjVars().getType("timeNextCityPickRandomCitizenCommandAllowed") == DynamicVariable::INT))
 	{
 		int timeNextCityPickRandomCitizenCommandAllowed = 0;
 		if (targetObj->getObjVars().getItem("timeNextCityPickRandomCitizenCommandAllowed", timeNextCityPickRandomCitizenCommandAllowed))
 		{
-			if (timeNextCityPickRandomCitizenCommandAllowed > timeNow)
+			if (EpochTime::fromWire32(timeNextCityPickRandomCitizenCommandAllowed, timeNow) > timeNow)
 			{
-				Chat::sendSystemMessage(*targetObj, Unicode::narrowToWide(FormattedString<1024>().sprintf("You must wait %ds before you can run this command again.", (timeNextCityPickRandomCitizenCommandAllowed - timeNow))), Unicode::emptyString);
+				Chat::sendSystemMessage(*targetObj, Unicode::narrowToWide(FormattedString<1024>().sprintf("You must wait %ds before you can run this command again.", static_cast<int>(EpochTime::fromWire32(timeNextCityPickRandomCitizenCommandAllowed, timeNow) - timeNow))), Unicode::emptyString);
 				return;
 			}
 		}
@@ -5394,7 +5394,7 @@ static void commandFuncCityPickRandomCitizen(Command const &, NetworkId const &a
 
 	// set cooldown
 	if (!client->isGod())
-		IGNORE_RETURN(targetObj->setObjVarItem("timeNextCityPickRandomCitizenCommandAllowed", (timeNow + 30)));
+		IGNORE_RETURN(targetObj->setObjVarItem("timeNextCityPickRandomCitizenCommandAllowed", EpochTime::toWire32(timeNow + 30)));
 }
 
 // ----------------------------------------------------------------------
@@ -8953,17 +8953,17 @@ static void commandFuncOccupyUnlockedSlot(Command const &, NetworkId const &acto
 			}
 
 			// check to see if there is a cooldown is in effect for the command
-			int const timeNow = static_cast<int>(::time(nullptr));
+			int64_t const timeNow = EpochTime::now();
 			if (!gmClient->isGod() && gm->getObjVars().hasItem("timeNextOccupyVacateUnlockedSlotCommandAllowed") && (gm->getObjVars().getType("timeNextOccupyVacateUnlockedSlotCommandAllowed") == DynamicVariable::INT))
 			{
 				int timeNextOccupyVacateUnlockedSlotCommandAllowed = 0;
 				if (gm->getObjVars().getItem("timeNextOccupyVacateUnlockedSlotCommandAllowed", timeNextOccupyVacateUnlockedSlotCommandAllowed))
 				{
-					if (timeNextOccupyVacateUnlockedSlotCommandAllowed > timeNow)
+					if (EpochTime::fromWire32(timeNextOccupyVacateUnlockedSlotCommandAllowed, timeNow) > timeNow)
 					{
 						ProsePackage prosePackage;
 						prosePackage.stringId = StringId("unlocked_slot", "occupy_unlocked_slot_command_too_fast");
-						prosePackage.target.str = Unicode::narrowToWide(CalendarTime::convertSecondsToHMS(static_cast<unsigned int>(timeNextOccupyVacateUnlockedSlotCommandAllowed - timeNow)));
+						prosePackage.target.str = Unicode::narrowToWide(CalendarTime::convertSecondsToHMS(static_cast<unsigned int>(EpochTime::fromWire32(timeNextOccupyVacateUnlockedSlotCommandAllowed, timeNow) - timeNow)));
 						Chat::sendSystemMessage(*gm, prosePackage);
 
 						return;
@@ -8981,7 +8981,7 @@ static void commandFuncOccupyUnlockedSlot(Command const &, NetworkId const &acto
 			// set cooldown
 			if (!gmClient->isGod())
 			{
-				IGNORE_RETURN(gm->setObjVarItem("timeNextOccupyVacateUnlockedSlotCommandAllowed", (timeNow + ConfigServerGame::getOccupyVacateUnlockedSlotCommandCooldownSeconds())));
+				IGNORE_RETURN(gm->setObjVarItem("timeNextOccupyVacateUnlockedSlotCommandAllowed", EpochTime::toWire32(timeNow + ConfigServerGame::getOccupyVacateUnlockedSlotCommandCooldownSeconds())));
 			}
 
 			// display "wait for reply" message
@@ -9019,17 +9019,17 @@ static void commandFuncVacateUnlockedSlot(Command const &, NetworkId const &acto
 			}
 
 			// check to see if there is a cooldown is in effect for the command
-			int const timeNow = static_cast<int>(::time(nullptr));
+			int64_t const timeNow = EpochTime::now();
 			if (!gmClient->isGod() && gm->getObjVars().hasItem("timeNextOccupyVacateUnlockedSlotCommandAllowed") && (gm->getObjVars().getType("timeNextOccupyVacateUnlockedSlotCommandAllowed") == DynamicVariable::INT))
 			{
 				int timeNextOccupyVacateUnlockedSlotCommandAllowed = 0;
 				if (gm->getObjVars().getItem("timeNextOccupyVacateUnlockedSlotCommandAllowed", timeNextOccupyVacateUnlockedSlotCommandAllowed))
 				{
-					if (timeNextOccupyVacateUnlockedSlotCommandAllowed > timeNow)
+					if (EpochTime::fromWire32(timeNextOccupyVacateUnlockedSlotCommandAllowed, timeNow) > timeNow)
 					{
 						ProsePackage prosePackage;
 						prosePackage.stringId = StringId("unlocked_slot", "vacate_unlocked_slot_command_too_fast");
-						prosePackage.target.str = Unicode::narrowToWide(CalendarTime::convertSecondsToHMS(static_cast<unsigned int>(timeNextOccupyVacateUnlockedSlotCommandAllowed - timeNow)));
+						prosePackage.target.str = Unicode::narrowToWide(CalendarTime::convertSecondsToHMS(static_cast<unsigned int>(EpochTime::fromWire32(timeNextOccupyVacateUnlockedSlotCommandAllowed, timeNow) - timeNow)));
 						Chat::sendSystemMessage(*gm, prosePackage);
 
 						return;
@@ -9047,7 +9047,7 @@ static void commandFuncVacateUnlockedSlot(Command const &, NetworkId const &acto
 			// set cooldown
 			if (!gmClient->isGod())
 			{
-				IGNORE_RETURN(gm->setObjVarItem("timeNextOccupyVacateUnlockedSlotCommandAllowed", (timeNow + ConfigServerGame::getOccupyVacateUnlockedSlotCommandCooldownSeconds())));
+				IGNORE_RETURN(gm->setObjVarItem("timeNextOccupyVacateUnlockedSlotCommandAllowed", EpochTime::toWire32(timeNow + ConfigServerGame::getOccupyVacateUnlockedSlotCommandCooldownSeconds())));
 			}
 
 			// display "wait for reply" message
@@ -9107,17 +9107,17 @@ static void commandFuncSwapUnlockedSlot(Command const &, NetworkId const &actor,
 			}
 
 			// check to see if there is a cooldown is in effect for the command
-			int const timeNow = static_cast<int>(::time(nullptr));
+			int64_t const timeNow = EpochTime::now();
 			if (!gmClient->isGod() && gm->getObjVars().hasItem("timeNextOccupyVacateUnlockedSlotCommandAllowed") && (gm->getObjVars().getType("timeNextOccupyVacateUnlockedSlotCommandAllowed") == DynamicVariable::INT))
 			{
 				int timeNextOccupyVacateUnlockedSlotCommandAllowed = 0;
 				if (gm->getObjVars().getItem("timeNextOccupyVacateUnlockedSlotCommandAllowed", timeNextOccupyVacateUnlockedSlotCommandAllowed))
 				{
-					if (timeNextOccupyVacateUnlockedSlotCommandAllowed > timeNow)
+					if (EpochTime::fromWire32(timeNextOccupyVacateUnlockedSlotCommandAllowed, timeNow) > timeNow)
 					{
 						ProsePackage prosePackage;
 						prosePackage.stringId = StringId("unlocked_slot", "swap_unlocked_slot_command_too_fast");
-						prosePackage.target.str = Unicode::narrowToWide(CalendarTime::convertSecondsToHMS(static_cast<unsigned int>(timeNextOccupyVacateUnlockedSlotCommandAllowed - timeNow)));
+						prosePackage.target.str = Unicode::narrowToWide(CalendarTime::convertSecondsToHMS(static_cast<unsigned int>(EpochTime::fromWire32(timeNextOccupyVacateUnlockedSlotCommandAllowed, timeNow) - timeNow)));
 						Chat::sendSystemMessage(*gm, prosePackage);
 
 						return;
@@ -9135,7 +9135,7 @@ static void commandFuncSwapUnlockedSlot(Command const &, NetworkId const &actor,
 			// set cooldown
 			if (!gmClient->isGod())
 			{
-				IGNORE_RETURN(gm->setObjVarItem("timeNextOccupyVacateUnlockedSlotCommandAllowed", (timeNow + ConfigServerGame::getOccupyVacateUnlockedSlotCommandCooldownSeconds())));
+				IGNORE_RETURN(gm->setObjVarItem("timeNextOccupyVacateUnlockedSlotCommandAllowed", EpochTime::toWire32(timeNow + ConfigServerGame::getOccupyVacateUnlockedSlotCommandCooldownSeconds())));
 			}
 
 			// display "wait for reply" message
@@ -9175,11 +9175,11 @@ static void commandFuncPickupAllRoomItemsIntoInventory(Command const &, NetworkI
 		return;
 
 	// don't allow multiple /pickupAllRoomItemsIntoInventory and/or /dropAllInventoryItemsIntoRoom
-	int const timeNow = static_cast<int>(::time(nullptr));
+	int64_t const timeNow = EpochTime::now();
 	int pickupDropAllItemsOperationTimeout = 0;
-	if (targetObj->getObjVars().getItem("pickupDropAllItemsOperation.timeout", pickupDropAllItemsOperationTimeout) && (pickupDropAllItemsOperationTimeout > timeNow))
+	if (targetObj->getObjVars().getItem("pickupDropAllItemsOperation.timeout", pickupDropAllItemsOperationTimeout) && (EpochTime::fromWire32(pickupDropAllItemsOperationTimeout, timeNow) > timeNow))
 	{
-		Chat::sendSystemMessage(*targetObj, Unicode::narrowToWide(FormattedString<1024>().sprintf("You are already performing the /pickupAllRoomItemsIntoInventory or /dropAllInventoryItemsIntoRoom command.  Please wait for the current operation to complete, or if the current operation does not complete in %s, you can try another operation.", CalendarTime::convertSecondsToMS(static_cast<unsigned int>(pickupDropAllItemsOperationTimeout - timeNow)).c_str())), Unicode::emptyString);
+		Chat::sendSystemMessage(*targetObj, Unicode::narrowToWide(FormattedString<1024>().sprintf("You are already performing the /pickupAllRoomItemsIntoInventory or /dropAllInventoryItemsIntoRoom command.  Please wait for the current operation to complete, or if the current operation does not complete in %s, you can try another operation.", CalendarTime::convertSecondsToMS(static_cast<unsigned int>(EpochTime::fromWire32(pickupDropAllItemsOperationTimeout, timeNow) - timeNow)).c_str())), Unicode::emptyString);
 		return;
 	}
 
@@ -9284,7 +9284,7 @@ static void commandFuncPickupAllRoomItemsIntoInventory(Command const &, NetworkI
 	targetPlayerObj->setPickupDropAllItemsNumItemsSoFar(0);
 	targetPlayerObj->getPickupDropAllItemsProcessedItemsSoFar().clear();
 
-	IGNORE_RETURN(targetObj->setObjVarItem("pickupDropAllItemsOperation.timeout", timeNow + (5 * 60)));
+	IGNORE_RETURN(targetObj->setObjVarItem("pickupDropAllItemsOperation.timeout", EpochTime::toWire32(timeNow + (5 * 60))));
 	IGNORE_RETURN(targetObj->setObjVarItem("pickupDropAllItemsOperation.operationId", pickupDropAllItemsOperationId));
 
 	Chat::sendSystemMessage(*targetObj, Unicode::narrowToWide("Please remain in the room while the operation is being performed.  You will be notified when the operation is complete."), Unicode::emptyString);
@@ -9324,11 +9324,11 @@ static void commandFuncDropAllInventoryItemsIntoRoom(Command const &, NetworkId 
 		return;
 
 	// don't allow multiple /pickupAllRoomItemsIntoInventory and/or /dropAllInventoryItemsIntoRoom
-	int const timeNow = static_cast<int>(::time(nullptr));
+	int64_t const timeNow = EpochTime::now();
 	int pickupDropAllItemsOperationTimeout = 0;
-	if (targetObj->getObjVars().getItem("pickupDropAllItemsOperation.timeout", pickupDropAllItemsOperationTimeout) && (pickupDropAllItemsOperationTimeout > timeNow))
+	if (targetObj->getObjVars().getItem("pickupDropAllItemsOperation.timeout", pickupDropAllItemsOperationTimeout) && (EpochTime::fromWire32(pickupDropAllItemsOperationTimeout, timeNow) > timeNow))
 	{
-		Chat::sendSystemMessage(*targetObj, Unicode::narrowToWide(FormattedString<1024>().sprintf("You are already performing the /pickupAllRoomItemsIntoInventory or /dropAllInventoryItemsIntoRoom command.  Please wait for the current operation to complete, or if the current operation does not complete in %s, you can try another operation.", CalendarTime::convertSecondsToMS(static_cast<unsigned int>(pickupDropAllItemsOperationTimeout - timeNow)).c_str())), Unicode::emptyString);
+		Chat::sendSystemMessage(*targetObj, Unicode::narrowToWide(FormattedString<1024>().sprintf("You are already performing the /pickupAllRoomItemsIntoInventory or /dropAllInventoryItemsIntoRoom command.  Please wait for the current operation to complete, or if the current operation does not complete in %s, you can try another operation.", CalendarTime::convertSecondsToMS(static_cast<unsigned int>(EpochTime::fromWire32(pickupDropAllItemsOperationTimeout, timeNow) - timeNow)).c_str())), Unicode::emptyString);
 		return;
 	}
 
@@ -9432,7 +9432,7 @@ static void commandFuncDropAllInventoryItemsIntoRoom(Command const &, NetworkId 
 	targetPlayerObj->setPickupDropAllItemsNumItemsSoFar(0);
 	targetPlayerObj->getPickupDropAllItemsProcessedItemsSoFar().clear();
 
-	IGNORE_RETURN(targetObj->setObjVarItem("pickupDropAllItemsOperation.timeout", timeNow + (5 * 60)));
+	IGNORE_RETURN(targetObj->setObjVarItem("pickupDropAllItemsOperation.timeout", EpochTime::toWire32(timeNow + (5 * 60))));
 	IGNORE_RETURN(targetObj->setObjVarItem("pickupDropAllItemsOperation.operationId", pickupDropAllItemsOperationId));
 
 	Chat::sendSystemMessage(*targetObj, Unicode::narrowToWide("Please remain in the room while the operation is being performed.  You will be notified when the operation is complete."), Unicode::emptyString);
@@ -9528,11 +9528,11 @@ static void commandFuncRestoreDecorationLayout(Command const &, NetworkId const 
 	}
 
 	// don't allow another restore on the pob while one is still in progress
-	int const timeNow = static_cast<int>(::time(nullptr));
+	int64_t const timeNow = EpochTime::now();
 	int restoreDecorationOperationTimeout = 0;
-	if (targetObj->getObjVars().getItem("restoreDecorationOperation.timeout", restoreDecorationOperationTimeout) && (restoreDecorationOperationTimeout > timeNow))
+	if (targetObj->getObjVars().getItem("restoreDecorationOperation.timeout", restoreDecorationOperationTimeout) && (EpochTime::fromWire32(restoreDecorationOperationTimeout, timeNow) > timeNow))
 	{
-		Chat::sendSystemMessage(*targetObj, Unicode::narrowToWide(FormattedString<1024>().sprintf("You are already performing a restore decoration layout operation.  Please wait for the current operation to complete, or if the current operation does not complete in %s, you can try another operation.", CalendarTime::convertSecondsToMS(static_cast<unsigned int>(restoreDecorationOperationTimeout - timeNow)).c_str())), Unicode::emptyString);
+		Chat::sendSystemMessage(*targetObj, Unicode::narrowToWide(FormattedString<1024>().sprintf("You are already performing a restore decoration layout operation.  Please wait for the current operation to complete, or if the current operation does not complete in %s, you can try another operation.", CalendarTime::convertSecondsToMS(static_cast<unsigned int>(EpochTime::fromWire32(restoreDecorationOperationTimeout, timeNow) - timeNow)).c_str())), Unicode::emptyString);
 		return;
 	}
 
@@ -9603,15 +9603,15 @@ static void commandFuncAreaPickRandomPlayer(Command const &, NetworkId const &ac
 	if (!client)
 		return;
 
-	int const timeNow = static_cast<int>(::time(nullptr));
+	int64_t const timeNow = EpochTime::now();
 	if (!client->isGod() && targetObj->getObjVars().hasItem("timeNextAreaPickRandomPlayerCommandAllowed") && (targetObj->getObjVars().getType("timeNextAreaPickRandomPlayerCommandAllowed") == DynamicVariable::INT))
 	{
 		int timeNextAreaPickRandomPlayerCommandAllowed = 0;
 		if (targetObj->getObjVars().getItem("timeNextAreaPickRandomPlayerCommandAllowed", timeNextAreaPickRandomPlayerCommandAllowed))
 		{
-			if (timeNextAreaPickRandomPlayerCommandAllowed > timeNow)
+			if (EpochTime::fromWire32(timeNextAreaPickRandomPlayerCommandAllowed, timeNow) > timeNow)
 			{
-				Chat::sendSystemMessage(*targetObj, Unicode::narrowToWide(FormattedString<1024>().sprintf("You must wait %ds before you can run this command again.", (timeNextAreaPickRandomPlayerCommandAllowed - timeNow))), Unicode::emptyString);
+				Chat::sendSystemMessage(*targetObj, Unicode::narrowToWide(FormattedString<1024>().sprintf("You must wait %ds before you can run this command again.", static_cast<int>(EpochTime::fromWire32(timeNextAreaPickRandomPlayerCommandAllowed, timeNow) - timeNow))), Unicode::emptyString);
 				return;
 			}
 		}
@@ -9724,7 +9724,7 @@ static void commandFuncAreaPickRandomPlayer(Command const &, NetworkId const &ac
 
 	// set cooldown
 	if (!client->isGod())
-		IGNORE_RETURN(targetObj->setObjVarItem("timeNextAreaPickRandomPlayerCommandAllowed", (timeNow + 30)));
+		IGNORE_RETURN(targetObj->setObjVarItem("timeNextAreaPickRandomPlayerCommandAllowed", EpochTime::toWire32(timeNow + 30)));
 }
 
 // ----------------------------------------------------------------------
@@ -9751,15 +9751,15 @@ static void commandFuncRoomPickRandomPlayer(Command const &, NetworkId const &ac
 	if (!client)
 		return;
 
-	int const timeNow = static_cast<int>(::time(nullptr));
+	int64_t const timeNow = EpochTime::now();
 	if (!client->isGod() && targetObj->getObjVars().hasItem("timeNextRoomPickRandomPlayerCommandAllowed") && (targetObj->getObjVars().getType("timeNextRoomPickRandomPlayerCommandAllowed") == DynamicVariable::INT))
 	{
 		int timeNextRoomPickRandomPlayerCommandAllowed = 0;
 		if (targetObj->getObjVars().getItem("timeNextRoomPickRandomPlayerCommandAllowed", timeNextRoomPickRandomPlayerCommandAllowed))
 		{
-			if (timeNextRoomPickRandomPlayerCommandAllowed > timeNow)
+			if (EpochTime::fromWire32(timeNextRoomPickRandomPlayerCommandAllowed, timeNow) > timeNow)
 			{
-				Chat::sendSystemMessage(*targetObj, Unicode::narrowToWide(FormattedString<1024>().sprintf("You must wait %ds before you can run this command again.", (timeNextRoomPickRandomPlayerCommandAllowed - timeNow))), Unicode::emptyString);
+				Chat::sendSystemMessage(*targetObj, Unicode::narrowToWide(FormattedString<1024>().sprintf("You must wait %ds before you can run this command again.", static_cast<int>(EpochTime::fromWire32(timeNextRoomPickRandomPlayerCommandAllowed, timeNow) - timeNow))), Unicode::emptyString);
 				return;
 			}
 		}
@@ -9866,7 +9866,7 @@ static void commandFuncRoomPickRandomPlayer(Command const &, NetworkId const &ac
 
 	// set cooldown
 	if (!client->isGod())
-		IGNORE_RETURN(targetObj->setObjVarItem("timeNextRoomPickRandomPlayerCommandAllowed", (timeNow + 30)));
+		IGNORE_RETURN(targetObj->setObjVarItem("timeNextRoomPickRandomPlayerCommandAllowed", EpochTime::toWire32(timeNow + 30)));
 }
 
 // ======================================================================

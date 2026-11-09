@@ -25,6 +25,7 @@
 #include "Session/CommonAPI/CommonAPI.h"
 #include "webAPI.h"
 #include "jsonWebAPI.h"
+#include "serverUtility/EpochTime.h"
 
 //-----------------------------------------------------------------------
 
@@ -91,7 +92,7 @@ void ClientConnection::onReceive(const Archive::ByteStream &message) {
                 // send the client the server "now" Epoch time so that the
                 // client has an idea of how much difference there is between
                 // the client's Epoch time and the server Epoch time
-                GenericValueTypeMessage <int32> const serverNowEpochTime("ServerNowEpochTime", static_cast<int32>(::time(nullptr)));
+                GenericValueTypeMessage <int32> const serverNowEpochTime("ServerNowEpochTime", EpochTime::toWire32(EpochTime::now())); // client field: wrapped 32-bit
                 send(serverNowEpochTime, true);
 
                 LoginClientId id(ri);

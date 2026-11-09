@@ -791,7 +791,7 @@ bool ConsoleCommandParserGuild::performParsing (const NetworkId & userId, const 
 			// previous election end time
 			result += Unicode::narrowToWide("guild election previous end time: ");
 
-			if (gi->m_guildElectionPreviousEndTime > 0)
+			if (gi->m_guildElectionPreviousEndTime != 0)
 				result += Unicode::narrowToWide(CalendarTime::convertEpochToTimeStringLocal(static_cast<time_t>(gi->m_guildElectionPreviousEndTime)));
 			else
 				result += Unicode::narrowToWide("NONE");
@@ -801,7 +801,7 @@ bool ConsoleCommandParserGuild::performParsing (const NetworkId & userId, const 
 			// next election end time
 			result += Unicode::narrowToWide("guild election next end time: ");
 
-			if (gi->m_guildElectionNextEndTime > 0)
+			if (gi->m_guildElectionNextEndTime != 0)
 				result += Unicode::narrowToWide(CalendarTime::convertEpochToTimeStringLocal(static_cast<time_t>(gi->m_guildElectionNextEndTime)));
 			else
 				result += Unicode::narrowToWide("NONE");

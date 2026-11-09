@@ -4377,12 +4377,14 @@ void PlayerObject::endBaselines()
 			DynamicVariableList::NestedList const gcwContribution(getObjVars(), "gcwContributionTracking");
 			if (!gcwContribution.empty())
 			{
-				int const timeExpired = static_cast<int>(::time(nullptr)) - (60 * 60 * 24 * 30); // 30 days
+				int64_t const timeNow = EpochTime::now();
+				int64_t const timeExpired = timeNow - (60 * 60 * 24 * 30); // 30 days
 				std::list<std::string> gcwContributionToRemove;
 				int timeLastContributed;
 				for (DynamicVariableList::NestedList::const_iterator i = gcwContribution.begin(); i != gcwContribution.end(); ++i)
 				{
-					if (!Pvp::getGcwScoreCategory(i.getName()) || !i.getValue(timeLastContributed) || (timeLastContributed < timeExpired))
+					// the objvar holds the wrapped 32-bit form
+					if (!Pvp::getGcwScoreCategory(i.getName()) || !i.getValue(timeLastContributed) || (EpochTime::fromWire32(timeLastContributed, timeNow) < timeExpired))
 						gcwContributionToRemove.push_back(std::string("gcwContributionTracking.") + i.getName());
 				}
 
@@ -8249,7 +8251,7 @@ void PlayerObject::updateGcwDefenderRegionInfo()
 	if (!owner)
 		return;
 
-	int timeQualifyForBonus = -1;
+	int64_t timeQualifyForBonus = -1;
 	bool qualifyForWarPlannerTitle = false;
 
 	std::string cityGcwDefenderRegion;
@@ -8272,8 +8274,9 @@ void PlayerObject::updateGcwDefenderRegionInfo()
 			cityGcwDefenderRegion = gcwDefenderRegion;
 
 			int const timeJoinedGcwDefenderRegion = cityInfo.getTimeJoinedGcwDefenderRegion();
-			timeQualifyForBonus = static_cast<int>(::time(nullptr)) - (ConfigServerGame::getGcwDaysRequiredForGcwRegionDefenderBonus() * 86400);
-			if (!PvpData::isNeutralFactionId(cityFaction) && (cityFaction == owner->getPvpFaction()) && (timeJoinedGcwDefenderRegion < timeQualifyForBonus))
+			timeQualifyForBonus = EpochTime::now() - (ConfigServerGame::getGcwDaysRequiredForGcwRegionDefenderBonus() * 86400);
+			// the join time is kept in the wrapped 32-bit form
+			if (!PvpData::isNeutralFactionId(cityFaction) && (cityFaction == owner->getPvpFaction()) && (EpochTime::fromWire32(timeJoinedGcwDefenderRegion, EpochTime::now()) < timeQualifyForBonus))
 			{				
 				cityGcwDefenderRegionHasBonus = true;
 
@@ -8314,9 +8317,10 @@ void PlayerObject::updateGcwDefenderRegionInfo()
 
 				int const timeJoinedGcwDefenderRegion = GuildInterface::getTimeJoinedGuildCurrentGcwDefenderRegion(*gi);
 				if (timeQualifyForBonus < 0)
-					timeQualifyForBonus = static_cast<int>(::time(nullptr)) - (ConfigServerGame::getGcwDaysRequiredForGcwRegionDefenderBonus() * 86400);
+					timeQualifyForBonus = EpochTime::now() - (ConfigServerGame::getGcwDaysRequiredForGcwRegionDefenderBonus() * 86400);
 
-				if (!PvpData::isNeutralFactionId(guildFaction) && (guildFaction == owner->getPvpFaction()) && (timeJoinedGcwDefenderRegion < timeQualifyForBonus))
+				// the join time is kept in the wrapped 32-bit form
+				if (!PvpData::isNeutralFactionId(guildFaction) && (guildFaction == owner->getPvpFaction()) && (EpochTime::fromWire32(timeJoinedGcwDefenderRegion, EpochTime::now()) < timeQualifyForBonus))
 				{
 					guildGcwDefenderRegionHasBonus = true;
 
@@ -8601,11 +8605,12 @@ void PlayerObject::setAccountNumLotsOverLimitSpam()
 		{
 			m_accountNumLotsOverLimitSpam = m_accountNumLots.get() - owner->getMaxNumberOfLots();
 
-			int const timeNow = static_cast<int>(::time(nullptr));
+			// the objvars hold the wrapped 32-bit form
+			int64_t const timeNow = EpochTime::now();
 			int violationTime = 0;
 			if (!owner->getObjVars().getItem("lotOverlimit.violation_time", violationTime))
 			{
-				violationTime = timeNow;
+				violationTime = EpochTime::toWire32(timeNow);
 				IGNORE_RETURN(owner->setObjVarItem("lotOverlimit.violation_time", violationTime));
 			}
 
@@ -8613,14 +8618,14 @@ void PlayerObject::setAccountNumLotsOverLimitSpam()
 			{
 				// spam once every 5 minutes for 24 hours after the violation, then once every minute after that
 				bool shouldSpam = true;
-				if ((violationTime + 86400) >= timeNow)
+				if ((EpochTime::fromWire32(violationTime, timeNow) + 86400) >= timeNow)
 				{
 					int timeLastSpam = 0;
-					if (owner->getObjVars().getItem("lotOverlimit.last_spam_time", timeLastSpam) && ((timeLastSpam + 300) >= timeNow))
+					if (owner->getObjVars().getItem("lotOverlimit.last_spam_time", timeLastSpam) && ((EpochTime::fromWire32(timeLastSpam, timeNow) + 300) >= timeNow))
 						shouldSpam = false;
 
 					if (shouldSpam)
-						IGNORE_RETURN(owner->setObjVarItem("lotOverlimit.last_spam_time", timeNow));
+						IGNORE_RETURN(owner->setObjVarItem("lotOverlimit.last_spam_time", EpochTime::toWire32(timeNow)));
 				}
 				else
 				{
@@ -9185,8 +9190,12 @@ void PlayerObjectNamespace::grantGcwFactionalPresenceScore(std::string const & g
 
 			bonus += (cityRank * ConfigServerGame::getGcwFactionalPresenceAlignedCityRankBonusPct());
 
-			if (ci->getCreationTime() > 0)
-				bonus += std::max(0, (static_cast<int>(::time(nullptr)) - std::max(1041408000, ci->getCreationTime())) / 31536000 * ConfigServerGame::getGcwFactionalPresenceAlignedCityAgeBonusPct());
+			// the city creation time is kept in the wrapped 32-bit form
+			if (ci->getCreationTime() != 0)
+			{
+				int64_t const timeNow = EpochTime::now();
+				bonus += std::max(0, static_cast<int>((timeNow - std::max(static_cast<int64_t>(1041408000), EpochTime::fromWire32(ci->getCreationTime(), timeNow))) / 31536000) * ConfigServerGame::getGcwFactionalPresenceAlignedCityAgeBonusPct());
+			}
 		}
 	}
 

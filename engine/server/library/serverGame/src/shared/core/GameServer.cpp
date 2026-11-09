@@ -5681,7 +5681,8 @@ void GameServerNamespace::loadRetroactivePlayerCityCreationTime()
 
 bool GameServerNamespace::checkAndSetOutstandingRequestSceneTransfer(ServerObject & object)
 {
-	int const timeNow = static_cast<int>(::time(nullptr));
+	// the objvar holds the wrapped 32-bit form
+	int64_t const timeNow = EpochTime::now();
 
 	// don't send multiple RequestSceneTransfer message
 	if (object.getObjVars().hasItem(OBJVAR_HAS_OUTSTANDING_REQUEST_SCENE_TRANSFER) && (object.getObjVars().getType(OBJVAR_HAS_OUTSTANDING_REQUEST_SCENE_TRANSFER) == DynamicVariable::INT))
@@ -5689,9 +5690,10 @@ bool GameServerNamespace::checkAndSetOutstandingRequestSceneTransfer(ServerObjec
 		int requestTimeOut = 0;
 		if (object.getObjVars().getItem(OBJVAR_HAS_OUTSTANDING_REQUEST_SCENE_TRANSFER, requestTimeOut))
 		{
-			if (timeNow <= requestTimeOut)
+			int64_t const requestTimeOutFull = EpochTime::fromWire32(requestTimeOut, timeNow);
+			if (timeNow <= requestTimeOutFull)
 			{
-				LOG("RequestSceneWarp", ("%s already has an outstanding RequestSceneTransfer that will expire in %d seconds", PlayerObject::getAccountDescription(&object).c_str(), (requestTimeOut - timeNow)));
+				LOG("RequestSceneWarp", ("%s already has an outstanding RequestSceneTransfer that will expire in %d seconds", PlayerObject::getAccountDescription(&object).c_str(), static_cast<int>(requestTimeOutFull - timeNow)));
 				return true;
 			}
 			else
@@ -5701,7 +5703,7 @@ bool GameServerNamespace::checkAndSetOutstandingRequestSceneTransfer(ServerObjec
 		}
 	}
 
-	IGNORE_RETURN(object.setObjVarItem(OBJVAR_HAS_OUTSTANDING_REQUEST_SCENE_TRANSFER, (timeNow + ConfigServerGame::getRequestSceneWarpTimeoutSeconds())));
+	IGNORE_RETURN(object.setObjVarItem(OBJVAR_HAS_OUTSTANDING_REQUEST_SCENE_TRANSFER, EpochTime::toWire32(timeNow + ConfigServerGame::getRequestSceneWarpTimeoutSeconds())));
 
 	return false;
 }

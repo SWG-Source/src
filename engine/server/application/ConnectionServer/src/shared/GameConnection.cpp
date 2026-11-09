@@ -32,6 +32,7 @@
 #include "unicodeArchive/UnicodeArchive.h"
 
 #include "sharedFoundation/CrcConstexpr.hpp"
+#include "serverUtility/EpochTime.h"
 
 //-----------------------------------------------------------------------
 
@@ -165,7 +166,7 @@ void GameConnection::onReceive(const Archive::ByteStream & message)
 					ca.getStartYaw(),
 					ca.getTemplateName(),
 					ca.getTimeSeconds(),
-					static_cast<int32>(::time(nullptr)),
+					EpochTime::toWire32(EpochTime::now()), // client field: wrapped 32-bit server time
 					ConfigConnectionServer::getDisableWorldSnapshot());
 				client->getClientConnection()->send(startScene, true);
 			}

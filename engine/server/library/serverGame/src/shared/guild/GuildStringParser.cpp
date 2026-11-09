@@ -207,11 +207,11 @@ void GuildStringParser::buildNameSpec(int guildId, std::string const &guildName,
 	char buffer[501]; // 500 chars + terminating \0
 
 	// only write out newer version if there is actually new version information
-	if (!PvpData::isNeutralFactionId(guildFaction) || (timeLeftGuildFaction > 0) || (timeJoinedGuildGcwDefenderRegion > 0) || (timeLeftGuildGcwDefenderRegion > 0)) // version 3
+	if (!PvpData::isNeutralFactionId(guildFaction) || (timeLeftGuildFaction != 0) || (timeJoinedGuildGcwDefenderRegion != 0) || (timeLeftGuildGcwDefenderRegion != 0)) // version 3
 	{
 		snprintf(buffer, sizeof(buffer), "v3:%d:%s:%d:%d:%d:%d:%s:%d:%d", guildId, guildName.c_str(), guildElectionPreviousEndTime, guildElectionNextEndTime, static_cast<int>(guildFaction), timeLeftGuildFaction, guildGcwDefenderRegion.c_str(), timeJoinedGuildGcwDefenderRegion, timeLeftGuildGcwDefenderRegion);
 	}
-	else if ((guildElectionPreviousEndTime > 0) || (guildElectionNextEndTime > 0)) // version 2
+	else if ((guildElectionPreviousEndTime != 0) || (guildElectionNextEndTime != 0)) // version 2
 	{
 		snprintf(buffer, sizeof(buffer), "v2:%d:%s:%d:%d", guildId, guildName.c_str(), guildElectionPreviousEndTime, guildElectionNextEndTime);
 	}

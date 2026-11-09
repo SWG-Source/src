@@ -9262,7 +9262,7 @@ void CreatureObject::handleCMessageTo(MessageToPayload const &message)
 		// set objvar to indicate there's a pending rename request for this character,
 		// and the time of the rename request, to enforce the 90 days wait between rename
 		if (!getClient() || !getClient()->isGod())
-			setObjVarItem("renameCharacterRequest.requestTime", static_cast<int>(::time(nullptr)));
+			setObjVarItem("renameCharacterRequest.requestTime", EpochTime::toWire32(EpochTime::now()));
 
 		std::string const newName(message.getDataAsString());
 		if (getObjVars().hasItem("renameCharacterRequest.requestTime") && !newName.empty())
@@ -14738,7 +14738,7 @@ void CreatureObject::getLfgCharacterData(LfgCharacterData & lfgCharacterData) co
 		lfgCharacterData.characterAge = -1;
 	}
 
-	if (lfgCharacterData.characterCreateTime <= 0)
+	if ((lfgCharacterData.characterCreateTime == -1) || (lfgCharacterData.characterCreateTime == 0))
 		lfgCharacterData.characterCreateTime = EpochTime::toWire32(NameManager::getInstance().getPlayerCreateTime(getNetworkId()));
 
 	PlayerObject const * const playerObject = PlayerCreatureController::getPlayerObject(this);
@@ -15548,7 +15548,7 @@ void CreatureObject::saveDecorationLayout(ServerObject const & pobSourceObject, 
 			}
 
 			snprintf(buffer1, sizeof(buffer1)-1, "savedDecoration%d.saveTime", saveSlotNumber);
-			playerObj->setObjVarItem(buffer1, static_cast<int>(::time(nullptr)));
+			playerObj->setObjVarItem(buffer1, EpochTime::toWire32(EpochTime::now()));
 
 			snprintf(buffer1, sizeof(buffer1)-1, "savedDecoration%d.pobName", saveSlotNumber);
 			playerObj->setObjVarItem(buffer1, containingPOB->getObjectNameStringId().localize());
@@ -15643,11 +15643,11 @@ void CreatureObject::restoreDecorationLayout(ServerObject const & pobTargetObjec
 	}
 
 	// don't allow another restore on the pob while one is still in progress
-	int const timeNow = static_cast<int>(::time(nullptr));
+	int64_t const timeNow = EpochTime::now();
 	int restoreDecorationOperationTimeout = 0;
-	if (getObjVars().getItem("restoreDecorationOperation.timeout", restoreDecorationOperationTimeout) && (restoreDecorationOperationTimeout > timeNow))
+	if (getObjVars().getItem("restoreDecorationOperation.timeout", restoreDecorationOperationTimeout) && (EpochTime::fromWire32(restoreDecorationOperationTimeout, timeNow) > timeNow))
 	{
-		Chat::sendSystemMessage(*this, Unicode::narrowToWide(FormattedString<1024>().sprintf("You are already performing a restore decoration layout operation.  Please wait for the current operation to complete, or if the current operation does not complete in %s, you can try another operation.", CalendarTime::convertSecondsToMS(static_cast<unsigned int>(restoreDecorationOperationTimeout - timeNow)).c_str())), Unicode::emptyString);
+		Chat::sendSystemMessage(*this, Unicode::narrowToWide(FormattedString<1024>().sprintf("You are already performing a restore decoration layout operation.  Please wait for the current operation to complete, or if the current operation does not complete in %s, you can try another operation.", CalendarTime::convertSecondsToMS(static_cast<unsigned int>(EpochTime::fromWire32(restoreDecorationOperationTimeout, timeNow) - timeNow)).c_str())), Unicode::emptyString);
 		return;
 	}
 
@@ -15915,7 +15915,7 @@ void CreatureObject::restoreDecorationLayout(ServerObject const & pobTargetObjec
 		playerObj->setRestoreDecorationAttemptedCount(0);
 		playerObj->setRestoreDecorationSuccessCount(0);
 
-		IGNORE_RETURN(setObjVarItem("restoreDecorationOperation.timeout", timeNow + (5 * 60)));
+		IGNORE_RETURN(setObjVarItem("restoreDecorationOperation.timeout", EpochTime::toWire32(timeNow + (5 * 60))));
 		IGNORE_RETURN(setObjVarItem("restoreDecorationOperation.operationId", restoreDecorationOperationId));
 
 		MessageToQueue::getInstance().sendMessageToC(getNetworkId(),
